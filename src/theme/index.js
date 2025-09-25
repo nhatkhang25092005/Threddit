@@ -1,0 +1,1 @@
+export {default as MainThemeProvider} from "./MainTheme.jsx"
