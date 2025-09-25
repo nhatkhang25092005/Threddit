@@ -6,6 +6,12 @@ const mainTheme = createTheme({
     background: {
       default: "#0A0B0B",
     },
+    text: {
+      primary: "#FFFFFF",
+    },
+  },
+  typography: {
+    fontFamily: "Inter, Arial, sans-serif",
   },
 });
 
