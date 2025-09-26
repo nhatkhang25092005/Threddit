@@ -1,18 +1,15 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
+import { typographyTheme } from "./typographyTheme";
+import { paletteTheme} from "./paletteTheme"
+import {buttonTheme} from "./buttonTheme"
 
 const mainTheme = createTheme({
-  palette: {
-    background: {
-      default: "#0A0B0B",
-    },
-    text: {
-      primary: "#FFFFFF",
-    },
-  },
-  typography: {
-    fontFamily: "Inter, Arial, sans-serif",
-  },
+  palette : paletteTheme,
+  typography: typographyTheme,
+  components:{
+    MuiButton:buttonTheme
+  }
 });
 
 export default function MainThemeProvider({ children }) {
