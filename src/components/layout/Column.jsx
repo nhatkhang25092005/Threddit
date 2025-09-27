@@ -8,7 +8,7 @@ const style = {
 
 export default function Column({ children }) {
   return (
-    <Box component="form" autoComplete="off" sx={style}>
+    <Box autoComplete="off" sx={style}>
       {children}
     </Box>
   );
