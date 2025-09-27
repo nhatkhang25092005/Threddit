@@ -24,7 +24,7 @@ export default function Login() {
               isRequired={true}
             />
             <Button variant="contained">{TEXT.LOGIN}</Button>
-            <Button variant="text" disableRipple>
+            <Button variant="text" disableRipple href={ROUTES.FORGOT}>
               {TEXT.FORGOT}
             </Button>
           </SmallForm>
