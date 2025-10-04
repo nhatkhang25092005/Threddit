@@ -3,7 +3,7 @@ import InputField from "../components/InputField";
 import Column from "../../../components/layout/Column";
 import NavButton from "../components/NavButton";
 import SmallForm from "../../../components/layout/SmallForm";
-import { TITLE, TEXT, ROUTES } from "../../../constant";
+import { TITLE, TEXT, ROUTES,LABEL } from "../../../constant";
 import FadeSlideInVertical from "../../../components/animation/FadeSlideInVertical";
 export default function Login() {
   return (
@@ -17,10 +17,10 @@ export default function Login() {
         <Column>
           <Typography variant="title">{TITLE.LOGIN_TITLE}</Typography>
           <SmallForm>
-            <InputField type={"email"} label={"email"} isRequired={true} />
+            <InputField type={"email"} label={LABEL.EMAIL} isRequired={true} />
             <InputField
               type={"password"}
-              label={"password"}
+              label={LABEL.PASSWORD}
               isRequired={true}
             />
             <Button variant="contained">{TEXT.LOGIN}</Button>

@@ -2,10 +2,12 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AuthRoutes from "./AuthRoutes.jsx";
 import AppRoute from "./AppRoute.jsx";
 import Notfound from "../components/common/Notfound.jsx";
+import Awake from "../features/awake.jsx";
 
 export default function AppRouter() {
   return (
     <BrowserRouter>
+      <Awake/>
       <Routes>
 
         {/* Default route */}

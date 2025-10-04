@@ -1,7 +1,7 @@
 import FadeSlideInVertical from "../../../components/animation/FadeSlideInVertical";
 import SmallForm from "../../../components/layout/SmallForm";
 import { Button, Typography } from "@mui/material";
-import { ROUTES, TEXT, TITLE } from "../../../constant";
+import { ROUTES, TEXT, TITLE, LABEL } from "../../../constant";
 import NavButton from "../components/NavButton";
 import Column from "../../../components/layout/Column";
 import { InputField } from "../components";
@@ -18,7 +18,7 @@ export default function Forgot() {
         <Column>
           <Typography variant="title">{TITLE.FORGOT}</Typography>
           <SmallForm>
-            <InputField type={"email"} label={"email"} isRequired={true}/>
+            <InputField type={"email"} label={LABEL.EMAIL} isRequired={true}/>
             <Button variant="contained">{TEXT.REQUEST_FORGOT}</Button>
           </SmallForm>
         </Column>

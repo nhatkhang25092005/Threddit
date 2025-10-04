@@ -29,6 +29,7 @@ export default function FadeSlideInVertical({
   return (
     <Box
       sx={(theme) => ({
+        height:"100%",
         opacity: show ? 1 : 0,
         transform: show ? "translateY(0)" : `translateY(${distance}px)`,
         transition: theme.transitions.create(["opacity", "transform"], {

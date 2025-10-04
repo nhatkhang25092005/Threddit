@@ -9,13 +9,13 @@ const textFieldSlotProps = {
     sx: {
       color: "#BCBDBF",
       "&.Mui-focused": {
-        color: "#BCBDBF", 
+        color: "#BCBDBF",
       },
     },
   },
   root: {
     sx: {
-      backgroundColor:"inherit",
+      backgroundColor: "inherit",
       "& .MuiOutlinedInput-root": {
         "&.Mui-focused fieldset": {
           borderColor: "#A6A6A6",
@@ -27,16 +27,31 @@ const textFieldSlotProps = {
     },
   },
 };
-export default function InputField({type, label, isRequired = false }) {
+export default function InputField({
+  setError = false,
+  helperText,
+  type,
+  label,
+  setName,
+  setValue,
+  setOnChange,
+  isRequired = false,
+}) {
   return (
     <TextField
+      {...(setName ? { name: setName } : {})}
+      {...(setOnChange ? { onChange: setOnChange } : {})}
+      value={setValue ?? ""}
       {...(isRequired ? { required: true } : {})}
       variant="outlined"
       label={label}
       type={type}
       slotProps={textFieldSlotProps}
       autoComplete={`new-${type}`}
-      sx={{width:"80%"}}
+      autoCorrect="off"
+      error={!!setError}
+      helperText={helperText || "helper text missing"}
+      sx={{ width: "80%" }}
     />
   );
 }
