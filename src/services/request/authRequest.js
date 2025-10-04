@@ -65,3 +65,23 @@ export async function handleVerifyRequest(email, otp){
       return new ApiResponse(status, message, data, displayType)
   })
 }
+
+//Login
+export async function handleLoginRequest(email, password){
+  if(!email){
+    console.error("email can not be null in request")
+    return
+  }
+
+  if(!password){
+    console.error("password can not be null in request")
+    return
+  }
+
+  return authApi.login(email,password)
+  .then((res)=>new ApiResponse(res.status, ApiResponse.getMessageFromApi(res),res.data))
+  .catch((err)=>{
+    const {status, displayType, message, data} = classifyError(err)
+    return new ApiResponse(status, message, data, displayType)
+  })
+}

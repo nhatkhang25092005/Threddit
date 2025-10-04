@@ -3,11 +3,11 @@
  * If not, redirect user to /auth/login
  * @returns 
  */
+import { Outlet } from "react-router-dom"
 export default function PrivateRoute(){
-    return(<>
     {/* useAuth() is get user info method that will be build later */}
     {/* const {user} = useAuth() 
         return user ? <Outlet/> : <Navigate to ="/auth/login" replace/>
     */}
-    </>)
+    return(<Outlet/>)
 }

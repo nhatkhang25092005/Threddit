@@ -1,7 +1,8 @@
 import axiosClient from "../axiosClient";
 
 const authApi = {
-  login: () => axiosClient.post(import.meta.env.VITE_API_LOGIN), // this is example
+  login: (email, password) =>
+    axiosClient.post(import.meta.env.VITE_API_LOGIN, { email, password }), // this is example
 
   register: (email, username, password, confirmedPassword) =>
     axiosClient.post(import.meta.env.VITE_API_REGISTER, {

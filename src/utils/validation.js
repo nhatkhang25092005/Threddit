@@ -1,4 +1,17 @@
 import nullChecker from "./nullChecker";
+import { ERRORS } from "../constant";
+
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+
+function wrapField(fields){
+  let nullFields = {}
+  fields.forEach((field)=>{
+    nullFields[field] = ERRORS.NULL_FIELD
+  })
+  return nullFields
+}
 /**
  * Validate registration form data.
  *
@@ -61,7 +74,6 @@ import nullChecker from "./nullChecker";
  * //   confirmPassword: "confirmPassword không được phép rỗng"
  * // }
  */
-
 export function validRegister(data) {
   const nullCheck = nullChecker(data);
   const errorFields = {}
@@ -70,21 +82,19 @@ export function validRegister(data) {
     const { displayName, email, password, confirmPassword } = data;
     // display name
     if (displayName.trim().length < 8 || displayName.trim().length > 32) 
-        errorFields.displayName = "Tên người dùng phải từ 8 đến 32 ký tự"
+        errorFields.displayName = ERRORS.DISPLAYNAME_FORMAT
     
     // email
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email.trim())) 
-        errorFields.email = "Email không hợp lệ"
+        errorFields.email = ERRORS.EMAIL_FORMAT
 
     // password
-    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
     if (!passwordPattern.test(password.trim())) 
-        errorFields.password = "Mật khẩu phải bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt, tối thiểu 8 ký tự"
+        errorFields.password = ERRORS.PASSWORD_FORMAT
 
     // confirmPassword
     if (!(password.trim() === confirmPassword.trim()))
-         errorFields.confirmPassword = "Mật khẩu không khớp"
+         errorFields.confirmPassword = ERRORS.PASSWORD_MATCH
 
     return !Object.keys(errorFields).length ? true : errorFields
   }
@@ -94,4 +104,24 @@ export function validRegister(data) {
   })
 
   return errorFields
+}
+
+export function validLogin(data){
+  const nullCheck = nullChecker(data)
+
+  if(nullCheck === true){
+    const {email, password} = data
+    const errorFields = {}
+    //email
+    if(!emailPattern.test(email.trim()))
+      errorFields.email = ERRORS.EMAIL_FORMAT
+
+    //password
+    if(!passwordPattern.test(password.trim()))
+      errorFields.password = ERRORS.PASSWORD_FORMAT
+
+    return !Object.keys(errorFields).length ? true : errorFields
+  }
+  
+  return wrapField(nullCheck)
 }

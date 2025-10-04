@@ -21,7 +21,7 @@ export default function PopupNotification({ open = false, onClose, title, conten
           sx={{
             py: "1rem",
             bgcolor: "#0A0B0B",
-            width: "30vw",
+            width: "fit-content",
             height: "fit-content",
             position: "absolute",
             left: "50%",
@@ -29,6 +29,9 @@ export default function PopupNotification({ open = false, onClose, title, conten
             border: "solid #A6A6A6 2px",
             borderRadius: "7px",
             transform: "translateX(-50%)",
+            px:"1rem",
+            pt:"1.5rem",
+            pb:"2rem"
           }}
         >
           <Typography
@@ -39,7 +42,7 @@ export default function PopupNotification({ open = false, onClose, title, conten
           >
             {title}
           </Typography>
-          <Typography id="modal-description" sx={{ textAlign: "center" }}>
+          <Typography id="modal-description" sx={{ textAlign: "center",mt:"1rem" }}>
             {content}
           </Typography>
           <Button

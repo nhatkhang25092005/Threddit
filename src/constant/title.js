@@ -5,5 +5,6 @@ export const TITLE = {
     FORGOT:"Quên mật khẩu",
     REGISTER_SUCCESS : "Đăng kí thành công",
     VALIDATION : "Xác minh tài khoản", 
-    VALIDATION_SUCCESS : "Xác minh tài khoản thành công"
+    VALIDATION_SUCCESS : "Xác minh tài khoản thành công",
+    LOGIN_FAIL : "Đăng nhập không thành công",
 }
