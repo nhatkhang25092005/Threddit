@@ -3,5 +3,6 @@ export const ROUTES = {
     REGISTER : "/auth/register",
     FORGOT:"/auth/forgot",
     VERIFY:"/auth/verify",
-    PROFILE:"/app/profile"
+    PROFILE:"/app/profile",
+    RESET_PASSWORD_VERIFY : "/auth/verify_reset"
 }

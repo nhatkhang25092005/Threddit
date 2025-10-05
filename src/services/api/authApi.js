@@ -17,6 +17,17 @@ const authApi = {
       email,
       verificationCode,
     }),
+
+  resetRequest : (email)=>
+    axiosClient.post(import.meta.env.VITE_API_RESET_PASSWORD,
+      {email}
+    ),
+
+  verifyResetPassword : (email, verificationCode, newPassword, confirmedNewPassword)=>
+    axiosClient.post(import.meta.env.VITE_API_VERIFY_RESET_PASSWORD,
+      {email, verificationCode, newPassword, confirmedNewPassword}
+    )
+
 };
 
 export default authApi;

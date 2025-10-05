@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { handleRegisterRequest } from "../../../services/request/authRequest";
-import { Error } from "../../../class/index";
+import { Result } from "../../../class";
 import { validRegister } from "../../../utils/validation";
 import { replace, useNavigate } from "react-router-dom";
 import {ROUTES,ERRORS} from "../../../constant/"
@@ -27,7 +27,7 @@ export default function useRegister() {
     else{
       setLoading(true);
       const response = await handleRegisterRequest(formData.email, formData.displayName, formData.password, formData.confirmPassword);
-      setResult(response.isOk() ? navigate(ROUTES.VERIFY, {state:{email : formData.email}, replace}) : new Error(response.displayType,ERRORS.REGISTER,response.message));
+      setResult(response.isOk() ? navigate(ROUTES.VERIFY, {state:{email : formData.email}, replace}) : new Result(response.displayType,ERRORS.REGISTER,response.message));
       setLoading(false);
       return
     }

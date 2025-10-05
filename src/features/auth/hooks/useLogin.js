@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, replace } from "react-router-dom";
 import { validLogin } from "../../../utils/validation";
 import { handleLoginRequest } from "../../../services/request/authRequest";
-import { Error } from "../../../class";
+import { Result } from "../../../class";
 import { DISPLAY, TITLE, ROUTES } from "../../../constant";
 
 export default function useLogin() {
@@ -28,7 +28,7 @@ export default function useLogin() {
     else{
       setLoading(true)
       const res = await handleLoginRequest(formData.email, formData.password)
-      setResult(res.isOk() ? navigate(ROUTES.PROFILE, replace) : new Error(DISPLAY.POPUP,TITLE.LOGIN_FAIL,res.message) )
+      setResult(res.isOk() ? navigate(ROUTES.PROFILE, replace) : new Result(DISPLAY.POPUP,TITLE.LOGIN_FAIL,res.message) )
       setLoading(false)
       return
     }

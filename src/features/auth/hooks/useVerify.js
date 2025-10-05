@@ -1,7 +1,7 @@
 import { useLocation, useNavigate,replace } from "react-router-dom";
 import { handleVerifyRequest } from "../../../services/request/authRequest";
 import { useState } from "react";
-import { Error, Success } from "../../../class";
+import { Result } from "../../../class";
 import { ERRORS, DISPLAY, LABEL, TITLE, TEXT,ROUTES } from "../../../constant";
 
 export default function useVerify() {
@@ -12,13 +12,13 @@ export default function useVerify() {
 
   const verify = async (otp) => {
     if (otp.length < 6) {
-      setResult(new Error(DISPLAY.MAGIC ,null , ERRORS.OTP))
+      setResult(new Result(DISPLAY.MAGIC ,null , ERRORS.OTP))
       return
     }
     setLoading(true)
     const response = await handleVerifyRequest(email, String(otp));
    
-    setResult(response.isOk() ? new Success(DISPLAY.POPUP ,TITLE.VALIDATION_SUCCESS, TEXT.VALIDATION_SUCCESS,() => navigate(ROUTES.LOGIN,replace)) : new Error(DISPLAY.POPUP,LABEL.ERROR,response.message)) 
+    setResult(response.isOk() ? new Result(DISPLAY.POPUP ,TITLE.VALIDATION_SUCCESS, TEXT.VALIDATION_SUCCESS,() => navigate(ROUTES.LOGIN,replace)) : new Result(DISPLAY.POPUP,LABEL.ERROR,response.message)) 
     setLoading(false)
   };
 

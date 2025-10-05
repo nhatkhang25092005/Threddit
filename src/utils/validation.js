@@ -3,8 +3,31 @@ import { ERRORS } from "../constant";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+const otpPattern = /^\d{6}$/
 
-
+/**
+ * Creates an object that maps each field name to a "null field" error message.
+ *
+ * @function wrapField
+ * @param {string[]} fields - An array of field names to check for null or missing values.
+ * @returns {Object} An object where each key is a field name, and each value is the constant error message `ERRORS.NULL_FIELD`.
+ *
+ * @example
+ * // Example usage:
+ * const missingFields = wrapField(["email", "password"]);
+ * console.log(missingFields);
+ * // Output:
+ * // {
+ * //   email: "Field cannot be null",
+ * //   password: "Field cannot be null"
+ * // }
+ *
+ * @description
+ * This helper function is useful for generating standardized error objects
+ * when validating form data. It takes an array of field names and returns
+ * a corresponding object mapping each field to a shared error message,
+ * allowing for consistent and centralized error handling.
+ */
 function wrapField(fields){
   let nullFields = {}
   fields.forEach((field)=>{
@@ -106,6 +129,36 @@ export function validRegister(data) {
   return errorFields
 }
 
+/**
+ * Validates login form data, including null checks and format checks for email and password.
+ *
+ * @function validLogin
+ * @param {Object} data - The login form data to validate.
+ * @param {string} data.email - The user's email address.
+ * @param {string} data.password - The user's password.
+ * @returns {true | Object} 
+ * - Returns `true` if all fields are valid.  
+ * - Returns an object containing field-specific error messages if validation fails.
+ *
+ * @example
+ * // Example usage:
+ * const result = validLogin({ email: "user@example.com", password: "Pass123!" });
+ * if (result === true) {
+ *   console.log("Login data is valid!");
+ * } else {
+ *   console.log("Errors:", result);
+ * }
+ * 
+ * @description
+ * This function performs two layers of validation:
+ * 1. **Null Check:** Uses `nullChecker()` to detect missing fields.  
+ *    - If any required fields are missing, it calls `wrapField(nullCheck)` to generate standardized error messages.
+ * 2. **Format Validation:**  
+ *    - `email` must match `emailPattern` (valid email format).  
+ *    - `password` must match `passwordPattern` (e.g., contains letters, numbers, or special characters depending on your rule).
+ *
+ * It returns `true` if validation passes, or an object mapping invalid fields to error messages if it fails.
+ */
 export function validLogin(data){
   const nullCheck = nullChecker(data)
 
@@ -123,5 +176,115 @@ export function validLogin(data){
     return !Object.keys(errorFields).length ? true : errorFields
   }
   
+  return wrapField(nullCheck)
+}
+
+/**
+ * Validates the email field for a password reset request.
+ *
+ * @function validResetRequest
+ * @param {string} email - The user's email address to validate.
+ * @returns {true | Object}
+ * - Returns `true` if the email is valid.  
+ * - Returns an object `{ email: errorMessage }` if the email is null, empty, or invalid in format.
+ *
+ * @example
+ * // Example usage:
+ * const result = validResetRequest("user@example.com");
+ * if (result === true) {
+ *   console.log("Email is valid!");
+ * } else {
+ *   console.log("Error:", result);
+ *   // e.g. { email: "Invalid email format" }
+ * }
+ *
+ * @description
+ * This function is used in the **"Forgot Password"** or **"Reset Password Request"** form
+ * to ensure the email field is not empty and follows a valid format.
+ *
+ * Validation rules:
+ * 1. The email must not be `null`, `undefined`, or an empty string.
+ * 2. The email must match the regular expression `emailPattern`.
+ *
+ * It returns a standardized error object using `ERRORS.NULL_FIELD` or `ERRORS.EMAIL_FORMAT`
+ * for consistent error handling across forms.
+ */
+export function validResetRequest(email){
+  if(!email || email === "" || email === null) return ({email : ERRORS.NULL_FIELD})
+  if(!emailPattern.test(email.trim())) return ({email : ERRORS.EMAIL_FORMAT })
+  return true
+}
+
+/**
+ * Validates the data for verifying a password reset request.
+ *
+ * @function validVerifyReset
+ * @param {Object} data - The form data to validate.
+ * @param {string} data.email - The user's email used for password reset.
+ * @param {string} data.code - The 6-digit verification code sent to the user.
+ * @param {string} data.newPassword - The new password entered by the user.
+ * @param {string} data.confirmPassword - The repeated new password for confirmation.
+ * @returns {true | Object}
+ * - Returns `true` if all fields are valid.  
+ * - Returns an object `{ fieldName: errorMessage }` containing validation errors otherwise.
+ *
+ * @example
+ * const result = validVerifyReset({
+ *   email: "user@example.com",
+ *   code: "123456",
+ *   newPassword: "StrongPass123!",
+ *   confirmPassword: "StrongPass123!"
+ * });
+ * 
+ * if (result === true) {
+ *   console.log("Verification data is valid!");
+ * } else {
+ *   console.log("Errors:", result);
+ *   // Example:
+ *   // { code: "OTP must be 6 digits", password: "Invalid password format" }
+ * }
+ *
+ * @description
+ * This function validates the **verify reset password** form, ensuring all fields are present and correctly formatted.
+ *
+ * It performs the following checks:
+ * 1. **Null Check:**  
+ *    Uses `nullChecker()` to detect missing fields. If any are missing, it returns `wrapField(nullCheck)` to generate uniform "null field" errors.
+ * 2. **Email Validation:**  
+ *    Checks if `email` matches the `emailPattern`.  
+ * 3. **Password Validation:**  
+ *    Ensures `newPassword` matches `passwordPattern`.  
+ * 4. **OTP (Code) Validation:**  
+ *    Ensures `code` matches `otpPattern` — typically `^\d{6}$` for a 6-digit numeric code.  
+ * 5. **Password Confirmation:**  
+ *    Ensures `confirmPassword` matches `newPassword`.
+ *
+ * The function returns `true` if all validations pass, otherwise an object mapping invalid fields to specific error messages from `ERRORS`.
+ */
+export function validVerifyReset(data){
+  const nullCheck = nullChecker(data)
+  if(nullCheck === true){
+    //do something
+    const errorFields = {}
+    const {email, code, newPassword, confirmPassword} = data
+
+    //email
+    if(!emailPattern.test(email.trim()))
+      errorFields.email = ERRORS.EMAIL_FORMAT
+
+    // new password
+    if (!passwordPattern.test(newPassword.trim())) 
+        errorFields.newPassword = ERRORS.PASSWORD_FORMAT
+    
+    //code
+    if (!otpPattern.test(code.trim()))
+      errorFields.code = ERRORS.OTP
+    
+    //confirm password
+    if (!(newPassword.trim() === confirmPassword.trim()))
+      errorFields.confirmPassword = ERRORS.PASSWORD_MATCH
+
+    return !Object.keys(errorFields).length ? true : errorFields
+  }
   return wrapField(nullCheck)
 }

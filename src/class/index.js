@@ -1,2 +1,1 @@
-export {default as Success} from "./Success"
-export {default as Error} from "./Error"
+export {default as Result} from "./Result"

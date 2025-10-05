@@ -5,11 +5,11 @@ class ApiResponse {
 
   //constructor to create a response object
   constructor(status, message, data = null, displayType = null) {
-    console.log(message)
     this.status = status ?? 404;
     this.message = message ?? "Unknown Error";
     this.data = data;
     this.displayType = displayType;
+    console.log("API Response:",this)
   }
 
   //get the message from api response if success
@@ -39,6 +39,22 @@ function classifyError(err) {
 
 // Register
 export async function handleRegisterRequest(email,username, password,confirmedPassword){
+  if(!email){
+    console.error("email can not be null in handleLoginRequest()")
+    return
+  }
+  if(!username){
+    console.error("username can not be null in handleLoginRequest()")
+    return
+  }
+  if(!password){
+    console.error("password cant not be null in handleLoginRequest()")
+    return
+  }
+  if(!confirmedPassword){
+    console.error("confirmedPassword can not be null in handleLoginRequest()")
+    return
+  }
   return authApi.register(email, username, password, confirmedPassword)
   .then((res)=> new ApiResponse(res.status,ApiResponse.getMessageFromApi(res),res.data))
   .catch((err)=>{
@@ -80,6 +96,47 @@ export async function handleLoginRequest(email, password){
 
   return authApi.login(email,password)
   .then((res)=>new ApiResponse(res.status, ApiResponse.getMessageFromApi(res),res.data))
+  .catch((err)=>{
+    const {status, displayType, message, data} = classifyError(err)
+    return new ApiResponse(status, message, data, displayType)
+  })
+}
+
+//Reset Request
+export async function handleResetPasswordRequest(email){
+  if(!email){
+    console.error("Email cant not be null in `handleResetPasswordRequest()`")
+    return
+  }
+
+  return authApi.resetRequest(email)
+    .then((res)=>new ApiResponse(res.status, ApiResponse.getMessageFromApi(res),res.data))
+    .catch((err)=>{
+      const {status, displayType, message, data} = classifyError(err)
+      return new ApiResponse(status, message, data, displayType)
+    })
+}
+
+//Verify reset Password
+export async function handleResetPasswordVerify(email, code, newPass, confirmNewPass){
+  if(!email){
+    console.error("Email can not be null in `handleResetPasswordVerify()`")
+    return
+  }
+  if(!code){
+    console.error("Verify code can not be null in `handleResetPasswordVerify()`")
+    return
+  }
+  if(!newPass){
+    console.error("New password can not be null in `handleResetPasswordVerify()`")
+    return
+  }
+  if(!confirmNewPass){
+    console.error("Confirm new password can not be null in `handleResetPasswordVerify()`")
+    return
+  }
+  return authApi.verifyResetPassword(email, code, newPass, confirmNewPass)
+  .then((res)=> new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data, DISPLAY.POPUP))
   .catch((err)=>{
     const {status, displayType, message, data} = classifyError(err)
     return new ApiResponse(status, message, data, displayType)
