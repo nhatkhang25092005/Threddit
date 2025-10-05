@@ -1,6 +1,6 @@
 import { Modal, Box, Typography, Button, Backdrop, Fade } from "@mui/material";
 
-export default function PopupNotification({ open = false, onClose, title, content }) {
+export default function PopupNotification({ open = false, onClose, title, content, btnTitle = null }) {
 
   return (
     <Modal
@@ -55,7 +55,7 @@ export default function PopupNotification({ open = false, onClose, title, conten
               mt: "1rem",
             }}
           >
-            Đóng
+            {btnTitle || "Đóng"}
           </Button>
         </Box>
       </Fade>

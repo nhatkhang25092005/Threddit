@@ -26,7 +26,8 @@ const authApi = {
   verifyResetPassword : (email, verificationCode, newPassword, confirmedNewPassword)=>
     axiosClient.post(import.meta.env.VITE_API_VERIFY_RESET_PASSWORD,
       {email, verificationCode, newPassword, confirmedNewPassword}
-    )
+    ),
+  signout : () => axiosClient.post(import.meta.env.VITE_API_SIGNOUT)
 
 };
 

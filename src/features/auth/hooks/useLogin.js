@@ -11,6 +11,11 @@ export default function useLogin() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  function executeLogin(res){
+    localStorage.setItem("accessToken",res.data.data.accessToken)
+    navigate(ROUTES.PROFILE, replace)
+  }
+
   //execute
   const login = async (formData) => {
     setResult(null)
@@ -28,7 +33,7 @@ export default function useLogin() {
     else{
       setLoading(true)
       const res = await handleLoginRequest(formData.email, formData.password)
-      setResult(res.isOk() ? navigate(ROUTES.PROFILE, replace) : new Result(DISPLAY.POPUP,TITLE.LOGIN_FAIL,res.message) )
+      setResult(res.isOk() ? executeLogin(res) : new Result(DISPLAY.POPUP,TITLE.LOGIN_FAIL,res.message) )
       setLoading(false)
       return
     }

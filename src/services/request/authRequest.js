@@ -142,3 +142,13 @@ export async function handleResetPasswordVerify(email, code, newPass, confirmNew
     return new ApiResponse(status, message, data, displayType)
   })
 }
+
+// signout
+export function handleSignoutRequest(){
+  return authApi.signout()
+  .then((res)=> new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data))
+  .catch((err)=>{
+    const {status, displayType, message, data} = classifyError(err)
+    return new ApiResponse(status, message, data, displayType)
+  })
+}

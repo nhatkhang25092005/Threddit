@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import AppLayout from "../components/layout/AppLayout";
 import Profile from "../features/user/page/Profile"
+import Notfound from "../components/common/Notfound";
 export default function AppRoute() {
   return (
     <Routes>
@@ -11,6 +12,7 @@ export default function AppRoute() {
             <Route path="profile" element={<Profile/>}/>
         </Route>
       </Route>
+      <Route path="*" element = {<Notfound/>}/>
     </Routes>
   );
 }
