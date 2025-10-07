@@ -50,7 +50,7 @@ export default function InputField({
       autoComplete={`new-${type}`}
       autoCorrect="off"
       error={!!setError}
-      helperText={helperText || "helper text missing"}
+      helperText={helperText}
       sx={{ width: "80%" }}
     />
   );
