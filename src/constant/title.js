@@ -12,6 +12,10 @@ export const TITLE = {
     RESET_PASSWORD : "Đặt lại mật khẩu" ,
     RESET_PASSWORD_SUCCESSFULLY : "Đặt lại mật khẩu thành công",
     RESET_PASSWORD_FAIL : "Đặt lại mật khẩu không thành công",
+    SIGNOUT:"Đăng xuất",
+    USER_INFO:"Thông tin cá nhân",
     ERROR:"Lỗi!",
-    OK:"OK"
+    OK:"OK",
+    CHANGE_NAME_SUCCESS:"Đổi tên thành công",
+    CHANGE_NAME_FAIL : "Đổi tên không thành công"
 }

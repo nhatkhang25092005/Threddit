@@ -15,6 +15,7 @@ export default function useAuth() {
 
    useEffect(() => {
     const token = localStorage.getItem("accessToken");
+    console.log(token)
     setIsAuthenticated(!!token); 
     setLoading(false);
   }, []);

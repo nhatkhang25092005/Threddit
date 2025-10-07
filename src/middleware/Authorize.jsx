@@ -13,5 +13,5 @@ export default function Authorize() {
     };
   }, [navigate]);
 
-  return null; // no UI
+  return null;
 }

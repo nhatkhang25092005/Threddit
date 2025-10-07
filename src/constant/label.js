@@ -8,5 +8,7 @@ export const LABEL = {
     ERROR:"Lỗi !",
     CODE:"Mã xác minh",
     OLD_PASSWORD : "Mật khẩu cũ",
-    NEW_PASSWORD : "Mật khẩu mới"
+    NEW_PASSWORD : "Mật khẩu mới",
+    USERNAME:"Tên người dùng",
+    SAVE:"Lưu"
 }

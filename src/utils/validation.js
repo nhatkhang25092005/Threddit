@@ -288,3 +288,40 @@ export function validVerifyReset(data){
   }
   return wrapField(nullCheck)
 }
+
+/**
+ * Validates a username based on specific rules.
+ *
+ * @function validChangeUsernme
+ * @param {string} username - The username to be validated.
+ * @returns {true | Object} 
+ * - Returns `true` if the username is valid.  
+ * - Returns an object `{ username: ERRORS.<TYPE> }` if invalid:
+ *   - `ERRORS.NULL_FIELD` → when the username is empty, null, or undefined.
+ *   - `ERRORS.DISPLAYNAME_FORMAT` → when the username length is not between 8 and 32 characters.
+ *
+ * @description
+ * This function ensures that the username field meets the following conditions:
+ * 1. It must not be null, undefined, or an empty string.
+ * 2. It must be between 8 and 32 characters long (after trimming whitespace).
+ *
+ * @example
+ * // Example 1: Valid username
+ * validChangeUsernme("JohnDoe123");
+ * // → true
+ *
+ * @example
+ * // Example 2: Empty username
+ * validChangeUsernme("");
+ * // → { username: ERRORS.NULL_FIELD }
+ *
+ * @example
+ * // Example 3: Too short
+ * validChangeUsernme("abc");
+ * // → { username: ERRORS.DISPLAYNAME_FORMAT }
+ */
+export function validChangeUsername(username){
+  if(!username || username === "" || username === null) return ({username : ERRORS.NULL_FIELD})
+  if(username.trim().length < 8 || username.trim().length > 32) return ({username : ERRORS.DISPLAYNAME_FORMAT})
+  return true
+}

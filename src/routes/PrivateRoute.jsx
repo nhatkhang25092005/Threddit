@@ -15,7 +15,7 @@ export default function PrivateRoute() {
   if (loading) {
     return <div>Loading...</div>;
   }
-
+  console.log(isAuthenticated)
   if (!isAuthenticated) {
     return (
         <PopupNotification
