@@ -7,7 +7,7 @@ import { TITLE, TEXT, LABEL, DISPLAY} from "../../../constant";
 import LoadingScreen from "../../../components/common/LoadingScreen";
 import PopupNotification from "../../../components/common/PopupNotification";
 
-import { InputField } from "../components";
+import InputField  from "../../../components/common/InputField";
 import SmallForm from "../../../components/layout/SmallForm";
 import useVerifyForgot from "../hooks/useVerifyForgot";
 import { useState, useEffect } from "react";

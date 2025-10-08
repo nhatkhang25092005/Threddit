@@ -1,4 +1,4 @@
-import Row from "../../../components/layout/Row";
+import Row from "../layout/Row";
 import { Typography, Button } from "@mui/material";
 import { replace, useNavigate } from "react-router-dom";
 export default function NavButton({ subTitle, btnText, destination }) {

@@ -17,5 +17,9 @@ export const TITLE = {
     ERROR:"Lỗi!",
     OK:"OK",
     CHANGE_NAME_SUCCESS:"Đổi tên thành công",
-    CHANGE_NAME_FAIL : "Đổi tên không thành công"
+    CHANGE_NAME_FAIL : "Đổi tên không thành công",
+    CHANGE_PASSWORD: "Đổi mật khẩu",
+    CHANGE_PASSWORD_SUCCESS: "Đổi mật khẩu thành công",
+    CHANGE_PASSWORD_FAIL: "Đổi mật khẩu không thành công",
+    
 }

@@ -12,4 +12,6 @@ export const TEXT = {
     RESET_PASSWORD_VERIFY : "Chúng tôi đã gửi mã về email của bạn, hãy điền vào mã và mật khẩu muốn thay đổi",
     RECOMMEND_TO_BACK_TO_FORGOT_PAGE : "Hãy quay về trang quên mật khẩu để điền email!",
     RESET_PASSWORD_SUCCESSFULLY : "Mật khẩu của bạn đã được đặt lại thành công! Vui lòng đăng nhập lại",
+    CHANGE_PASSWORD_SUCCESSFULLY : "Mật khẩu của bạn đã được thay đổi thành công! Vui lòng đăng nhập lại",
+    OLD_PASSWORD_INCORRECT: "Mật khẩu cũ không đúng",
 }

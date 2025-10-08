@@ -2,9 +2,9 @@ import FadeSlideInVertical from "../../../components/animation/FadeSlideInVertic
 import SmallForm from "../../../components/layout/SmallForm";
 import { Button, Typography } from "@mui/material";
 import { ROUTES, TEXT, TITLE, LABEL, DISPLAY } from "../../../constant";
-import NavButton from "../components/NavButton";
+import NavButton from "../../../components/common/NavButton";
 import Column from "../../../components/layout/Column";
-import { InputField } from "../components";
+import InputField  from "../../../components/common/InputField";
 import useForgot from "../hooks/useForgot";
 import LoadingScreen from "../../../components/common/LoadingScreen"
 import PopupNotification from "../../../components/common/PopupNotification";
