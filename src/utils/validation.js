@@ -325,3 +325,22 @@ export function validChangeUsername(username){
   if(username.trim().length < 8 || username.trim().length > 32) return ({username : ERRORS.DISPLAYNAME_FORMAT})
   return true
 }
+
+export function validChangePassword(data){
+  const nullCheck = nullChecker(data)
+  if(nullCheck === true){
+    const errorFields = {}
+    const {oldPassword, newPassword, confirmPass} = data
+    // old password
+    if (!passwordPattern.test(oldPassword.trim())) 
+        errorFields.oldPassword = ERRORS.PASSWORD_FORMAT
+    // new password
+    if (!passwordPattern.test(newPassword.trim())) 
+        errorFields.newPassword = ERRORS.PASSWORD_FORMAT
+    // confirm password
+    if (!(newPassword.trim() === confirmPass.trim()))
+        errorFields.confirmPass = ERRORS.PASSWORD_MATCH 
+    return !Object.keys(errorFields).length ? true : errorFields
+  }
+  return wrapField(nullCheck)
+}

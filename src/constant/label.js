@@ -10,5 +10,5 @@ export const LABEL = {
     OLD_PASSWORD : "Mật khẩu cũ",
     NEW_PASSWORD : "Mật khẩu mới",
     USERNAME:"Tên người dùng",
-    SAVE:"Lưu"
+    SAVE:"Lưu",
 }

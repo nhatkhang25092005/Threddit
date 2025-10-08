@@ -22,3 +22,13 @@ export async function handleUpdateUsernameRequest(username){
         return new ApiResponse(status, message, data, displayType)
     })
 }
+
+// Change password
+export async function handleChangePasswordRequest(oldPassword, newPassword, confirmPass){
+    return userApi.changePassword(oldPassword, newPassword, confirmPass)
+    .then((res) => new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data, DISPLAY.POPUP))
+    .catch((err)=>{
+        const {status, message, data, displayType} = classifyError(err)
+        return new ApiResponse(status, message, data, displayType)
+    })
+}

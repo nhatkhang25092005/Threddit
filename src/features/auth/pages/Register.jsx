@@ -1,8 +1,8 @@
 import Column from "../../../components/layout/Column";
 import { Button, Typography } from "@mui/material";
-import NavButton from "../components/NavButton";
+import NavButton from "../../../components/common/NavButton";
 import SmallForm from "../../../components/layout/SmallForm";
-import { InputField } from "../components/";
+import InputField  from "../../../components/common/InputField";
 import { TITLE, TEXT, ROUTES, LABEL, DISPLAY } from "../../../constant";
 import FadeSlideInVertical from "../../../components/animation/FadeSlideInVertical";
 import useRegister from "../hooks/useRegister";

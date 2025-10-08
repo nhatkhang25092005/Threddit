@@ -1,7 +1,7 @@
 import { Typography, Button } from "@mui/material";
-import InputField from "../components/InputField";
+import InputField  from "../../../components/common/InputField";
 import Column from "../../../components/layout/Column";
-import NavButton from "../components/NavButton";
+import NavButton from "../../../components/common/NavButton";
 import SmallForm from "../../../components/layout/SmallForm";
 import { TITLE, TEXT, ROUTES,LABEL,DISPLAY } from "../../../constant";
 import FadeSlideInVertical from "../../../components/animation/FadeSlideInVertical";
