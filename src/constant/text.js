@@ -14,4 +14,5 @@ export const TEXT = {
     RESET_PASSWORD_SUCCESSFULLY : "Mật khẩu của bạn đã được đặt lại thành công! Vui lòng đăng nhập lại",
     CHANGE_PASSWORD_SUCCESSFULLY : "Mật khẩu của bạn đã được thay đổi thành công! Vui lòng đăng nhập lại",
     OLD_PASSWORD_INCORRECT: "Mật khẩu cũ không đúng",
+    NO_NOTIFICATION : "Chưa có thông báo nào !",
 }
