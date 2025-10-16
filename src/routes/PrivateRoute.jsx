@@ -20,7 +20,7 @@ export default function PrivateRoute() {
     return (
         <PopupNotification
           title={"Bạn chưa đăng nhập!"}
-          content={"Vui lòng quay về trang đăng nhập =D"}
+          content={"Vui lòng quay về trang đăng nhập"}
           open={true}
           onClose={() => navigate(ROUTES.LOGIN, replace)}
           btnTitle={"Quay về đăng nhập"}

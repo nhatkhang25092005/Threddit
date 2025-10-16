@@ -12,10 +12,9 @@ export default function Notifications() {
   useEffect(() => {
     const handleScroll = () => {
       if (
-        window.innerHeight + window.scrollY >=
-          document.body.offsetHeight - 200 &&
-        !loading &&
-        hasMore
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 200 
+        && !loading 
+        && hasMore
       ) {
         loadMore();
       }

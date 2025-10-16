@@ -5,12 +5,8 @@ export default function Authorize() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const handleUnauthorized = () => navigate("/auth/login");
-    window.addEventListener("unauthorized", handleUnauthorized);
-
-    return () => {
-      window.removeEventListener("unauthorized", handleUnauthorized);
-    };
+    const token = localStorage.getItem("accessToken")
+    if(token) navigate("/app/profile") 
   }, [navigate]);
 
   return null;

@@ -30,7 +30,7 @@ export async function handleGetUnreadNotification(){
     return notificationApi.getUnreadNotification()
     .then((res) => {
         console.log(res)
-        return new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data.data || res.data)})
+        return new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data.data)})
     .catch((err)=>{
         const {status, message, data, displayType} = classifyError(err)
         return new ApiResponse(status, message, data, displayType)

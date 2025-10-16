@@ -22,7 +22,6 @@ export default function Profile() {
 
   // handle change of username input field
   function handleChange(e){ setEditName(e.target.value) }
-
   return (
     <>
       <PopupNotification title={result?.title} open={popup} content={result?.message} onClose={()=>setPopup(false)}/>

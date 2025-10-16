@@ -7,15 +7,15 @@
 import { Box, Tabs, Tab, Tooltip, Badge } from "@mui/material";
 import  CircleNotifications from "@mui/icons-material/CircleNotifications";
 import  PersonIcon from "@mui/icons-material/Person";
-import useNotificationListener from "../../hooks/useNotificationListener";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import {useNotificationContext} from "../../hooks/useNotificationContext";
 export default function AppLayout() {
-  const notifications = useNotificationListener();
   const navigate = useNavigate();
   const location = useLocation()
+
   const {count} = useNotificationContext()
+  console.log(count)
 
   /**
    *  Điền đối tượng thông tin của trang vào đây, bao gồm đường dẫn tuyệt đối, icon sử dụng và nhãn
@@ -23,6 +23,8 @@ export default function AppLayout() {
    *  
    * Tham khảo đối tượng đã có sẵn bên dưới
    */
+
+  console.log(count)
   const tabs = [
     // Notification Tab
     { label: "Thông báo", 
@@ -47,12 +49,11 @@ export default function AppLayout() {
     navigate(tabs[newValue].path);
   };
 
-  console.log("New Notifications: ", notifications);
 
   return (
     <Box sx={{ display: "flex", height: "100vh"}}>
       <Box sx={{height:"100vh", width: "fit-content", position: "absolute", display:"flex", flexDirection:"column"}}>
-        <img src="" alt="LOGO" style={{width:"150px", height:"50px"}}/>
+        <img src="#" alt="LOGO" style={{width:"150px", height:"50px"}}/>
         <Tabs
           orientation="vertical"
           variant="scrollable"

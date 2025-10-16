@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { handleGetNotificationsRequest, handleMarkReadNotificationRequest } from "../../../services/request/notificationRequest";
+import { handleGetNotificationsRequest } from "../../../services/request/notificationRequest";
 import convertTime from "../../../utils/convertTime";
 import { Result } from "../../../class";
 import { TITLE, DISPLAY } from "../../../constant";
@@ -12,7 +12,7 @@ export default function useNotificationList() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const firstLoad = useRef(false);
-  const {setCount} = useNotificationContext()
+  const {realTimeList} = useNotificationContext()
 
   const loadMore = async () => {
     if (loading || !hasMore) return;
@@ -26,14 +26,6 @@ export default function useNotificationList() {
     }
 
     if (response.isOk()) {
-
-      // mark read all new notification
-      response.data.notifications.map(async (item) => {
-        if (!item.isRead) { await handleMarkReadNotificationRequest(item.id) }
-      });
-
-      // set the number of unread notification to 0
-      setCount(0)
 
       // convert time to relative time
       const newList = response.data.notifications.map(item => ({
@@ -60,6 +52,19 @@ export default function useNotificationList() {
       loadMore();
     }
   }, []);
+
+  // update new list when new notification comes
+  useEffect(()=>{
+    if(realTimeList?.length > 0 ){
+      const convertTimeList = realTimeList.map(item=>({
+        ...item,
+        createdAt : convertTime(item.createdAt)
+      }))
+      setList((prev)=>[...convertTimeList, ...prev])
+    }
+  },[realTimeList])
+
+
 
   return { list, error, loadMore, hasMore, loading };
 }
