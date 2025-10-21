@@ -1,10 +1,10 @@
 import * as React from "react";
 import { Box, Typography } from "@mui/material";
-import SideBar from "../src/components/layout/Sidebar";
-import PostCard from "../src/components/layout/PostCard";
-import TopBar from "../src/components/layout/TopBar";
-import TabMenu from "../src/components/layout/TabMenu";
-import MenuOption from "./components/layout/MenuOption";
+import SideBar from "../../../components/layout/Sidebar";
+import PostCard from "../../../components/layout/PostCard";
+import TopBar from "../../../components/layout/TopBar";
+import TabMenu from "../../../components/layout/TabMenu";
+import MenuOption from "../../../components/layout/MenuOption";
 
 export default function App() {
   const [page, setPage] = React.useState("home");
