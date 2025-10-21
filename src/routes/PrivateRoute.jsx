@@ -1,6 +1,7 @@
 import useAuth from "../hooks/useAuth";
 import { replace, useNavigate } from "react-router-dom";
 import PopupNotification from "../components/common/PopupNotification";
+import LoadingScreen from "../components/common/LoadingScreen";
 /**
  * This component is used for check if user was log in or not
  * If not, redirect user to /auth/login
@@ -13,7 +14,7 @@ export default function PrivateRoute() {
   const navigate = useNavigate();
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingScreen control={loading}/>;
   }
   console.log(isAuthenticated)
   if (!isAuthenticated) {

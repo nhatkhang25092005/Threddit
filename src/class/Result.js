@@ -1,5 +1,5 @@
 export default class Result{
-    constructor(type=null, title=null, message, fallback = null){
+    constructor(type=null, title=null, message = null, fallback = null){
         this.title = title
         this.type = type,
         this.message = message

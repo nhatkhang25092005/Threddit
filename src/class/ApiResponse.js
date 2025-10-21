@@ -7,7 +7,6 @@ export default class ApiResponse {
     this.message = message ?? "Unknown Error";
     this.data = data;
     this.displayType = displayType;
-    console.log("API Response:",this)
   }
 
   //get the message from api response if success

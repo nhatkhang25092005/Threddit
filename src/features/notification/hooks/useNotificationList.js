@@ -12,37 +12,49 @@ export default function useNotificationList() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const firstLoad = useRef(false);
-  const {realTimeList} = useNotificationContext()
+  const loadingRef = useRef(null)
+  const {realTimeList, readNotification} = useNotificationContext()
 
   const loadMore = async () => {
-    if (loading || !hasMore) return;
+    if (loadingRef.current || !hasMore || loading) return;
+    loadingRef.current = true
     setLoading(true);
-    const response = await handleGetNotificationsRequest(cursor);
+    try{
+      const response = await handleGetNotificationsRequest(cursor);
+      console.log(response)
+      if (response.data.statusCode === 204) {
+        setLoading(false);
+        setHasMore(false);
+        return;
+      }
 
-    if (response.data.statusCode === 204) {
-      setLoading(false);
-      setHasMore(false);
-      return;
+      if (response.isOk()) {
+
+        // convert time to relative time
+        const newList = response.data.notifications.map(item => ({
+          ...item,
+          createdAt : convertTime(item.createdAt)
+        }))
+
+        // append new notification to list
+        setList((prev) => [...prev, ...newList]);
+        console.log(list)
+        console.log(response.data.cursor)
+        // update cursor
+        setCursor(response.data.cursor);
     }
-
-    if (response.isOk()) {
-
-      // convert time to relative time
-      const newList = response.data.notifications.map(item => ({
-        ...item,
-        createdAt : convertTime(item.createdAt)
-      }))
-
-      // append new notification to list
-      setList((prev) => [...prev, ...newList]);
-
-      // update cursor
-      setCursor(response.data.cursor);
-    } else {
-      setError(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null));
-      return;
+    else{
+       setError(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null));
     }
+  }
+    catch(err){
+      console.log(err)
+      setError(new Result(DISPLAY.POPUP, TITLE.ERROR, "Internet error", null));
+    }
+  finally{
     setLoading(false);
+    loadingRef.current = false
+  }
   };
 
   //ensure load once
@@ -64,7 +76,13 @@ export default function useNotificationList() {
     }
   },[realTimeList])
 
+  /**
+   * Mark the notification with id as read when user clicking on it (~v~)
+   * notice: Main handler is in notificationProvider
+   * @param {int} id 
+   */
+  async function markAsRead(id){readNotification(id)}
 
 
-  return { list, error, loadMore, hasMore, loading };
+  return { list, error, loadMore, hasMore, loading, markAsRead };
 }

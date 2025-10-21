@@ -4,7 +4,7 @@ const NotificationContext = createContext(
         realTimeList:[],
         count:0,
         setCount:()=>{},
-        markAsRead : () => {}
+        readNotification : () => {}
     }
 )
 export default NotificationContext

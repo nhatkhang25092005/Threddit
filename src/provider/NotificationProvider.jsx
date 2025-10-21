@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import NotificationContext from "../context/NotificationContext";
-import { handleGetUnreadNotification } from "../services/request/notificationRequest";
+import { handleGetUnreadNotification,handleMarkReadNotificationRequest } from "../services/request/notificationRequest";
 export default function NotificationProvider({children}){
     const [count, setCount] = useState(0)
     const [loading, setLoading] = useState(true)
@@ -45,13 +45,20 @@ export default function NotificationProvider({children}){
     },[loading])
 
     /**
-     * mark as read later
+     * Mark notification as read with provided id
+     * @param {int} id 
      */
+    async function readNotification(id){
+        const response = await handleMarkReadNotificationRequest(id)
+        if(response.isOk()){ console.log("Mark as read:", response) }
+        if(!response.isOk()){ console.error(response) }
+        setCount(count-1)
+    }
 
     if(loading) return null
 
     return (
-        <NotificationContext.Provider value={{count, setCount, realTimeList}}>
+        <NotificationContext.Provider value={{count, setCount, realTimeList, readNotification}}>
             {children}
         </NotificationContext.Provider>
     )

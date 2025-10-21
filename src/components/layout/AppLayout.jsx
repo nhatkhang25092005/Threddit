@@ -4,12 +4,13 @@
  * @returns
  */
 
-import { Box, Tabs, Tab, Tooltip, Badge } from "@mui/material";
+import { Box, Tabs, Tab, Tooltip, Badge, Button } from "@mui/material";
 import  CircleNotifications from "@mui/icons-material/CircleNotifications";
 import  PersonIcon from "@mui/icons-material/Person";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
+import {  useState, useEffect } from "react";
 import {useNotificationContext} from "../../hooks/useNotificationContext";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 export default function AppLayout() {
   const navigate = useNavigate();
   const location = useLocation()
@@ -38,16 +39,22 @@ export default function AppLayout() {
       icon : <PersonIcon fontSize="large" sx={{color:"#fff"}}/> },
   ];  
 
-  const currentTab = tabs.findIndex(
-    (tab) => location.pathname.startsWith(tab.path)
-  );
-
-  const [value, setValue] = useState(currentTab === -1 ? 0 : currentTab);
+  
+  const [value, setValue] = useState(-1);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
     navigate(tabs[newValue].path);
   };
+
+  // eslint 
+  useEffect(()=>{
+      const currentTab = tabs.findIndex(
+      (tab) => location.pathname.startsWith(tab.path)
+    );
+    setValue(currentTab)
+
+  },[location.pathname])
 
 
   return (
@@ -58,12 +65,11 @@ export default function AppLayout() {
           orientation="vertical"
           variant="scrollable"
           textColor="white"
-          indicatorColor="#fff"
-          value={value}
+          value={value === -1 ? false : value}
           onChange={handleChange} 
           sx={{my:"auto", 
             "& .MuiTabs-indicator":{
-            backgroundColor:"#fff",
+            backgroundColor:value === -1 ? "transparent" : "#fff",
             width:"4px"
           }}}
         >
@@ -73,6 +79,9 @@ export default function AppLayout() {
             </Tooltip>
           ))}
         </Tabs>
+        <Button sx={{height:"50px", width:"fit-content", borderRadius:"150px", mx:"auto", mb:"1rem"}}>
+          <MoreVertIcon/>
+        </Button>
       </Box>
       <Box sx={{ flexGrow: 1, overflow: "auto" }}>
         <Outlet />

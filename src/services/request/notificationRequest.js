@@ -7,7 +7,6 @@ import notificationApi from "../api/notificationApi"
 export async function handleGetNotificationsRequest(cursor = null){
     return notificationApi.getNotifications(cursor)
     .then((res) => {
-        console.log(res)
         return new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data.data || res.data)})
     .catch((err)=>{
         const {status, message, data, displayType} = classifyError(err)
@@ -29,7 +28,6 @@ export async function handleMarkReadNotificationRequest(notificationId){
 export async function handleGetUnreadNotification(){
     return notificationApi.getUnreadNotification()
     .then((res) => {
-        console.log(res)
         return new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data.data)})
     .catch((err)=>{
         const {status, message, data, displayType} = classifyError(err)

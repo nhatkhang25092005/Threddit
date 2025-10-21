@@ -5,6 +5,7 @@ export default function BlockContent({
   children,
   footer,
   debug = false,
+  onClick = () => {} 
 }) {
   const style = {
     borderBottom: "1px solid #A6A6A6",
@@ -13,7 +14,7 @@ export default function BlockContent({
     ...(debug && { border: "solid red 1px" }),
   };
   return (
-    <Box sx={style}>
+    <Box sx={style} onClick ={onClick}>
       {header && <Box>{header}</Box> }
       {children && <Box>{children}</Box>}
       {footer && <Box sx={{ p: "1rem" }}>{footer}</Box>}

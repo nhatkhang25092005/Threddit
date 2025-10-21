@@ -6,6 +6,7 @@ import ChangePassword from "../features/user/page/ChangePassword";
 import Notfound from "../components/common/Notfound";
 import Notifications from "../features/notification/page/Notifications";
 import NotificationProvider from "../provider/NotificationProvider";
+import ClientPage from "../features/personal/page/ClientPage";
 export default function AppRoute() {
   return (
     <Routes>
@@ -15,6 +16,7 @@ export default function AppRoute() {
           <Route path="profile" element={<Profile />} />
           <Route path="change_password" element={<ChangePassword />} />
           <Route path="notification" element={<Notifications />} />
+          <Route path="client" element={<ClientPage/>}/>
         </Route>
       </Route>
       <Route path="*" element={<Notfound />} />
