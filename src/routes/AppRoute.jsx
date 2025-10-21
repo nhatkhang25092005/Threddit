@@ -3,6 +3,8 @@ import PrivateRoute from "./PrivateRoute";
 import AppLayout from "../components/layout/AppLayout";
 import Profile from "../features/user/page/Profile"
 import Notfound from "../components/common/Notfound";
+import Home from "../features/user/page/home";
+
 export default function AppRoute() {
   return (
     <Routes>
@@ -10,6 +12,7 @@ export default function AppRoute() {
         <Route element={<AppLayout />}>
             {/* Feature Route Here */}
             <Route path="profile" element={<Profile/>}/>
+            <Route path="home" element={<Home />} />
         </Route>
       </Route>
       <Route path="*" element = {<Notfound/>}/>
