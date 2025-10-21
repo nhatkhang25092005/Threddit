@@ -7,6 +7,8 @@ import Notfound from "../components/common/Notfound";
 import Notifications from "../features/notification/page/Notifications";
 import NotificationProvider from "../provider/NotificationProvider";
 import ClientPage from "../features/personal/page/ClientPage";
+import Home from "../features/user/page/home";
+
 export default function AppRoute() {
   return (
     <Routes>
@@ -17,6 +19,7 @@ export default function AppRoute() {
           <Route path="change_password" element={<ChangePassword />} />
           <Route path="notification" element={<Notifications />} />
           <Route path="client" element={<ClientPage/>}/>
+          <Route path="home" element={<Home />} />
         </Route>
       </Route>
       <Route path="*" element={<Notfound />} />
