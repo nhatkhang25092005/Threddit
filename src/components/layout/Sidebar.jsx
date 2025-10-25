@@ -1,5 +1,5 @@
-import * as React from "react";
 import { Box } from "@mui/material";
+import { useState } from "react";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 
@@ -10,9 +10,10 @@ import UserIcon from "../../assets/icons/user.svg?react";
 import NotifyIcon from "../../assets/icons/bell.svg?react";
 
 export default function ColumnNavigation({ customStyle }) {
-  const [value, setValue] = React.useState("add");
+  const [value, setValue] = useState("add");
 
   const handleChange = (event, newValue) => {
+    console.log("hello")
     setValue(newValue);
   };
 
@@ -72,27 +73,27 @@ export default function ColumnNavigation({ customStyle }) {
       >
         <BottomNavigationAction value="home" icon={<HomeIcon />} />
         <BottomNavigationAction value="search" icon={<SearchIcon />} />
-<BottomNavigationAction
-  value="add"
-  icon={
-    <Box
-      sx={{
-        width: "70px",
-        minWidth: "auto",
-        height: "50px",
-        minHeight: "auto",
-        bgcolor: "#2b2b2b",
-        borderRadius: "12px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        mr: "4px",
-      }}
-    >
-      <AddIcon />
-    </Box>
-  }
-/>
+        <BottomNavigationAction
+          value="add"
+          icon={
+            <Box
+              sx={{
+                width: "70px",
+                minWidth: "auto",
+                height: "50px",
+                minHeight: "auto",
+                bgcolor: "#2b2b2b",
+                borderRadius: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                mr: "4px",
+              }}
+            >
+              <AddIcon />
+            </Box>
+          }
+        />
         <BottomNavigationAction value="user" icon={<UserIcon />} />
         <BottomNavigationAction value="notify" icon={<NotifyIcon />} />
         
