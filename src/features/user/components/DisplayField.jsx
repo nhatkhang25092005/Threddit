@@ -20,7 +20,7 @@ export default function DisplayField({ name, value, onChange = null, sx, allowFo
       onFocus = {(e) => {
         if(!allowFocus) e.target.blur()
       }}
-      onCLick = {(e)=>{
+      onClick = {(e)=>{
         if(!allowFocus) e.preventDefault()
       }}
     />

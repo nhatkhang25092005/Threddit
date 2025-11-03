@@ -5,83 +5,161 @@
  */
 
 import { Box, Tabs, Tab, Tooltip, Badge, Button } from "@mui/material";
-import  CircleNotifications from "@mui/icons-material/CircleNotifications";
-import  PersonIcon from "@mui/icons-material/Person";
+import CircleNotifications from "@mui/icons-material/CircleNotifications";
+import PersonIcon from "@mui/icons-material/Person";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import {  useState, useEffect } from "react";
-import {useNotificationContext} from "../../hooks/useNotificationContext";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-export default function AppLayout() {
+import { useState, useEffect } from "react";
+import { useNotificationContext } from "../../hooks/useNotificationContext";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import BottomNavigation from "@mui/material/BottomNavigation";
+import BottomNavigationAction from "@mui/material/BottomNavigationAction";
+import HomeIcon from "../../assets/icons/home.svg?react";
+import SearchIcon from "../../assets/icons/search.svg?react";
+import AddIcon from "../../assets/icons/plus.svg?react";
+import UserIcon from "../../assets/icons/user.svg?react";
+import NotifyIcon from "../../assets/icons/bell.svg?react";
+export default function AppLayout({ customStyle }) {
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
+  const [value, setValue] = useState("add");
 
-  const {count} = useNotificationContext()
-  console.log(count)
+  const { count } = useNotificationContext();
 
-  /**
-   *  Điền đối tượng thông tin của trang vào đây, bao gồm đường dẫn tuyệt đối, icon sử dụng và nhãn
-   * Icon nên lấy trong icons-material, chú ý thiết lập kích cỡ là "large" và màu sắc là #fff
-   *  
-   * Tham khảo đối tượng đã có sẵn bên dưới
-   */
-
-  console.log(count)
-  const tabs = [
+  const tabs = {
     // Notification Tab
-    { label: "Thông báo", 
-      path: "/app/notification", 
-      icon : (
-      <Badge color="error" max = {99} badgeContent={count} invisible = {count === 0} overlap="circular" anchorOrigin={{vertical:"bottom",horizontal:"right"}}><CircleNotifications fontSize="large" sx={{color:"#fff"}}/></Badge>) },
-    
-      // Profile Tab
-    { label: "Thông tin tài khoản", 
-      path: "/app/profile", 
-      icon : <PersonIcon fontSize="large" sx={{color:"#fff"}}/> },
-  ];  
+    home: {
+      value: "home",
+      path: "/app/home",
+      icon: <HomeIcon />,
+    },
+    search: {
+      value: "search",
+      path: "/app/search",
+      icon: <SearchIcon />,
+    },
+    // {
+    //   value: "user",
+    //   path: "app/user",
+    //   icon: <UserIcon />,
+    // },
+    add: {
+      value: "add",
+      path: "/app/add",
+      icon: (
+        <Box
+          sx={{
+            width: "70px",
+            minWidth: "auto",
+            height: "50px",
+            minHeight: "auto",
+            bgcolor: "#2b2b2b",
+            borderRadius: "12px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <AddIcon />
+        </Box>
+      ),
+    },
+    notification: {
+      label: "Thông báo",
+      value: "notification",
+      path: "/app/notification",
+      icon: (
+        <Badge
+          color="error"
+          max={99}
+          badgeContent={count}
+          invisible={count === 0}
+          overlap="circular"
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        >
+          <NotifyIcon fontSize="large" sx={{ color: "#fff" }} />
+        </Badge>
+      ),
+    },
 
-  
-  const [value, setValue] = useState(-1);
+    // Profile Tab
+    profile: {
+      label: "Thông tin tài khoản",
+      value: "profile",
+      path: "/app/profile",
+      icon: <PersonIcon fontSize="large" sx={{ color: "#fff" }} />,
+    },
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
     navigate(tabs[newValue].path);
   };
 
-  // eslint 
-  useEffect(()=>{
-      const currentTab = tabs.findIndex(
-      (tab) => location.pathname.startsWith(tab.path)
-    );
-    setValue(currentTab)
+  useEffect(() => {
+    const currentTab = Object.keys(tabs).find((key) =>
+    location.pathname.startsWith(tabs[key].path)
+  );
+    currentTab ? setValue(currentTab) : setValue(null)
+  }, [location.pathname]);
 
-  },[location.pathname])
-
+  const style = {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    height: "100%",
+    width: "fit-content",
+    backgroundColor: "#0f0f0f",
+    borderRight: "1px solid #222",
+    position: "fixed",
+    left: 0,
+    top: 0,
+    ...customStyle,
+  };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh"}}>
-      <Box sx={{height:"100vh", width: "fit-content", position: "absolute", display:"flex", flexDirection:"column"}}>
-        <img src="#" alt="LOGO" style={{width:"150px", height:"50px"}}/>
-        <Tabs
-          orientation="vertical"
-          variant="scrollable"
-          textColor="white"
-          value={value === -1 ? false : value}
-          onChange={handleChange} 
-          sx={{my:"auto", 
-            "& .MuiTabs-indicator":{
-            backgroundColor:value === -1 ? "transparent" : "#fff",
-            width:"4px"
-          }}}
+    <Box sx={{ display: "flex", height: "100vh" }}>
+      <Box sx={style}>
+        <Box
+          sx={{
+            width: 60,
+            height: 60,
+            backgroundColor: "#cfcfcf",
+            my: "7px",
+          }}
+        />
+        <BottomNavigation
+          value={value || false}
+          onChange={handleChange}
+          sx={{
+            flexDirection: "column",
+            width: "100%",
+            height: "70%",
+            backgroundColor: "transparent",
+            "& .MuiBottomNavigationAction-root": {
+              minWidth: "auto",
+              color: "#ffffffff",
+              "& svg": {
+                width: 40,
+                minWidth: "auto",
+                height: 40,
+                minHeight: "auto",
+                transition: "0.2s",
+                fill: "white", // ép màu trắng cho tất cả path
+              },
+              "&:hover svg": {
+                color: "#fff",
+                transform: "scale(1.5)",
+              },
+            },
+            "& .Mui-selected": {
+              bgcolor: "#bcbdbf39",
+            },
+          }}
         >
-          {tabs.map((tab, index) => (
-            <Tooltip title={tab.label} placement="right" key={index}>
-                <Tab icon={tab.icon} sx={{my:"3px"}}/>
-            </Tooltip>
+          {Object.entries(tabs).map(([key, tab]) => (
+            <BottomNavigationAction key={key} value={tab.value} icon={tab.icon} />
           ))}
-        </Tabs>
-        <Button sx={{height:"50px", width:"fit-content", borderRadius:"150px", mx:"auto", mb:"1rem"}}>
-          <MoreVertIcon/>
-        </Button>
+        </BottomNavigation>
       </Box>
       <Box sx={{ flexGrow: 1, overflow: "auto" }}>
         <Outlet />

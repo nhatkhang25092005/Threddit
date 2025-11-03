@@ -12,12 +12,12 @@ export default function TopBar({ title = "Trang chủ", onLogin }) {
         backgroundColor: "#0f0f0f",
         color: "white",
         padding: "10px 20px",
-        borderBottom: "1px solid #222",
+        // borderBottom: "1px solid #222",
         position: "fixed",
         top: 0,
         left: "5%", 
         right: 0,
-        zIndex: 10,
+        // zIndex: 10,
       }}
     >
   <Typography
