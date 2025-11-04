@@ -7,9 +7,7 @@ import PushPinIcon from "@mui/icons-material/PushPin";
 import TrashIcon from "../../../assets/icons/trash.svg?react"
 import EditIcon from "../../../assets/icons/pen-edit.svg?react"
 
-export default function App() {
-
-
+export default function DetailPost() {
   return (
     <>
       <TopBar title="Threaddits" onLogin={() => alert("Login")} />
@@ -39,11 +37,12 @@ export default function App() {
             menuOptions={[
                 { label: "Ghim bài viết", icon: <PushPinIcon />, onClick: () => alert("Ghim bài viết") },
                ]}
+            isMainPost
             style = {{ borderRadius: "12px", }}
           />
 
           <PostCard
-  author="Name_User"
+  author="Name_User_Cmt"
   time="99 giờ"
   content="Lorem ipsum dolor sit amet, consectetur adipiscing elit..."
   menuOptions={[
@@ -88,7 +87,7 @@ export default function App() {
 />
 
           <PostCard
-            author="Name_User"
+            author="Name_User_Cmt"
             time="99 giờ"
             content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..."
             menuOptions={[

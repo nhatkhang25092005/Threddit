@@ -6,7 +6,7 @@ import TabMenu from "../../../components/layout/TabMenu";
 import { Box } from "@mui/material";
 import PushPinIcon from "@mui/icons-material/PushPin";
 
-export default function App() {
+export default function Home() {
   const [tab, setTab] = React.useState("posts");
 
   return (

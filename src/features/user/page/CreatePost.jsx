@@ -1,13 +1,40 @@
-import React, { useState } from "react";
+import { useState,useEffect } from "react";
 import { Box, Typography, TextField, Button } from "@mui/material";
+import postApi from "../../../services/api/postApi";
+import useProfile from "../hooks/useProfile";
 
-export default function NewThreadBox({ onPost, onExit }) {
+export default function CreatePost({ onPost, onExit }) {
   const [content, setContent] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { userInfo, getUserInfo } = useProfile();
 
-  const handlePost = () => {
+
+  useEffect(() => {
+getUserInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handlePost = async () => {
     if (content.trim() === "") return alert("Vui lòng nhập nội dung trước khi đăng!");
-    if (onPost) onPost(content);
-    setContent("");
+
+     //  Tách các từ bắt đầu bằng @ 
+  const mentionMatches = content.match(/@(\w+)/g); 
+
+  //  Lọc bỏ ký tự @
+  const mentionedUser = mentionMatches ? mentionMatches.map(m => m.substring(1)) : [];
+
+    setLoading(true);
+    try {
+      const res = await postApi.createPost(content, mentionedUser);
+      alert("Đăng bài thành công!");
+      setContent("");
+
+      if (onPost) onPost(res); // callback để reload danh sách bài viết
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -19,10 +46,11 @@ export default function NewThreadBox({ onPost, onExit }) {
         color: "white",
         borderRadius: "12px",
         border: "1px solid #ffffffff",
-        width: "60%",
+        width: "50%",
         mx: "auto",
         mt: 3,
         boxShadow: "0 0 10px rgba(0,0,0,0.4)",
+        marginTop: "100px",
       }}
     >
       {/* === Thanh tab đầu === */}
@@ -66,7 +94,7 @@ export default function NewThreadBox({ onPost, onExit }) {
 
       {/* === Nội dung đăng bài === */}
       <Box sx={{ p: 2 }}>
-        <Typography sx={{ fontWeight: "bold" }}>Name_user</Typography>
+        <Typography sx={{ fontWeight: "bold", color:"#fff" }}>{userInfo?.username}</Typography>
         <TextField
           multiline
           fullWidth
@@ -101,7 +129,7 @@ export default function NewThreadBox({ onPost, onExit }) {
               },
             }}
           >
-            Đăng bài
+            {loading ? "Đang đăng..." : "Đăng bài"}
           </Button>
         </Box>
       </Box>

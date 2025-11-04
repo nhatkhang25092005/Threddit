@@ -3,11 +3,11 @@ import PostFooter from "../../components/layout/PostFooter";
 import PostMenu from "../../components/layout/MenuOption";
 
 
-export default function PostCard({ author, time, content, menuOptions = [] }) {
+export default function PostCard({ author, time, content, menuOptions = [], isMainPost = false  }) {
   return (
     <Box
       sx={{
-        backgroundColor: "#1a1a1a",
+        backgroundColor: isMainPost ? "#1a1a1a" : "#2f2f2fff",
         color: "white",
         borderRadius: "0 0 12px 12px",
         p: 2,
