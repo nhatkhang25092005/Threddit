@@ -7,6 +7,7 @@ export default function Authorize() {
   useEffect(() => {
     const token = localStorage.getItem("accessToken")
     if(token) navigate("/app/profile") 
+    else navigate("/auth/login")
   }, [navigate]);
 
   return null;

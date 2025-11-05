@@ -11,4 +11,12 @@ export const LABEL = {
     NEW_PASSWORD : "Mật khẩu mới",
     USERNAME:"Tên người dùng",
     SAVE:"Lưu",
+    FOLLOW:"Người theo dõi",
+    FOLLOWING:"Người đang theo dõi",
+    CLOSE:"Đóng",
+    PROFILE:"Thông tin cá nhân",
+    LOGOUT:"Đăng xuất",
+    CHANGE_PASSWORD:"Đổi mật khẩu",
+    CREATED_POSTS : "Danh sách bài viết đã tạo",
+    SAVED_POSTS : "Danh sách bài viết đã lưu"
 }

@@ -21,7 +21,6 @@ export default function useNotificationList() {
     setLoading(true);
     try{
       const response = await handleGetNotificationsRequest(cursor);
-      console.log(response)
       if (response.data.statusCode === 204) {
         setLoading(false);
         setHasMore(false);
@@ -42,14 +41,11 @@ export default function useNotificationList() {
         console.log(response.data.cursor)
         // update cursor
         setCursor(response.data.cursor);
-    }
-    else{
-       setError(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null));
-    }
+      }
+      else setError(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null));
   }
     catch(err){
-      console.log(err)
-      setError(new Result(DISPLAY.POPUP, TITLE.ERROR, "Internet error", null));
+      setError(new Result(DISPLAY.POPUP, TITLE.ERROR, err, null));
     }
   finally{
     setLoading(false);

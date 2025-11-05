@@ -7,7 +7,7 @@ import { useEffect, useState} from "react";
 import PopupNotification from "../../../components/common/PopupNotification";
 
 export default function Profile() {
-  const { signout, getUserInfo, saveChange, result, loading, userInfo } = useProfile();
+  const { getUserInfo, saveChange, result, loading, userInfo } = useProfile();
   const [editName, setEditName] = useState("")
   const [popup, setPopup] = useState(false)
 
@@ -26,7 +26,6 @@ export default function Profile() {
     <>
       <PopupNotification title={result?.title} open={popup} content={result?.message} onClose={()=>setPopup(false)}/>
       <LoadingScreen control={loading} />
-      <Button variant="contained" onClick={signout} sx={{position:"absolute", right:"10px",top:"10px"}}> {TITLE.SIGNOUT} </Button>
       <Box
         sx={{
           mt:"6rem",

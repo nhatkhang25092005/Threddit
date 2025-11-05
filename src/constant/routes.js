@@ -5,5 +5,6 @@ export const ROUTES = {
     VERIFY:"/auth/verify",
     PROFILE:"/app/profile",
     RESET_PASSWORD_VERIFY : "/auth/verify_reset",
-    CLIENT_PAGE : "/app/client"
+    CLIENT_PAGE : "/app/client",
+    FOLLOW_LIST : "/app/follow"
 }

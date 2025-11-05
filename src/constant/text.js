@@ -16,5 +16,11 @@ export const TEXT = {
     OLD_PASSWORD_INCORRECT: "Mật khẩu cũ không đúng",
     NO_NOTIFICATION : "Chưa có thông báo nào !",
     FOLLOW:"Theo dõi",
-    UNFOLLOW:"Hủy theo dõi"
+    UNFOLLOW:"Hủy theo dõi",
+    NO_FOLLOWERS : "Chưa có người theo dõi !",
+    NO_FOLLOWINGS : "Bạn chưa theo dõi ai !",
+    CLIENT_FOLLOW: "Đang theo dõi",
+    CLIENT_NO_FOLLOW:"Không theo dõi",
+    NO_POST_CLIENT : "Người dùng này chưa có bài viết nào",
+    NO_POST_ME : "Bạn chưa đăng bài viết nào"
 }

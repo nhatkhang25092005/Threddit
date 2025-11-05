@@ -1,5 +1,7 @@
 import { Box } from "@mui/material";
 export default function BlockContent({
+  headerStyle,
+  footerStyle,
   customStyle,
   header,
   children,
@@ -8,16 +10,15 @@ export default function BlockContent({
   onClick = () => {} 
 }) {
   const style = {
-    borderBottom: "1px solid #A6A6A6",
     px: "0.5rem",
     ...customStyle,
-    ...(debug && { border: "solid red 1px" }),
+   
   };
   return (
-    <Box sx={style} onClick ={onClick}>
-      {header && <Box>{header}</Box> }
-      {children && <Box>{children}</Box>}
-      {footer && <Box sx={{ p: "1rem" }}>{footer}</Box>}
+    <Box sx={{display:"flex", flexDirection:"column", ...(debug && { border: "solid red 1px" }),}} onClick ={onClick}>
+      {header && <Box sx={headerStyle}>{header}</Box> }
+      {children && <Box sx={style}>{children}</Box>}
+      {footer && <Box sx={footerStyle}>{footer}</Box>}
     </Box>
   );
 }

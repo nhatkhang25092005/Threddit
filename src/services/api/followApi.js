@@ -24,6 +24,28 @@ const followApi = {
     axiosClient.delete(
       import.meta.env.VITE_API_FOLLOW + `/${username}`
   ),
+
+  //get the follow number of user
+  getFollowNumberOfUser: () =>
+    axiosClient.get(
+      import.meta.env.VITE_API_FOLLOW + `/me` + import.meta.env.VITE_API_COUNT_FOLLOW
+  ),
+
+  // get the follower list
+  getFollowerList : (target, cursor) => {
+    target ? undefined : target = 'me'
+    const url = import.meta.env.VITE_API_FOLLOW + `/${target}` + import.meta.env.VITE_API_GET_FOLLOWERS
+    const finalUrl = cursor ? `${url}?cursor=${cursor}` : url
+    return axiosClient.get(finalUrl)
+  },
+
+  // get the following list
+  getFollowingList : (target, cursor) => {
+    target ? undefined : target = 'me'
+    const url = import.meta.env.VITE_API_FOLLOW + `/${target}` + import.meta.env.VITE_API_GET_FOLLOWING
+    const finalUrl = cursor ? `${url}?cursor=${cursor}` : url
+    return axiosClient.get(finalUrl)
+  }
 };
 
 export default followApi;

@@ -8,6 +8,8 @@ import Notifications from "../features/notification/page/Notifications";
 import NotificationProvider from "../provider/NotificationProvider";
 import ClientPage from "../features/personal/page/ClientPage";
 import Home from "../features/user/page/home";
+import FollowList from "../features/user/page/FollowList";
+import UserPage from "../features/personal/page/UserPage";
 
 export default function AppRoute() {
   return (
@@ -19,7 +21,9 @@ export default function AppRoute() {
           <Route path="change_password" element={<ChangePassword />} />
           <Route path="notification" element={<Notifications />} />
           <Route path="client" element={<ClientPage/>}/>
+          <Route path="user" element={<UserPage/>}/>
           <Route path="home" element={<Home />} />
+          <Route path="follow"  element={<FollowList/>}/>
         </Route>
       </Route>
       <Route path="*" element={<Notfound />} />

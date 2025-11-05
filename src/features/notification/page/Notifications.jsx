@@ -5,10 +5,10 @@ import BoxContent from "../../../components/common/BoxContent";
 import BlockContent from "../../../components/common/BlockContent";
 import useNotificationList from "../hooks/useNotificationList";
 import PopupNotification from "../../../components/common/PopupNotification";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useInfiniteScroll from "../../../hooks/useInfiniteScroll"
 export default function Notifications() {
-  const loadMoreRef = useRef(null)
   // elements of page, using for render on screen
   const { list, error, loadMore, hasMore, loading, markAsRead } = useNotificationList();
 
@@ -21,22 +21,7 @@ export default function Notifications() {
   const navigate = useNavigate()
 
   // handle scroll effect, scroll down and download more notification
-  useEffect(() => {
-    if(!hasMore) return
-    const observer = new IntersectionObserver(
-      (entries)=>{
-        const target = entries[0]
-        if(target.isIntersecting && !loading && hasMore) loadMore()
-      },
-      {
-        threshold : 0.1,
-        rootMargin : "200px"
-      }
-    )
-
-    if(loadMoreRef.current){ observer.observe(loadMoreRef.current) }
-    return () => observer.disconnect()
-  }, [loading, hasMore]);
+  const loadMoreRef = useInfiniteScroll({hasMore, loading, onLoadMore: loadMore})
 
   // Observation of error.type status, if it has type = POPUP, set popup to open
   useEffect(() => {if(error?.type === DISPLAY.POPUP) setPopup(true)},[error])
@@ -53,7 +38,7 @@ export default function Notifications() {
             {/* BLocks of content */}
             {list.length !== 0 ? (list.map((notification, index) => (
               <BlockContent 
-                customStyle={index === list.length - 1 ? {borderBottom : "none"} : undefined}
+                customStyle={index === list.length - 1 ? undefined: {borderBottom:"solid #BCBDBF 1px"} }
                 onClick = {()=>{
                   notification.isRead ? undefined : markAsRead(notification.id)
                   navigate(ROUTES.CLIENT_PAGE,{state:{clientName:notification.target}})
@@ -65,7 +50,7 @@ export default function Notifications() {
           :(
             <BlockContent><Typography variant="h6" sx={{textAlign:"center", pb:"1.5rem",pt:"1rem"}}>{TEXT.NO_NOTIFICATION}</Typography></BlockContent>
           ) }
-            {hasMore && <div ref={loadMoreRef} style={{ height: "20px" }} /> }
+            <div ref={loadMoreRef} style={{ height: "20px", visibility: hasMore ? "visible" : "hidden" }} /> 
             {/* Loading block */}
             <Fade in={loading} unmountOnExit>
               <Box sx={{display:"flex",justifyContent:"center",py:2}}>

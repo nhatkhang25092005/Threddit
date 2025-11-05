@@ -22,4 +22,5 @@ export const TITLE = {
     CHANGE_PASSWORD_SUCCESS: "Đổi mật khẩu thành công",
     CHANGE_PASSWORD_FAIL: "Đổi mật khẩu không thành công",
     NOTIFICATION:"Thông báo",
+    FOLLOW_LIST : "Danh sách theo dõi"
 }

@@ -52,10 +52,38 @@ export async function handleUnFollow(username){
         return
     }
     return followApi.unfollowClient(username)
-    .then(res => {
-        console.log("Response from unfollow")
-        return new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data)})
+    .then(res =>  new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data))
     .catch(err=>{
+        const {status, message, data, displayType} = classifyError(err)
+        return new ApiResponse(status, message, data, displayType)
+    })
+}
+
+// get the follow number of user
+export async function handleGetFollowNumberOfUser(){
+    return followApi.getFollowNumberOfUser()
+    .then((res) => new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data.data))
+    .catch((err) => {
+        const {status, message, data, displayType} = classifyError(err)
+        return new ApiResponse(status, message, data, displayType)
+    })
+}
+
+// get the followers list
+export async function handleGetFollowersListRequest(target, cursor){
+    return followApi.getFollowerList(target, cursor)
+    .then((res) => new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data.data))
+    .catch((err)=>{
+        const {status, message, data, displayType} = classifyError(err)
+        return new ApiResponse(status, message, data, displayType)
+    })
+}   
+
+//get the following list
+export async function handleGetFollowingListRequest(target, cursor){
+    return followApi.getFollowingList(target, cursor)
+    .then((res) => new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data.data))
+    .catch((err)=>{
         const {status, message, data, displayType} = classifyError(err)
         return new ApiResponse(status, message, data, displayType)
     })

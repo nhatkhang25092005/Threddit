@@ -16,7 +16,6 @@ export default function PrivateRoute() {
   if (loading) {
     return <LoadingScreen control={loading}/>;
   }
-  console.log(isAuthenticated)
   if (!isAuthenticated) {
     return (
         <PopupNotification

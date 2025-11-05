@@ -16,8 +16,8 @@ import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import HomeIcon from "../../assets/icons/home.svg?react";
 import SearchIcon from "../../assets/icons/search.svg?react";
 import AddIcon from "../../assets/icons/plus.svg?react";
-import UserIcon from "../../assets/icons/user.svg?react";
 import NotifyIcon from "../../assets/icons/bell.svg?react";
+import MoreInfoMenu from "../common/MoreInfoMenu"
 export default function AppLayout({ customStyle }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,11 +37,6 @@ export default function AppLayout({ customStyle }) {
       path: "/app/search",
       icon: <SearchIcon />,
     },
-    // {
-    //   value: "user",
-    //   path: "app/user",
-    //   icon: <UserIcon />,
-    // },
     add: {
       value: "add",
       path: "/app/add",
@@ -64,7 +59,6 @@ export default function AppLayout({ customStyle }) {
       ),
     },
     notification: {
-      label: "Thông báo",
       value: "notification",
       path: "/app/notification",
       icon: (
@@ -80,12 +74,9 @@ export default function AppLayout({ customStyle }) {
         </Badge>
       ),
     },
-
-    // Profile Tab
-    profile: {
-      label: "Thông tin tài khoản",
-      value: "profile",
-      path: "/app/profile",
+    user: {
+      value: "user",
+      path: "/app/user",
       icon: <PersonIcon fontSize="large" sx={{ color: "#fff" }} />,
     },
   };
@@ -160,6 +151,7 @@ export default function AppLayout({ customStyle }) {
             <BottomNavigationAction key={key} value={tab.value} icon={tab.icon} />
           ))}
         </BottomNavigation>
+        <MoreInfoMenu sx={{marginTop:"30px"}}/>
       </Box>
       <Box sx={{ flexGrow: 1, overflow: "auto" }}>
         <Outlet />
