@@ -1,4 +1,4 @@
-import awake from "../services/api/Awake.jsx";
+import awake from "../services/api/Awake";
 import { useEffect } from "react";
 export default function Awake(){
     useEffect(() => {
