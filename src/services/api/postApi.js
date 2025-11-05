@@ -7,6 +7,24 @@ const postApi = {
         return axiosClient.get(finalUrl)
     },
 
+    //Create post
+    createPost: (content, mentionedUser = []) => {
+    const url = import.meta.env.VITE_API_POST; 
+
+  // 🔹 Tạo object body ban đầu
+  const body = { content };
+
+  // 🔹 Chỉ thêm 'mentionedUser' nếu có phần tử
+  if (mentionedUser.length > 0) {
+    body.mentionedUser = mentionedUser;
+  }
+
+  // 🔹 Gửi request
+  return axiosClient.post(url, body);
+  },
+
+    },
+
     // Get user' created posts
     getUserCreatedPost : (cursor) => {
         const url = import.meta.env.VITE_API_POST + import.meta.env.VITE_API_GET_MY_POST

@@ -1,8 +1,16 @@
-import React from "react";
-import { Box, Typography } from "@mui/material";
+import React, { useEffect } from "react";
+import { Box, Typography, Button } from "@mui/material";
 import CustomButton from "./button";
+import useProfile from "../../features/user/hooks/useProfile"; // 👈 import hook
 
 export default function TopBar({ title = "Trang chủ", onLogin }) {
+  const { userInfo, getUserInfo } = useProfile();
+
+  // 🔹 Khi load TopBar lần đầu, lấy thông tin user
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+
   return (
     <Box
       sx={{
@@ -12,15 +20,14 @@ export default function TopBar({ title = "Trang chủ", onLogin }) {
         backgroundColor: "#0f0f0f",
         color: "white",
         padding: "10px 20px",
-        borderBottom: "1px solid #222",
         position: "fixed",
         top: 0,
-        left: "5%", 
+        left: "5%",
         right: 0,
-        zIndex: 10,
       }}
     >
-  <Typography
+      {/* --- Tiêu đề ở giữa --- */}
+      <Typography
         variant="h6"
         sx={{
           fontWeight: 500,
@@ -28,23 +35,33 @@ export default function TopBar({ title = "Trang chủ", onLogin }) {
           left: "50%",
           transform: "translateX(-50%)",
           top: "50%",
-          transformOrigin: "center",
-          translate: "-50%  -50%", // hỗ trợ CSS shorthand nếu môi trường chấp nhận
-          pointerEvents: "none", // tránh chặn click vào nút
+          translate: "0 -50%",
+          pointerEvents: "none",
         }}
       >
         {title}
       </Typography>
-      <CustomButton 
-      sx={{
-          textTransform: "none",
-          alignItems: "center",    // fix typo
-          backgroundColor: "white",
-          color: "black",
-          fontWeight: 600,
-          ml: "auto",
-      }}
-              label="Đăng nhập" onClick={onLogin} />
+
+      {/* --- Phần bên phải: Đăng nhập / User --- */}
+      {userInfo?.username ? (
+        // Nếu đã đăng nhập, hiển thị tên user
+        <Typography sx={{ ml: "auto", fontWeight: 600, color: "#fff" }}>
+          {userInfo.username}
+        </Typography>
+      ) : (
+        // Nếu chưa đăng nhập, hiển thị nút đăng nhập
+        <CustomButton
+          label="Đăng nhập"
+          onClick={onLogin}
+          sx={{
+            textTransform: "none",
+            backgroundColor: "white",
+            color: "black",
+            fontWeight: 600,
+            ml: "auto",
+          }}
+        />
+      )}
     </Box>
   );
 }
