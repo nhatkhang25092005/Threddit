@@ -9,20 +9,10 @@ const postApi = {
 
     //Create post
     createPost: (content, mentionedUser = []) => {
-    const url = import.meta.env.VITE_API_POST; 
-
-  // 🔹 Tạo object body ban đầu
-  const body = { content };
-
-  // 🔹 Chỉ thêm 'mentionedUser' nếu có phần tử
-  if (mentionedUser.length > 0) {
-    body.mentionedUser = mentionedUser;
-  }
-
-  // 🔹 Gửi request
-  return axiosClient.post(url, body);
-  },
-
+        const url = import.meta.env.VITE_API_POST; 
+        const body = { content };
+        if (mentionedUser.length > 0) { body.mentionedUser = mentionedUser;}
+        return axiosClient.post(url, body);
     },
 
     // Get user' created posts
