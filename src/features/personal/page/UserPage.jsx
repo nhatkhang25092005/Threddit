@@ -18,6 +18,7 @@ import PopupNotification from "../../../components/common/PopupNotification.jsx"
 import CustomTabPanel from "../../../components/common/CustomTabPanel.jsx";
 import ThreeDotMenu from "../../../components/common/ThreeDotMenu.jsx"
 
+const username = localStorage.getItem("username");
 function allyProps(index){
     return{
         id: `simple-tab-${index}`,
@@ -131,7 +132,22 @@ export default function UserPage() {
                   header={<Box sx={{display:"flex", flexDirection:"row", justifyItems:"start",pb:"0px", gap:"1rem", alignItems:"center", mb:"1rem", py:"1rem",mx:"1rem" }}>
                       <Typography variant="h6" fontWeight={"bold"}>{item.author.username}</Typography>
                       <Typography variant="sub" > {item.createdAt}</Typography>
-                      <ThreeDotMenu functionList={[{label:"save",callback:null}]} sx={{ ml:"auto"}}/>
+                      <ThreeDotMenu 
+                        functionList={[
+                          {label:"xóa",icon:(<DeleteIcon/>),callback:null},
+                          {label:"sửa",icon:(<EditIcon/>),callback:null},
+                          {label:"ghim bài viết",icon:(<PushPinIcon/>),callback:null}
+                          ]} 
+                        sx={{ ml:"auto"}}
+                        anchorOrigin={{
+                          vertical: 'top',
+                          horizontal: 'right'
+                        }}
+                        transformOrigin={{ 
+                          vertical: 'top',
+                          horizontal: 'right'
+                        }}
+                        />
                   </Box>}
                   
                   // Footer of content block
@@ -180,13 +196,17 @@ export default function UserPage() {
 
                   // Header of content block
                   header={<Box sx={{display:"flex", flexDirection:"row", justifyItems:"start",pb:"0px", gap:"1rem", alignItems:"center", mb:"1rem", py:"1rem" }}>
-                      <Typography variant="h6" fontWeight={"bold"}>{username}</Typography>
+                      <Typography variant="h6" fontWeight={"bold"}>{item.author.username}</Typography>
                       <Typography variant="sub" > {item.createdAt}</Typography>
-                      <ThreeDotMenu functionList={[
+                      {username === item.author.username 
+                      ? <ThreeDotMenu functionList={[
                         {label:"xóa",icon:(<DeleteIcon/>),callback:null},
                         {label:"sửa",icon:(<EditIcon/>),callback:null},
                         {label:"ghim bài viết",icon:(<PushPinIcon/>),callback:null}
                         ]} sx={{ ml:"auto"}}/>
+                      : <ThreeDotMenu functionList={[
+                        {label:"ghim bài viết",icon:(<PushPinIcon/>),callback:null}]} 
+                        sx={{ ml:"auto"}}/>}
                   </Box>}
                   
                   // Footer of content block
