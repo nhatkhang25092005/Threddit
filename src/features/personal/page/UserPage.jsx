@@ -18,7 +18,6 @@ import PopupNotification from "../../../components/common/PopupNotification.jsx"
 import CustomTabPanel from "../../../components/common/CustomTabPanel.jsx";
 import ThreeDotMenu from "../../../components/common/ThreeDotMenu.jsx"
 
-const username = localStorage.getItem("username");
 function allyProps(index){
     return{
         id: `simple-tab-${index}`,
