@@ -30,27 +30,47 @@ export default function Notifications() {
     <>
       {/* Popup for error from server (500) */}
       <PopupNotification open={popup} onClose={()=>setPopup(false)} title={TITLE.ERROR} content={error}/>
-      <Column customStyle={{ pt: "2rem", width: "60%", mx: "auto",pb:"0",mb:"2rem" }} >
+      <Column customStyle={{ pt: "2rem", width: "60%", mx: "auto",pb:"0"}} >
         <Typography variant="title">{TITLE.NOTIFICATION}</Typography>
-        <BoxContent customStyle={{ mx: 0, px: 0, height:"fit-content",py:0,mt:2 }}>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem", mt:"1rem" }}>
+        <BoxContent customStyle={{ mx: 0, px: 0, height:"fit-content",py:0,mt:2,mb:"5rem" }}>
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
 
             {/* BLocks of content */}
             {list.length !== 0 ? (list.map((notification, index) => (
               <BlockContent 
-                customStyle={index === list.length - 1 ? undefined: {borderBottom:"solid #BCBDBF 1px"} }
+                customStyle={{
+                  ...(notification.isRead === true ? undefined :{bgcolor: "#cdcdcd24"}),
+                  ...index === list.length - 1 ? undefined: {borderBottom:"solid #BCBDBF 1px"} ,
+                  cursor:"pointer",
+                  "&:hover":{
+                    bgcolor:"#f0f0f012",
+                  }
+                }}
                 onClick = {()=>{
-                  notification.isRead ? undefined : markAsRead(notification.id)
+                  if (!notification.isRead) markAsRead(notification.id)
                   navigate(ROUTES.CLIENT_PAGE,{state:{clientName:notification.target}})
                 }}
-                 header={<Box sx={{ px: "1rem",pt:"0.5rem"}} textAlign={"end"}><Typography variant="sub">{notification.createdAt}</Typography></Box>}>
+                header={
+                  <Box 
+                    sx={{ px: "1rem",pt:"1rem"}} 
+                    textAlign={"end"}
+                  >
+                    <Typography variant="sub">{notification.createdAt}</Typography>
+                  </Box>}
+                footer = {<Typography sx={{
+                  pb:"0.5rem", 
+                  pr:"1rem",
+                  textAlign:"right",
+                  ...(notification.isRead ? {color:"#9898989e"} : {color:"#43ff2bff"})
+                }}>{notification.isRead ? TEXT.READ: TEXT.NOT_READ}</Typography>}  
+                >
                 <Box sx={{ px: "1rem",pb:"2rem", }}>{notification?.content}</Box>
               </BlockContent>
             )))
           :(
             <BlockContent><Typography variant="h6" sx={{textAlign:"center", pb:"1.5rem",pt:"1rem"}}>{TEXT.NO_NOTIFICATION}</Typography></BlockContent>
           ) }
-            <div ref={loadMoreRef} style={{ height: "20px", visibility: hasMore ? "visible" : "hidden" }} /> 
+            <div ref={loadMoreRef} style={{visibility: hasMore ? "visible" : "hidden" }} /> 
             {/* Loading block */}
             <Fade in={loading} unmountOnExit>
               <Box sx={{display:"flex",justifyContent:"center",py:2}}>

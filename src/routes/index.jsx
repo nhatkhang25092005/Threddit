@@ -9,7 +9,7 @@ export default function AppRouter() {
       <Awake />
       <Routes>
         {/* Default route */}
-        <Route path="/" element={<Navigate to="/auth/login" replace />} />
+        <Route path="/" element={<Navigate to="/app/home" replace />} />
 
         {/* Auth Routes */}
         <Route path="/auth/*" element={<AuthRoutes />} />

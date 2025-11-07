@@ -2,46 +2,43 @@ import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlin
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { handleSavePost, handleUnSavePost } from '../../services/request/postRequest';
 import {Button, Typography,CircularProgress} from "@mui/material"
-import { useState } from 'react';
-export default function MakerButton({data, sx, marked = false, postId}){
+import { useEffect, useState } from 'react';
+export default function MakerButton({data, sx, marked = false, postId, ...rest}){
     const [save, setSave] = useState(marked)
     const [loading, setLoading] = useState(false)
     const [displayData, setDisplayData] = useState(data)
-
+     useEffect(() => {
+        setSave(marked)
+        setDisplayData(data)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [postId])
     if(!postId) {
         console.error("Post id can not be null when init save or unsave!")
         return
     }
-    async function savePost() {
+
+    const toggleSave = async (e) => {
         setLoading(true)
-        const response = await handleSavePost(postId)
-        if(response.isOk()){
-            setSave(true)
-            setDisplayData(prev=>prev + 1)
+        try {
+            const response = save ? await handleUnSavePost(postId) : await handleSavePost(postId)
+            if (response.isOk()) {
+            setSave(!save)
+            setDisplayData(prev => prev + (save ? -1 : 1))
+            } else {console.error(`Fail in ${save ? "unsave" : "save"} post`)}
+            if (rest.onClick) rest.onClick(e)
+            
+        } catch (err) {
+            console.error(err)
+        } finally {
+            setLoading(false)
         }
-        else{
-            console.error("Fail in save post")
-            return
-        }
-        setLoading(false)
+        
     }
 
-    async function unSavePost(){
-        setLoading(true)
-        const response = await handleUnSavePost(postId)
-        if(response.isOk()){
-            setSave(false)
-            setDisplayData(prev=>prev - 1)
-        }
-        else{
-            console.error("Fail in unsave post")
-            return
-        }
-        setLoading(false)
-    }
     return(
          <Button  
-            onClick={save ? unSavePost : savePost}
+            {...rest}
+            onClick={(e)=>toggleSave(e)}
             variant='interact' 
             sx={{display:"flex", flexDirection:"row", gap:"3px", alignItems: "center", ...sx}}
             disabled={loading}

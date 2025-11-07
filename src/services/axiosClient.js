@@ -9,13 +9,11 @@ const axiosClient = axios.create({
 axiosClient.interceptors.response.use(
     (response) => response,
     (error) => {
-        console.log(error)
-        if(error?.response?.status === 401){
-            console.warn("Session expired, redirecting to login...")
-            window.dispatchEvent(new Event("unauthorized"));
-
-        }
-        return Promise.reject(error)
+       if(error?.response?.status === 401){
+         console.warn("Session expired (401), redirecting to login...");
+         window.location.href = '/auth/login'
+       }
+       return  Promise.reject(error)
     }
 )
 

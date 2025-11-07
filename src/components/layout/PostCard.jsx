@@ -7,7 +7,7 @@ export default function PostCard({ author, time, content, menuOptions = [], isMa
   return (
     <Box
       sx={{
-        backgroundColor: isMainPost ? "#1a1a1a" : "#2f2f2fff",
+        backgroundColor: "transparent",
         color: "white",
         borderRadius: "0 0 12px 12px",
         p: 2,

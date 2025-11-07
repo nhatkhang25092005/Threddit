@@ -10,15 +10,12 @@ import Authorize from "../middleware/Authorize";
 export default function AuthRoutes() {
   return (
     <>
-      <Authorize/>
       <Routes>
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} /> 
         <Route path="forgot" element={<Forgot />} /> 
         <Route path="verify" element={<Verify />} /> 
-        <Route path="verify_reset" element={<VerifyForgot />} /> 
-      
-        
+        <Route path="verify_reset" element={<VerifyForgot />} />  
         {/* Not found */}
         <Route path="*" element={<Notfound/>}/>
       </Routes>

@@ -1,4 +1,7 @@
 import {Box} from "@mui/material"
+/**
+ * Used to Wrap block content inside a box with padding and border radius
+ */
 export default function BoxContent({children, customStyle, debug =false}) {
     const style = {
         border:"solid #A6A6A6 1px",

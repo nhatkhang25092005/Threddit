@@ -3,6 +3,7 @@ import { useNavigate, replace } from "react-router-dom";
 import { validLogin } from "../../../utils/validation";
 import { handleLoginRequest } from "../../../services/request/authRequest";
 import { Result } from "../../../class";
+import { handleGetUserInfoRequest} from "../../../services/request/userRequest"
 import { DISPLAY, TITLE, ROUTES } from "../../../constant";
 
 export default function useLogin() {
@@ -11,8 +12,10 @@ export default function useLogin() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  function executeLogin(res){
-    localStorage.setItem("accessToken",res.data.data.accessToken)
+  async function executeLogin(){
+    // Store username in localStorage
+    const response = await handleGetUserInfoRequest()
+    if(response.isOk()) localStorage.setItem("username", response.data.data.username)
     navigate(ROUTES.PROFILE, replace)
   }
 
@@ -33,7 +36,7 @@ export default function useLogin() {
     else{
       setLoading(true)
       const res = await handleLoginRequest(formData.email, formData.password)
-      setResult(res.isOk() ? executeLogin(res) : new Result(DISPLAY.POPUP,TITLE.LOGIN_FAIL,res.message) )
+      setResult(res.isOk() ? executeLogin() : new Result(DISPLAY.POPUP,TITLE.LOGIN_FAIL,res.message) )
       setLoading(false)
       return
     }

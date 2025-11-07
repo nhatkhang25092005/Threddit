@@ -22,5 +22,10 @@ export const TEXT = {
     CLIENT_FOLLOW: "Đang theo dõi",
     CLIENT_NO_FOLLOW:"Không theo dõi",
     NO_POST_CLIENT : "Người dùng này chưa có bài viết nào",
-    NO_POST_ME : "Bạn chưa đăng bài viết nào"
+    NO_POST_ME : "Bạn chưa đăng bài viết nào",
+    READ : "đã đọc",
+    NOT_READ : "Thông báo mới !",
+    NO_POST:"Chưa có bài viết nào !",
+    NO_POST_SAVED:"Bạn chưa lưu bài viết nào",
+    CREATE_POST_SUCCESS:"Tạo bài viết thành công!",
 }

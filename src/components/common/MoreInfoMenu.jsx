@@ -25,7 +25,10 @@ export default function PositionedMenu({sx}) {
 
   const handleLogOut = async () => {
     const response = await handleSignoutRequest()
-    if(response.isOk) navigate(ROUTES.LOGIN, replace)
+    if(response.isOk) {
+      localStorage.clear()
+      navigate(ROUTES.LOGIN, replace)
+    }
     setAnchorEl(null)
   }
 

@@ -64,5 +64,17 @@ export async function handleUnSavePost(postId){
     })
 }
 
-
+// create post
+export async function handleCreatePost(content, mentionedUser){
+    if(!content){
+        console.error("Content can not be null in handleCreatePost!")
+        return
+    }
+    return postApi.createPost(content, mentionedUser)
+    .then(res => new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data.data))
+    .catch( err => {
+        const {status, message, data, displayType} = classifyError(err)
+        return new ApiResponse(status, message, data, displayType)
+    })
+}
 

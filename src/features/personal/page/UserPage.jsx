@@ -7,7 +7,9 @@ import ArrowButton from "../../../components/common/ArrowButton";
 import CommentButton from "../../../components/common/CommentButton";
 import MakerButton from "../../../components/common/MakerButton";
 import ShareButton from "../../../components/common/ShareButton";
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import PushPinIcon from '@mui/icons-material/PushPin';
 import {DISPLAY, ROUTES, TEXT,LABEL} from "../../../constant/"
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -27,6 +29,7 @@ export default function UserPage() {
   const navigate = useNavigate()
   const [value, setValue] = useState(0)
   const {
+    adjustSavePostAfterUnsave,
     getCreatedPost,
     getSavedPost,
     setTag,
@@ -126,18 +129,16 @@ export default function UserPage() {
 
                   // Header of content block
                   header={<Box sx={{display:"flex", flexDirection:"row", justifyItems:"start",pb:"0px", gap:"1rem", alignItems:"center", mb:"1rem", py:"1rem",mx:"1rem" }}>
-                      <Typography variant="h6" fontWeight={"bold"}>{username}</Typography>
+                      <Typography variant="h6" fontWeight={"bold"}>{item.author.username}</Typography>
                       <Typography variant="sub" > {item.createdAt}</Typography>
-                      <ThreeDotMenu functionList={[
-                        {label:"save",callback:null}
-                      ]} sx={{ ml:"delete"}}/>
+                      <ThreeDotMenu functionList={[{label:"save",callback:null}]} sx={{ ml:"auto"}}/>
                   </Box>}
                   
                   // Footer of content block
                   footer={<Box sx={{display:"flex", flexDirection:"row", gap:"1rem", justifyItems:"start",mx:"1rem"}}>
                       <ArrowButton data={item.upvoteNumber} sx={{width:"130px"}}/>
-                      <CommentButton data={item.mentionedUser.length} sx={{width:"130px"}}/>
-                      <MakerButton  data={item.saveNumber} sx={{width:"130px"}} marked={item.isSave ? true : false} postId={item.id}/>
+                      <CommentButton data={item.commentNumber} sx={{width:"130px"}}/>
+                      <MakerButton data={item.saveNumber} sx={{width:"130px"}} marked={item.isSave ? true : false} postId={item.id}/>
                       <ShareButton/>
                   </Box>}
 
@@ -150,7 +151,7 @@ export default function UserPage() {
                 {item.content} 
                 </BlockContent>))
               : <BlockContent customStyle={{display:"flex", flexDirection:"row", mx:"auto",p:"2rem"}}>
-                  <Typography>{TEXT.NO_POST_ME}</Typography>
+                  <Typography sx={{textAlign:"center"}}>{TEXT.NO_POST_ME}</Typography>
                 </BlockContent>
             }
 
@@ -171,20 +172,28 @@ export default function UserPage() {
               savedPosts.length !== 0
               ?  savedPosts.map((item,index )=>(
                 <BlockContent
-                  customStyle={index === savedPosts.length - 1 ? {borderBottom : "none"} : undefined}
+                  key={item.id}
+                  customStyle={{
+                    px:"2rem",
+                    ...index === savedPosts.length - 1 ? {borderBottom : "none"} : undefined
+                  }}
 
                   // Header of content block
                   header={<Box sx={{display:"flex", flexDirection:"row", justifyItems:"start",pb:"0px", gap:"1rem", alignItems:"center", mb:"1rem", py:"1rem" }}>
                       <Typography variant="h6" fontWeight={"bold"}>{username}</Typography>
                       <Typography variant="sub" > {item.createdAt}</Typography>
-                      <MoreHorizIcon sx={{ml:"auto"}}/>
+                      <ThreeDotMenu functionList={[
+                        {label:"xóa",icon:(<DeleteIcon/>),callback:null},
+                        {label:"sửa",icon:(<EditIcon/>),callback:null},
+                        {label:"ghim bài viết",icon:(<PushPinIcon/>),callback:null}
+                        ]} sx={{ ml:"auto"}}/>
                   </Box>}
                   
                   // Footer of content block
                   footer={<Box sx={{display:"flex", flexDirection:"row", gap:"1rem", justifyItems:"start"}}>
                       <ArrowButton data={item.upvoteNumber} sx={{width:"130px"}}/>
                       <CommentButton data={item.commentNumber} sx={{width:"130px"}}/>
-                      <MakerButton data={item.saveNumber} sx={{width:"130px"}}/>
+                      <MakerButton onClick={()=>adjustSavePostAfterUnsave(item.id)} data={item.saveNumber} sx={{width:"130px"}} marked={item.isSave ? true : false} postId={item.id}/>
                       <ShareButton/>
                   </Box>}
 
@@ -197,12 +206,12 @@ export default function UserPage() {
                 {item.content} 
                 </BlockContent>))
               : <BlockContent customStyle={{display:"flex", flexDirection:"row", mx:"auto",p:"2rem"}}>
-                  <Typography>{TEXT.NO_POST_ME}</Typography>
+                  <Typography sx={{textAlign:"center"}}>{TEXT.NO_POST_SAVED}</Typography>
                 </BlockContent>
             }
 
              {/* observer block */}
-              { <div ref={savedHasMoreRef} style={{ height: "20px",visibility: savedPostHasMore ? "visible" : "hidden" }} /> }
+              { <div ref={savedHasMoreRef} style={{visibility: savedPostHasMore ? "visible" : "hidden" }} /> }
               
               {/* Loading block */}
               <Fade in={loading} unmountOnExit>

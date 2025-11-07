@@ -7,10 +7,7 @@ import { Result } from "../../../class"
 export default function useProfile(){
     const [loading, setLoading] = useState(false)
     const [userInfo, setUserInfo] = useState({email:"", username:""})
-    const [result, setResult] = useState(null)
-
-    //sign out
-    
+    const [result, setResult] = useState(null) 
 
     //get user information
     const getUserInfo = async () => {

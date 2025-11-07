@@ -27,8 +27,6 @@ export default function useUserPage() {
 
  
   // Ref
-  const firstLoadOfSaved = useRef(false);
-  const firstLoadOfCreated = useRef(false)
   const loadingRef = useRef(null);
   const createdCursor = useRef(null)
   const savedCursor = useRef(null)
@@ -115,18 +113,25 @@ export default function useUserPage() {
 
   },[savedPostHasMore])
 
+  function adjustSavePostAfterUnsave(postId){
+    setSavedPosts((prev)=> prev.filter((item)=> item.id !== postId))
+  }
 
   // Execute with re-render
   useEffect(() => {
-    if(!firstLoadOfCreated.current && tag === 0) {
-      firstLoadOfCreated.current = true;
-      getCreatedPost();
-    }
-    if(!firstLoadOfSaved.current && tag === 1){
-      firstLoadOfSaved.current = true
-      getSavedPost()
-    }
-  }, [getCreatedPost, tag, getSavedPost]);
+   if (tag === 0) {
+    setCreatedPosts([]);
+    createdCursor.current = null;
+    setCreatedPostHasMore(true);
+    getCreatedPost();
+  } else if (tag === 1) {
+    setSavedPosts([]);
+    savedCursor.current = null;
+    setSavedPostHasMore(true);
+    getSavedPost();
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tag]);
 
 
   // Execute once 
@@ -137,6 +142,7 @@ export default function useUserPage() {
 
 
   return {
+    adjustSavePostAfterUnsave,
     getCreatedPost,
     getSavedPost,
     setTag,

@@ -56,7 +56,11 @@ export default function ThreeDotMenu({sx, functionList, direction}) {
         }}
       >
         {functionList.map(
-            item=>(<MenuItem onClick={item.callback}>{item.label}</MenuItem>)
+            item=>(
+            <MenuItem sx={{display:"flex", flexDirection:"row", alignItems:"center",gap:"1rem"}} onClick={item.callback}>
+              {(item.icon)}
+              {item.label}
+            </MenuItem>)
         )}
       </Menu>
     </Box>
