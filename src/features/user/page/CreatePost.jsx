@@ -10,9 +10,8 @@ export default function CreatePost({ onPost, onExit }) {
 
 
   useEffect(() => {
-getUserInfo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    getUserInfo(); // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, []);
 
   const handlePost = async () => {
     if (content.trim() === "") return alert("Vui lòng nhập nội dung trước khi đăng!");
