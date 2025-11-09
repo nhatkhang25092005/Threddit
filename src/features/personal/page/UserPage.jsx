@@ -10,13 +10,20 @@ import ShareButton from "../../../components/common/ShareButton";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PushPinIcon from '@mui/icons-material/PushPin';
+import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import {DISPLAY, ROUTES, TEXT,LABEL} from "../../../constant/"
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useInfiniteScroll  from "../../../hooks/useInfiniteScroll.js"
 import PopupNotification from "../../../components/common/PopupNotification.jsx"
 import CustomTabPanel from "../../../components/common/CustomTabPanel.jsx";
-import ThreeDotMenu from "../../../components/common/ThreeDotMenu.jsx"
+import OptionsMenu from "../../../components/common/OptionsMenu.jsx"
+import usePin from "../../../hooks/usePin.js";
+import SnakeBarNotification from "../../../components/common/SnakeBarNotification.jsx";
+import EditableContent from "../../../components/common/EditableContent.jsx";
+import NorthIcon from '@mui/icons-material/North';
+import SouthIcon from '@mui/icons-material/South';
+import Post from "../../../components/common/Post.jsx";
 
 function allyProps(index){
     return{
@@ -26,13 +33,20 @@ function allyProps(index){
 }
 
 export default function UserPage() {
+  const {pinPost,unpinPost, resultOfPin, pinLoading} = usePin()
   const navigate = useNavigate()
   const [value, setValue] = useState(0)
   const {
+    setEditContent,
+    saveEdit,
+    cancelEditing,
+    startEditing,
+    deletePost,
     adjustSavePostAfterUnsave,
     getCreatedPost,
     getSavedPost,
     setTag,
+    adjustPinStatus,
     createdPostHasMore,
     savedPostHasMore,
     loading,
@@ -41,7 +55,10 @@ export default function UserPage() {
     following,
     createdPosts,
     savedPosts,
-    error,
+    result,
+    resultOfEdit,
+    editingPostId,
+    editContent,
     } = useUserPage()
 
   const createdHasMoreRef = useInfiniteScroll({
@@ -56,9 +73,41 @@ export default function UserPage() {
     onLoadMore : getSavedPost
   })
 
-  // Popup error (if occurs)
-  const [open, setOpen] = useState(false)
-  useEffect(()=>{if(error?.type === DISPLAY.POPUP) setOpen(true)},[error])
+  // pin/unpin post menu item props
+  function pinProps(item){
+    return {
+      label:item.isPinned ? "bỏ ghim bài viết" : "ghim bài viết", 
+      icon:(pinLoading ? <CircularProgress/> : (item.isPinned ? <PushPinIcon/> : <PushPinOutlinedIcon/>)), 
+      callback:()=>{
+        adjustPinStatus(item.id);
+        item.isPinned ? unpinPost(item.id) : pinPost(item.id)
+      }}
+  }
+
+  // Result controller
+  const [openSnack, setOpenSnack] = useState(false)
+  const [openPopup, setOpenPopup] = useState(false)
+  const [resultMessage, setResultMessage] = useState(null)
+  const [resultTitle, setResultTitle] = useState(null)
+  useEffect(()=>{
+    if(result?.type === DISPLAY.POPUP){ 
+      setResultTitle(result?.title)
+      setResultMessage(result?.message)
+      setOpenPopup(true)
+    }
+    if(resultOfPin?.isSuccess === false){
+      setResultTitle(resultOfPin?.say?.title)
+      setResultMessage(resultOfPin?.say?.message)
+      setOpenPopup(true)
+    }
+    if(resultOfEdit?.type === DISPLAY.SNACKBAR){
+      console.log("Result:",resultOfEdit)
+      setResultTitle(resultOfEdit?.title)
+      setResultMessage(resultOfEdit?.message)
+
+      setOpenSnack(true)
+    }
+  },[result, resultOfPin, resultOfEdit])
 
   // switch tag handler
   function handleChange(event, newValue){
@@ -67,7 +116,8 @@ export default function UserPage() {
   }
   return (
     <>
-      <PopupNotification open={open} onClose={()=>setOpen(false)} title={error?.title} content={error?.message}/>
+      <SnakeBarNotification open={openSnack} onClose={()=>setOpenSnack(false)} duration={3000} message={resultMessage}/>
+      <PopupNotification open={openPopup} onClose={()=>setOpenPopup(false)} title={resultTitle} content={resultMessage}/>
       <Column customStyle={{ pt: "1rem", width:"60%", mx:"auto", mb:"3rem" }}>
         <Typography variant="h6" fontWeight={"bold"}>{username}</Typography>
         
@@ -120,51 +170,26 @@ export default function UserPage() {
           <CustomTabPanel value={value} index={0}>
             {
               createdPosts.length !== 0
-              ? createdPosts.map((item,index )=>(
-                <BlockContent
-                  customStyle={{
-                      px:"1rem",
-                      ...index === createdPosts.length - 1 ? {borderBottom : "none"} : undefined
-                  }}
 
-                  // Header of content block
-                  header={<Box sx={{display:"flex", flexDirection:"row", justifyItems:"start",pb:"0px", gap:"1rem", alignItems:"center", mb:"1rem", py:"1rem",mx:"1rem" }}>
-                      <Typography variant="h6" fontWeight={"bold"}>{item.author.username}</Typography>
-                      <Typography variant="sub" > {item.createdAt}</Typography>
-                      <ThreeDotMenu 
-                        functionList={[
-                          {label:"xóa",icon:(<DeleteIcon/>),callback:null},
-                          {label:"sửa",icon:(<EditIcon/>),callback:null},
-                          {label:"ghim bài viết",icon:(<PushPinIcon/>),callback:null}
-                          ]} 
-                        sx={{ ml:"auto"}}
-                        anchorOrigin={{
-                          vertical: 'top',
-                          horizontal: 'right'
-                        }}
-                        transformOrigin={{ 
-                          vertical: 'top',
-                          horizontal: 'right'
-                        }}
-                        />
-                  </Box>}
-                  
-                  // Footer of content block
-                  footer={<Box sx={{display:"flex", flexDirection:"row", gap:"1rem", justifyItems:"start",mx:"1rem"}}>
-                      <ArrowButton data={item.upvoteNumber} sx={{width:"130px"}}/>
-                      <CommentButton data={item.commentNumber} sx={{width:"130px"}}/>
-                      <MakerButton data={item.saveNumber} sx={{width:"130px"}} marked={item.isSave ? true : false} postId={item.id}/>
-                      <ShareButton/>
-                  </Box>}
 
-                  footerStyle={{
-                    py:"1rem",
-                    mb:"1rem",
-                    ...index === createdPosts.length - 1 ? {mb:"0",borderBottom:"None"} : {borderBottom:"solid #BCBDBF 1px"}
-                  }}
-                >
-                {item.content} 
-                </BlockContent>))
+              // công trường đang thi công ://
+              ? createdPosts.map((item, index)=>
+                <Post
+                  item = {item}
+                  index = {index}
+                  createdPostsLength={createdPosts.length}
+                  deletePost={deletePost}
+                  startEditing = {startEditing}
+                  pinProps = {pinProps}
+                  editingPostId = {editingPostId}
+                  editContent = {editContent} 
+                  saveEdit = {saveEdit}
+                  cancelEditing={cancelEditing}
+                  setEditContent={setEditContent}
+                  loading={loading}
+                  isOwner={item.author.username === username}
+                />
+              )
               : <BlockContent customStyle={{display:"flex", flexDirection:"row", mx:"auto",p:"2rem"}}>
                   <Typography sx={{textAlign:"center"}}>{TEXT.NO_POST_ME}</Typography>
                 </BlockContent>
@@ -185,45 +210,23 @@ export default function UserPage() {
           <CustomTabPanel value = {value} index={1}>
             {
               savedPosts.length !== 0
-              ?  savedPosts.map((item,index )=>(
-                <BlockContent
-                  key={item.id}
-                  customStyle={{
-                    px:"2rem",
-                    ...index === savedPosts.length - 1 ? {borderBottom : "none"} : undefined
-                  }}
-
-                  // Header of content block
-                  header={<Box sx={{display:"flex", flexDirection:"row", justifyItems:"start",pb:"0px", gap:"1rem", alignItems:"center", mb:"1rem", py:"1rem" }}>
-                      <Typography variant="h6" fontWeight={"bold"}>{item.author.username}</Typography>
-                      <Typography variant="sub" > {item.createdAt}</Typography>
-                      {username === item.author.username 
-                      ? <ThreeDotMenu functionList={[
-                        {label:"xóa",icon:(<DeleteIcon/>),callback:null},
-                        {label:"sửa",icon:(<EditIcon/>),callback:null},
-                        {label:"ghim bài viết",icon:(<PushPinIcon/>),callback:null}
-                        ]} sx={{ ml:"auto"}}/>
-                      : <ThreeDotMenu functionList={[
-                        {label:"ghim bài viết",icon:(<PushPinIcon/>),callback:null}]} 
-                        sx={{ ml:"auto"}}/>}
-                  </Box>}
-                  
-                  // Footer of content block
-                  footer={<Box sx={{display:"flex", flexDirection:"row", gap:"1rem", justifyItems:"start"}}>
-                      <ArrowButton data={item.upvoteNumber} sx={{width:"130px"}}/>
-                      <CommentButton data={item.commentNumber} sx={{width:"130px"}}/>
-                      <MakerButton onClick={()=>adjustSavePostAfterUnsave(item.id)} data={item.saveNumber} sx={{width:"130px"}} marked={item.isSave ? true : false} postId={item.id}/>
-                      <ShareButton/>
-                  </Box>}
-
-                  footerStyle={{
-                    py:"1rem",
-                    mb:"1rem",
-                    ...index === savedPosts.length - 1 ? {mb:"0",borderBottom:"None"} : {borderBottom:"solid #BCBDBF 1px"}
-                  }}
-                >
-                {item.content} 
-                </BlockContent>))
+              ?  savedPosts.map((item,index ) => 
+              <Post
+                  item = {item}
+                  index = {index}
+                  createdPostsLength = {savedPosts.length}
+                  deletePost = {deletePost}
+                  startEditing = {startEditing}
+                  pinProps = {pinProps}
+                  editingPostId = {editingPostId}
+                  editContent = {editContent}
+                  saveEdit = {saveEdit}
+                  cancelEditing = {cancelEditing}
+                  setEditContent = {setEditContent}
+                  loading={loading}
+                  adjustSavePostAfterUnsave = {adjustSavePostAfterUnsave}
+                  isOwner={item.author.username === username}
+                />)
               : <BlockContent customStyle={{display:"flex", flexDirection:"row", mx:"auto",p:"2rem"}}>
                   <Typography sx={{textAlign:"center"}}>{TEXT.NO_POST_SAVED}</Typography>
                 </BlockContent>

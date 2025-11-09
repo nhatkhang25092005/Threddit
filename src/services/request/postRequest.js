@@ -78,3 +78,60 @@ export async function handleCreatePost(content, mentionedUser){
     })
 }
 
+// pin my post
+export async function handlePinMyPost(postId){
+    if(!postId){
+        console.error("Post ID can not be null in handlePinMyPost!")
+        return
+    }
+    return postApi.pinMyPost(postId)
+    .then(res => new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data.data))
+    .catch( err => {
+        const {status, message, data, displayType} = classifyError(err)
+        return new ApiResponse(status, message, data, displayType)
+    })  
+}
+
+// unpin my post
+export async function handleUnPinMyPost(postId){
+    if(!postId){
+        console.error("Post ID can not be null in handleUnPinMyPost!")
+        return
+    }
+    return postApi.unPinMyPost(postId)
+    .then(res => new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data.data))
+    .catch( err => {
+        const {status, message, data, displayType} = classifyError(err)
+        return new ApiResponse(status, message, data, displayType)
+    })
+}
+
+// delete my post
+export async function handleDeleteMyPost(postId){
+    if(!postId){
+        console.error("Post ID can not be null in handleDeleteMyPost!")
+        return
+    }
+    return postApi.deleteMyPost(postId)
+    .then(res => new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data.data))
+    .catch( err => {
+        const {status, message, data, displayType} = classifyError(err)
+        return new ApiResponse(status, message, data, displayType)
+    })  
+}
+
+// edit my post
+export async function handleEditMyPost(postId, newContent, mentionedUser){
+    if(!postId){
+        console.error("Post ID can not be null in handleEditMyPost!")
+        return
+    }
+    return postApi.editMyPost(postId, newContent, mentionedUser)
+    .then(res => new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data.data))
+    .catch( err => {
+        const {status, message, data, displayType} = classifyError(err)
+        return new ApiResponse(status, message, data, displayType)
+    })
+}
+
+

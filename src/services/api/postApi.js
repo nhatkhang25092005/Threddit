@@ -33,7 +33,19 @@ const postApi = {
     savePost : (postId) => axiosClient.post(import.meta.env.VITE_API_POST + `/${postId}` + import.meta.env.VITE_API_SAVE_POST),
     
     // unsave a post
-    unSavePost : (postId) => axiosClient.delete(import.meta.env.VITE_API_POST + `/${postId}` + import.meta.env.VITE_API_SAVE_POST)
+    unSavePost : (postId) => axiosClient.delete(import.meta.env.VITE_API_POST + `/${postId}` + import.meta.env.VITE_API_SAVE_POST),
+
+    // Pin my post
+    pinMyPost : (postId) => axiosClient.post(import.meta.env.VITE_API_POST + `/${postId}` + import.meta.env.VITE_API_PIN_POST),
+
+    //unPinMyPost
+    unPinMyPost : (postId) => axiosClient.delete(import.meta.env.VITE_API_POST + `/${postId}` + import.meta.env.VITE_API_PIN_POST),
+
+    // Delete my post
+    deleteMyPost : (postId) => axiosClient.delete(import.meta.env.VITE_API_POST + `/${postId}`),
+
+    // Edit my post
+    editMyPost : (postId, content, mentionedUser) => axiosClient.patch(import.meta.env.VITE_API_POST + `/${postId}`, {content, ...mentionedUser.length !==0 ? mentionedUser : null}),
 }
 
 export default postApi

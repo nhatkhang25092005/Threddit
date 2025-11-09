@@ -4,12 +4,17 @@ import { handleGetFollowNumberOfUser } from "../../../services/request/followReq
 import { 
   handleGetUserCreatedPost, 
   handleGetUserSavedPost,
+  handleDeleteMyPost,
+  handleEditMyPost
 } from "../../../services/request/postRequest";
 
 import { handleGetUserInfoRequest } from "../../../services/request/userRequest";
 import { Result } from "../../../class";
 import { DISPLAY, TITLE } from "../../../constant";
 import convertTime from "../../../utils/convertTime";
+
+import {sortPinned} from "../../../utils/sortPinned";
+import {extractUsernames} from "../../../utils/extractUsernames";
 
 export default function useUserPage() {
   // Get basic information of user
@@ -22,10 +27,9 @@ export default function useUserPage() {
   const [savedPosts, setSavedPosts] = useState([])
 
   // Elements of rendering
-  const [error, setError] = useState(null);
+  const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
- 
   // Ref
   const loadingRef = useRef(null);
   const createdCursor = useRef(null)
@@ -39,7 +43,48 @@ export default function useUserPage() {
   // Switch between tags
   const [tag, setTag] = useState(0)
 
-  // first execute after rendering for basic information
+  // Edit posts
+  const [editingPostId, setEditingPostId] = useState(null);
+  const [editContent, setEditContent] = useState("");
+  const [resultOfEdit, setResultOfEdit] = useState(null);
+
+  function startEditing(postId, currentContent) {
+    setEditingPostId(postId);
+    setEditContent(currentContent);
+  }
+
+  function cancelEditing() {
+    setEditingPostId(null);
+    setEditContent("");
+  }
+
+  async function saveEdit(postId) {
+    if(!postId) {
+      console.error("postId is required to save edit");
+      return
+    }
+    try{
+      setLoading(true)
+      const response = await handleEditMyPost(postId, editContent, extractUsernames(editContent))
+      if(response.isOk()){
+        // Update content in createdPosts
+        setCreatedPosts((prev)=> prev.map((item)=> item.id === postId ? {...item, content: editContent} : item))
+        // Update content in savedPosts
+        setSavedPosts((prev)=> prev.map((item)=> item.id === postId ? {...item, content: editContent} : item))
+        setResultOfEdit(new Result(DISPLAY.SNACKBAR, TITLE.OK, response.message, null))
+        cancelEditing()
+      }
+      else{
+        setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))
+      }
+    }
+    catch(err){
+      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, err, null))
+    }
+    finally{
+      setLoading(false)
+    }
+  }
 
   // get username
   async function getUserInfo() {
@@ -70,14 +115,14 @@ export default function useUserPage() {
           ...item,
           createdAt: convertTime(item.createdAt),
           updatedAt: convertTime(item.updatedAt),
-        }));
+        }));  
         // append new posts list
-        setCreatedPosts((prev) => [...prev, ...newList]);
+        setCreatedPosts((prev) => sortPinned([...prev, ...newList]));
         createdCursor.current = response.data.cursor 
       } 
-      else {setError(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))}
+      else {setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))}
     } catch (err) {
-      setError(new Result(DISPLAY.POPUP, TITLE.ERROR, err, null));
+      setResult (new Result(DISPLAY.POPUP, TITLE.ERROR, err, null));
     } finally {
       setLoading(false);
       loadingRef.current = false;
@@ -98,14 +143,14 @@ export default function useUserPage() {
           createdAt: convertTime(item.createdAt),
           updatedAt: convertTime(item.updatedAt),
         }))
-        setSavedPosts(prev => [...prev, ...newList])
+        setSavedPosts(prev => sortPinned([...prev, ...newList]))
         savedCursor.current = response.data.cursor
       }     
       else{
-        setError(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))
+        setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))
       }
     }
-    catch (err){setError(new Result(DISPLAY.POPUP, TITLE.ERROR, err, null))}
+    catch (err){setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, err, null))}
     finally{
       setLoading(false)
       loadingRef.current = false
@@ -116,6 +161,39 @@ export default function useUserPage() {
   function adjustSavePostAfterUnsave(postId){
     setSavedPosts((prev)=> prev.filter((item)=> item.id !== postId))
   }
+
+  // Adjust pin status after pin/unpin
+  function adjustPinStatus(postId){
+    setCreatedPosts((prev)=> sortPinned(prev.map((item)=> item.id === postId ? {...item, isPinned: !item.isPinned} : item)))
+    setSavedPosts((prev)=> sortPinned(prev.map((item)=> item.id === postId ? {...item, isPinned: !item.isPinned} : item)))
+  }
+
+  // Delete post
+  async function deletePost(postId){
+    if(!postId) {
+      console.error("postId is required to delete post");
+      return
+    }
+    setLoading(true)
+    try{
+      const response = await handleDeleteMyPost(postId)
+      console.log(response)
+      if(response.isOk()){
+        setCreatedPosts((prev)=> prev.filter((item)=> item.id !== postId))
+        setSavedPosts((prev)=> prev.filter((item)=> item.id !== postId))
+        setResult(new Result(DISPLAY.SNACKBAR, TITLE.SUCCESS, response.message, null))
+      }
+      else{ setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null)) }
+    }
+    catch(err){
+      console.error("Error in deletePost:", err);
+      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, err, null))
+    }
+    finally{
+      setLoading(false)
+    }
+  }
+
 
   // Execute with re-render
   useEffect(() => {
@@ -142,10 +220,16 @@ export default function useUserPage() {
 
 
   return {
+    setEditContent,
+    startEditing,
+    cancelEditing,
+    saveEdit,
+    deletePost,
     adjustSavePostAfterUnsave,
     getCreatedPost,
     getSavedPost,
     setTag,
+    adjustPinStatus,
     createdPostHasMore,
     savedPostHasMore,
     loading,
@@ -154,6 +238,9 @@ export default function useUserPage() {
     following,
     createdPosts,
     savedPosts,
-    error,
+    result,
+    editingPostId,
+    editContent,
+    resultOfEdit
   }
 }

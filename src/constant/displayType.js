@@ -1,5 +1,6 @@
 export const DISPLAY = {
     POPUP : "popup",
     MAGIC : "magic",
-    DISABLE: "disable"
+    DISABLE: "disable",
+    SNACKBAR: "snackbar"
 }

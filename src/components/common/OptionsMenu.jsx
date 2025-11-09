@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -41,15 +41,17 @@ import {Box} from "@mui/material"
  * 
  * @returns {JSX.Element | void} Returns a 3-dot menu button with dropdown options.
  */
-export default function ThreeDotMenu({sx, functionList, anchorOrigin, transformOrigin}) {
+export default function OptionsMenu({sx,symbol ,functionList, anchorOrigin, transformOrigin, allowDisabled = true}) {
+  const disabledRef = useRef(false);
   const [anchorEl, setAnchorEl] = useState(null);
   if(functionList===null){ 
-    console.error("functionList in ThreeDotMenu Component can not be null")
+    console.error("functionList in OptionsMenu Component can not be null")
     return
   }
  
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
+    disabledRef.current = false;
     setAnchorEl(event.currentTarget);
   }
   const handleClose = () => {
@@ -60,6 +62,7 @@ export default function ThreeDotMenu({sx, functionList, anchorOrigin, transformO
   return (
     <Box sx={{...sx,py:"0px"}}>
       <Button
+        disableRipple
         id="demo-positioned-button"
         aria-controls={open ? 'demo-positioned-menu' : undefined}
         aria-haspopup="true"
@@ -67,7 +70,7 @@ export default function ThreeDotMenu({sx, functionList, anchorOrigin, transformO
         onClick={handleClick}
         sx={{py:"0px"}}
       >
-        <MoreVertIcon/>
+        {(symbol) || <MoreVertIcon/>}
       </Button>
       
       <Menu
@@ -96,8 +99,11 @@ export default function ThreeDotMenu({sx, functionList, anchorOrigin, transformO
         }}
       >
         {functionList.map(
-            item=>(
-            <MenuItem sx={{
+            (item, index)=>(
+            <MenuItem
+                key={index}
+                disabled = {allowDisabled && disabledRef.current}
+                sx={{
                 display:"flex", 
                 flexDirection:"row", 
                 alignItems:"center",
@@ -105,7 +111,10 @@ export default function ThreeDotMenu({sx, functionList, anchorOrigin, transformO
                 cursor:"pointer",
                 borderBottom:"solid #2C2D2D 1px",
                 "&:hover":{backgroundColor:"#1A1B1B"}
-                }} onClick={item.callback}>
+                }} onClick={()=>{
+                  disabledRef.current = true;
+                  if(item.callback) item.callback();
+                  handleClose()}}>
               {(item.icon)}
               {item.label}
             </MenuItem>)
