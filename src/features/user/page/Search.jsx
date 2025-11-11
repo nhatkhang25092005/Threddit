@@ -7,13 +7,14 @@ import UserFollowCard from "../../../components/layout/UserFollowCard";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import { Box } from "@mui/material";
 
+
 export default function App() {
   const [tab, setTab] = React.useState("posts");
   const [query, setQuery] = useState("");
   return (
     <>
       <TopBar title="Tìm kiếm" onLogin={() => alert("Login")} />
-
+      
       <Box
         sx={{
           alignItems: "center",
