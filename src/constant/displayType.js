@@ -2,5 +2,6 @@ export const DISPLAY = {
     POPUP : "popup",
     MAGIC : "magic",
     DISABLE: "disable",
-    SNACKBAR: "snackbar"
+    SNACKBAR: "snackbar",
+    NOTICE: "notice"
 }

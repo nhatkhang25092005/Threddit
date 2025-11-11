@@ -1,20 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { handleGetFollowNumberOfUser } from "../../../services/request/followRequest";
-
-import { 
-  handleGetUserCreatedPost, 
-  handleGetUserSavedPost,
-  handleDeleteMyPost,
-  handleEditMyPost
-} from "../../../services/request/postRequest";
-
+import { handleGetUserCreatedPost, handleGetUserSavedPost } from "../../../services/request/postRequest";
 import { handleGetUserInfoRequest } from "../../../services/request/userRequest";
 import { Result } from "../../../class";
 import { DISPLAY, TITLE } from "../../../constant";
 import convertTime from "../../../utils/convertTime";
-
-import {sortPinned} from "../../../utils/sortPinned";
-import {extractUsernames} from "../../../utils/extractUsernames";
+import { sortPinned } from "../../../utils/sortPinned";
 
 export default function useUserPage() {
   // Get basic information of user
@@ -24,7 +15,7 @@ export default function useUserPage() {
 
   // Get posts
   const [createdPosts, setCreatedPosts] = useState([]);
-  const [savedPosts, setSavedPosts] = useState([])
+  const [savedPosts, setSavedPosts] = useState([]);
 
   // Elements of rendering
   const [result, setResult] = useState(null);
@@ -32,59 +23,66 @@ export default function useUserPage() {
 
   // Ref
   const loadingRef = useRef(null);
-  const createdCursor = useRef(null)
-  const savedCursor = useRef(null)
+  const createdCursor = useRef(null);
+  const savedCursor = useRef(null);
 
   // Scrolling controlled elements
   const [createdPostHasMore, setCreatedPostHasMore] = useState(true);
-  const [savedPostHasMore, setSavedPostHasMore] = useState(true)
-
+  const [savedPostHasMore, setSavedPostHasMore] = useState(true);
 
   // Switch between tags
-  const [tag, setTag] = useState(0)
+  const [tag, setTag] = useState(0);
 
-  // Edit posts
-  const [editingPostId, setEditingPostId] = useState(null);
-  const [editContent, setEditContent] = useState("");
-  const [resultOfEdit, setResultOfEdit] = useState(null);
+  // Handle post updates from Post component
+  function handlePostUpdate(update) {
+    const { type, postId, data, message } = update;
 
-  function startEditing(postId, currentContent) {
-    setEditingPostId(postId);
-    setEditContent(currentContent);
+    switch (type) {
+      case 'edit':
+        // Update content in both lists
+        setCreatedPosts((prev) =>
+          prev.map((item) =>
+            item.id === postId ? { ...item, content: data.content } : item
+          )
+        );
+        setSavedPosts((prev) =>
+          prev.map((item) =>
+            item.id === postId ? { ...item, content: data.content } : item
+          )
+        );
+        setResult(new Result(DISPLAY.SNACKBAR, TITLE.OK, message || "Đã cập nhật bài viết", null));
+        break;
+
+      case 'delete':
+        // Remove from both lists
+        setCreatedPosts((prev) => prev.filter((item) => item.id !== postId));
+        setSavedPosts((prev) => prev.filter((item) => item.id !== postId));
+        setResult(new Result(DISPLAY.SNACKBAR, TITLE.SUCCESS, message || "Đã xóa bài viết", null));
+        break;
+
+      case 'pin':
+        setCreatedPosts((prev) =>
+          sortPinned(
+            prev.map((item) =>
+              item.id === postId ? { ...item, isPinned: !item.isPinned } : item
+            )
+          )
+        );
+        setSavedPosts((prev) =>
+          sortPinned(
+            prev.map((item) =>
+              item.id === postId ? { ...item, isPinned: !item.isPinned } : item
+            )
+          )
+        );
+        break
+      default:
+        console.warn('Unknown update type:', type);
+    }
   }
 
-  function cancelEditing() {
-    setEditingPostId(null);
-    setEditContent("");
-  }
-
-  async function saveEdit(postId) {
-    if(!postId) {
-      console.error("postId is required to save edit");
-      return
-    }
-    try{
-      setLoading(true)
-      const response = await handleEditMyPost(postId, editContent, extractUsernames(editContent))
-      if(response.isOk()){
-        // Update content in createdPosts
-        setCreatedPosts((prev)=> prev.map((item)=> item.id === postId ? {...item, content: editContent} : item))
-        // Update content in savedPosts
-        setSavedPosts((prev)=> prev.map((item)=> item.id === postId ? {...item, content: editContent} : item))
-        setResultOfEdit(new Result(DISPLAY.SNACKBAR, TITLE.OK, response.message, null))
-        cancelEditing()
-      }
-      else{
-        setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))
-      }
-    }
-    catch(err){
-      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, err, null))
-    }
-    finally{
-      setLoading(false)
-    }
-  }
+  // Handle errors from Post component
+  function handlePostResult(result) { setResult(result) }
 
   // get username
   async function getUserInfo() {
@@ -105,24 +103,22 @@ export default function useUserPage() {
     loadingRef.current = true;
     setLoading(true);
     try {
-      //call
       const response = await handleGetUserCreatedPost(createdCursor.current);
-      // check has more posts
-      if (response.data === null){setCreatedPostHasMore(false)}
-      else if (response.isOk()) {
-        //convert time for each post
+      if (response.data === null) {
+        setCreatedPostHasMore(false);
+      } else if (response.isOk()) {
         const newList = response.data.posts.map((item) => ({
           ...item,
           createdAt: convertTime(item.createdAt),
           updatedAt: convertTime(item.updatedAt),
-        }));  
-        // append new posts list
+        }));
         setCreatedPosts((prev) => sortPinned([...prev, ...newList]));
-        createdCursor.current = response.data.cursor 
-      } 
-      else {setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))}
+        createdCursor.current = response.data.cursor;
+      } else {
+        setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null));
+      }
     } catch (err) {
-      setResult (new Result(DISPLAY.POPUP, TITLE.ERROR, err, null));
+      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, err, null));
     } finally {
       setLoading(false);
       loadingRef.current = false;
@@ -131,100 +127,79 @@ export default function useUserPage() {
 
   //get saved posts
   const getSavedPost = useCallback(async () => {
-    if(loadingRef.current || !savedPostHasMore) return
-    loadingRef.current = true
-    setLoading(true)
-    try{
-      const response = await handleGetUserSavedPost(savedCursor.current)
-      if(response.data === null ){setSavedPostHasMore(false)}
-      else if(response.isOk()){
+    if (loadingRef.current || !savedPostHasMore) return;
+    loadingRef.current = true;
+    setLoading(true);
+    try {
+      const response = await handleGetUserSavedPost(savedCursor.current);
+      if (response.data === null) {
+        setSavedPostHasMore(false);
+      } else if (response.isOk()) {
         const newList = response.data.posts.map((item) => ({
           ...item,
           createdAt: convertTime(item.createdAt),
           updatedAt: convertTime(item.updatedAt),
-        }))
-        setSavedPosts(prev => sortPinned([...prev, ...newList]))
-        savedCursor.current = response.data.cursor
-      }     
-      else{
-        setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))
+        }));
+        setSavedPosts((prev) => sortPinned([...prev, ...newList]));
+        savedCursor.current = response.data.cursor;
+      } else {
+        setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null));
       }
+    } catch (err) {
+      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, err, null));
+    } finally {
+      setLoading(false);
+      loadingRef.current = false;
     }
-    catch (err){setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, err, null))}
-    finally{
-      setLoading(false)
-      loadingRef.current = false
-    }
+  }, [savedPostHasMore]);
 
-  },[savedPostHasMore])
-
-  function adjustSavePostAfterUnsave(postId){
-    setSavedPosts((prev)=> prev.filter((item)=> item.id !== postId))
+  function adjustSavePostAfterUnsave(postId) {
+    setSavedPosts((prev) => prev.filter((item) => item.id !== postId));
   }
 
   // Adjust pin status after pin/unpin
-  function adjustPinStatus(postId){
-    setCreatedPosts((prev)=> sortPinned(prev.map((item)=> item.id === postId ? {...item, isPinned: !item.isPinned} : item)))
-    setSavedPosts((prev)=> sortPinned(prev.map((item)=> item.id === postId ? {...item, isPinned: !item.isPinned} : item)))
+  function adjustPinStatus(postId) {
+    setCreatedPosts((prev) =>
+      sortPinned(
+        prev.map((item) =>
+          item.id === postId ? { ...item, isPinned: !item.isPinned } : item
+        )
+      )
+    );
+    setSavedPosts((prev) =>
+      sortPinned(
+        prev.map((item) =>
+          item.id === postId ? { ...item, isPinned: !item.isPinned } : item
+        )
+      )
+    );
   }
-
-  // Delete post
-  async function deletePost(postId){
-    if(!postId) {
-      console.error("postId is required to delete post");
-      return
-    }
-    setLoading(true)
-    try{
-      const response = await handleDeleteMyPost(postId)
-      console.log(response)
-      if(response.isOk()){
-        setCreatedPosts((prev)=> prev.filter((item)=> item.id !== postId))
-        setSavedPosts((prev)=> prev.filter((item)=> item.id !== postId))
-        setResult(new Result(DISPLAY.SNACKBAR, TITLE.SUCCESS, response.message, null))
-      }
-      else{ setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null)) }
-    }
-    catch(err){
-      console.error("Error in deletePost:", err);
-      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, err, null))
-    }
-    finally{
-      setLoading(false)
-    }
-  }
-
 
   // Execute with re-render
   useEffect(() => {
-   if (tag === 0) {
-    setCreatedPosts([]);
-    createdCursor.current = null;
-    setCreatedPostHasMore(true);
-    getCreatedPost();
-  } else if (tag === 1) {
-    setSavedPosts([]);
-    savedCursor.current = null;
-    setSavedPostHasMore(true);
-    getSavedPost();
-  }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (tag === 0) {
+      setCreatedPosts([]);
+      createdCursor.current = null;
+      setCreatedPostHasMore(true);
+      getCreatedPost();
+    } else if (tag === 1) {
+      setSavedPosts([]);
+      savedCursor.current = null;
+      setSavedPostHasMore(true);
+      getSavedPost();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tag]);
 
-
-  // Execute once 
-  useEffect(()=>{
+  // Execute once
+  useEffect(() => {
     getUserInfo();
     getFollow();
-  },[])
-
+  }, []);
 
   return {
-    setEditContent,
-    startEditing,
-    cancelEditing,
-    saveEdit,
-    deletePost,
+    handlePostUpdate,
+    handlePostResult,
     adjustSavePostAfterUnsave,
     getCreatedPost,
     getSavedPost,
@@ -239,8 +214,5 @@ export default function useUserPage() {
     createdPosts,
     savedPosts,
     result,
-    editingPostId,
-    editContent,
-    resultOfEdit
-  }
+  };
 }

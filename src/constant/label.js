@@ -18,5 +18,7 @@ export const LABEL = {
     LOGOUT:"Đăng xuất",
     CHANGE_PASSWORD:"Đổi mật khẩu",
     CREATED_POSTS : "Danh sách bài viết đã tạo",
-    SAVED_POSTS : "Danh sách bài viết đã lưu"
+    SAVED_POSTS : "Danh sách bài viết đã lưu",
+    FEED:"Xu hướng",
+    FOLLOWING_POSTS:"Theo dõi"
 }

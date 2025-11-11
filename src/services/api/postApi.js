@@ -46,6 +46,16 @@ const postApi = {
 
     // Edit my post
     editMyPost : (postId, content, mentionedUser) => axiosClient.patch(import.meta.env.VITE_API_POST + `/${postId}`, {content, ...mentionedUser.length !==0 ? mentionedUser : null}),
+
+    // Get feed
+    getFeed : () => axiosClient.get(import.meta.env.VITE_API_POST + import.meta.env.VITE_API_GET_FEED),
+
+    // Get following post
+    getFollowingPost : (cursor) => {
+        const url = import.meta.env.VITE_API_POST + import.meta.env.VITE_API_FOLLOWING
+        const finalUrl = cursor ? `${url}?cursor=${cursor}` : url
+        return axiosClient.get(finalUrl)
+    }
 }
 
 export default postApi

@@ -1,11 +1,12 @@
-// Material
+import { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import NorthIcon from "@mui/icons-material/North";
 import SouthIcon from "@mui/icons-material/South";
-
+import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
+import { CircularProgress } from "@mui/material";
 // Custom
 import BlockContent from "./BlockContent";
 import OptionsMenu from "./OptionsMenu";
@@ -15,23 +16,134 @@ import MakerButton from "./MakerButton";
 import ShareButton from "./ShareButton";
 import EditableContent from "./EditableContent";
 
-//
+// Services & Utils
+import { handleDeleteMyPost, handleEditMyPost } from "../../services/request/postRequest";
+import { extractUsernames } from "../../utils/extractUsernames";
+import { Result } from "../../class";
+import { DISPLAY, TITLE } from "../../constant";
+import usePin from "../../hooks/usePin"
+
 export default function Post({
   item,
   index,
   createdPostsLength,
-  deletePost,
-  startEditing,
-  pinProps,
-  editingPostId,
-  editContent,
-  setEditContent,
-  saveEdit,
-  cancelEditing,
-  loading,
-  adjustSavePostAfterUnsave = null,
-  isOwner = false
+  adjustSavePostAfterUnsave = null, // This prop just need for save posts list
+  isOwner = false,
+  onResult, // Callback to handle error comes
+  onPostUpdatedRendering, // Callback to notice parent component when change occurs
 }) {
+  const { pinPost, unpinPost, pinLoading } = usePin();
+  const [editingPostId, setEditingPostId] = useState(null);
+  const [editContent, setEditContent] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [currentItem, setCurrentItem] = useState(item);
+
+  useEffect(()=>{setCurrentItem(item)},[item])
+
+  async function handlePin(postId, currentPinStatus){
+    try{
+      const result = currentPinStatus ? await unpinPost(postId) : await pinPost(postId)
+      console.log("Result of the handle Pin:", result)
+      if(result.isSuccess){
+        setCurrentItem(prev => ({...prev, isPinned: !currentPinStatus}))
+        onPostUpdatedRendering({
+          type:"pin",
+          postId:postId,
+          newPinStatus : !currentPinStatus,
+          message:"Updated successfully"
+        })
+      }
+    }
+    catch(err){
+      onResult(new Result(DISPLAY.POPUP, TITLE.ERROR, err, null))
+    }
+  }
+  // Pin
+  function pinProps(item) {
+    return {
+      label: item.isPinned ? "bỏ ghim bài viết" : "ghim bài viết",
+      icon: (pinLoading ? <CircularProgress size={20} /> : (item.isPinned ? <PushPinIcon /> : <PushPinOutlinedIcon />)),
+      callback: () => handlePin(item.id, item.isPinned)
+    };
+  }
+
+  // Start editing
+  function startEditing(postId, currentContent) {
+    setEditingPostId(postId);
+    setEditContent(currentContent);
+  }
+
+  // Cancel editing
+  function cancelEditing() {
+    setEditingPostId(null);
+    setEditContent("");
+  }
+
+  // Save edit
+  async function saveEdit(postId) {
+    if (!postId) {
+      console.error("postId is required to save edit");
+      return;
+    }
+    try {
+      setLoading(true);
+      const response = await handleEditMyPost(postId, editContent, extractUsernames(editContent));
+      
+      if (response.isOk()) {
+        // Update local state
+        setCurrentItem(prev => ({ ...prev, content: editContent }));
+        
+        // Notify parent component
+        if (onPostUpdatedRendering) {
+          onPostUpdatedRendering({
+            type: 'edit',
+            postId,
+            data: { content: editContent },
+            message: response.message 
+          });
+        }
+
+        cancelEditing()
+        if(onResult) onResult(new Result(DISPLAY.SNACKBAR, null, response.message, null))
+      } else if (onResult) onResult(response.message);
+      
+    } catch (err) {
+      if (onResult) onResult(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Delete post
+  async function deletePost(postId) {
+    if (!postId) {
+      console.error("postId is required to delete post");
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await handleDeleteMyPost(postId);
+      
+      if (response.isOk()) {
+        // Notify parent component
+        if (onPostUpdatedRendering) {
+          onPostUpdatedRendering({
+            type: 'delete',
+            postId  
+          });
+        }
+        if (onResult) onResult(new Result(DISPLAY.SNACKBAR, null, response.message, null))
+      } else {
+        if (onResult) onResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null));
+      }
+    } catch (err) {
+      console.error("Error in deletePost:", err);
+      if (onResult) onResult(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <BlockContent
       key={index}
@@ -56,15 +168,15 @@ export default function Post({
           }}
         >
           <Typography variant="h6" fontWeight={"bold"}>
-            {item.author.username}
+            {currentItem.author.username}
           </Typography>
-          <Typography variant="sub"> {item.createdAt}</Typography>
-          {item.isPinned && <PushPinIcon sx={{ color: "#d9ff41ff" }} />}
-          <OptionsMenu
+          <Typography variant="sub"> {currentItem.createdAt}</Typography>
+          {currentItem.isPinned && <PushPinIcon sx={{ color: "#d9ff41ff" }} />}
+          {isOwner && <OptionsMenu
             functionList={[
-              (isOwner ? { label: "xóa", icon: <DeleteIcon />, callback: () => deletePost(item.id)} : undefined),
-              (isOwner ? { label: "sửa", icon: <EditIcon />, callback: () => startEditing(item.id, item.content)}: undefined ),
-              pinProps(item)
+                { label: "xóa", icon: (<DeleteIcon />), callback: () => deletePost(currentItem.id)},
+                { label: "sửa", icon: (<EditIcon />), callback: () => startEditing(currentItem.id, currentItem.content)},
+                pinProps(currentItem)
             ]}
             sx={{ ml: "auto" }}
             anchorOrigin={{
@@ -75,7 +187,7 @@ export default function Post({
               vertical: "top",
               horizontal: "right",
             }}
-          />
+          />}
         </Box>
       }
 
@@ -92,7 +204,7 @@ export default function Post({
         >
           <OptionsMenu
             sx={{ borderRadius: "50px" }}
-            symbol={<ArrowButton data={item.upvoteNumber - item.downvoteNumber} sx={{ width: "130px" }} />}
+            symbol={<ArrowButton data={currentItem.upvoteNumber - currentItem.downvoteNumber} sx={{ width: "130px" }} />}
             functionList={[
               { label: "upvote", icon: (<NorthIcon />), callback: null },
               { label: "downvote", icon:(<SouthIcon />), callback: null},
@@ -106,13 +218,13 @@ export default function Post({
               horizontal: "right",
             }}
           />
-          <CommentButton data={item.commentNumber} sx={{ width: "130px" }} />
+          <CommentButton data={currentItem.commentNumber} sx={{ width: "130px" }} />
           <MakerButton
-            data={item.saveNumber}
+            data={Number(currentItem.saveNumber)}
             sx={{ width: "130px" }}
-            marked={item.isSave ? true : false}
-            postId={item.id}
-            onClick = {adjustSavePostAfterUnsave ? ()=>adjustSavePostAfterUnsave(item.id) : undefined}
+            marked={currentItem.isSave ? true : false}
+            postId={currentItem.id}
+            onClick = {adjustSavePostAfterUnsave ? () => adjustSavePostAfterUnsave(currentItem.id) : undefined}
           />
           <ShareButton />
         </Box>
@@ -127,11 +239,11 @@ export default function Post({
     >
       <EditableContent
         loading={loading}
-        isEditing={editingPostId === item.id}
-        content={item.content}
+        isEditing={editingPostId === currentItem.id}
+        content={currentItem.content}
         editContent={editContent}
         onEditChange={setEditContent}
-        onSave={() => saveEdit(item.id)}
+        onSave={() => saveEdit(currentItem.id)}
         onCancel={cancelEditing}
       />
     </BlockContent>

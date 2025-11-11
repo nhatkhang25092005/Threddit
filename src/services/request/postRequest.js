@@ -134,4 +134,22 @@ export async function handleEditMyPost(postId, newContent, mentionedUser){
     })
 }
 
+// get feed
+export async function handleGetFeed(){
+    return postApi.getFeed()
+    .then(res => new ApiResponse(res.data.statusCode, ApiResponse.getMessageFromApi(res), res.data.data))
+    .catch( err => {
+        const {status, message, data, displayType} = classifyError(err)
+        return new ApiResponse(status, message, data, displayType)
+    })
+}
 
+// handle get following posts
+export async function handleGetFollowingPost(cursor) {
+    return postApi.getFollowingPost(cursor)
+    .then(res => new ApiResponse(res.data.statusCode, ApiResponse.getMessageFromApi(res), res.data.data))
+    .catch( err => {
+        const {status, message, data, displayType} = classifyError(err)
+        return new ApiResponse(status, message, data, displayType)
+    })
+}
