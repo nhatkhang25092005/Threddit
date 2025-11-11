@@ -7,55 +7,69 @@ const postApi = {
         return axiosClient.get(finalUrl)
     },
 
-    //Create post
-    createPost: (content, mentionedUser = []) => {
-        const url = import.meta.env.VITE_API_POST; 
-        const body = { content };
-        if (mentionedUser.length > 0) { body.mentionedUser = mentionedUser;}
-        return axiosClient.post(url, body);
-    },
 
-    // Get user' created posts
-    getUserCreatedPost : (cursor) => {
-        const url = import.meta.env.VITE_API_POST + import.meta.env.VITE_API_GET_MY_POST
-        const finalUrl = cursor ? `${url}?cursor=${cursor}` : url
-        return axiosClient.get(finalUrl)
-    },
 
-    // get user's saved posts
-    getUserSavedPost : (cursor) => {
-        const url = import.meta.env.VITE_API_POST + import.meta.env.VITE_API_GET_SAVED_POST
-        const finalUrl = cursor ? `${url}?cursor=${cursor}` : url
-        return axiosClient.get(finalUrl)
-    },
+   // Lấy chi tiết 1 bài viết
+  getById: (id) => {
+    const url = import.meta.env.VITE_API_POST + `/detail/${id}`;
+    return axiosClient.get(url);
+  },
 
-    // save a post
-    savePost : (postId) => axiosClient.post(import.meta.env.VITE_API_POST + `/${postId}` + import.meta.env.VITE_API_SAVE_POST),
-    
-    // unsave a post
-    unSavePost : (postId) => axiosClient.delete(import.meta.env.VITE_API_POST + `/${postId}` + import.meta.env.VITE_API_SAVE_POST),
+  // Lấy comment của bài viết
+  getComments: (postId) => {
+    const url = import.meta.env.VITE_API_POST + `/${postId}/comment`;
+    return axiosClient.get(url);
+  },
 
-    // Pin my post
-    pinMyPost : (postId) => axiosClient.post(import.meta.env.VITE_API_POST + `/${postId}` + import.meta.env.VITE_API_PIN_POST),
+  //Create post
+  createPost: (content, mentionedUser = []) => {
+      const url = import.meta.env.VITE_API_POST; 
+      const body = { content };
+      if (mentionedUser.length > 0) { body.mentionedUser = mentionedUser;}
+      return axiosClient.post(url, body);
+  },
 
-    //unPinMyPost
-    unPinMyPost : (postId) => axiosClient.delete(import.meta.env.VITE_API_POST + `/${postId}` + import.meta.env.VITE_API_PIN_POST),
+  // Get user' created posts
+  getUserCreatedPost : (cursor) => {
+      const url = import.meta.env.VITE_API_POST + import.meta.env.VITE_API_GET_MY_POST
+      const finalUrl = cursor ? `${url}?cursor=${cursor}` : url
+      return axiosClient.get(finalUrl)
+  },
 
-    // Delete my post
-    deleteMyPost : (postId) => axiosClient.delete(import.meta.env.VITE_API_POST + `/${postId}`),
+  // get user's saved posts
+  getUserSavedPost : (cursor) => {
+      const url = import.meta.env.VITE_API_POST + import.meta.env.VITE_API_GET_SAVED_POST
+      const finalUrl = cursor ? `${url}?cursor=${cursor}` : url
+      return axiosClient.get(finalUrl)
+  },
 
-    // Edit my post
-    editMyPost : (postId, content, mentionedUser) => axiosClient.patch(import.meta.env.VITE_API_POST + `/${postId}`, {content, ...mentionedUser.length !==0 ? mentionedUser : null}),
+  // save a post
+  savePost : (postId) => axiosClient.post(import.meta.env.VITE_API_POST + `/${postId}` + import.meta.env.VITE_API_SAVE_POST),
+  
+  // unsave a post
+  unSavePost : (postId) => axiosClient.delete(import.meta.env.VITE_API_POST + `/${postId}` + import.meta.env.VITE_API_SAVE_POST),
 
-    // Get feed
-    getFeed : () => axiosClient.get(import.meta.env.VITE_API_POST + import.meta.env.VITE_API_GET_FEED),
+  // Pin my post
+  pinMyPost : (postId) => axiosClient.post(import.meta.env.VITE_API_POST + `/${postId}` + import.meta.env.VITE_API_PIN_POST),
 
-    // Get following post
-    getFollowingPost : (cursor) => {
-        const url = import.meta.env.VITE_API_POST + import.meta.env.VITE_API_FOLLOWING
-        const finalUrl = cursor ? `${url}?cursor=${cursor}` : url
-        return axiosClient.get(finalUrl)
-    }
+  //unPinMyPost
+  unPinMyPost : (postId) => axiosClient.delete(import.meta.env.VITE_API_POST + `/${postId}` + import.meta.env.VITE_API_PIN_POST),
+
+  // Delete my post
+  deleteMyPost : (postId) => axiosClient.delete(import.meta.env.VITE_API_POST + `/${postId}`),
+
+  // Edit my post
+  editMyPost : (postId, content, mentionedUser) => axiosClient.patch(import.meta.env.VITE_API_POST + `/${postId}`, {content, ...mentionedUser.length !==0 ? mentionedUser : null}),
+
+  // Get feed
+  getFeed : () => axiosClient.get(import.meta.env.VITE_API_POST + import.meta.env.VITE_API_GET_FEED),
+
+  // Get following post
+  getFollowingPost : (cursor) => {
+      const url = import.meta.env.VITE_API_POST + import.meta.env.VITE_API_FOLLOWING
+      const finalUrl = cursor ? `${url}?cursor=${cursor}` : url
+      return axiosClient.get(finalUrl)
+  }
 }
 
 export default postApi

@@ -3,9 +3,10 @@ import PostFooter from "../../components/layout/PostFooter";
 import PostMenu from "../../components/layout/MenuOption";
 
 
-export default function PostCard({ author, time, content, menuOptions = [], isMainPost = false  }) {
+export default function PostCard({ author, time, content, menuOptions = [],onClick, isMainPost = false  }) {
   return (
     <Box
+    onClick={onClick}
       sx={{
         backgroundColor: "transparent",
         color: "white",
@@ -18,6 +19,9 @@ export default function PostCard({ author, time, content, menuOptions = [], isMa
         "&:last-child": {
           borderBottom: "1px solid #333",
           borderRadius: "0 0 12px 12px",
+        },
+        "&:hover": {
+          backgroundColor: onClick ? "#222" : undefined, // hiệu ứng hover nếu có click
         },
       }}
     >

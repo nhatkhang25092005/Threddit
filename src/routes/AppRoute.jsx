@@ -7,6 +7,7 @@ import Notifications from "../features/notification/page/Notifications";
 import NotificationProvider from "../provider/NotificationProvider";
 import ClientPage from "../features/personal/page/ClientPage";
 import Home from "../features/Home/page/Home";
+import PostDetail from "../features/user/page/PostDetail";
 import Search from "../features/user/page/Search";
 import CreatePost from "../features/post/page/CreatePost";
 import FollowList from "../features/user/page/FollowList";
@@ -25,6 +26,7 @@ export default function AppRoute() {
           <Route path="user" element={<UserPage/>}/>
           <Route path="home" element={<Home />} />
           <Route path="follow"  element={<FollowList/>}/>
+          <Route path="post/detail/:id" element={<PostDetail />} />
           <Route path="search" element={<Search />} />
           <Route path="add" element={<CreatePost />} />
         </Route>
