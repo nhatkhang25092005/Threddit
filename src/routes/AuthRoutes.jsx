@@ -5,7 +5,6 @@ import Register from "../features/auth/pages/Register";
 import Forgot from "../features/auth/pages/Forgot";
 import Verify from "../features/auth/pages/Verify";
 import VerifyForgot from "../features/auth/pages/VerifyForgot";
-import Authorize from "../middleware/Authorize";
 
 export default function AuthRoutes() {
   return (
