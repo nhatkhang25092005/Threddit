@@ -92,7 +92,7 @@ export default function FollowList(){
                     {followers.length !==0 
                     ? followers.map((item, index)=>(<BlockContent 
                         key = {item.follower.username || index}
-                        customStyle={{
+                        bodyStyle={{
                             display:"flex", 
                             flexDirection:"row",
                             alignItems:"center",
@@ -134,7 +134,7 @@ export default function FollowList(){
                     ? followings.map((item, index)=>(
                     <BlockContent 
                         key={item.followee.username || index}
-                        customStyle={{
+                        bodyStyle={{
                             display:"flex", 
                             flexDirection:"row",
                             alignItems:"center",
