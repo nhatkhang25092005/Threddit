@@ -32,7 +32,7 @@ export default function DetailPost() {
         setPost(postData);
         setComments(commentData);
       } catch (err) {
-        console.error("❌ Lỗi tải chi tiết bài viết:", err);
+        console.error(" Lỗi tải chi tiết bài viết:", err);
         setError("Không thể tải chi tiết bài viết.");
       } finally {
         setLoading(false);
