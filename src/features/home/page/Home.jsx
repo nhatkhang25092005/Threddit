@@ -8,6 +8,9 @@ import { useEffect, useState } from "react";
 import CustomTabPanel from "../../../components/common/CustomTabPanel"
 import PopupNotification from "../../../components/common/PopupNotification"
 import Post from "../../../components/common/Post"
+import { useParams } from "react-router-dom";
+import PostDetail from "../../post/page/PostDetail";
+import { useNavigate } from "react-router-dom";
 
 function allyProps(index) {
   return {  
@@ -17,7 +20,8 @@ function allyProps(index) {
 }
 export default function Home() {
   const [value, setValue] = useState(0);
-
+  const {postId} = useParams()
+  const navigate = useNavigate()
   const {
     posts,
     setTag,
@@ -50,9 +54,17 @@ export default function Home() {
 
   const [open, setOpen] = useState(false)
   useEffect(()=>{if(result?.type === DISPLAY.POPUP) setOpen(true)},[result])
-
+  
+  const [openDetail, setOpenDetail] = useState(false)
+  
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(()=>{if(postId) setOpenDetail(true)},[]) 
   return (
     <>
+      {openDetail && <PostDetail onOpen={openDetail} onClose={()=>{
+        setOpenDetail(false)
+        navigate("..", { replace: true, relative: "path" });
+      }}/>}
       <PopupNotification open={open} onClose={()=>setOpen(false)} content={result?.message} title={result?.title} />
       <Column customStyle={{ pt: "0rem" }}>
         <Typography variant="title">Threddit</Typography>

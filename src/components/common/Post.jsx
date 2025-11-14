@@ -26,9 +26,6 @@ import { Result } from "../../class";
 import { DISPLAY, ROUTES, TEXT, TITLE } from "../../constant";
 import usePin from "../../hooks/usePin"
 
-
-
-
 export default function Post({
   onUpdateComment,
   showPin,

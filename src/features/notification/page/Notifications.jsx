@@ -48,8 +48,9 @@ export default function Notifications() {
                 }}
                 onClick = {()=>{
                   if (!notification.isRead) markAsRead(notification.id)
-                  const isPostId = !isNaN(Number(notification.target))
-                  if(isPostId)  navigate(`${ROUTES.DETAIL_POST}/${notification.target}`,)
+                  const isPostId = notification.target?.postId
+                  console.log(notification.target)
+                  if(isPostId)  navigate(`${ROUTES.HOME}/${notification.target.postId}`,)
                   else navigate(`${ROUTES.CLIENT_PAGE}/${notification.target}`)
                   // navigate(ROUTES.CLIENT_PAGE, {
                   //   state: !isNaN(Number(notification.target))
