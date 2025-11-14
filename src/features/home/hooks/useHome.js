@@ -1,18 +1,8 @@
 import {useState, useEffect, useCallback, useRef} from "react"
-import convertTime from "../../../utils/convertTime" // dung de set "n thời gian trước"
-// convertTime(createAt) (createAt là dữ liệu thô trả về từ api)
-
-//api
+import convertTime from "../../../utils/convertTime"
 import { handleGetFeed, handleGetFollowingPost } from "../../../services/request/postRequest"
 import { Result } from "../../../class"
 import { DISPLAY, ERRORS, TITLE } from "../../../constant"
-/**
- * Xử lý các login của trang home có thể bao gồm:
- * - lấy danh sách các bài viết
- * - bình luận
- * - up/down vote
- * - (mở rộng thêm tùy nhu cầu)
- */
 export default function useHome(){
     const username = localStorage.getItem("username")
     const [posts, setPosts] = useState([])
@@ -46,7 +36,8 @@ export default function useHome(){
         try{
             const response = await handleGetFeed()
             if(response.status === 200){
-                const convertedTimeList = response.data.map(post=>({
+                const posts = Array.isArray(response.data) ? response.data : []
+                const convertedTimeList = posts.map(post=>({
                     ...post,
                     createdAt : convertTime(post.createdAt),
                     updatedAt : convertTime(post.updatedAt)
@@ -60,7 +51,8 @@ export default function useHome(){
                 setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))}
             }
         catch(error){
-             setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, error, null))}
+             const errorMessage =  error?.message || String(error)
+             setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null))}
         finally{setLoading(false)}
     },[loading])
 
@@ -70,9 +62,9 @@ export default function useHome(){
         setLoading(true)
         try{
             const response = await handleGetFollowingPost(cursor.current)
-            console.log(response)
-            if(response.isOk()){
-                const convertedTimeList = response.data.posts.map(post=>({
+            if(response.status === 200){
+                const posts = Array.isArray(response.data.posts) ? response.data.posts : []
+                const convertedTimeList = posts.map(post=>({
                     ...post,
                     createdAt : convertTime(post.createdAt),
                     updatedAt : convertTime(post.updatedAt)
@@ -80,10 +72,12 @@ export default function useHome(){
                 setFollowingPosts(prev => [...prev, ...convertedTimeList])
                 cursor.current = response.data.cursor
             }
-            else if (response.statusCode === 204){setFollowingHasMore(false)}
+            else if (response.status === 204){setFollowingHasMore(false)}
             else{setResult( new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))}
         }
-        catch (error){setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, error))}
+        catch (error){
+            const errorMessage =  error?.message || String(error)
+            setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null))}
         finally{setLoading(false)}
     },[loading, followingHasMore])
 

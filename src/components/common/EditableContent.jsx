@@ -45,18 +45,27 @@ export default function EditableContent({
                         >
                             <CheckIcon/>
                         </IconButton>}
-                    <IconButton
-                        onClick={onCancel}
-                        sx={{color:"#F44336"}}
-                        size="small"
-                    >
-                        <CloseIcon/>
+                        <IconButton
+                            onClick={onCancel}
+                            sx={{color:"#F44336"}}
+                            size="small"
+                        >
+                            <CloseIcon/>
                     </IconButton>
                 </Box>  
             </Box>
         )
     }
     // If not editing, just display the content
-    return <Box display="flex" alignItems="center">{content}</Box>;
+    return <Box sx={{  
+            display: "flex",
+            alignItems: "flex-start", 
+            whiteSpace: "pre-wrap",   
+            wordBreak: "break-word",  
+            overflowWrap: "break-word", 
+            width: "100%"}}
+            >
+                {content}
+            </Box>;
   
 }

@@ -105,6 +105,7 @@ export default function AppLayout({ customStyle }) {
     position: "fixed",
     left: 0,
     top: 0,
+    zIndex:"20",
     ...customStyle,
   };
 

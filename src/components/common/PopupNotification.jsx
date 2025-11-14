@@ -15,7 +15,7 @@ export default function PopupNotification({ open = false, onClose, title, conten
           timeout: 500,
         },
       }}
-      sx={{ zIndex: 12, width:"100%", height:"100%" }}
+      sx={{ zIndex: 100, width:"100%", height:"100%" }}
     >
       <Fade in={open}>
         <Box

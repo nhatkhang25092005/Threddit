@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import {
   handleGetFollowNumberOfClient,
   handleFollowRequest,
@@ -13,7 +13,7 @@ import { DISPLAY, TITLE } from "../../../constant";
 import convertTime from "../../../utils/convertTime";
 
 export default function useClientPage() {
-  const clientName = useLocation().state?.clientName;
+  const {clientName} = useParams()
   const [follower, setFollower] = useState(0);
   const [following, setFollowing] = useState(0);
   const [follow, setFollow] = useState(false);

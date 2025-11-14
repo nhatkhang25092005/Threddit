@@ -2,7 +2,7 @@ import { Typography, Box, Fade, CircularProgress, Tabs, Tab } from "@mui/materia
 import Column from "../../../components/layout/Column";
 import useUserPage from "../hooks/useUserPage.js";
 import BlockContent from "../../../components/common/BlockContent";
-
+import PostDetail from "../../post/page/PostDetail"
 import { DISPLAY, ROUTES, TEXT, LABEL } from "../../../constant/";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -22,6 +22,8 @@ function allyProps(index) {
 export default function UserPage() {
   const navigate = useNavigate();
   const [value, setValue] = useState(0);
+  // const {postId} = useParams()
+
   
   const {
     handlePostUpdate,
@@ -80,6 +82,8 @@ export default function UserPage() {
     setValue(newValue);
   }
 
+  // useEffect(()=>{if(postId) setOpenDetail(true)},[postId])
+
   return (
     <>
       <SnakeBarNotification 
@@ -94,7 +98,6 @@ export default function UserPage() {
         title={resultTitle} 
         content={resultMessage} 
       />
-      
       <Column customStyle={{ pt: "1rem", width: "60%", mx: "auto", mb: "3rem" }}>
         <Typography variant="h6" fontWeight={"bold"}>{username}</Typography>
         
@@ -158,6 +161,9 @@ export default function UserPage() {
               createdPosts.length !== 0
                 ? createdPosts.map((post, index) =>
                   <Post
+                    showPin
+                    location = {ROUTES.USER}
+                    onNavigate
                     key={post.id}
                     item={post}
                     index={index}
@@ -189,6 +195,9 @@ export default function UserPage() {
               savedPosts.length !== 0
                 ? savedPosts.map((post, index) =>
                   <Post
+                    showPin
+                    onNavigate
+                    location={ROUTES.USER}
                     key={post.id}
                     item={post}
                     index={index}

@@ -7,17 +7,10 @@ const postApi = {
         return axiosClient.get(finalUrl)
     },
 
-
-
    // Lấy chi tiết 1 bài viết
-  getById: (id) => {
+  getPostById: (id) => {
     const url = import.meta.env.VITE_API_POST + `/detail/${id}`;
-    return axiosClient.get(url);
-  },
-
-  // Lấy comment của bài viết
-  getComments: (postId) => {
-    const url = import.meta.env.VITE_API_POST + `/${postId}/comment`;
+    console.log(url)
     return axiosClient.get(url);
   },
 

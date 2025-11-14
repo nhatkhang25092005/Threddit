@@ -48,7 +48,14 @@ export default function Notifications() {
                 }}
                 onClick = {()=>{
                   if (!notification.isRead) markAsRead(notification.id)
-                  navigate(ROUTES.CLIENT_PAGE,{state:{clientName:notification.target}})
+                  const isPostId = !isNaN(Number(notification.target))
+                  if(isPostId)  navigate(`${ROUTES.DETAIL_POST}/${notification.target}`,)
+                  else navigate(`${ROUTES.CLIENT_PAGE}/${notification.target}`)
+                  // navigate(ROUTES.CLIENT_PAGE, {
+                  //   state: !isNaN(Number(notification.target))
+                  //     ? { postId: Number(notification.target) }
+                  //     : { clientName: notification.target }
+                  // })
                 }}
                 header={
                   <Box 

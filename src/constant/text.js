@@ -29,5 +29,7 @@ export const TEXT = {
     NO_POST_SAVED:"Bạn chưa lưu bài viết nào",
     CREATE_POST_SUCCESS:"Tạo bài viết thành công!",
     NO_FEED : "Bảng tin chưa có bài viết nào mới",
-    NO_FOLLOWING_POSTS : "Những người bạn theo dõi hiện chưa có bài đăng"
+    NO_FOLLOWING_POSTS : "Những người bạn theo dõi hiện chưa có bài đăng",
+    NO_COMMENTS : "Hãy là người đầu tiên bình luận cho bài viết này!",
+    ITS_YOU : "Bạn"
 }

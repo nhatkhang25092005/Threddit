@@ -15,6 +15,7 @@ import PopupNotification from "../../../components/common/PopupNotification";
 import useInfiniteScroll  from "../../../hooks/useInfiniteScroll.js"
 export default function ClientPage() {
   const navigate = useNavigate()
+  
   const {
     loading, 
     clientName, 
