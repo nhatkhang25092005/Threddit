@@ -6,7 +6,7 @@ import Notfound from "../components/common/Notfound";
 import Notifications from "../features/notification/page/Notifications";
 import NotificationProvider from "../provider/NotificationProvider";
 import ClientPage from "../features/personal/page/ClientPage";
-import Home from "../features/Home/page/Home.jsx";
+import Home from "../features/home/page/Home.jsx";
 import Search from "../features/user/page/Search";
 import CreatePost from "../features/post/page/CreatePost";
 import FollowList from "../features/user/page/FollowList";
