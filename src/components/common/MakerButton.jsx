@@ -2,6 +2,7 @@ import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlin
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { handleSavePost, handleUnSavePost } from '../../services/request/postRequest';
 import {Button, Typography,CircularProgress} from "@mui/material"
+import { emitPostEvent, POST_EVENTS } from '../../utils/postEvent';
 import { useEffect, useState } from 'react';
 export default function MakerButton({data, sx, marked = false, postId, ...rest}){
     const [save, setSave] = useState(marked)
@@ -24,6 +25,12 @@ export default function MakerButton({data, sx, marked = false, postId, ...rest})
             if (response.isOk()) {
             setSave(!save)
             setDisplayData(prev => prev + (save ? -1 : 1))
+           
+            emitPostEvent(POST_EVENTS.SAVE_CHANGED,{
+                postId, 
+                isSaved : !save,
+                saveNumber:displayData + (save ? -1 : 1)
+            })
             } else {console.error(`Fail in ${save ? "unsave" : "save"} post`)}
             if (rest.onClick) rest.onClick(e)
             
@@ -32,7 +39,6 @@ export default function MakerButton({data, sx, marked = false, postId, ...rest})
         } finally {
             setLoading(false)
         }
-        
     }
 
     return(

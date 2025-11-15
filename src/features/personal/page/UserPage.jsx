@@ -2,7 +2,7 @@ import { Typography, Box, Fade, CircularProgress, Tabs, Tab } from "@mui/materia
 import Column from "../../../components/layout/Column";
 import useUserPage from "../hooks/useUserPage.js";
 import BlockContent from "../../../components/common/BlockContent";
-import PostDetail from "../../post/page/PostDetail"
+import { listenToPostEvent, POST_EVENTS } from "../../../utils/postEvent.js";
 import { DISPLAY, ROUTES, TEXT, LABEL } from "../../../constant/";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -23,8 +23,6 @@ export default function UserPage() {
   const navigate = useNavigate();
   const [value, setValue] = useState(0);
   // const {postId} = useParams()
-
-  
   const {
     handlePostUpdate,
     handlePostResult,
@@ -32,6 +30,8 @@ export default function UserPage() {
     getCreatedPost,
     getSavedPost,
     setTag,
+    setCreatedPosts,
+    setSavedPosts,
     createdPostHasMore,
     savedPostHasMore,
     loading,
@@ -40,8 +40,39 @@ export default function UserPage() {
     following,
     createdPosts,
     savedPosts,
-    result,
+    result, 
   } = useUserPage();
+        
+   useEffect(() => {
+    if(!loading){
+      const unsubscribe = listenToPostEvent(POST_EVENTS.SAVE_CHANGED, (event) => {
+      const { postId, isSaved, saveNumber } = event.detail;
+      console.log('🔔 UserPage.jsx received event:', event.detail);
+      
+      setCreatedPosts(prev =>{
+        console.log(prev)
+        const updated = prev.map(item=>(
+          item.id === postId ? {...item, isSave : isSaved} : item
+        ))
+        console.log(updated)
+        return updated
+      });
+        
+      console.log(createdPosts[0].isSave)
+      
+      setSavedPosts(prev => 
+        prev.map(post => 
+          post.id === postId 
+            ? { ...post, isSaved, saveNumber }
+            : post
+        )
+      );
+    });
+
+    return unsubscribe;
+  }
+  }, [setCreatedPosts, setSavedPosts, loading]);
+
 
   const createdHasMoreRef = useInfiniteScroll({
     hasMore: createdPostHasMore,
@@ -74,6 +105,8 @@ export default function UserPage() {
       }
     }
   }, [result]);
+
+  console.log("UserPage re-render")
 
 
   // switch tag handler

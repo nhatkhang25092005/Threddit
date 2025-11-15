@@ -71,14 +71,13 @@ function EditableComment({
 }){
   if(!isEditing) 
     return (<>
-      <Box sx={{display:"flex", flexDirection:"column",ml:"1rem", bgcolor:"#bcbdbf43", borderRadius:"1rem",py:0.5,px:2,width:"fit-content"}}>
-        <Typography > {comment.content}</Typography>
+      <Box sx={{display:"flex", flexDirection:"column", bgcolor:"#bcbdbf43", borderRadius:"1rem",py:0.5,px:2,width:"fit-content"}}>
+        <Typography > {comment?.content}</Typography>
       </Box>  
     </>)
   else return(
     <Box sx={{display:"flex", flexDirection:"column", ml:"1rem",alignItems:"flex-end", width:"100%"}}>
       <TextField
-
         multiline
         fullWidth
         minRows={1}
@@ -125,7 +124,7 @@ function EditableComment({
   )
 }
 
-const username = localStorage.getItem('username')
+
 export default function Comment({
   comment, 
   index, 
@@ -133,10 +132,10 @@ export default function Comment({
   onResult,
   onUpdateComment
 }){
+  const username = localStorage.getItem('username')
   const [isEditing, setIsEditing] = useState(false)
   const [editComment, setEditComment] = useState('')
   const [loading, setLoading] = useState(false)
-
   function startEditComment(currentContent){
     setIsEditing(true)
     setEditComment(currentContent)
@@ -196,15 +195,18 @@ export default function Comment({
         ? <Typography variant="sub" sx={{ml:"5px"}}>({TEXT.ITS_YOU})</Typography>
         : undefined}
         <Box sx={{display:"flex", flexDirection:"row", alignItems:"flex-start",width:"100%"}}>
-          <EditableComment 
-            isEditing={isEditing} 
-            comment={comment} 
-            editComment={editComment}
-            onCancel={cancelEditComment}
-            loading={loading}
-            onSave={saveEditComment}
-            onEditChange={setEditComment}
-          />
+          <Box sx={{display:"flex", flexDirection:"column", alignItems:"start", ml:"1rem"}}>
+            <EditableComment 
+              isEditing={isEditing} 
+              comment={comment} 
+              editComment={editComment}
+              onCancel={cancelEditComment}
+              loading={loading}
+              onSave={saveEditComment}
+              onEditChange={setEditComment}
+            />
+            <Typography variant="sub" sx={{ml:"0.5rem", fontSize:"15px"}}>{comment.createdAt}</Typography>
+          </Box>
           {(comment?.commenter?.username === username && !isEditing) &&
           <CommentMenu 
             editComment={()=>startEditComment(comment.content)}

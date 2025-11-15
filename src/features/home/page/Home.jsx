@@ -32,18 +32,19 @@ export default function Home() {
     getFollowingPosts,
     followingHasMore,
     feedHasMore,
-    loading
+    loadingForFeed,
+    LoadingForFollow
   } = useHome();
-  
+
   // Scroll controller
   const loadMoreRef = useInfiniteScroll({
     hasMore: feedHasMore,
-    loading,
+    loading : loadingForFeed,
     onLoadMore : getFeed
   })
   const followingMoreRef = useInfiniteScroll({
     hasMore:followingHasMore,
-    loading,
+    loading: LoadingForFollow,
     onLoadMore:getFollowingPosts
   })
 
@@ -122,7 +123,7 @@ export default function Home() {
             <div ref={loadMoreRef} style={{ height: "20px", visibility: feedHasMore ? "visible" : "hidden" }} />
 
             {/* Loading block */}
-            <Fade in={loading} unmountOnExit>
+            <Fade in={loadingForFeed} unmountOnExit>
               <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
                 <CircularProgress  sx={{color:"white"}} size={30}  />
               </Box>
@@ -153,7 +154,7 @@ export default function Home() {
             <div ref={followingMoreRef} style={{ height: "20px", visibility: followingHasMore ? "visible" : "hidden" }} />
 
             {/* Loading block */}
-            <Fade in={loading} unmountOnExit>
+            <Fade in={LoadingForFollow} unmountOnExit>
               <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
                 <CircularProgress sx={{color:"white"}} size={30} />
               </Box>

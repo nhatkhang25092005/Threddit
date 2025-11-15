@@ -86,7 +86,7 @@ const sxForLoading = {
 const sxForSendIcon={cursor:"pointer",p:"4px","&:hover":{p:0}}
 const sxForDisabledSendIcon = {p:"4px", opacity:"10%"}
 
-export default function PostDetail({onOpen, onClose}) {
+export default function PostDetail({onOpen, onClose, onUpdate}) {
   return(
     <Modal
       sx={{zIndex:40}}
@@ -96,13 +96,13 @@ export default function PostDetail({onOpen, onClose}) {
       aria-describedby="modal-modal-description"
     >
       <CommentProvider>
-        <PostDetailContent onClose={onClose}/>
+        <PostDetailContent onClose={onClose} onUpdate = {onUpdate}/>
       </CommentProvider>
     </Modal>
   );
 }
 
-function PostDetailContent ({onClose}){
+function PostDetailContent ({onClose, onUpdate}){
   const {
     post,
     comments,
@@ -110,19 +110,28 @@ function PostDetailContent ({onClose}){
     result,
     commentLoading,
     commentContent,
+    hasMore,
+    getMoreCommentLoading,
     postComment,
-    onUpdateComment,
     setResult,
-    setCommentContent
+    getComment,
+    setCommentContent,
   } = usePostDetail()
 
   const [openPopup, setOpenPopup] = useState(false)
   const [openSnack, setOpenSnack] = useState(false)
+  useEffect(()=>{if(onUpdate && comments && !loading) onUpdate({type:'comment',commentNumber:comments.length})},[comments, loading])
+    
+  // Have not sync icon display yet
+  useEffect(()=>{if(onUpdate && !loading && post.isSaved !== undefined){ 
+    console.log("effect on save")
+    console.log(post.isSaved)
+    onUpdate({type:'save',status:post.isSaved})}},[post, loading])
 
   useEffect(()=>{
     if(result?.type === DISPLAY.POPUP) setOpenPopup(true)
     if(result?.type === DISPLAY.SNACKBAR) setOpenSnack(true)
-    },[result])
+  },[result])
 
   if(loading || post === null)
     return(
@@ -147,8 +156,8 @@ function PostDetailContent ({onClose}){
               commentList={comments}
               item={post}
               index={Number(post?.id)}
-              onUpdateComment = {onUpdateComment}
               onResult={setResult}
+              onGetMoreComment={{getMoreComment: getComment, hasMore : hasMore, getMoreCommentLoading: getMoreCommentLoading}}
             />
         </Box>
         <Box sx={sxForCommentInputBox} >

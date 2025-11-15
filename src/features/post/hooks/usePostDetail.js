@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { handleGetComments, handlePostComment } from "../../../services/request/commentRequest";
 import { handleGetDetailPost } from "../../../services/request/postRequest";
 import convertTime from "../../../utils/convertTime";
@@ -11,20 +11,27 @@ import { useRealtimeComments } from "../../../provider/CommentProvider";
 export default function usePostDetail() {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [commentLoading, setCommentLoading] = useState(false)
   const [result, setResult] = useState(null);
   const {realTimeComments} = useRealtimeComments()
   const [comments, setComments] = useState([])
   const [commentContent, setCommentContent] = useState("")
   const [hasMore, setHasMore] = useState(true)
+  const [getMoreCommentLoading, setGetMoreCommentLoading] = useState(false)
+  const cursor = useRef(null)
 
-  const getComment = useCallback(async () => {
-    if(!hasMore) return
+  const getComment = async () => {
+    if(!hasMore &&  getMoreCommentLoading) return
+    setGetMoreCommentLoading(true)
     try {
-      const response = await handleGetComments(postId);
+      console.log(cursor.current)
+
+      const response = await handleGetComments(postId, cursor.current);
       console.log(response)
-      if(response.status === 204) setHasMore(false)
+      if(response.status === 204) {
+        setHasMore(false)
+      }
       else if(response.isOk()) {
           const convertedTimeList = response.data.comments.map(comment => ({
           ...comment,
@@ -32,14 +39,17 @@ export default function usePostDetail() {
           updatedAt: convertTime(comment.updatedAt),
         }))
         setComments(prev=>[...prev, ...convertedTimeList])
+        cursor.current = response.data.cursor
       } 
       else {setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null));}
     } 
     catch (err) {
+      console.log(err)
       const errorMessage = err?.message || String(err);
       setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null));
     }
-  }, [postId, hasMore]);
+    finally{setGetMoreCommentLoading(false)}
+  }
 
   const getDetailPost = useCallback(async () => {
     try {
@@ -93,15 +103,32 @@ export default function usePostDetail() {
     setLoading(true);
     setPost(null);
     setComments([]);
-
     Promise.all([getDetailPost(), getComment()])
       .catch(err => {
         const errorMessage = err?.message || String(err);
         setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null));
       })
       .finally(() => setLoading(false));
-  }, [postId, getDetailPost, getComment]);
+  }, [postId]);
 
-  useEffect(()=>{ setComments(prev=>[realTimeComments, ...prev]) },[realTimeComments])
-  return {commentContent, comments, loading,commentLoading, post, result,setCommentContent, onUpdateComment, postComment, setResult };
+  useEffect(()=>{ 
+    if(!realTimeComments) return
+    setComments(prev=>[realTimeComments, ...prev]) },[realTimeComments])
+    
+    
+  return {
+    commentContent, 
+    comments, 
+    loading,
+    commentLoading, 
+    post, 
+    result, 
+    hasMore, 
+    getMoreCommentLoading,
+    getComment, 
+    setCommentContent, 
+    onUpdateComment, 
+    postComment, 
+    setResult 
+  }
 }

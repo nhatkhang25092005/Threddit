@@ -5,7 +5,7 @@ const CommentContext = createContext()
 
 export default function CommentProvider({children}){
     const {postId} = useParams()
-    const [realTimeComments, setRealTimeComments] = useState({})
+    const [realTimeComments, setRealTimeComments] = useState(null)
     const [isConnected, setIsConnected] = useState(false)
     useEffect(()=>{
         if(!postId){return}
@@ -15,7 +15,6 @@ export default function CommentProvider({children}){
 
         eventSource.onmessage = (event)=>{
             try{
-                console.log("Listened data")
                 const data = JSON.parse(event.data)
                 setRealTimeComments(data)
             }
@@ -32,7 +31,7 @@ export default function CommentProvider({children}){
         return () => {
             eventSource.close()
             setIsConnected(false)
-            setRealTimeComments([])
+            setRealTimeComments(null)
         }
     },[postId])
 

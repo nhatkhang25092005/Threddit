@@ -10,7 +10,6 @@ const postApi = {
    // Lấy chi tiết 1 bài viết
   getPostById: (id) => {
     const url = import.meta.env.VITE_API_POST + `/detail/${id}`;
-    console.log(url)
     return axiosClient.get(url);
   },
 

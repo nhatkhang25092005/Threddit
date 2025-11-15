@@ -7,7 +7,8 @@ export default function useHome(){
     const username = localStorage.getItem("username")
     const [posts, setPosts] = useState([])
     const [followingPosts, setFollowingPosts] = useState([])
-    const [loading, setLoading] = useState(false)
+    const [loadingForFeed, setLoadingForFeed] = useState(false)
+    const [loadingForFollow, setLoadingForFollow] = useState(false)
     const [result, setResult] = useState(null)
     const [feedHasMore, setFeedHasMore] = useState(true)
     const [followingHasMore, setFollowingHasMore] = useState(true)
@@ -31,8 +32,8 @@ export default function useHome(){
 
     // Get feed
     const getFeed = useCallback(async () => {
-        if(loading) return
-        setLoading(true)
+        if(loadingForFeed) return
+        setLoadingForFeed(true)
         try{
             const response = await handleGetFeed()
             if(response.status === 200){
@@ -53,13 +54,13 @@ export default function useHome(){
         catch(error){
              const errorMessage =  error?.message || String(error)
              setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null))}
-        finally{setLoading(false)}
-    },[loading])
+        finally{setLoadingForFeed(false)}
+    },[loadingForFeed])
 
     // Get following posts
     const getFollowingPosts = useCallback(async ()=>{
-        if(loading || !followingHasMore ) return
-        setLoading(true)
+        if(loadingForFollow || !followingHasMore ) return
+        setLoadingForFollow(true)
         try{
             const response = await handleGetFollowingPost(cursor.current)
             if(response.status === 200){
@@ -78,8 +79,8 @@ export default function useHome(){
         catch (error){
             const errorMessage =  error?.message || String(error)
             setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null))}
-        finally{setLoading(false)}
-    },[loading, followingHasMore])
+        finally{setLoadingForFollow(false)}
+    },[loadingForFollow, followingHasMore])
 
     return{
         getFollowingPosts,
@@ -90,7 +91,8 @@ export default function useHome(){
         posts,
         result,
         username,
-        loading,
+        loadingForFeed,
+        loadingForFollow,
         feedHasMore
     }
 }

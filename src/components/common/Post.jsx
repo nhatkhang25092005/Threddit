@@ -6,7 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import NorthIcon from "@mui/icons-material/North";
 import SouthIcon from "@mui/icons-material/South";
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
-import { CircularProgress, Box, Typography } from "@mui/material";
+import { CircularProgress, Box, Typography, Fade } from "@mui/material";
 
 // Custom
 import BlockContent from "./BlockContent";
@@ -18,13 +18,16 @@ import ShareButton from "./ShareButton";
 import EditableContent from "./EditableContent";
 import PostDetail from "../../features/post/page/PostDetail";
 import Comment from "./Comment"
+import useInfiniteScroll from '../../hooks/useInfiniteScroll'
 
 // Services & Utils
 import { handleDeleteMyPost, handleEditMyPost } from "../../services/request/postRequest";
 import { extractUsernames } from "../../utils/extractUsernames";
 import { Result } from "../../class";
-import { DISPLAY, ROUTES, TEXT, TITLE } from "../../constant";
+import { DISPLAY, TEXT, TITLE } from "../../constant";
 import usePin from "../../hooks/usePin"
+import { listenToPostEvent, POST_EVENTS } from "../../utils/postEvent";
+import SnakeBarNotification from "./SnakeBarNotification";
 
 export default function Post({
   onUpdateComment,
@@ -34,26 +37,45 @@ export default function Post({
   onComment,
   commentList,
   onNavigate = false,
-  item,
+  item, // the post data object
   index,
   createdPostsLength,
   adjustSavePostAfterUnsave = null,
   isOwner = false,
   onResult,
   onPostUpdatedRendering,
+  onGetMoreComment
 }) {
+  function normalizeItem(item){
+    const {isSave, isSaved, ...rest} = item
+    return{
+      ...rest,
+      isSaved:isSaved ?? isSave ?? false
+    }
+  }
+
   const { pinPost, unpinPost, pinLoading } = usePin();
   const [editingPostId, setEditingPostId] = useState(null);
   const [editContent, setEditContent] = useState("");
   const [loading, setLoading] = useState(false);
-  const [currentItem, setCurrentItem] = useState(item);
+  const [currentItem, setCurrentItem] = useState(normalizeItem(item));
   const navigate = useNavigate()
   const [openDetail, setOpenDetail] = useState(false)
   const [comments, setComments] = useState(commentList)
+  
+  const {getMoreComment = null, hasMore = null, getMoreCommentLoading = null} = onGetMoreComment || {}
 
+  const commentRef = useInfiniteScroll({
+    hasMore,
+    loading : getMoreCommentLoading, 
+    onLoadMore : getMoreComment
+  })
 
   // Get comments list
-  useEffect(()=>{setComments(commentList)},[commentList])
+  useEffect(()=>{
+    setComments(commentList)
+    if(commentList) setCurrentItem(prev=>({...prev, commentNumber : commentList.length}))
+  },[commentList])
 
   // Handle navigation
   const handleNavigateToPost = () => {
@@ -62,6 +84,20 @@ export default function Post({
       setOpenDetail(true)
     }
   };
+
+  useEffect(()=>{
+    const unsubscribe = listenToPostEvent(POST_EVENTS.SAVE_CHANGED, (event)=>{
+      const {postId, isSaved, saveNumber} = event.detail
+      if(postId === currentItem.id){
+         setCurrentItem(prev => ({
+          ...prev,
+          isSaved,
+          saveNumber
+        }));
+      }
+    })
+    return unsubscribe
+  },[currentItem.id])
 
   async function handlePin(postId, currentPinStatus){
     try{
@@ -124,7 +160,6 @@ export default function Post({
             message: response.message 
           });
         }
-
         cancelEditing()
         if(onResult) onResult(new Result(DISPLAY.SNACKBAR, null, response.message, null))
       } else if (onResult) onResult(response.message);
@@ -165,12 +200,33 @@ export default function Post({
     }
   }
 
+  // handle update render from post detail
+  function handleUpdateFromDetail(data){
+    switch(data.type){
+      case 'comment' : 
+        setCurrentItem(prev=>({...prev, commentNumber : data.commentNumber}))
+        break
+      case 'save':
+        console.log(data)
+        setCurrentItem(prev=>({...prev, isSaved : data.status}))
+        break
+    }
+  }
+
+  const [openSnack, setOpenSnack] = useState(false)
+  const [resultOfShare, setResultOfShare] = useState(null)
+
+  useEffect(()=>{if(resultOfShare) setOpenSnack(true)},[resultOfShare])
   return (
     <>
-      {openDetail && <PostDetail onOpen={openDetail} onClose={()=>{
-        setOpenDetail(false)
-        navigate("..", { replace: true, relative: "path" });
-      }}
+      <SnakeBarNotification open={openSnack} onClose={()=>setOpenSnack(false)} duration={3000} message={resultOfShare?.message}/>
+      {openDetail && <PostDetail 
+        onOpen={openDetail} 
+        onClose={()=>{
+          setOpenDetail(false)
+          navigate("..", { replace: true, relative: "path" });
+        }}
+        onUpdate = {handleUpdateFromDetail}
         />}
       <BlockContent
         key={index}
@@ -256,11 +312,11 @@ export default function Post({
               <MakerButton
                 data={Number(currentItem.saveNumber)}
                 sx={{ width: "130px" }}
-                marked={currentItem.isSave ? true : false}
+                marked={currentItem.isSaved ? true : false}
                 postId={currentItem.id}
                 onClick = {adjustSavePostAfterUnsave ? () => adjustSavePostAfterUnsave(currentItem.id) : undefined}
               />
-              <ShareButton />
+              <ShareButton onNotification={setResultOfShare} postId={item.id} />
             </Box>
       
            {/* Open comment list */}
@@ -269,6 +325,7 @@ export default function Post({
               {comments.length !==0 
               ? comments.map((comment, index) => 
                 <Comment 
+                  key={index}
                   comment={comment} 
                   index={index} 
                   postId={item.id}
@@ -278,6 +335,13 @@ export default function Post({
               : <Box key="no_more_comment" sx={{flex:1, my:"5rem"}}><Typography textAlign={"center"}>{TEXT.NO_COMMENTS}</Typography></Box>}
             </Box>
           )}
+
+          <div ref={commentRef} style={{ visibility: hasMore ? "visible" : "hidden" }}/>
+          <Fade in={loading} unmountOnExit>
+            <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
+              <CircularProgress />
+            </Box>
+          </Fade>
           </Box>
         }
         footerStyle={{
