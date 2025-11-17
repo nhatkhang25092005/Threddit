@@ -17,7 +17,6 @@ export default function TopBar({ title = "Trang chủ", onLogin }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        backgroundColor: "#0f0f0f",
         color: "white",
         padding: "10px 20px",
         position: "fixed",

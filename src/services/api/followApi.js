@@ -7,6 +7,12 @@ const followApi = {
       import.meta.env.VITE_API_FOLLOW + `/${username}` + import.meta.env.VITE_API_COUNT_FOLLOW
     ),
   
+    // search users
+  searchUsers: (key) => {
+      const url = import.meta.env.VITE_API_FOLLOW + `/search?key=${encodeURIComponent(key)}`;
+      return axiosClient.get(url);
+    },
+
   // follow a client
   followClient : (username) => 
     axiosClient.post(
