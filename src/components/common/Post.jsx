@@ -224,8 +224,6 @@ const handleVote = async (isUpVote) => {
 
   try {
     let response;
-
-    //  Nhấn lại nút → HỦY VOTE
     if (voteState.isUpvote === isUpVote) {
       response = await postApi.cancel(currentItem.id);
 
@@ -298,28 +296,11 @@ const handleVote = async (isUpVote) => {
         />}
       <BlockContent
         key={index}
-        customStyle={{
-          ...sx,
-          px: "1rem",
-          bgcolor:"#0A0B0B",
-          ...(index === createdPostsLength - 1  ? { borderBottom: "none" } : undefined)
-        }}
+        customStyle={{...sx, px: "1rem", bgcolor:"#0A0B0B", ...(index === createdPostsLength - 1  ? { borderBottom: "none" } : undefined)}}
       
         // Header of content block
         header={
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyItems: "start",
-              pb: "0px",
-              gap: "1rem",
-              alignItems: "center",
-              mb: "1rem",
-              py: "1rem",
-              mx: "1rem",
-            }}
-          >
+          <Box sx={{display: "flex", flexDirection: "row", justifyItems: "start", pb: "0px", gap: "1rem", alignItems: "center", mb: "1rem",py: "1rem",mx: "1rem",}}>
             <Typography onClick={(e)=>{handleRedirectOnName(e)}} variant="h6" fontWeight={"bold"} sx={{cursor:'pointer','&:hover':{fontStyle:'underline'}}}>
               {currentItem.author.username}
             </Typography>
@@ -332,14 +313,8 @@ const handleVote = async (isUpVote) => {
                   pinProps(currentItem)
               ]}
               sx={{ ml: "auto" }}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
+              anchorOrigin={{vertical: "bottom", horizontal: "left"}}
+              transformOrigin={{vertical: "top", horizontal: "right",}}
             />}
           </Box>
         }
@@ -347,81 +322,21 @@ const handleVote = async (isUpVote) => {
         // Footer of content block
         footer={
           <Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                gap: "1rem",
-                justifyItems: "start",
-                mx: "1rem",
-              }}
-            >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1.5,
-              }}
-            >
+            <Box sx={{ display: "flex", flexDirection: "row", gap: "1rem", justifyItems: "start", mx: "1rem"}}>
+            <Box sx={{display: "flex", alignItems: "center", gap: 1.5,}}>
               {/* UPVOTE */}
               <Box
                 onClick={() => handleVote(true)}
-                sx={{
-                  p: "4px", // Giảm padding để thu nhỏ khu vực click và biểu tượng
-                  borderRadius: "50%",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  bgcolor: "transparent",
-                  "&:hover": { bgcolor: "#1b1b1b" },
-                  transition: "background-color 0.2s ease", // Thêm transition cho hover
-                }}
-              >
-                <ArrowIcon
-                  style={{
-                    transform: "rotate(-45deg)",
-                    width: 24,
-                    height: 24,
-                    color: voteState.isUpvote === true ? "#4CAF50" : "#A0A0A0",
-                    transition: "color 0.2s ease",
-                  }}
-                />
+                sx={{p: "4px", borderRadius: "50%", cursor: "pointer", display: "flex", alignItems: "center",justifyContent: "center", bgcolor: "transparent","&:hover": { bgcolor: "#1b1b1b" },transition: "background-color 0.2s ease",}}>
+                <ArrowIcon style={{transform: "rotate(-45deg)", width: 24, height: 24, color: voteState.isUpvote === true ? "#4CAF50" : "#A0A0A0",transition: "color 0.2s ease",}}/>
               </Box>
-              <Box
-                sx={{
-                  minWidth: 30,
-                  textAlign: "center",
-                  fontWeight: 700,
-                  fontSize: "1.1rem",
-                  color: "#ffffff", 
-                }}
-              >
+              <Box sx={{minWidth: 30, textAlign: "center", fontWeight: 700, fontSize: "1.1rem", color: "#ffffff"}}>
                 {voteState.up - voteState.down}
               </Box>
                 <Box
                   onClick={() => handleVote(false)}
-                  sx={{
-                    p: "4px", // Giảm padding
-                    borderRadius: "50%",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    bgcolor: "transparent",
-                    "&:hover": { bgcolor: "#1b1b1b" },
-                    transition: "background-color 0.2s ease", // Thêm transition cho hover
-                  }}
-                >
-                  <ArrowIcon
-                    style={{
-                      transform: "rotate(135deg)",
-                      width: 24, // Giảm kích thước biểu tượng
-                      height: 24, // Giảm kích thước biểu tượng
-                      color: voteState.isUpvote === false ? "#F44336" : "#A0A0A0", // Dùng màu xám nhạt hơn cho trạng thái mặc định
-                      transition: "color 0.2s ease",
-                    }}
-                  />
+                  sx={{p: "4px", borderRadius: "50%", cursor: "pointer", display: "flex",alignItems: "center", justifyContent: "center", bgcolor: "transparent","&:hover": { bgcolor: "#1b1b1b" },transition: "background-color 0.2s ease"}}>
+                  <ArrowIcon style={{transform: "rotate(135deg)", width: 24,  height: 24, color: voteState.isUpvote === false ? "#F44336" : "#A0A0A0", transition: "color 0.2s ease",}}/>
                 </Box>
               </Box>
       
@@ -462,20 +377,10 @@ const handleVote = async (isUpVote) => {
             </Box>
           </Fade>
           </Box>
-        }
-        footerStyle={{
-          py: "1rem",
-          mb: "1rem",
-          ...((index === createdPostsLength - 1 || onComment)
-            ? { mb: "0", borderBottom: "None" }
-            : { borderBottom: "solid #BCBDBF 1px" }),
-        }}
-      >
-        <Box 
-          sx={{
-            height:"100%",
-          }}
+          }
+          footerStyle={{py: "1rem", mb: "1rem", ...((index === createdPostsLength - 1 || onComment) ? { mb: "0", borderBottom: "None" } : { borderBottom: "solid #BCBDBF 1px" }),}}
         >
+        <Box sx={{height:"100%"}}>
           <EditableContent
             loading={editLoading}
             isEditing={editingPostId === currentItem.id}
