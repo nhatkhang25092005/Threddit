@@ -3,6 +3,7 @@ import AuthRoutes from "./AuthRoutes.jsx";
 import AppRoute from "./AppRoute.jsx";
 import Notfound from "../components/common/Notfound.jsx";
 import Awake from "../features/Awake.jsx";
+import Test from "../test/Test.jsx";
 export default function AppRouter() {
   return (
     <BrowserRouter>
@@ -19,6 +20,8 @@ export default function AppRouter() {
 
         {/* Not Found */}
         <Route path="*" element={<Notfound />} />
+
+        <Route path='/test' element = {<Test/>}/>
       </Routes>
     </BrowserRouter>
   );

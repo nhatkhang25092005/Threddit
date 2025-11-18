@@ -1,13 +1,34 @@
 import {Button} from "@mui/material"
-export default function ShareButton() {
+import { Result } from "../../class"
+import { DISPLAY, TITLE } from "../../constant"
+
+
+
+export default function ShareButton({onNotification, postId}) {
+
+  const handleShare = async () => {
+    const url = `${window.location.origin}/app/home/${postId}`
+    console.log(url)
+      try{
+        await navigator.clipboard.writeText(url)
+        if(onNotification) onNotification(new Result(DISPLAY.SNACKBAR, null, 'copied link!',null))
+      }
+      catch (error) {
+        console.error(error)
+        const errMessage = error?.message || String(error)
+        if(onNotification) onNotification(new Result(DISPLAY.POPUP, TITLE.ERROR, errMessage, null))
+      }
+  }
+
   return (
     <Button variant="interact"
+    onClick={handleShare}
      sx={{
-        minWidth: 0, // bỏ min-width mặc định 64px của MUI
+        minWidth: 0,
         width: 50,
         height: 50,
-        borderRadius: "50%", // 👈 làm tròn
-        padding: 0, // bỏ padding thừa
+        borderRadius: "50%", // 
+        padding: 0,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

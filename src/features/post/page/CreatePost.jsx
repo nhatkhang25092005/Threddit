@@ -5,16 +5,52 @@ import PopupNotification from "../../../components/common/PopupNotification";
 import { DISPLAY } from "../../../constant";
 import BlockContent from "../../../components/common/BlockContent";
 import Column from "../../../components/layout/Column";
+import useMention from "../hooks/useMention";
+import MentionList from "../../../components/common/MentionList";
+
 const username = localStorage.getItem("username");
 export default function CreatePost({ onPost, onExit }) {
   const { result, content, setContent, loading, handlePost } = useCreatePost();
-  console.log(result);
 
   // popup modal controller
   const [open, setOpen] = useState(false);
   useEffect(() => {
     if (result?.type === DISPLAY.POPUP) setOpen(true);
   }, [result]);
+
+const {inputRef, showList, list, setShowList} = useMention(content);
+
+console.log("🎨 CreatePost render:", { 
+  showList, 
+  listCount: list.length,
+  list 
+});
+
+const handleSelectMention = (username) => {
+  const cursor = inputRef.current.selectionStart;
+  const textBeforeCursor = content.slice(0, cursor);
+  const textAfterCursor = content.slice(cursor);
+  
+  // Tìm vị trí bắt đầu của @mention
+  const lastAtIndex = textBeforeCursor.lastIndexOf('@');
+  
+  if (lastAtIndex !== -1) {
+    const newText = 
+      textBeforeCursor.slice(0, lastAtIndex) + 
+      `@${username} ` + 
+      textAfterCursor;
+    
+    setContent(newText);
+    setShowList(false);
+    
+    // Đặt cursor sau mention (optional)
+    setTimeout(() => {
+      const newCursorPos = lastAtIndex + username.length + 2;
+      inputRef.current.setSelectionRange(newCursorPos, newCursorPos);
+      inputRef.current.focus();
+    }, 0);
+  }
+};
 
   return (
     <>
@@ -63,13 +99,18 @@ export default function CreatePost({ onPost, onExit }) {
             <Typography sx={{ fontWeight: "bold", color: "#fff" }}>
               {username}
             </Typography>
+            <Box sx={{ position: "relative" }}>
             <TextField
               multiline
               fullWidth
               placeholder="Tin gì mới?"
               value={content}
+              inputProps={{ 
+                ref: inputRef  // ← ĐỔI TỪ inputRef={inputRef} SANG inputProps
+                }}
               onChange={(e) => setContent(e.target.value)}
               variant="standard"
+              onKeyUp={() => {}}
               InputProps={{
                 disableUnderline: true,
                 sx: {
@@ -81,6 +122,16 @@ export default function CreatePost({ onPost, onExit }) {
                 },
               }}
             />
+
+            {showList && (
+              <MentionList
+                items={list}
+                onSelect={handleSelectMention}
+              />
+            )}
+          </Box>
+
+
 
             <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
               <Button

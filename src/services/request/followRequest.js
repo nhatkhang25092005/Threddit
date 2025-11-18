@@ -72,7 +72,7 @@ export async function handleGetFollowNumberOfUser(){
 // get the followers list
 export async function handleGetFollowersListRequest(target, cursor){
     return followApi.getFollowerList(target, cursor)
-    .then((res) => new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data.data))
+    .then((res) => new ApiResponse(res.data.statusCode, ApiResponse.getMessageFromApi(res), res.data.data))
     .catch((err)=>{
         const {status, message, data, displayType} = classifyError(err)
         return new ApiResponse(status, message, data, displayType)
@@ -82,7 +82,7 @@ export async function handleGetFollowersListRequest(target, cursor){
 //get the following list
 export async function handleGetFollowingListRequest(target, cursor){
     return followApi.getFollowingList(target, cursor)
-    .then((res) => new ApiResponse(res.status, ApiResponse.getMessageFromApi(res), res.data.data))
+    .then((res) => new ApiResponse(res.data.statusCode, ApiResponse.getMessageFromApi(res), res.data.data))
     .catch((err)=>{
         const {status, message, data, displayType} = classifyError(err)
         return new ApiResponse(status, message, data, displayType)

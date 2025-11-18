@@ -153,3 +153,18 @@ export async function handleGetFollowingPost(cursor) {
         return new ApiResponse(status, message, data, displayType)
     })
 }
+
+// handle get detail post
+export async function handleGetDetailPost(id){
+    if(!id){
+        console.error("Id can not be null in handleGetDetailPost method!")
+        return
+    }
+    return postApi.getPostById(id)
+    .then(res => new ApiResponse(res.data.statusCode, ApiResponse.getMessageFromApi(res), res.data.data))
+    .catch( err => {
+        const {status, message, data, displayType} = classifyError(err)
+        return new ApiResponse(status, message, data, displayType)
+    })
+}
+

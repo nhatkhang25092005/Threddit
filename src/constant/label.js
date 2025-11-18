@@ -20,5 +20,8 @@ export const LABEL = {
     CREATED_POSTS : "Danh sách bài viết đã tạo",
     SAVED_POSTS : "Danh sách bài viết đã lưu",
     FEED:"Xu hướng",
-    FOLLOWING_POSTS:"Theo dõi"
+    FOLLOWING_POSTS:"Theo dõi",
+    WRITE_COMMENT : "Viết bình luận...",
+    EDIT_COMMENT : "Chỉnh sửa bình luận",
+    DELETE_COMMENT : "Xóa bình luận"
 }

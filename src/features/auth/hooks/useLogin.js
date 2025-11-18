@@ -15,8 +15,10 @@ export default function useLogin() {
   async function executeLogin(){
     // Store username in localStorage
     const response = await handleGetUserInfoRequest()
-    if(response.isOk()) localStorage.setItem("username", response.data.data.username)
-    navigate(ROUTES.PROFILE, replace)
+    if(response.isOk()){
+      localStorage.setItem("username", response.data.data.username)
+      navigate(ROUTES.PROFILE, replace)
+    }
   }
 
   //execute

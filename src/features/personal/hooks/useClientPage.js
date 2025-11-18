@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import {
   handleGetFollowNumberOfClient,
   handleFollowRequest,
@@ -13,11 +13,11 @@ import { DISPLAY, TITLE } from "../../../constant";
 import convertTime from "../../../utils/convertTime";
 
 export default function useClientPage() {
-  const clientName = useLocation().state?.clientName;
+  const {clientName} = useParams()
   const [follower, setFollower] = useState(0);
   const [following, setFollowing] = useState(0);
   const [follow, setFollow] = useState(false);
-  const [error, setError] = useState(null);
+  const [result, setResult] = useState(null);
 
   const [btnLoading, setBtnLoading] = useState(false)
   const [loading, setLoading] = useState(false);
@@ -48,9 +48,9 @@ export default function useClientPage() {
       setFollow(true);
     }
     else if (response.status === 429) {
-      setError(new Result(DISPLAY.DISABLE));
+      setResult(new Result(DISPLAY.DISABLE));
     } else {
-      setError(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message));
+      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message));
     }
     setBtnLoading(false);
     return;
@@ -64,9 +64,9 @@ export default function useClientPage() {
       setFollow(false);
     }
     else if (response.status === 429) {
-      setError(new Result(DISPLAY.DISABLE));
+      setResult(new Result(DISPLAY.DISABLE));
     } else {
-      setError(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message));
+      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message));
     }
     setBtnLoading(false);
     return;
@@ -88,7 +88,7 @@ export default function useClientPage() {
     // call and handle api response
     try {
       const response = await handleGetClientPost(clientName, cursor.current);
-
+      console.log(response)
       // check has more post
       if (response.data === null) {
         setLoading(false);
@@ -108,12 +108,12 @@ export default function useClientPage() {
 
       // if unexpected error occurs
       else {
-        setError(
+        setResult(
           new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null)
         );
       }
     } catch (e) {
-      setError(new Result(DISPLAY.POPUP, TITLE.ERROR, e, null));
+      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, e, null));
     } finally {
       setLoading(false);
       loadingRef.current = false;
@@ -136,9 +136,10 @@ export default function useClientPage() {
     follower,
     following,
     posts,
-    error,
+    result,
     follow,
     hasMore,
+    btnLoading,
     postUnFollow,
     postFollow,
     getCreatedPost,

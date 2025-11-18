@@ -60,7 +60,7 @@ export default function OptionsMenu({sx,symbol ,functionList, anchorOrigin, tran
   
 
   return (
-    <Box sx={{...sx,py:"0px"}}>
+    <Box sx={{...sx,py:"0px"}} onClick={(e) => e.stopPropagation()}>
       <Button
         disableRipple
         id="demo-positioned-button"

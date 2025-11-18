@@ -30,10 +30,10 @@ export default function NotificationProvider({children}){
                 setRealTimeList((prev) => [...prev, data])
             }
             catch(err){
-                console.error('Error parsing notification data:', err)
+                console.error('Error parsing notification data:', err?.message || String(err))
             }
         }
-
+        
         eventSource.onerror = (err) => {
             console.error('EventSource failed:', err)
             eventSource.close()

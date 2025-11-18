@@ -19,7 +19,7 @@ export default function useUserPage() {
 
   // Elements of rendering
   const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Ref
   const loadingRef = useRef(null);
@@ -35,7 +35,7 @@ export default function useUserPage() {
 
   // Handle post updates from Post component
   function handlePostUpdate(update) {
-    const { type, postId, data, message } = update;
+    const { type, postId, data, message, status } = update;
 
     switch (type) {
       case 'edit':
@@ -76,13 +76,18 @@ export default function useUserPage() {
           )
         );
         break
+      case 'save':
+        console.log("Saved is call in useUserPage")
+        setCreatedPosts(prev=>prev.map(post=>
+          post.id === postId
+          ? {...post, isSave: status}
+          : post
+        ))
+        break
       default:
         console.warn('Unknown update type:', type);
     }
   }
-
-  // Handle errors from Post component
-  function handlePostResult(result) { setResult(result) }
 
   // get username
   async function getUserInfo() {
@@ -198,13 +203,15 @@ export default function useUserPage() {
   }, []);
 
   return {
+    setResult,
     handlePostUpdate,
-    handlePostResult,
     adjustSavePostAfterUnsave,
     getCreatedPost,
     getSavedPost,
     setTag,
     adjustPinStatus,
+    setCreatedPosts,
+    setSavedPosts,
     createdPostHasMore,
     savedPostHasMore,
     loading,

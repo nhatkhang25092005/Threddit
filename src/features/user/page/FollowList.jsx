@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
 import {Box, Typography, Tab, Tabs, Button,CircularProgress, Fade } from "@mui/material"
 import Column from "../../../components/layout/Column"
-import {LABEL, TEXT, TITLE,DISPLAY} from "../../../constant"
+import {LABEL, TEXT, TITLE,DISPLAY, ROUTES} from "../../../constant"
 import CustomTabPanel from "../../../components/common/CustomTabPanel"
 import BlockContent from "../../../components/common/BlockContent"
 import useFollowList from "../hooks/useFollowList"
 import PopupNotification from "../../../components/common/PopupNotification"
 import useInfiniteScroll from "../../../hooks/useInfiniteScroll"
+import { useNavigate } from "react-router-dom"
 function allyProps(index){
     return{
         id: `simple-tab-${index}`,
@@ -15,6 +16,7 @@ function allyProps(index){
 }
 
 export default function FollowList(){
+    const navigate = useNavigate()
     // elements of follow page
     const {
         actor,
@@ -91,6 +93,10 @@ export default function FollowList(){
                 <CustomTabPanel value={value} index={0}>
                     {followers.length !==0 
                     ? followers.map((item, index)=>(<BlockContent 
+                        onClick={(e)=>{
+                            e.stopPropagation()
+                            navigate(item?.canFollow === undefined ? ROUTES.USER: ROUTES.CLIENT_PAGE + `/${item.follower.username}`)
+                        }}
                         key = {item.follower.username || index}
                         bodyStyle={{
                             display:"flex", 
@@ -99,6 +105,7 @@ export default function FollowList(){
                             justifyContent:"space-between",
                             px:"3rem",
                             py:"1rem",
+                            cursor:"pointer",
                             ...index === followers.length - 1 ? undefined : { borderBottom:"solid #BCBDBF 1px"}
                         }}>
                         <Typography variant="h6" fontWeight={"bold"}>{item.follower.username}</Typography>
@@ -106,11 +113,10 @@ export default function FollowList(){
                             loadingPosition="start"
                             loadingIndicator={<CircularProgress/>}
                             loading = {btnLoading[item.follower.username] || false}
-                            onClick={
-                                item.canFollow 
-                                ? ()=>handleFollow(item.follower.username) 
-                                : ()=>UnFollow(item.follower.username)
-                            }
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                item.canFollow ? handleFollow(item.follower.username): UnFollow(item.follower.username)
+                            }}
                             variant={item.canFollow ? "contained" : "darker"} 
                             sx={{px:"3rem"}}>
                                 {item.canFollow ? TEXT.FOLLOW : TEXT.UNFOLLOW}
@@ -133,6 +139,10 @@ export default function FollowList(){
                     {followings.length 
                     ? followings.map((item, index)=>(
                     <BlockContent 
+                        onClick={(e)=>{
+                            e.stopPropagation()
+                            navigate(item.canFollow === undefined ? ROUTES.USER: ROUTES.CLIENT_PAGE + `/${item.followee.username}`
+                        )}}
                         key={item.followee.username || index}
                         bodyStyle={{
                             display:"flex", 
@@ -141,6 +151,7 @@ export default function FollowList(){
                             justifyContent:"space-between",
                             px:"3rem",
                             py:"1rem",
+                            cursor:"pointer",
                             ...(index === followings.length - 1 ? undefined : { borderBottom:"solid #BCBDBF 1px"})
                         }}>
                         <Typography variant="h6" fontWeight={"bold"}>{item.followee.username}</Typography>
@@ -148,11 +159,10 @@ export default function FollowList(){
                             loadingPosition="start"
                             loadingIndicator={<CircularProgress/>}
                             loading = {btnLoading[item.followee.username] || false}
-                            onClick={
-                                item.canFollow 
-                                ? ()=>handleFollow(item.followee.username)
-                                : ()=>UnFollow(item.followee.username)
-                            }
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                item.canFollow ? handleFollow(item.followee.username): UnFollow(item.followee.username)
+                            }}
                             variant={item.canFollow ? "contained" : "darker"} 
                             sx={{px:"3rem"}}>
                                 {item.canFollow ? TEXT.FOLLOW : TEXT.UNFOLLOW}

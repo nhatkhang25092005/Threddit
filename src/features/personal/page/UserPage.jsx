@@ -2,7 +2,6 @@ import { Typography, Box, Fade, CircularProgress, Tabs, Tab } from "@mui/materia
 import Column from "../../../components/layout/Column";
 import useUserPage from "../hooks/useUserPage.js";
 import BlockContent from "../../../components/common/BlockContent";
-
 import { DISPLAY, ROUTES, TEXT, LABEL } from "../../../constant/";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -22,10 +21,10 @@ function allyProps(index) {
 export default function UserPage() {
   const navigate = useNavigate();
   const [value, setValue] = useState(0);
-  
+  // const {postId} = useParams()
   const {
     handlePostUpdate,
-    handlePostResult,
+    setResult,
     adjustSavePostAfterUnsave,
     getCreatedPost,
     getSavedPost,
@@ -38,8 +37,9 @@ export default function UserPage() {
     following,
     createdPosts,
     savedPosts,
-    result,
+    result, 
   } = useUserPage();
+        
 
   const createdHasMoreRef = useInfiniteScroll({
     hasMore: createdPostHasMore,
@@ -73,12 +73,16 @@ export default function UserPage() {
     }
   }, [result]);
 
+  console.log("UserPage re-render")
+
 
   // switch tag handler
   function handleChange(event, newValue) {
     setTag(newValue);
     setValue(newValue);
   }
+
+  // useEffect(()=>{if(postId) setOpenDetail(true)},[postId])
 
   return (
     <>
@@ -94,9 +98,8 @@ export default function UserPage() {
         title={resultTitle} 
         content={resultMessage} 
       />
-      
       <Column customStyle={{ pt: "1rem", width: "60%", mx: "auto", mb: "3rem" }}>
-        <Typography variant="h6" fontWeight={"bold"}>{username}</Typography>
+        <Typography variant="h6" fontWeight={"bold"}>{TEXT.USER_PAGE}</Typography>
         
         {/* client information */}
         <Box sx={{ height: "fit-content", py: "0",pl:"1rem", mb: "2rem", width:"100%"}}>
@@ -158,12 +161,15 @@ export default function UserPage() {
               createdPosts.length !== 0
                 ? createdPosts.map((post, index) =>
                   <Post
+                    showPin
+                    location = {ROUTES.USER}
+                    onNavigate
                     key={post.id}
                     item={post}
                     index={index}
                     createdPostsLength={createdPosts.length}
                     onPostUpdatedRendering={handlePostUpdate}
-                    onResult={handlePostResult}
+                    onResult={setResult}
                     isOwner={true}
                   />
                 )
@@ -189,12 +195,15 @@ export default function UserPage() {
               savedPosts.length !== 0
                 ? savedPosts.map((post, index) =>
                   <Post
+                    showPin
+                    onNavigate
+                    location={ROUTES.USER}
                     key={post.id}
                     item={post}
                     index={index}
                     createdPostsLength={savedPosts.length}
                     onPostUpdatedRendering={handlePostUpdate}
-                    onResult={handlePostResult}
+                    onResult={setResult}
                     adjustSavePostAfterUnsave={adjustSavePostAfterUnsave}
                     isOwner={post.author.username === username}
                   />)

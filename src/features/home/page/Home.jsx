@@ -1,26 +1,27 @@
-import PostCard from "../../../components/layout/PostCard";
-import {DISPLAY, TEXT, LABEL} from "../../../constant"
+import {DISPLAY, TEXT, LABEL, ROUTES} from "../../../constant"
 import { Box, Typography, CircularProgress, Tab, Tabs, Fade } from "@mui/material";
-import PushPinIcon from "@mui/icons-material/PushPin";
-import TrashIcon from "../../../assets/icons/trash.svg?react";
-import EditIcon from "../../../assets/icons/pen-edit.svg?react";
 import Column from "../../../components/layout/Column";
 import useHome from "../../home/hooks/useHome";
 import BlockContent from "../../../components/common/BlockContent";
 import useInfiniteScroll from "../../../hooks/useInfiniteScroll";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomTabPanel from "../../../components/common/CustomTabPanel"
-
+import PopupNotification from "../../../components/common/PopupNotification"
 import Post from "../../../components/common/Post"
+import { useParams } from "react-router-dom";
+import PostDetail from "../../post/page/PostDetail";
+import { useNavigate } from "react-router-dom";
 
 function allyProps(index) {
-  return {
+  return {  
     id: `simple-tab-${index}`,
     'aria-controls': `simple-tabpanel-${index}`,
   };
 }
 export default function Home() {
   const [value, setValue] = useState(0);
+  const {postId} = useParams()
+  const navigate = useNavigate()
   const {
     posts,
     setTag,
@@ -31,18 +32,19 @@ export default function Home() {
     getFollowingPosts,
     followingHasMore,
     feedHasMore,
-    loading
+    loadingForFeed,
+    LoadingForFollow
   } = useHome();
-  
+
   // Scroll controller
   const loadMoreRef = useInfiniteScroll({
     hasMore: feedHasMore,
-    loading,
+    loading : loadingForFeed,
     onLoadMore : getFeed
   })
   const followingMoreRef = useInfiniteScroll({
     hasMore:followingHasMore,
-    loading,
+    loading: LoadingForFollow,
     onLoadMore:getFollowingPosts
   })
 
@@ -51,8 +53,20 @@ export default function Home() {
     setValue(newValue);
   }
 
+  const [open, setOpen] = useState(false)
+  useEffect(()=>{if(result?.type === DISPLAY.POPUP) setOpen(true)},[result])
+  
+  const [openDetail, setOpenDetail] = useState(false)
+  
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(()=>{if(postId) setOpenDetail(true)},[]) 
   return (
     <>
+      {openDetail && <PostDetail onOpen={openDetail} onClose={()=>{
+        setOpenDetail(false)
+        navigate("..", { replace: true, relative: "path" });
+      }}/>}
+      <PopupNotification open={open} onClose={()=>setOpen(false)} content={result?.message} title={result?.title} />
       <Column customStyle={{ pt: "0rem" }}>
         <Typography variant="title">Threddit</Typography>
 
@@ -91,6 +105,9 @@ export default function Home() {
               posts.length !== 0
               ? posts.map((post, index) => (
                 <Post
+                  showPin = {false}
+                  location={ROUTES.HOME}
+                  onNavigate
                   key={`feed_${post.id}`}
                   isOwner={false}
                   item={post}
@@ -106,7 +123,7 @@ export default function Home() {
             <div ref={loadMoreRef} style={{ height: "20px", visibility: feedHasMore ? "visible" : "hidden" }} />
 
             {/* Loading block */}
-            <Fade in={loading} unmountOnExit>
+            <Fade in={loadingForFeed} unmountOnExit>
               <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
                 <CircularProgress  sx={{color:"white"}} size={30}  />
               </Box>
@@ -119,6 +136,8 @@ export default function Home() {
               followingPosts.length !== 0 
               ? followingPosts.map((post, index)=>(
                 <Post
+                  location={ROUTES.HOME}
+                  onNavigate
                   key={`following_${post.id}`}
                   isOwner={false}
                   item={post}
@@ -135,7 +154,7 @@ export default function Home() {
             <div ref={followingMoreRef} style={{ height: "20px", visibility: followingHasMore ? "visible" : "hidden" }} />
 
             {/* Loading block */}
-            <Fade in={loading} unmountOnExit>
+            <Fade in={LoadingForFollow} unmountOnExit>
               <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
                 <CircularProgress sx={{color:"white"}} size={30} />
               </Box>
