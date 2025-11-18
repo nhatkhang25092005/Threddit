@@ -13,8 +13,8 @@ import { useNavigate } from "react-router-dom";
 export default function App() {
   const [tab, setTab] = React.useState("posts");
   const [query, setQuery] = useState("");
-    const [results, setResults] = useState([]);
-  const [searched, setSearched] = useState(false); // 🔹 để kiểm soát hiển thị tab
+  const [results, setResults] = useState([]);
+  const [searched, setSearched] = useState(false); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 const navigate = useNavigate();
@@ -167,19 +167,33 @@ const navigate = useNavigate();
               )}
 
                  {/* CÁ NHÂN */}
-              {!loading && !error && tab === "profile" && results.length > 0 && (
-                results.map((user) => (
-                  <UserFollowCard
-                    key={user.id}
-                    name={user.username}
-                    buttonText={user.canFollow ? "Theo dõi" : "Đã theo dõi"}
-                    disabled={false}
-                    onFollow={() =>
-                      handleFollowToggle(user.username, user.canFollow)
-                    }
-                  />
-                ))
-              )}
+            {!loading && !error && tab === "profile" && results.length > 0 && (
+            results.map((user) => (
+              <UserFollowCard
+                key={user.id}
+                name={user.username}
+                
+                // Nếu là chính mình → ẩn nút
+                hideButton={user.canFollow === null}
+
+                // Nếu không phải mình → hiển thị theo trạng thái
+                buttonText={
+                  user.canFollow === null
+                    ? ""
+                    : user.canFollow
+                    ? "Theo dõi"
+                    : "Đã theo dõi"
+                }
+
+                disabled={user.canFollow === null}
+                onFollow={() =>
+                  user.canFollow !== null &&
+                  handleFollowToggle(user.username, user.canFollow)
+                }
+              />
+            ))
+          )}
+
 
               {/* KHÔNG CÓ KẾT QUẢ */}
               {!loading && !error && results.length === 0 && (

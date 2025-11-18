@@ -4,6 +4,8 @@ export default function UserFollowCard({
   name,
   buttonText,
   onFollow,
+  disabled,
+  hideButton
 }) {
   const isFollowing = buttonText === "Đã theo dõi";
 
@@ -28,28 +30,32 @@ export default function UserFollowCard({
       }}
     >
       {/* Tên người dùng */}
-      <Typography sx={{ fontWeight: "bold", fontSize: 15 }}>{name}</Typography>
+      <Typography sx={{ fontWeight: "bold", fontSize: 15 }}>
+        {name}
+      </Typography>
 
-      {/* Nút Theo dõi / Đã theo dõi */}
-      <Button
-        variant="contained"
-        color={isFollowing ? "inherit" : "primary"}
-        onClick={onFollow}
-        sx={{
-          backgroundColor: isFollowing ? "#444" : "#fff",
-          color: isFollowing? "#fff" : "#000",
-          fontWeight: "bold",
-          borderRadius: "8px",
-          textTransform: "none",
-          minWidth: "110px",
-          "&:hover": {
-            backgroundColor: isFollowing ? "#555" : "#e5e5e5",
-          },
-          transition: "all 0.25s ease",
-        }}
-      >
-        {isFollowing ? "Đã theo dõi" : "Theo dõi"}
-      </Button>
+      {/* 🔥 Nếu là bản thân → KHÔNG hiển thị nút */}
+      {!hideButton && (
+        <Button
+          variant="contained"
+          disabled={disabled}
+          onClick={onFollow}
+          sx={{
+            backgroundColor: isFollowing ? "#444" : "#fff",
+            color: isFollowing ? "#fff" : "#000",
+            fontWeight: "bold",
+            borderRadius: "8px",
+            textTransform: "none",
+            minWidth: "110px",
+            "&:hover": {
+              backgroundColor: isFollowing ? "#555" : "#e5e5e5",
+            },
+            transition: "all 0.25s ease",
+          }}
+        >
+          {isFollowing ? "Đã theo dõi" : "Theo dõi"}
+        </Button>
+      )}
     </Box>
   );
 }
