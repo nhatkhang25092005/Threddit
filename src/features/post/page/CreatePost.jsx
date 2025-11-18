@@ -8,7 +8,6 @@ import Column from "../../../components/layout/Column";
 const username = localStorage.getItem("username");
 export default function CreatePost({ onPost, onExit }) {
   const { result, content, setContent, loading, handlePost } = useCreatePost();
-  console.log(result);
 
   // popup modal controller
   const [open, setOpen] = useState(false);

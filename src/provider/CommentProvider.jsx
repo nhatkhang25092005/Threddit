@@ -1,5 +1,6 @@
 import { useEffect, useState, createContext, useContext } from "react";
 import { useParams } from "react-router-dom";
+import convertTime from "../utils/convertTime";
 
 const CommentContext = createContext()
 
@@ -16,7 +17,7 @@ export default function CommentProvider({children}){
         eventSource.onmessage = (event)=>{
             try{
                 const data = JSON.parse(event.data)
-                setRealTimeComments(data)
+                setRealTimeComments({...data, createdAt : convertTime(data.createdAt)})
             }
             catch(err){
                 console.error('Error parsing notification data:', err?.message || String(err))

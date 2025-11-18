@@ -31,5 +31,7 @@ export const TEXT = {
     NO_FEED : "Bảng tin chưa có bài viết nào mới",
     NO_FOLLOWING_POSTS : "Những người bạn theo dõi hiện chưa có bài đăng",
     NO_COMMENTS : "Hãy là người đầu tiên bình luận cho bài viết này!",
-    ITS_YOU : "Bạn"
+    ITS_YOU : "Bạn",
+    CLIENT_PAGE:"Trang cá nhân của ",
+    USER_PAGE : "Trang cá nhân"
 }

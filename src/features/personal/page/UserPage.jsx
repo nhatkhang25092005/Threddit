@@ -2,7 +2,6 @@ import { Typography, Box, Fade, CircularProgress, Tabs, Tab } from "@mui/materia
 import Column from "../../../components/layout/Column";
 import useUserPage from "../hooks/useUserPage.js";
 import BlockContent from "../../../components/common/BlockContent";
-import { listenToPostEvent, POST_EVENTS } from "../../../utils/postEvent.js";
 import { DISPLAY, ROUTES, TEXT, LABEL } from "../../../constant/";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -25,13 +24,11 @@ export default function UserPage() {
   // const {postId} = useParams()
   const {
     handlePostUpdate,
-    handlePostResult,
+    setResult,
     adjustSavePostAfterUnsave,
     getCreatedPost,
     getSavedPost,
     setTag,
-    setCreatedPosts,
-    setSavedPosts,
     createdPostHasMore,
     savedPostHasMore,
     loading,
@@ -43,36 +40,6 @@ export default function UserPage() {
     result, 
   } = useUserPage();
         
-   useEffect(() => {
-    if(!loading){
-      const unsubscribe = listenToPostEvent(POST_EVENTS.SAVE_CHANGED, (event) => {
-      const { postId, isSaved, saveNumber } = event.detail;
-      console.log('🔔 UserPage.jsx received event:', event.detail);
-      
-      setCreatedPosts(prev =>{
-        console.log(prev)
-        const updated = prev.map(item=>(
-          item.id === postId ? {...item, isSave : isSaved} : item
-        ))
-        console.log(updated)
-        return updated
-      });
-        
-      console.log(createdPosts[0].isSave)
-      
-      setSavedPosts(prev => 
-        prev.map(post => 
-          post.id === postId 
-            ? { ...post, isSaved, saveNumber }
-            : post
-        )
-      );
-    });
-
-    return unsubscribe;
-  }
-  }, [setCreatedPosts, setSavedPosts, loading]);
-
 
   const createdHasMoreRef = useInfiniteScroll({
     hasMore: createdPostHasMore,
@@ -132,7 +99,7 @@ export default function UserPage() {
         content={resultMessage} 
       />
       <Column customStyle={{ pt: "1rem", width: "60%", mx: "auto", mb: "3rem" }}>
-        <Typography variant="h6" fontWeight={"bold"}>{username}</Typography>
+        <Typography variant="h6" fontWeight={"bold"}>{TEXT.USER_PAGE}</Typography>
         
         {/* client information */}
         <Box sx={{ height: "fit-content", py: "0",pl:"1rem", mb: "2rem", width:"100%"}}>
@@ -202,7 +169,7 @@ export default function UserPage() {
                     index={index}
                     createdPostsLength={createdPosts.length}
                     onPostUpdatedRendering={handlePostUpdate}
-                    onResult={handlePostResult}
+                    onResult={setResult}
                     isOwner={true}
                   />
                 )
@@ -236,7 +203,7 @@ export default function UserPage() {
                     index={index}
                     createdPostsLength={savedPosts.length}
                     onPostUpdatedRendering={handlePostUpdate}
-                    onResult={handlePostResult}
+                    onResult={setResult}
                     adjustSavePostAfterUnsave={adjustSavePostAfterUnsave}
                     isOwner={post.author.username === username}
                   />)

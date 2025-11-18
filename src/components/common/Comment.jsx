@@ -3,11 +3,10 @@ import {Box, Typography, Button, Menu, MenuItem, TextField, IconButton, Circular
 import {DISPLAY, TEXT, TITLE, LABEL} from '../../constant'
 import BlockContent from "./BlockContent"
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
 import { handleDeleteComment, handleEditComment } from "../../services/request/commentRequest";
 import { extractUsernames } from "../../utils/extractUsernames";
 import { Result } from "../../class";
+import EditableContent from "./EditableContent";
 
 
 function CommentMenu({editComment, deleteComment}){
@@ -60,71 +59,6 @@ function CommentMenu({editComment, deleteComment}){
   </>)
 }
 
-function EditableComment({
-  isEditing, 
-  comment, 
-  editComment, 
-  onEditChange,
-  onCancel,
-  loading,
-  onSave
-}){
-  if(!isEditing) 
-    return (<>
-      <Box sx={{display:"flex", flexDirection:"column", bgcolor:"#bcbdbf43", borderRadius:"1rem",py:0.5,px:2,width:"fit-content"}}>
-        <Typography > {comment?.content}</Typography>
-      </Box>  
-    </>)
-  else return(
-    <Box sx={{display:"flex", flexDirection:"column", ml:"1rem",alignItems:"flex-end", width:"100%"}}>
-      <TextField
-        multiline
-        fullWidth
-        minRows={1}
-        maxRows={10}
-        value={editComment}
-        autoFocus
-        onChange={(e)=>onEditChange(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {e.preventDefault();onSave()}
-          if (e.key === "Escape") {onCancel()}
-        }}
-        sx={{
-          '& ,MuiOutlinedInput-root': {
-              color:"white",
-              "& fieldset": { borderColor:"#bcbcbf" },
-              "&:hover fieldset": { borderColor:"white" },
-              "&.Mui-focused fieldset": { borderColor:"white" },
-          },
-        }}
-      />
-      <Box sx={{display:'flex', gap:1, justifyContent:"flex-end"}}>
-        {loading
-        ?
-          <CircularProgress size={24} sx={{alignSelf:"center"}}/>
-        :
-          <IconButton
-            onClick={onSave}
-            sx={{color:"white"}}
-            size="small"  
-          >
-            <CheckIcon/>
-          </IconButton>
-        }
-          <IconButton
-            onClick={onCancel}
-            sx={{color:"white"}}
-            size="small"  
-          >
-            <CloseIcon/>
-          </IconButton>
-        
-      </Box>
-    </Box>
-  )
-}
-
-
 export default function Comment({
   comment, 
   index, 
@@ -132,7 +66,6 @@ export default function Comment({
   onResult,
   onUpdateComment
 }){
-  const username = localStorage.getItem('username')
   const [isEditing, setIsEditing] = useState(false)
   const [editComment, setEditComment] = useState('')
   const [loading, setLoading] = useState(false)
@@ -172,9 +105,11 @@ export default function Comment({
   }
   
   async function deleteComment(){
+    console.log('delete comment is called')
     setLoading(true)
     try{
       const response = await handleDeleteComment(postId, comment.id)
+      console.log(response)
       if(response.isOk()){
         onUpdateComment({type:'delete', commentId : comment.id})
         if(onResult) onResult(new Result(DISPLAY.SNACKBAR, null, response.message, null))
@@ -187,31 +122,36 @@ export default function Comment({
     finally {setLoading(false)}
   }
 
+
   return(
     <BlockContent customStyle={{mt:2}} key={index}>
       <Box sx={{display:"flex",flexDirection:"row", alignItems:'flex-start',justifyContent:"flex-start"}}>
         <Typography fontWeight={"bold"} variant="h7"> {comment?.commenter?.username}</Typography>
-        {comment?.commenter?.username === username 
+        {comment.isCommenter
         ? <Typography variant="sub" sx={{ml:"5px"}}>({TEXT.ITS_YOU})</Typography>
         : undefined}
         <Box sx={{display:"flex", flexDirection:"row", alignItems:"flex-start",width:"100%"}}>
-          <Box sx={{display:"flex", flexDirection:"column", alignItems:"start", ml:"1rem"}}>
-            <EditableComment 
-              isEditing={isEditing} 
-              comment={comment} 
-              editComment={editComment}
-              onCancel={cancelEditComment}
-              loading={loading}
-              onSave={saveEditComment}
-              onEditChange={setEditComment}
-            />
+          <Box sx={{display:"flex", flexDirection:"column", alignItems:"start", ml:"1rem", width:isEditing ? "100%" : 'fit-content'}}>
+            <Box sx={{width:"100%", display:"flex", flexDirection:"row"}}>
+              <EditableContent
+                editStyle={{width:"100%"}}
+                nonEditStyle={{display:"flex", flexDirection:"column", bgcolor:"#bcbdbf43", borderRadius:"1rem",py:0.5,px:2,width:"fit-content"}}
+                isEditing={isEditing} 
+                content={comment?.content} 
+                editContent={editComment}
+                onCancel={cancelEditComment}
+                loading={loading}
+                onSave={saveEditComment}
+                onEditChange={setEditComment}
+              />
+               {(comment.isCommenter && !isEditing) &&
+              <CommentMenu  
+                editComment={()=>startEditComment(comment.content)}
+                deleteComment={()=>deleteComment()}  
+              />}
+            </Box>
             <Typography variant="sub" sx={{ml:"0.5rem", fontSize:"15px"}}>{comment.createdAt}</Typography>
           </Box>
-          {(comment?.commenter?.username === username && !isEditing) &&
-          <CommentMenu 
-            editComment={()=>startEditComment(comment.content)}
-            deleteComment={()=>deleteComment()}  
-          />}
         </Box>
       </Box>
     </BlockContent>

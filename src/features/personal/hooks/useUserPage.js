@@ -89,9 +89,6 @@ export default function useUserPage() {
     }
   }
 
-  // Handle errors from Post component
-  function handlePostResult(result) { setResult(result) }
-
   // get username
   async function getUserInfo() {
     const response = await handleGetUserInfoRequest();
@@ -206,8 +203,8 @@ export default function useUserPage() {
   }, []);
 
   return {
+    setResult,
     handlePostUpdate,
-    handlePostResult,
     adjustSavePostAfterUnsave,
     getCreatedPost,
     getSavedPost,

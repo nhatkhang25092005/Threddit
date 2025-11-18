@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { handleGetComments, handlePostComment } from "../../../services/request/commentRequest";
+import {handleGetFollowersListRequest} from "../../../services/request/followRequest"
 import { handleGetDetailPost } from "../../../services/request/postRequest";
 import convertTime from "../../../utils/convertTime";
 import { Result } from "../../../class";
@@ -20,6 +21,33 @@ export default function usePostDetail() {
   const [hasMore, setHasMore] = useState(true)
   const [getMoreCommentLoading, setGetMoreCommentLoading] = useState(false)
   const cursor = useRef(null)
+
+  // Fetch followings elements
+  const followersCursor = useRef(null)
+  const [isFollowerHasMore, setIsFollowerHasMore] = useState(true)
+  const [followers, setFollowers] = useState([])
+  const [followersLoading, setFollowersLoading] = useState(false)
+
+  // Fetch followings
+  const fetchFollowers = useCallback(async ()=>{
+    if(!isFollowerHasMore) return
+    setFollowersLoading(true)
+    try{
+      const response = await handleGetFollowersListRequest('me', followersCursor.current)  
+      if(response.status === 204) setIsFollowerHasMore(false)
+      else if(response.isOk()){
+        setFollowers(response.data.followerList)
+        followersCursor.current = response.data.cursor
+      }
+      else setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))
+    }
+    catch(error){
+      console.error("Error occurs in fetchFollowings at usePostDetail:", error)
+      const eMessage = error?.message || String(error)
+      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, eMessage, null))
+    }
+    finally{setFollowersLoading(false)}
+  },[isFollowerHasMore])
 
   const getComment = async () => {
     if(!hasMore &&  getMoreCommentLoading) return
@@ -87,6 +115,7 @@ export default function usePostDetail() {
   },[postId])
 
   function onUpdateComment(data){
+    console.log("on Update COmment is called?")
     switch(data.type){
       case 'edit' : 
         setComments(comments.map(item => item.id === data.commentId ? {...item, content : data.content} : item))
@@ -103,7 +132,7 @@ export default function usePostDetail() {
     setLoading(true);
     setPost(null);
     setComments([]);
-    Promise.all([getDetailPost(), getComment()])
+    Promise.all([getDetailPost(), getComment(), fetchFollowers()])
       .catch(err => {
         const errorMessage = err?.message || String(err);
         setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null));
@@ -115,20 +144,23 @@ export default function usePostDetail() {
     if(!realTimeComments) return
     setComments(prev=>[realTimeComments, ...prev]) },[realTimeComments])
     
-    
   return {
     commentContent, 
     comments, 
     loading,
     commentLoading, 
+    isFollowerHasMore,
     post, 
     result, 
     hasMore, 
     getMoreCommentLoading,
+    followers,
+    followersLoading,
     getComment, 
     setCommentContent, 
     onUpdateComment, 
     postComment, 
-    setResult 
+    setResult,
+    fetchFollowers,
   }
 }

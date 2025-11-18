@@ -24,13 +24,13 @@ import useInfiniteScroll from '../../hooks/useInfiniteScroll'
 import { handleDeleteMyPost, handleEditMyPost } from "../../services/request/postRequest";
 import { extractUsernames } from "../../utils/extractUsernames";
 import { Result } from "../../class";
-import { DISPLAY, TEXT, TITLE } from "../../constant";
+import { DISPLAY, ROUTES, TEXT, TITLE } from "../../constant";
 import usePin from "../../hooks/usePin"
 import { listenToPostEvent, POST_EVENTS } from "../../utils/postEvent";
 import SnakeBarNotification from "./SnakeBarNotification";
 
 export default function Post({
-  onUpdateComment,
+  onUpdateComment,// use for post detail update the comment list
   showPin,
   location,
   sx,
@@ -44,7 +44,7 @@ export default function Post({
   isOwner = false,
   onResult,
   onPostUpdatedRendering,
-  onGetMoreComment
+  onGetMoreComment,
 }) {
   function normalizeItem(item){
     const {isSave, isSaved, ...rest} = item
@@ -58,13 +58,14 @@ export default function Post({
   const [editingPostId, setEditingPostId] = useState(null);
   const [editContent, setEditContent] = useState("");
   const [loading, setLoading] = useState(false);
+  const [editLoading, setEditLoading] = useState(false)
   const [currentItem, setCurrentItem] = useState(normalizeItem(item));
   const navigate = useNavigate()
   const [openDetail, setOpenDetail] = useState(false)
   const [comments, setComments] = useState(commentList)
   
+  // Comment Scrolling
   const {getMoreComment = null, hasMore = null, getMoreCommentLoading = null} = onGetMoreComment || {}
-
   const commentRef = useInfiniteScroll({
     hasMore,
     loading : getMoreCommentLoading, 
@@ -146,9 +147,9 @@ export default function Post({
       return;
     }
     try {
-      setLoading(true);
+      setEditLoading(true);
       const response = await handleEditMyPost(postId, editContent, extractUsernames(editContent));
-      
+      console.log(response)
       if (response.isOk()) {
         setCurrentItem(prev => ({ ...prev, content: editContent }));
         
@@ -162,12 +163,12 @@ export default function Post({
         }
         cancelEditing()
         if(onResult) onResult(new Result(DISPLAY.SNACKBAR, null, response.message, null))
-      } else if (onResult) onResult(response.message);
+      } else if (onResult) onResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message));
       
     } catch (err) {
       if (onResult) onResult(err);
     } finally {
-      setLoading(false);
+      setEditLoading(false);
     }
   }
 
@@ -207,7 +208,6 @@ export default function Post({
         setCurrentItem(prev=>({...prev, commentNumber : data.commentNumber}))
         break
       case 'save':
-        console.log(data)
         setCurrentItem(prev=>({...prev, isSaved : data.status}))
         break
     }
@@ -217,6 +217,12 @@ export default function Post({
   const [resultOfShare, setResultOfShare] = useState(null)
 
   useEffect(()=>{if(resultOfShare) setOpenSnack(true)},[resultOfShare])
+
+  function handleRedirectOnName(e){
+    e.stopPropagation()
+    if(isOwner) navigate(ROUTES.USER)
+    else navigate(ROUTES.CLIENT_PAGE + `/${currentItem.author.username}`)
+  }
   return (
     <>
       <SnakeBarNotification open={openSnack} onClose={()=>setOpenSnack(false)} duration={3000} message={resultOfShare?.message}/>
@@ -233,7 +239,7 @@ export default function Post({
         customStyle={{
           ...sx,
           px: "1rem",
-          ...(!onComment ? {"&:hover":{bgcolor:"#e9e9e904"}} : {bgcolor:"#0A0B0B"}),
+          bgcolor:"#0A0B0B",
           ...(index === createdPostsLength - 1  ? { borderBottom: "none" } : undefined)
         }}
       
@@ -250,10 +256,9 @@ export default function Post({
               mb: "1rem",
               py: "1rem",
               mx: "1rem",
-              cursor: onNavigate && editingPostId !== currentItem.id ? "pointer" : "default"
             }}
           >
-            <Typography variant="h6" fontWeight={"bold"}>
+            <Typography onClick={(e)=>{handleRedirectOnName(e)}} variant="h6" fontWeight={"bold"} sx={{cursor:'pointer','&:hover':{fontStyle:'underline'}}}>
               {currentItem.author.username}
             </Typography>
             <Typography variant="sub"> {currentItem.createdAt}</Typography>
@@ -358,7 +363,7 @@ export default function Post({
           }}
         >
           <EditableContent
-            loading={loading}
+            loading={editLoading}
             isEditing={editingPostId === currentItem.id}
             content={currentItem.content}
             editContent={editContent}
