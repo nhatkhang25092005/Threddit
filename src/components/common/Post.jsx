@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import NorthIcon from "@mui/icons-material/North";
-import SouthIcon from "@mui/icons-material/South";
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import { CircularProgress, Box, Typography, Fade } from "@mui/material";
 
@@ -102,21 +100,21 @@ export default function Post({
     })
     return unsubscribe
   },[currentItem.id])
-// --- VOTE STATE ---
-const [voteState, setVoteState] = useState({
-  isUpvote: item.isUpvote, // true | false | null
-  up: item.upvoteNumber,
-  down: item.downvoteNumber,
-});
-
-// Cập nhật khi item thay đổi
-useEffect(() => {
-  setVoteState({
-    isUpvote: item.isUpvote,
+  // --- VOTE STATE ---
+  const [voteState, setVoteState] = useState({
+    isUpvote: item.isUpvote, // true | false | null
     up: item.upvoteNumber,
     down: item.downvoteNumber,
   });
-}, [item]);
+
+  // Cập nhật khi item thay đổi
+  useEffect(() => {
+    setVoteState({
+      isUpvote: item.isUpvote,
+      up: item.upvoteNumber,
+      down: item.downvoteNumber,
+    });
+  }, [item]);
 
   async function handlePin(postId, currentPinStatus){
     try{
@@ -259,7 +257,7 @@ const handleVote = async (isUpVote) => {
       }));
     }
   } catch (err) {
-    console.error("❌ Vote error:", err);
+    console.error(" Vote error:", err);
   }
 };
 
@@ -358,81 +356,74 @@ const handleVote = async (isUpVote) => {
                 mx: "1rem",
               }}
             >
-              {/* Vote trực tiếp dùng ArrowIcon - Giao diện cân đối hơn */}
-<Box
-  sx={{
-    display: "flex",
-    alignItems: "center",
-    gap: 1.5, // Tăng khoảng cách giữa các phần tử một chút
-    // Đặt chiều cao tổng thể nhỏ hơn cho sự gọn gàng
-  }}
->
-  {/* UPVOTE */}
-  <Box
-    onClick={() => handleVote(true)}
-    sx={{
-      p: "4px", // Giảm padding để thu nhỏ khu vực click và biểu tượng
-      borderRadius: "50%",
-      cursor: "pointer",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      bgcolor: "transparent",
-      "&:hover": { bgcolor: "#1b1b1b" },
-      transition: "background-color 0.2s ease", // Thêm transition cho hover
-    }}
-  >
-    <ArrowIcon
-      style={{
-        transform: "rotate(-45deg)",
-        width: 24, // Giảm kích thước biểu tượng
-        height: 24, // Giảm kích thước biểu tượng
-        color: voteState.isUpvote === true ? "#4CAF50" : "#A0A0A0", // Dùng màu xám nhạt hơn cho trạng thái mặc định
-        transition: "color 0.2s ease",
-      }}
-    />
-  </Box>
-
-  {/* SCORE */}
-  <Box
-    sx={{
-      minWidth: 30, // Giảm minWidth vì biểu tượng đã nhỏ hơn
-      textAlign: "center",
-      fontWeight: 700,
-      fontSize: "1.1rem", // Kích thước font rõ ràng
-      color: "#ffffff", // Màu chữ trắng
-      // Có thể thêm màu sắc dựa trên điểm số (ví dụ: >0 là xanh, <0 là đỏ)
-    }}
-  >
-    {voteState.up - voteState.down}
-  </Box>
-
-            {/* DOWNVOTE */}
             <Box
-              onClick={() => handleVote(false)}
               sx={{
-                p: "4px", // Giảm padding
-                borderRadius: "50%",
-                cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
-                bgcolor: "transparent",
-                "&:hover": { bgcolor: "#1b1b1b" },
-                transition: "background-color 0.2s ease", // Thêm transition cho hover
+                gap: 1.5,
               }}
             >
-              <ArrowIcon
-                style={{
-                  transform: "rotate(135deg)",
-                  width: 24, // Giảm kích thước biểu tượng
-                  height: 24, // Giảm kích thước biểu tượng
-                  color: voteState.isUpvote === false ? "#F44336" : "#A0A0A0", // Dùng màu xám nhạt hơn cho trạng thái mặc định
-                  transition: "color 0.2s ease",
+              {/* UPVOTE */}
+              <Box
+                onClick={() => handleVote(true)}
+                sx={{
+                  p: "4px", // Giảm padding để thu nhỏ khu vực click và biểu tượng
+                  borderRadius: "50%",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  bgcolor: "transparent",
+                  "&:hover": { bgcolor: "#1b1b1b" },
+                  transition: "background-color 0.2s ease", // Thêm transition cho hover
                 }}
-              />
-            </Box>
-          </Box>
+              >
+                <ArrowIcon
+                  style={{
+                    transform: "rotate(-45deg)",
+                    width: 24,
+                    height: 24,
+                    color: voteState.isUpvote === true ? "#4CAF50" : "#A0A0A0",
+                    transition: "color 0.2s ease",
+                  }}
+                />
+              </Box>
+              <Box
+                sx={{
+                  minWidth: 30,
+                  textAlign: "center",
+                  fontWeight: 700,
+                  fontSize: "1.1rem",
+                  color: "#ffffff", 
+                }}
+              >
+                {voteState.up - voteState.down}
+              </Box>
+                <Box
+                  onClick={() => handleVote(false)}
+                  sx={{
+                    p: "4px", // Giảm padding
+                    borderRadius: "50%",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    bgcolor: "transparent",
+                    "&:hover": { bgcolor: "#1b1b1b" },
+                    transition: "background-color 0.2s ease", // Thêm transition cho hover
+                  }}
+                >
+                  <ArrowIcon
+                    style={{
+                      transform: "rotate(135deg)",
+                      width: 24, // Giảm kích thước biểu tượng
+                      height: 24, // Giảm kích thước biểu tượng
+                      color: voteState.isUpvote === false ? "#F44336" : "#A0A0A0", // Dùng màu xám nhạt hơn cho trạng thái mặc định
+                      transition: "color 0.2s ease",
+                    }}
+                  />
+                </Box>
+              </Box>
       
               {/* Open the popup */}
               <CommentButton onClick={handleNavigateToPost} data={currentItem.commentNumber} sx={{ width: "130px" }} />

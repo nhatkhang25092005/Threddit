@@ -12,18 +12,17 @@ const postApi = {
         return axiosClient.get(url);
     },
 
+    //Vote bài viết 
+    Vote: (postId, isUpVote) => {
+        const url = import.meta.env.VITE_API_POST + `/${postId}/vote/${isUpVote ? 'true' : 'false'}`;
+        return axiosClient.post(url);
+    },
 
-//Vote bài viết 
- Vote: (postId, isUpVote) => {
-    const url = import.meta.env.VITE_API_POST + `/${postId}/vote/${isUpVote ? 'true' : 'false'}`;
-    return axiosClient.post(url);
-},
-
-// Hủy vote bài viết
-cancel: (postId) => {
-    const url = import.meta.env.VITE_API_POST + `/${postId}/vote`;
-    return axiosClient.delete(url);
-},
+    // Hủy vote bài viết
+    cancel: (postId) => {
+        const url = import.meta.env.VITE_API_POST + `/${postId}/vote`;
+        return axiosClient.delete(url);
+    },
 
    // Lấy chi tiết 1 bài viết
   getPostById: (id) => {
