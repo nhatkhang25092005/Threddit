@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Post from "../../../components/common/Post";
-import TopBar from "../../../components/layout/TopBar";
 import TabMenu from "../../../components/layout/TabMenu";
 import SearchBar from "../../../components/layout/SearchBar";
 import UserFollowCard from "../../../components/layout/UserFollowCard";
@@ -9,7 +8,8 @@ import postApi from "../../../services/api/postApi";
 import followApi from "../../../services/api/followApi";
 import {useLocation } from "react-router-dom";
 import convertTime from "../../../utils/convertTime";
-
+import Column from "../../../components/layout/Column"
+import { TITLE } from "../../../constant";
 export default function App() {
   const [tab, setTab] = useState("posts");
   const [query, setQuery] = useState("");
@@ -80,9 +80,8 @@ export default function App() {
   };
 
   return (
-    <>
-      <TopBar title="Tìm kiếm" onLogin={() => alert("Login")} />
-
+    <Column customStyle={{pt:2}}>
+      <Typography variant="title">{TITLE.SEARCH}</Typography>
       <Box
         sx={{
           alignItems: "center",
@@ -91,24 +90,23 @@ export default function App() {
           borderRadius: "12px",
           p: 2,
           boxShadow: "0 0 10px rgba(0,0,0,0.4)",
-          width: "85%",
-          marginLeft: "120px",
-          marginTop: "80px",
+          width:"60%",
+         
           paddingBottom: "18px",
         }}
       >
         {/* THANH SEARCH */}
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Box sx={{ display: "flex", justifyContent: "center", width:"100%" }}>
           <SearchBar
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            onKeyDown={(e) => {if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); handleSearch()}}}
             placeholder="Nhập từ khóa..."
-            sx={{ width: "80%" }}
+            sx={{ width: "90%" }}
           />
           <Button
             variant="contained"
-            sx={{ ml: 2, fontWeight: "bold" }}
+            sx={{ ml: 2, fontWeight: "bold", width:'fit-content', whiteSpace: "nowrap" }}
             onClick={handleSearch}
           >
             Tìm kiếm
@@ -125,11 +123,12 @@ export default function App() {
               ]}
               value={tab}
               onChange={setTab}
+              sx={{width:"100%"}}
             />
 
             <Box
               sx={{
-                width: "80%",
+                width: "100%",
                 mx: "auto",
                 border: "1px solid #A6A6A6",
                 borderTop: "none",
@@ -211,6 +210,6 @@ export default function App() {
           </>
         )}
       </Box>
-    </>
+    </Column>
   );
 }

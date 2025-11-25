@@ -335,7 +335,7 @@ const handleVote = async (isUpVote) => {
         header={
           <Box sx={{display: "flex", flexDirection: "row", justifyItems: "start", pb: "0px", gap: "1rem", alignItems: "center", mb: "1rem",py: "1rem",mx: "1rem",}}>
             <Typography onClick={(e)=>{handleRedirectOnName(e)}} variant="h6" fontWeight={"bold"} sx={{cursor:'pointer','&:hover':{fontStyle:'underline'}}}>
-              {currentItem.author.username}
+              {currentItem?.author?.username}
             </Typography>
             <Typography variant="sub"> {currentItem.createdAt}</Typography>
             {(currentItem.isPinned && showPin) && <PushPinIcon sx={{ color: "#d9ff41ff" }} />}

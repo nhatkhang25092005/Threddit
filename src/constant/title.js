@@ -24,4 +24,5 @@ export const TITLE = {
     NOTIFICATION:"Thông báo",
     FOLLOW_LIST : "Danh sách theo dõi",
     CREATE_POST_SUCCESS : "Tạo bài viết thành công",
+    SEARCH:"Tìm kiếm"
 }

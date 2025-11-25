@@ -73,7 +73,6 @@ export default function UserPage() {
     }
   }, [result]);
 
-  console.log("UserPage re-render")
 
 
   // switch tag handler
