@@ -1,23 +1,26 @@
 import React, { useState } from "react";
-import PostCard from "../../../components/layout/PostCard";
+import Post from "../../../components/common/Post";
 import TopBar from "../../../components/layout/TopBar";
 import TabMenu from "../../../components/layout/TabMenu";
 import SearchBar from "../../../components/layout/SearchBar";
 import UserFollowCard from "../../../components/layout/UserFollowCard";
-import PushPinIcon from "@mui/icons-material/PushPin";
 import { Box, CircularProgress, Typography, Button } from "@mui/material";
 import postApi from "../../../services/api/postApi";
-import followApi from "../../../services/api/followApi";  
-import { useNavigate } from "react-router-dom";
+import followApi from "../../../services/api/followApi";
+import {useLocation } from "react-router-dom";
+import convertTime from "../../../utils/convertTime";
 
 export default function App() {
-  const [tab, setTab] = React.useState("posts");
+  const [tab, setTab] = useState("posts");
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
-  const [searched, setSearched] = useState(false); 
+  const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-const navigate = useNavigate();
+  
+  const location = useLocation(); // Thêm useLocation
+
+  const currentUserId = null; // Thay bằng user ID thật
 
   // Hàm tìm kiếm chính
   const handleSearch = async () => {
@@ -38,7 +41,7 @@ const navigate = useNavigate();
         setResults(users);
       }
     } catch (err) {
-      console.error(" Lỗi tìm kiếm:", err);
+      console.error("Lỗi tìm kiếm:", err);
       setError("Không thể tìm kiếm. Vui lòng thử lại sau.");
     } finally {
       setLoading(false);
@@ -50,13 +53,13 @@ const navigate = useNavigate();
     if (searched && query.trim()) handleSearch();
   }, [tab]);
 
-// Xử lý Theo dõi / Hủy theo dõi
+  // Xử lý Theo dõi / Hủy theo dõi
   const handleFollowToggle = async (username, canFollow) => {
     try {
       if (canFollow) {
         await followApi.followClient(username);
       } else {
-        await followApi.unfollowClient (username);
+        await followApi.unfollowClient(username); // Sửa khoảng trắng
       }
 
       // Cập nhật lại danh sách user
@@ -71,10 +74,15 @@ const navigate = useNavigate();
     }
   };
 
+  // Xử lý khi post bị xóa
+  const handlePostDeleted = (postId) => {
+    setResults((prev) => prev.filter((p) => p.id !== postId));
+  };
+
   return (
     <>
       <TopBar title="Tìm kiếm" onLogin={() => alert("Login")} />
-      
+
       <Box
         sx={{
           alignItems: "center",
@@ -82,7 +90,6 @@ const navigate = useNavigate();
           color: "white",
           borderRadius: "12px",
           p: 2,
-          border: "1px solid #A6A6A6",
           boxShadow: "0 0 10px rgba(0,0,0,0.4)",
           width: "85%",
           marginLeft: "120px",
@@ -108,7 +115,7 @@ const navigate = useNavigate();
           </Button>
         </Box>
 
-         {/* Chỉ hiển thị tab và kết quả sau khi bấm tìm */}
+        {/* Chỉ hiển thị tab và kết quả sau khi bấm tìm */}
         {searched && (
           <>
             <TabMenu
@@ -146,60 +153,57 @@ const navigate = useNavigate();
               )}
 
               {/* KẾT QUẢ BÀI VIẾT */}
-              {!loading && !error && tab === "posts" && results.length > 0 && (
-                results.map((post) => (
-                  <PostCard
+              {!loading && !error && tab === "posts" && results.length > 0 &&
+                results.map((post, index) => (
+                  <Post
                     key={post.id}
-                    author={post.author?.username || "Ẩn danh"}
-                    time={new Date(post.createdAt).toLocaleString("vi-VN")}
-                    content={post.content}
-                    menuOptions={[
-                      {
-                        label: "Ghim bài viết",
-                        icon: <PushPinIcon />,
-                        onClick: () => alert("Đã ghim!"),
-                      },
-                    ]}
-                    style={{ borderRadius: "12px" }}
-                    onClick={() => navigate(`/app/post/detail/${post.id}`)}
+                    item={{
+                            ...post,
+                            createdAt: convertTime(post.createdAt) // Convert trước khi truyền
+                          }}
+                    index={index} // Lấy từ map
+                    createdPostsLength={results.length} // Dùng results.length
+                    isOwner={post.author?.id === currentUserId}
+                    location={location.pathname}
+                    onNavigate={true}
+                    showPin={false} //  Không hiển thị pin trong search
+                    onResult={(result) => {
+                      console.log(result);
+                    }}
+                    onPostUpdatedRendering={(data) => {
+                      if (data.type === "delete") {
+                        handlePostDeleted(data.postId); // Gọi hàm xử lý
+                      }
+                    }}
+                    sx={{ borderRadius: "12px" }}
                   />
-                ))
-              )}
+                ))}
 
-                 {/* CÁ NHÂN */}
-            {!loading && !error && tab === "profile" && results.length > 0 && (
-            results.map((user) => (
-              <UserFollowCard
-                key={user.id}
-                name={user.username}
-                
-                // Nếu là chính mình → ẩn nút
-                hideButton={user.canFollow === null}
-
-                // Nếu không phải mình → hiển thị theo trạng thái
-                buttonText={
-                  user.canFollow === null
-                    ? ""
-                    : user.canFollow
-                    ? "Theo dõi"
-                    : "Đã theo dõi"
-                }
-
-                disabled={user.canFollow === null}
-                onFollow={() =>
-                  user.canFollow !== null &&
-                  handleFollowToggle(user.username, user.canFollow)
-                }
-              />
-            ))
-          )}
-
+              {/* KẾT QUẢ CÁ NHÂN */}
+              {!loading && !error && tab === "profile" && results.length > 0 &&
+                results.map((user) => (
+                  <UserFollowCard
+                    key={user.id}
+                    name={user.username}
+                    hideButton={user.canFollow === null}
+                    buttonText={
+                      user.canFollow === null
+                        ? ""
+                        : user.canFollow
+                        ? "Theo dõi"
+                        : "Đã theo dõi"
+                    }
+                    disabled={user.canFollow === null}
+                    onFollow={() =>
+                      user.canFollow !== null &&
+                      handleFollowToggle(user.username, user.canFollow)
+                    }
+                  />
+                ))}
 
               {/* KHÔNG CÓ KẾT QUẢ */}
               {!loading && !error && results.length === 0 && (
-                <Typography
-                  sx={{ textAlign: "center", py: 4, color: "#aaa" }}
-                >
+                <Typography sx={{ textAlign: "center", py: 4, color: "#aaa" }}>
                   Không tìm thấy kết quả nào.
                 </Typography>
               )}
