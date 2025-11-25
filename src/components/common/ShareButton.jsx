@@ -11,7 +11,7 @@ export default function ShareButton({onNotification, postId}) {
     console.log(url)
       try{
         await navigator.clipboard.writeText(url)
-        if(onNotification) onNotification(new Result(DISPLAY.SNACKBAR, null, 'copied link!',null))
+        if(onNotification) onNotification(new Result(DISPLAY.SNACKBAR, null, 'Đã sao chép đường dẫn!',null))
       }
       catch (error) {
         console.error(error)
