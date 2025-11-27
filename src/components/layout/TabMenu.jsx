@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 
-export default function TabMenu({ tabs, value, onChange }) {
+export default function TabMenu({ tabs, value, onChange, sx }) {
   return (
     <Box
       sx={{
@@ -14,6 +14,7 @@ export default function TabMenu({ tabs, value, onChange }) {
         width: "80%",
         mx: "auto",
         mt: 2,
+        ...sx 
       }}
     >
       {tabs.map((tab) => (

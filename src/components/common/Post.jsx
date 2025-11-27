@@ -103,18 +103,18 @@ export default function Post({
   // --- VOTE STATE ---
   const [voteState, setVoteState] = useState({
     isUpvote: item.isUpvote, // true | false | null
-    up: item.upvoteNumber,
-    down: item.downvoteNumber,
+    up: Number(item.upvoteNumber),
+    down: Number(item.downvoteNumber),
   });
 
   // Cập nhật khi item thay đổi
   useEffect(() => {
     setVoteState({
-      isUpvote: item.isUpvote,
-      up: item.upvoteNumber,
-      down: item.downvoteNumber,
+      isUpvote: item.isUpvote, // true | false | null
+      up: Number(item.upvoteNumber),
+      down: Number(item.downvoteNumber),
     });
-  }, [item]);
+  }, [item.id, item.isUpvote, item.upvoteNumber, item.downvoteNumber]);
 
   async function handlePin(postId, currentPinStatus){
     try{
@@ -220,46 +220,79 @@ export default function Post({
 
 // --- HANDLE VOTE ---
 const handleVote = async (isUpVote) => {
-  if (!currentItem?.id) return;
+  if (!item?.id) return;
+
+  // ✅ LƯU SNAPSHOT TRƯỚC KHI UPDATE
+  const snapshot = {
+    isUpvote: item.isUpvote, // true | false | null
+    up: Number(item.upvoteNumber),
+    down: Number(item.downvoteNumber),
+  };
 
   try {
-    let response;
+    // 1️⃣ Nhấn lại nút → HỦY VOTE
     if (voteState.isUpvote === isUpVote) {
-      response = await postApi.cancel(currentItem.id);
+      setVoteState(prev => ({
+        isUpvote: null,
+        up: isUpVote ? prev.up - 1 : prev.up,
+        down: !isUpVote ? prev.down - 1 : prev.down,
+      }));
 
-      if (response?.data?.statusCode === 200) {
-        setVoteState((prev) => ({
-          isUpvote: null,
-          up: isUpVote ? prev.up - 1 : prev.up,
-          down: !isUpVote ? prev.down - 1 : prev.down,
-        }));
+      const response = await postApi.cancel(item.id);
+      
+      if (response?.data?.statusCode !== 200) {
+        // ✅ Rollback về snapshot
+        setVoteState(snapshot);
       }
       return;
     }
 
-    //  Vote 
-    response = await postApi.Vote(currentItem.id, isUpVote);
+    // 2️⃣ Vote mới hoặc đổi vote
+    setVoteState(prev => {
+      let newUp = prev.up;
+      let newDown = prev.down;
 
-    if (response?.data?.statusCode === 200) {
-      setVoteState((prev) => ({
+      if (isUpVote) {
+        if (prev.isUpvote === false) {
+          // downvote → upvote
+          newDown -= 1;
+          newUp += 1;
+        } else {
+          // null → upvote
+          newUp += 1;
+        }
+      } else {
+        if (prev.isUpvote === true) {
+          // upvote → downvote
+          newUp -= 1;
+          newDown += 1;
+        } else {
+          // null → downvote
+          newDown += 1;
+        }
+      }
+
+      return {
         isUpvote: isUpVote,
-        up:
-          isUpVote
-            ? prev.up + 1 - (prev.isUpvote === false ? 1 : 0)
-            : prev.up - (prev.isUpvote === true ? 1 : 0),
+        up: newUp,
+        down: newDown,
+      };
+    });
 
-        down:
-          !isUpVote
-            ? prev.down + 1 - (prev.isUpvote === true ? 1 : 0)
-            : prev.down - (prev.isUpvote === false ? 1 : 0),
-      }));
+    const response = await postApi.Vote(item.id, isUpVote);
+
+    if (response?.data?.statusCode !== 200) {
+      // ✅ Rollback về snapshot
+      setVoteState(snapshot);
     }
   } catch (err) {
-    console.error(" Vote error:", err);
+    console.error("❌ Vote error:", err);
+    // ✅ Rollback về snapshot
+    setVoteState(snapshot);
   }
 };
-
-
+  // Tính điểm tổng
+  const score = voteState.up - voteState.down;
 
   // handle update render from post detail
   function handleUpdateFromDetail(data){
@@ -302,7 +335,7 @@ const handleVote = async (isUpVote) => {
         header={
           <Box sx={{display: "flex", flexDirection: "row", justifyItems: "start", pb: "0px", gap: "1rem", alignItems: "center", mb: "1rem",py: "1rem",mx: "1rem",}}>
             <Typography onClick={(e)=>{handleRedirectOnName(e)}} variant="h6" fontWeight={"bold"} sx={{cursor:'pointer','&:hover':{fontStyle:'underline'}}}>
-              {currentItem.author.username}
+              {currentItem?.author?.username}
             </Typography>
             <Typography variant="sub"> {currentItem.createdAt}</Typography>
             {(currentItem.isPinned && showPin) && <PushPinIcon sx={{ color: "#d9ff41ff" }} />}
@@ -331,7 +364,7 @@ const handleVote = async (isUpVote) => {
                 <ArrowIcon style={{transform: "rotate(-45deg)", width: 24, height: 24, color: voteState.isUpvote === true ? "#4CAF50" : "#A0A0A0",transition: "color 0.2s ease",}}/>
               </Box>
               <Box sx={{minWidth: 30, textAlign: "center", fontWeight: 700, fontSize: "1.1rem", color: "#ffffff"}}>
-                {voteState.up - voteState.down}
+                {score}
               </Box>
                 <Box
                   onClick={() => handleVote(false)}

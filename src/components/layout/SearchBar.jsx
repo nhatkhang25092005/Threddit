@@ -6,6 +6,7 @@ export default function SearchBar({
   icon = <SearchIcon />,
   onChange,
   value,
+  onKeyDown,
   sx = {},
 }) {
   return (
@@ -42,6 +43,7 @@ export default function SearchBar({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        onKeyDown={onKeyDown}
         sx={{
           flex: 1,
           color: "#fff",
