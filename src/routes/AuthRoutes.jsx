@@ -6,7 +6,6 @@ import Forgot from "../features/auth/pages/Forgot";
 import Verify from "../features/auth/pages/Verify";
 import VerifyForgot from "../features/auth/pages/VerifyForgot";
 
-
 export default function AuthRoutes() {
   return (
     <>
