@@ -20,7 +20,7 @@ export default function CreatePost({ onPost, onExit }) {
 
 const {inputRef, showList, list, setShowList} = useMention(content);
 
-console.log("🎨 CreatePost render:", { 
+console.log("CreatePost render:", { 
   showList, 
   listCount: list.length,
   list 
