@@ -9,5 +9,6 @@ export const ROUTES = {
     FOLLOW_LIST : "/app/follow",
     DETAIL_POST : '/app/post/detail',
     HOME : "/app/home",
-    USER : "/app/user"
+    USER : "/app/user",
+    SEARCH : "/app/search"
 }

@@ -114,7 +114,6 @@ export default function PostDetail({ onOpen, onClose, onUpdate }) {
 
 function PostDetailContent({ onClose, onUpdate }) {
   const textFieldRef = useRef(null)
-
   const {
     post,
     comments,
@@ -135,8 +134,6 @@ function PostDetailContent({ onClose, onUpdate }) {
     setCommentContent,
   } = usePostDetail()
 
-  const [openPopup, setOpenPopup] = useState(false)
-  const [openSnack, setOpenSnack] = useState(false)
 
   useEffect(() => {
     if (onUpdate && comments && !loading) {
@@ -156,12 +153,16 @@ function PostDetailContent({ onClose, onUpdate }) {
     }
   }, [post, loading])
 
+  const [openPopup, setOpenPopup] = useState(false)
+  const [openSnack, setOpenSnack] = useState(false)
   useEffect(() => {
+    console.log("HELLO FROM RESULT OBSERVER")
+    console.log(result)
+    console.log(loading)
     if (result?.type === DISPLAY.POPUP) setOpenPopup(true)
     if (result?.type === DISPLAY.SNACKBAR) setOpenSnack(true)
   }, [result])
 
-  // Sử dụng MentionList component với logic tích hợp
   const { handleCommentChange, handleKeyDown: handleMentionKeyDown, mentionUI } = Mention({
     textFieldRef,
     commentContent,
@@ -184,7 +185,7 @@ function PostDetailContent({ onClose, onUpdate }) {
     }
   }
 
-  if (loading || post === null) {
+  if (loading) {
     return (
       <Box sx={sxForLoading}>
         <CircularProgress sx={{ color: "white" }} size={50} />
@@ -194,90 +195,101 @@ function PostDetailContent({ onClose, onUpdate }) {
 
   return (
     <>
-      <SnakeBarNotification 
-        duration={3000} 
-        message={result?.message} 
-        open={openSnack} 
-        onClose={() => setOpenSnack(false)} 
-      />
-      <PopupNotification 
-        open={openPopup} 
-        onClose={() => setOpenPopup(false)} 
-        title={result?.title} 
-        content={result?.message} 
-      />
-      
-      <Box sx={sxForTheParentBox}>
-        <Box sx={sxForTheHeaderBox}>
-          <Typography variant="h6" sx={{ textAlign: "center" }}>
-            Bài viết của {post.author.username}
-          </Typography>
-          <HighlightOffIcon sx={sxForCloseIcon} onClick={onClose} />
-        </Box>
-
-        <Box sx={sxForBody}>
-          <Post
-            key={post.id}
-            sx={overrideSxForPost}
-            onComment={true}
-            commentList={comments}
-            item={post}
-            index={Number(post?.id)}
-            onResult={setResult}
-            onUpdateComment={onUpdateComment}
-            onGetMoreComment={{
-              getMoreComment: getComment,
-              hasMore: hasMore,
-              getMoreCommentLoading: getMoreCommentLoading
-            }}
-          />
-        </Box>
-
-        <Box sx={sxForCommentInputBox}>
-          <Typography fontWeight="bold" variant="body2" sx={{ mb: 1 }}>
-            {localStorage.getItem("username")}
-          </Typography>
-          
-          <Box sx={{ 
-            display: "flex", 
-            flexDirection: "row", 
-            alignItems: 'center', 
-            gap: '1rem', 
-            position: 'relative' 
-          }}>
-            <TextField
-              multiline
-              placeholder={LABEL.WRITE_COMMENT}
-              fullWidth
-              minRows={1}
-              maxRows={4}
-              ref={textFieldRef}
-              value={commentContent}
-              onChange={handleCommentChange}
-              onKeyDown={handleKeyDown}
-              sx={sxForTextField}
-            />
-            
-            {commentLoading ? (
-              <CircularProgress sx={{ color: "white" }} size={50} />
-            ) : (
-              commentContent.trim().length !== 0 ? (
-                <SendIcon
-                  onClick={() => postComment(commentContent)}
-                  sx={sxForSendIcon}
-                  fontSize='large'
-                />
-              ) : (
-                <SendIcon
-                  sx={sxForDisabledSendIcon}
-                  fontSize='large'
-                />
-              )
-            )}
+      {
+        post !== null 
+        ?
+        <>
+        <SnakeBarNotification 
+          duration={3000} 
+          message={result?.message} 
+          open={openSnack} 
+          onClose={() => setOpenSnack(false)} 
+        />
+        <PopupNotification 
+          open={openPopup} 
+          onClose={() => setOpenPopup(false)} 
+          title={result?.title} 
+          content={result?.message} 
+        />
+        
+        <Box sx={sxForTheParentBox}>
+          <Box sx={sxForTheHeaderBox}>
+            <Typography variant="h6" sx={{ textAlign: "center" }}>
+              Bài viết của {post.author.username}
+            </Typography>
+            <HighlightOffIcon sx={sxForCloseIcon} onClick={onClose} />
           </Box>
-          {mentionUI}
+
+          <Box sx={sxForBody}>
+            <Post
+              key={post.id}
+              sx={overrideSxForPost}
+              onComment={true}
+              commentList={comments}
+              item={post}
+              index={Number(post?.id)}
+              onResult={setResult}
+              onUpdateComment={onUpdateComment}
+              onGetMoreComment={{
+                getMoreComment: getComment,
+                hasMore: hasMore,
+                getMoreCommentLoading: getMoreCommentLoading
+              }}
+            />
+          </Box>
+
+          <Box sx={sxForCommentInputBox}>
+            <Typography fontWeight="bold" variant="body2" sx={{ mb: 1 }}>
+              {localStorage.getItem("username")}
+            </Typography>
+            
+            <Box sx={{ 
+              display: "flex", 
+              flexDirection: "row", 
+              alignItems: 'center', 
+              gap: '1rem', 
+              position: 'relative' 
+            }}>
+              <TextField
+                multiline
+                placeholder={LABEL.WRITE_COMMENT}
+                fullWidth
+                minRows={1}
+                maxRows={4}
+                ref={textFieldRef}
+                value={commentContent}
+                onChange={handleCommentChange}
+                onKeyDown={handleKeyDown}
+                sx={sxForTextField}
+              />
+              
+              {commentLoading ? (
+                <CircularProgress sx={{ color: "white" }} size={50} />
+              ) : (
+                commentContent.trim().length !== 0 ? (
+                  <SendIcon
+                    onClick={() => postComment(commentContent)}
+                    sx={sxForSendIcon}
+                    fontSize='large'
+                  />
+                ) : (
+                  <SendIcon
+                    sx={sxForDisabledSendIcon}
+                    fontSize='large'
+                  />
+                )
+              )}
+            </Box>
+            {mentionUI}
+          </Box>
         </Box>
-      </Box>
+        </>
+        :<PopupNotification  
+          open={openPopup} 
+          onClose={() => {setOpenPopup(false); onClose()}} 
+          title={result?.title} 
+          content={result?.message} />
+      }
     </>
   )
 }

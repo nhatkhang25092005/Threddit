@@ -17,7 +17,7 @@ export default function useLogin() {
     const response = await handleGetUserInfoRequest()
     if(response.isOk()){
       localStorage.setItem("username", response.data.data.username)
-      navigate(ROUTES.PROFILE, replace)
+      navigate(ROUTES.HOME, replace)
     }
   }
 

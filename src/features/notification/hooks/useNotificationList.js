@@ -36,9 +36,7 @@ export default function useNotificationList() {
         }))
 
         // append new notification to list
-        setList((prev) => [...prev, ...newList]);
-        console.log(list)
-        console.log(response.data.cursor)
+        setList((prev) => [...prev, ...newList]); 
         // update cursor
         setCursor(response.data.cursor);
       }
@@ -77,8 +75,21 @@ export default function useNotificationList() {
    * notice: Main handler is in notificationProvider
    * @param {int} id 
    */
-  async function markAsRead(id){readNotification(id)}
+  async function markAsRead(id){
+    setList(notifications=>notifications.map(
+      item => (item.id === id ? {...item, isRead : !item.isRead} : item)
+    ))
+    readNotification(id)
+  }
 
+  async function readAll(){
+    const unRead = list.filter(item => !item.isRead)
+    setList(notifications => notifications.map(
+      item => (!item.isRead ? {...item, isRead : true} : item)
+    ))
+    unRead.forEach(n => readNotification(n.id))
+  }
+// 
 
-  return { list, error, loadMore, hasMore, loading, markAsRead };
+  return { list, error, loadMore, hasMore, loading, markAsRead, readAll };
 }

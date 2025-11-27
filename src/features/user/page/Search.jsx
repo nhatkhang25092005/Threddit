@@ -6,10 +6,9 @@ import UserFollowCard from "../../../components/layout/UserFollowCard";
 import { Box, CircularProgress, Typography, Button } from "@mui/material";
 import postApi from "../../../services/api/postApi";
 import followApi from "../../../services/api/followApi";
-import {useLocation } from "react-router-dom";
 import convertTime from "../../../utils/convertTime";
 import Column from "../../../components/layout/Column"
-import { TITLE } from "../../../constant";
+import { TITLE, ROUTES } from "../../../constant";
 export default function App() {
   const [tab, setTab] = useState("posts");
   const [query, setQuery] = useState("");
@@ -17,8 +16,7 @@ export default function App() {
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  
-  const location = useLocation(); // Thêm useLocation
+
 
   const currentUserId = null; // Thay bằng user ID thật
 
@@ -157,13 +155,13 @@ export default function App() {
                   <Post
                     key={post.id}
                     item={{
-                            ...post,
-                            createdAt: convertTime(post.createdAt) // Convert trước khi truyền
-                          }}
+                      ...post,
+                      createdAt: convertTime(post.createdAt) // Convert trước khi truyền
+                    }}
                     index={index} // Lấy từ map
                     createdPostsLength={results.length} // Dùng results.length
                     isOwner={post.author?.id === currentUserId}
-                    location={location.pathname}
+                    location={ROUTES.SEARCH}
                     onNavigate={true}
                     showPin={false} //  Không hiển thị pin trong search
                     onResult={(result) => {

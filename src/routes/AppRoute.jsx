@@ -25,7 +25,7 @@ export default function AppRoute() {
           <Route path="user/:postId?" element={<UserPage/>}/>
           <Route path="home/:postId?" element={<Home />} />
           <Route path="follow" element={<FollowList/>}/>
-          <Route path="search" element={<Search />} />
+          <Route path="search/:postId?" element={<Search />} />
           <Route path="add" element={<CreatePost />} />
         </Route>
       </Route>

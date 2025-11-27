@@ -80,21 +80,27 @@ export default function usePostDetail() {
   }
 
   const getDetailPost = useCallback(async () => {
+    setLoading(true)
     try {
       const response = await handleGetDetailPost(postId);
       if (response.isOk()) {
+        console.log(response)
         setPost({
           ...response.data,
           createdAt: convertTime(response.data.createdAt),
           updatedAt: convertTime(response.data.updatedAt),
         });
+        return true
       } else {
+        console.log("HELLO from GET_DETAIL_POST")
         setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null));
+        return false
       }
     } catch (error) {
       const errorMessage = error?.message || String(error);
       setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null));
     }
+    finally{setLoading(false)}
   }, [postId]);
 
   // Post a comment request
@@ -129,15 +135,22 @@ export default function usePostDetail() {
   // Base Info
   useEffect(() => {
     if (!postId) return;
-    setLoading(true);
     setPost(null);
     setComments([]);
-    Promise.all([getDetailPost(), getComment(), fetchFollowers()])
-      .catch(err => {
+    async function run(){
+      try{
+        const isExisted = await getDetailPost()
+        if (isExisted){ 
+          await getComment()
+          await fetchFollowers()
+        }
+      }
+      catch(err){
         const errorMessage = err?.message || String(err);
         setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null));
-      })
-      .finally(() => setLoading(false));
+      }
+    }
+   run()  
   }, [postId]);
 
   useEffect(()=>{ 

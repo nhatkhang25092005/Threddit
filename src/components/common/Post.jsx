@@ -222,7 +222,7 @@ export default function Post({
 const handleVote = async (isUpVote) => {
   if (!item?.id) return;
 
-  // ✅ LƯU SNAPSHOT TRƯỚC KHI UPDATE
+  //  LƯU SNAPSHOT TRƯỚC KHI UPDATE
   const snapshot = {
     isUpvote: item.isUpvote, // true | false | null
     up: Number(item.upvoteNumber),
@@ -241,7 +241,7 @@ const handleVote = async (isUpVote) => {
       const response = await postApi.cancel(item.id);
       
       if (response?.data?.statusCode !== 200) {
-        // ✅ Rollback về snapshot
+        //  Rollback về snapshot
         setVoteState(snapshot);
       }
       return;
@@ -282,12 +282,12 @@ const handleVote = async (isUpVote) => {
     const response = await postApi.Vote(item.id, isUpVote);
 
     if (response?.data?.statusCode !== 200) {
-      // ✅ Rollback về snapshot
+      //  Rollback về snapshot
       setVoteState(snapshot);
     }
   } catch (err) {
-    console.error("❌ Vote error:", err);
-    // ✅ Rollback về snapshot
+    console.error("Vote error:", err);
+    //  Rollback về snapshot
     setVoteState(snapshot);
   }
 };
@@ -373,7 +373,7 @@ const handleVote = async (isUpVote) => {
                 </Box>
               </Box>
       
-              {/* Open the popup */}
+              {/* Open the  */}
               <CommentButton onClick={handleNavigateToPost} data={currentItem.commentNumber} sx={{ width: "130px" }} />
               
               <MakerButton

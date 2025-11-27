@@ -1,4 +1,4 @@
-import { Typography, Box, CircularProgress, Fade } from "@mui/material";
+import { Typography, Box, CircularProgress, Fade, Button } from "@mui/material";
 import { DISPLAY, TEXT, TITLE, ROUTES } from "../../../constant";
 import Column from "../../../components/layout/Column";
 import BoxContent from "../../../components/common/BoxContent";
@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import useInfiniteScroll from "../../../hooks/useInfiniteScroll"
 export default function Notifications() {
   // elements of page, using for render on screen
-  const { list, error, loadMore, hasMore, loading, markAsRead } = useNotificationList();
+  const { list, error, loadMore, hasMore, loading, markAsRead, readAll } = useNotificationList();
 
   // Popup for display errors have type "popup"
   const [popup, setPopup] = useState(false)
@@ -30,21 +30,25 @@ export default function Notifications() {
     <>
       {/* Popup for error from server (500) */}
       <PopupNotification open={popup} onClose={()=>setPopup(false)} title={TITLE.ERROR} content={error}/>
-      <Column customStyle={{ pt: "2rem", width: "60%", mx: "auto",pb:"0"}} >
+      <Column customStyle={{ pt: "2rem", width: "60%", mx: "auto",pb:"0", position:"relative"}} >
         <Typography variant="title">{TITLE.NOTIFICATION}</Typography>
+        <Button onClick={readAll} variant="contained" sx={{height:"fit-content", position:"absolute", right:"1rem"}}>{TEXT.READ_ALL}</Button>
         <BoxContent customStyle={{ mx: 0, px: 0, height:"fit-content",py:0,mt:2,mb:"5rem" }}>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
 
             {/* BLocks of content */}
             {list.length !== 0 ? (list.map((notification, index) => (
               <BlockContent 
+                key={index}
                 customStyle={{
                   ...(notification.isRead === true ? undefined :{bgcolor: "#cdcdcd24"}),
                   ...index === list.length - 1 ? undefined: {borderBottom:"solid #BCBDBF 1px"} ,
                   cursor:"pointer",
                   "&:hover":{
                     bgcolor:"#f0f0f012",
-                  }
+                  },
+                  "&:hover .markAsRead":{visibility:"visible"},
+                  "&:hover .newNotification":{visibility:"hidden"},
                 }}
                 onClick = {()=>{
                   if (!notification.isRead) markAsRead(notification.id)
@@ -54,20 +58,18 @@ export default function Notifications() {
                   else navigate(`${ROUTES.HOME}/${notification.target}`)
                 }}
                 header={
-                  <Box 
-                    sx={{ px: "1rem",pt:"1rem"}} 
-                    textAlign={"end"}
-                  >
-                    <Typography variant="sub">{notification.createdAt}</Typography>
-                  </Box>}
-                footer = {<Typography sx={{
-                  pb:"0.5rem", 
-                  pr:"1rem",
-                  textAlign:"right",
-                  ...(notification.isRead ? {color:"#9898989e"} : {color:"#43ff2bff"})
-                }}>{notification.isRead ? TEXT.READ: TEXT.NOT_READ}</Typography>}  
+                  <Box sx={{ px: "1rem",pt:"0.5rem", height:'1.5rem'}}/>}
+                footer = {
+                  <Box sx={{display:"flex", pb:"1rem", flexDirection:"row", px:"1rem",alignItems:"center", justifyContent:"space-between"}}>
+                    <Typography variant="sub" sx={{pl:"0.5rem"}}>{notification.createdAt}</Typography>
+                    {!notification.isRead 
+                    ? <Typography className="newNotification" sx={{color:"#43ff2bff", visibility:"visible", position:'absolute', right:"1.5rem"}}>{TEXT.NOT_READ}</Typography>
+                    : <Typography sx={{color:"#9898989e"}}>{TEXT.READ}</Typography>}
+                    {!notification.isRead && <Button onClick={(e)=>{e.stopPropagation();markAsRead(notification.id)}} variant="contained" className="markAsRead" sx={{visibility:"hidden",height:"fit-content" ,border:"solid #ffffff60 1px", fontSize:"12px", bgcolor:"#f5ffd0ff"}}>{TEXT.MARK_AS_READ}</Button>}
+                  </Box>
+                }  
                 >
-                <Box sx={{ px: "1rem",pb:"2rem", }}>{notification?.content}</Box>
+                  <Box sx={{ px: "1rem",pb:"1rem",pt:"0.3rem" }}>{notification?.content}</Box>
               </BlockContent>
             )))
           :(

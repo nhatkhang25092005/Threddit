@@ -33,5 +33,8 @@ export const TEXT = {
     NO_COMMENTS : "Hãy là người đầu tiên bình luận cho bài viết này!",
     ITS_YOU : "Bạn",
     CLIENT_PAGE:"Trang cá nhân của ",
-    USER_PAGE : "Trang cá nhân"
+    USER_PAGE : "Trang cá nhân",
+    MARK_AS_READ : "Đánh dấu là đã đọc",
+    MARK_AS_UNREAD : "Đánh dấu là chưa đọc",
+    READ_ALL : "Đọc tất cả"
 }
