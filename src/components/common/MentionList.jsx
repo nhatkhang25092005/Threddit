@@ -30,7 +30,7 @@ export default function MentionList({ items, onSelect }) {
             "&:hover": { backgroundColor: "#333" }
           }}
         >
-          @{u.username}
+          {u.username}
         </Box>
       ))}
     </Box>

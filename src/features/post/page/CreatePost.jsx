@@ -78,16 +78,6 @@ const handleSelectMention = (username) => {
                 borderBottom:"solid #A6A6A6 1px",
               }}
             >
-              <Typography sx={{ 
-                  fontWeight: "bold", 
-                  position:"absolute",
-                  width:"fit-content", 
-                  cursor:"pointer",
-                  pl:"1rem",
-                  "&:hover":{textDecoration:"underline"}
-                  }}>
-                Thoát
-              </Typography>
               <Typography variant="sub" sx={{ fontWeight: "bold", color: "#fff", mx: "auto" }}>
                 Threddit mới
               </Typography>
@@ -103,10 +93,10 @@ const handleSelectMention = (username) => {
             <TextField
               multiline
               fullWidth
-              placeholder="Tin gì mới?"
+              placeholder="> Tin gì mới?"
               value={content}
               inputProps={{ 
-                ref: inputRef  // ← ĐỔI TỪ inputRef={inputRef} SANG inputProps
+                ref: inputRef  
                 }}
               onChange={(e) => setContent(e.target.value)}
               variant="standard"
