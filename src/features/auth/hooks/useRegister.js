@@ -15,7 +15,6 @@ export default function useRegister() {
   }
   const register = async (formData) => {
     const validResult =  validRegister(formData)
-    console.log(validResult)
     // valid each field
     if (typeof validResult === "object" && validResult !== null) {
         handleError(validResult)

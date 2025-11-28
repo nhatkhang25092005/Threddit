@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef, useContext } from "react";
 import { handleGetComments, handlePostComment } from "../../../services/request/commentRequest";
 import {handleGetFollowersListRequest} from "../../../services/request/followRequest"
 import { handleGetDetailPost } from "../../../services/request/postRequest";
@@ -8,7 +8,7 @@ import { DISPLAY, TITLE } from "../../../constant";
 import { useParams } from "react-router-dom";
 import { extractUsernames } from "../../../utils/extractUsernames";
 import { useRealtimeComments } from "../../../provider/CommentProvider";
-
+import { PostSyncContext } from "../../../provider/PostProvider";
 export default function usePostDetail() {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
@@ -21,6 +21,7 @@ export default function usePostDetail() {
   const [hasMore, setHasMore] = useState(true)
   const [getMoreCommentLoading, setGetMoreCommentLoading] = useState(false)
   const cursor = useRef(null)
+  const {updateCommentCount} = useContext(PostSyncContext)
 
   // Fetch followings elements
   const followersCursor = useRef(null)
@@ -155,7 +156,9 @@ export default function usePostDetail() {
 
   useEffect(()=>{ 
     if(!realTimeComments) return
-    setComments(prev=>[realTimeComments, ...prev]) },[realTimeComments])
+    setComments(prev=>[realTimeComments, ...prev])
+    updateCommentCount(postId, comments.length + 1)
+  },[realTimeComments])
     
   return {
     commentContent, 

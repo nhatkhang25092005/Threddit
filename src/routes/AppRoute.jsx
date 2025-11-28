@@ -11,12 +11,13 @@ import Search from "../features/user/page/Search";
 import CreatePost from "../features/post/page/CreatePost";
 import FollowList from "../features/user/page/FollowList";
 import UserPage from "../features/personal/page/UserPage";
+import { PostProvider } from "../provider/PostProvider.jsx";
 
 export default function AppRoute() {
   return (
     <Routes>
       <Route>
-        <Route element={<NotificationProvider><AppLayout /></NotificationProvider>}>
+        <Route element={<NotificationProvider><PostProvider><AppLayout /></PostProvider></NotificationProvider>}>
           {/* Feature Route Here */}
           <Route path="profile" element={<Profile />} />
           <Route path="change_password" element={<ChangePassword />} />
@@ -24,8 +25,8 @@ export default function AppRoute() {
           <Route path="client/:clientName/:postId?" element={<ClientPage/>}/>
           <Route path="user/:postId?" element={<UserPage/>}/>
           <Route path="home/:postId?" element={<Home />} />
-          <Route path="follow" element={<FollowList/>}/>
           <Route path="search/:postId?" element={<Search />} />
+          <Route path="follow" element={<FollowList/>}/>
           <Route path="add" element={<CreatePost />} />
         </Route>
       </Route>

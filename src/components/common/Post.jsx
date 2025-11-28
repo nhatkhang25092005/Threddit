@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -24,11 +24,11 @@ import { extractUsernames } from "../../utils/extractUsernames";
 import { Result } from "../../class";
 import { DISPLAY, ROUTES, TEXT, TITLE } from "../../constant";
 import usePin from "../../hooks/usePin"
-import { listenToPostEvent, POST_EVENTS } from "../../utils/postEvent";
 import SnakeBarNotification from "./SnakeBarNotification";
 
 // API
 import postApi from "../../services/api/postApi";
+import { PostSyncContext } from "../../provider/PostProvider";
 
 export default function Post({
   onUpdateComment,// use for post detail update the comment list
@@ -47,6 +47,8 @@ export default function Post({
   onPostUpdatedRendering,
   onGetMoreComment,
 }) {
+
+  
   function normalizeItem(item){
     const {isSave, isSaved, ...rest} = item
     return{
@@ -54,7 +56,6 @@ export default function Post({
       isSaved:isSaved ?? isSave ?? false
     }
   }
-
   const { pinPost, unpinPost, pinLoading } = usePin();
   const [editingPostId, setEditingPostId] = useState(null);
   const [editContent, setEditContent] = useState("");
@@ -64,6 +65,43 @@ export default function Post({
   const navigate = useNavigate()
   const [openDetail, setOpenDetail] = useState(false)
   const [comments, setComments] = useState(commentList)
+  const {updateVote, getPostState} = useContext(PostSyncContext)
+  const lastUpdateTimeRef = useRef(0)
+
+  useEffect(()=>{
+    const postState = getPostState(item.id)
+    if(postState){
+      if(postState?.vote){
+        if(postState.vote.updatedAt > lastUpdateTimeRef.current){
+          setVoteState({
+            isUpvote:postState.vote.isUpvote,
+            up:postState.vote.up,
+            down:postState.vote.down
+          })
+        }
+      }
+      if (postState?.save) {
+        if(postState.save.updatedAt > lastUpdateTimeRef.current){
+          setCurrentItem(prev => ({
+            ...prev,
+            isSaved: postState.save.isSaved,
+            saveNumber: postState.save.saveNumber
+          }));
+        } 
+      }
+      
+      if (postState?.comment) {
+        if(postState.comment.updatedAt > lastUpdateTimeRef.current){
+          console.log("PostState.comment listening =)")
+          setCurrentItem(prev => ({
+            ...prev,
+            commentNumber: postState.comment.commentNumber
+          }));      
+        }
+        
+      }
+    }
+  },[getPostState, item.id])
   
   // Comment Scrolling
   const {getMoreComment = null, hasMore = null, getMoreCommentLoading = null} = onGetMoreComment || {}
@@ -78,7 +116,6 @@ export default function Post({
     setComments(commentList)
     if(commentList) setCurrentItem(prev=>({...prev, commentNumber : commentList.length}))
   },[commentList])
-
   // Handle navigation
   const handleNavigateToPost = () => {
     if (onNavigate && editingPostId !== currentItem.id) {
@@ -86,36 +123,6 @@ export default function Post({
       setOpenDetail(true)
     }
   };
-
-  useEffect(()=>{
-    const unsubscribe = listenToPostEvent(POST_EVENTS.SAVE_CHANGED, (event)=>{
-      const {postId, isSaved, saveNumber} = event.detail
-      if(postId === currentItem.id){
-         setCurrentItem(prev => ({
-          ...prev,
-          isSaved,
-          saveNumber
-        }));
-      }
-    })
-    return unsubscribe
-  },[currentItem.id])
-  // --- VOTE STATE ---
-  const [voteState, setVoteState] = useState({
-    isUpvote: item.isUpvote, // true | false | null
-    up: Number(item.upvoteNumber),
-    down: Number(item.downvoteNumber),
-  });
-
-  // Cập nhật khi item thay đổi
-  useEffect(() => {
-    setVoteState({
-      isUpvote: item.isUpvote, // true | false | null
-      up: Number(item.upvoteNumber),
-      down: Number(item.downvoteNumber),
-    });
-  }, [item.id, item.isUpvote, item.upvoteNumber, item.downvoteNumber]);
-
   async function handlePin(postId, currentPinStatus){
     try{
       const result = currentPinStatus ? await unpinPost(postId) : await pinPost(postId)
@@ -134,7 +141,6 @@ export default function Post({
       onResult(new Result(DISPLAY.POPUP, TITLE.ERROR, err, null))
     }
   }
-  
   // Pin
   function pinProps(item) {
     return {
@@ -143,19 +149,16 @@ export default function Post({
       callback: () => handlePin(item.id, item.isPinned)
     };
   }
-
   // Start editing
   function startEditing(postId, currentContent) {
     setEditingPostId(postId);
     setEditContent(currentContent);
   }
-
   // Cancel editing
   function cancelEditing() {
     setEditingPostId(null);
     setEditContent("");
   }
-
   // Save edit
   async function saveEdit(postId) {
     if (!postId) {
@@ -187,7 +190,6 @@ export default function Post({
       setEditLoading(false);
     }
   }
-
   // Delete post
   async function deletePost(postId) {
     if (!postId) {
@@ -217,10 +219,27 @@ export default function Post({
     }
   }
 
-
 // --- HANDLE VOTE ---
+const [voteState, setVoteState] = useState({
+  isUpvote: item.isUpvote, // true | false | null
+  up: Number(item.upvoteNumber),
+  down: Number(item.downvoteNumber),
+});
+
+// Cập nhật khi item thay đổi
+useEffect(() => {
+  setVoteState({
+    isUpvote: item.isUpvote, // true | false | null
+    up: Number(item.upvoteNumber),
+    down: Number(item.downvoteNumber),
+  });
+}, [item.id, item.isUpvote, item.upvoteNumber, item.downvoteNumber]);
+
 const handleVote = async (isUpVote) => {
-  if (!item?.id) return;
+  if (!item?.id){
+    console.error("item id can not be null when init vote")
+    return
+  };
 
   //  LƯU SNAPSHOT TRƯỚC KHI UPDATE
   const snapshot = {
@@ -230,55 +249,34 @@ const handleVote = async (isUpVote) => {
   };
 
   try {
-    // 1️⃣ Nhấn lại nút → HỦY VOTE
+    // Cancel Vote
     if (voteState.isUpvote === isUpVote) {
-      setVoteState(prev => ({
+      const newState = {
         isUpvote: null,
-        up: isUpVote ? prev.up - 1 : prev.up,
-        down: !isUpVote ? prev.down - 1 : prev.down,
-      }));
-
+        up: isUpVote ? voteState.up - 1 : voteState.up,
+        down: !isUpVote ? voteState.down - 1 : voteState.down,
+      }
+      setVoteState(newState);
+      lastUpdateTimeRef.current = Date.now()
+      updateVote(item.id, newState)
       const response = await postApi.cancel(item.id);
       
       if (response?.data?.statusCode !== 200) {
-        //  Rollback về snapshot
         setVoteState(snapshot);
+        updateVote(item.id, snapshot)
       }
       return;
     }
 
-    // 2️⃣ Vote mới hoặc đổi vote
-    setVoteState(prev => {
-      let newUp = prev.up;
-      let newDown = prev.down;
-
-      if (isUpVote) {
-        if (prev.isUpvote === false) {
-          // downvote → upvote
-          newDown -= 1;
-          newUp += 1;
-        } else {
-          // null → upvote
-          newUp += 1;
-        }
-      } else {
-        if (prev.isUpvote === true) {
-          // upvote → downvote
-          newUp -= 1;
-          newDown += 1;
-        } else {
-          // null → downvote
-          newDown += 1;
-        }
-      }
-
-      return {
-        isUpvote: isUpVote,
-        up: newUp,
-        down: newDown,
-      };
-    });
-
+    // Update Vote
+    const newState = {
+      isUpvote:isUpVote,
+      up: voteState.up + (isUpVote ? 1 : 0) - (voteState.isUpvote === true ? 1 : 0),
+      down:voteState.down + (!isUpVote ? 1 : 0) - (voteState.isUpvote === false ? 1 : 0)
+    }
+    setVoteState(newState)
+    lastUpdateTimeRef.current = Date.now()
+    updateVote(item.id, newState)
     const response = await postApi.Vote(item.id, isUpVote);
 
     if (response?.data?.statusCode !== 200) {
@@ -293,18 +291,6 @@ const handleVote = async (isUpVote) => {
 };
   // Tính điểm tổng
   const score = voteState.up - voteState.down;
-
-  // handle update render from post detail
-  function handleUpdateFromDetail(data){
-    switch(data.type){
-      case 'comment' : 
-        setCurrentItem(prev=>({...prev, commentNumber : data.commentNumber}))
-        break
-      case 'save':
-        setCurrentItem(prev=>({...prev, isSaved : data.status}))
-        break
-    }
-  }
 
   const [openSnack, setOpenSnack] = useState(false)
   const [resultOfShare, setResultOfShare] = useState(null)
@@ -325,7 +311,6 @@ const handleVote = async (isUpVote) => {
           setOpenDetail(false)
           navigate("..", { replace: true, relative: "path" });
         }}
-        onUpdate = {handleUpdateFromDetail}
         />}
       <BlockContent
         key={index}

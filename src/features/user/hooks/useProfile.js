@@ -22,11 +22,9 @@ export default function useProfile(){
 
     // change username
     const saveChange = async (oldUsername, newUsername) => {
-        console.log(oldUsername, newUsername)
         setResult(null)
         // no change if old username equals new username
         if(oldUsername === newUsername) return
-        console.log("changed")
 
         //validate
         const validResult = validChangeUsername(newUsername)
@@ -34,8 +32,6 @@ export default function useProfile(){
             setResult(new Result(DISPLAY.POPUP, TITLE.CHANGE_NAME_FAIL, validResult.username))
             return
         }
-
-        console.log("validated")
 
         //call api to change username
         setLoading(true)

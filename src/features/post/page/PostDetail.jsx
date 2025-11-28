@@ -10,7 +10,6 @@ import CommentProvider from "../../../provider/CommentProvider"
 import PopupNotification from "../../../components/common/PopupNotification"
 import SnakeBarNotification from "../../../components/common/SnakeBarNotification"
 import useInfiniteScroll from "../../../hooks/useInfiniteScroll"
-
 const sxForTheParentBox = {
   border: "solid #a4a4a463 2px",
   width: "70%",
@@ -96,7 +95,7 @@ const sxForLoading = {
 const sxForSendIcon = { cursor: "pointer", p: "4px", "&:hover": { p: 0 } }
 const sxForDisabledSendIcon = { p: "4px", opacity: "10%" }
 
-export default function PostDetail({ onOpen, onClose, onUpdate }) {
+export default function PostDetail({ onOpen, onClose }) {
   return (
     <Modal
       sx={{ zIndex: 40 }}
@@ -106,13 +105,13 @@ export default function PostDetail({ onOpen, onClose, onUpdate }) {
       aria-describedby="modal-modal-description"
     >
       <CommentProvider>
-        <PostDetailContent onClose={onClose} onUpdate={onUpdate} />
+        <PostDetailContent onClose={onClose}/>
       </CommentProvider>
     </Modal>
   )
 }
-
-function PostDetailContent({ onClose, onUpdate }) {
+//
+function PostDetailContent({ onClose }) {
   const textFieldRef = useRef(null)
   const {
     post,
@@ -134,24 +133,11 @@ function PostDetailContent({ onClose, onUpdate }) {
     setCommentContent,
   } = usePostDetail()
 
-
-  useEffect(() => {
-    if (onUpdate && comments && !loading) {
-      onUpdate({ type: 'comment', commentNumber: comments.length })
-    }
-  }, [comments, loading])
-
   const followingsRef = useInfiniteScroll({
     hasMore: isFollowerHasMore,
     loading: followersLoading,
     onLoadMore: fetchFollowers
   })
-
-  useEffect(() => {
-    if (onUpdate && !loading && post.isSaved !== undefined) {
-      onUpdate({ type: 'save', status: post.isSaved })
-    }
-  }, [post, loading])
 
   const [openPopup, setOpenPopup] = useState(false)
   const [openSnack, setOpenSnack] = useState(false)
