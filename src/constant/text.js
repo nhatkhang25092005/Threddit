@@ -36,5 +36,6 @@ export const TEXT = {
     USER_PAGE : "Trang cá nhân",
     MARK_AS_READ : "Đánh dấu là đã đọc",
     MARK_AS_UNREAD : "Đánh dấu là chưa đọc",
-    READ_ALL : "Đọc tất cả"
+    READ_ALL : "Đọc tất cả",
+    CHANGE_NAME_SUCCESS:"Vui lòng đăng nhập lại"
 }

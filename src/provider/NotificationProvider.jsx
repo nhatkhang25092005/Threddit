@@ -27,7 +27,7 @@ export default function NotificationProvider({children}){
                 console.log("Event =)",event.data)
                 const data = JSON.parse(event.data)
                 setCount((prev)=>prev + 1)
-                setRealTimeList((prev) => [...prev, data])
+                if(window.location.pathname === "/app/notification") setRealTimeList((prev) => [...prev, data])
             }
             catch(err){
                 console.error('Error parsing notification data:', err?.message || String(err))
@@ -52,13 +52,13 @@ export default function NotificationProvider({children}){
         const response = await handleMarkReadNotificationRequest(id)
         if(response.isOk()){ console.log("Mark as read:", response) }
         if(!response.isOk()){ console.error(response) }
-        setCount(count-1)
+        setCount(prev => prev-1)
     }
 
     if(loading) return null
 
     return (
-        <NotificationContext.Provider value={{count, setCount, realTimeList, readNotification}}>
+        <NotificationContext.Provider value={{setRealTimeList, count, setCount, realTimeList, readNotification}}>
             {children}
         </NotificationContext.Provider>
     )

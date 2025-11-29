@@ -1,4 +1,4 @@
-export default function DisplayField({ name, value, onChange = null, sx, allowFocus = true }) {
+export default function DisplayField({ name, value, onChange = null, sx, allowFocus = true, onKeyDown }) {
   return (
     <input
       style={{
@@ -14,6 +14,7 @@ export default function DisplayField({ name, value, onChange = null, sx, allowFo
         width:"100%",
         ...sx
       }}
+      onKeyDown={onKeyDown}
       name={name}
       value={value}
       onChange={onChange}

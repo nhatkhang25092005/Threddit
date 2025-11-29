@@ -54,10 +54,7 @@ export default function usePostDetail() {
     if(!hasMore &&  getMoreCommentLoading) return
     setGetMoreCommentLoading(true)
     try {
-      console.log(cursor.current)
-
       const response = await handleGetComments(postId, cursor.current);
-      console.log(response)
       if(response.status === 204) {
         setHasMore(false)
       }
@@ -85,7 +82,6 @@ export default function usePostDetail() {
     try {
       const response = await handleGetDetailPost(postId);
       if (response.isOk()) {
-        console.log(response)
         setPost({
           ...response.data,
           createdAt: convertTime(response.data.createdAt),
@@ -93,7 +89,6 @@ export default function usePostDetail() {
         });
         return true
       } else {
-        console.log("HELLO from GET_DETAIL_POST")
         setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null));
         return false
       }
@@ -120,24 +115,24 @@ export default function usePostDetail() {
     }
     finally{setCommentLoading(false)}
   },[postId])
-
   function onUpdateComment(data){
-    console.log("on Update COmment is called?")
-    switch(data.type){
-      case 'edit' : 
-        setComments(comments.map(item => item.id === data.commentId ? {...item, content : data.content} : item))
-        break
-      case 'delete' : 
-        setComments(comments.filter(item => item.id !== data.commentId))
-        break
+      console.log("on Update COmment is called?")
+      switch(data.type){
+        case 'edit' : 
+          setComments(comments.map(item => item.id === data.commentId ? {...item, content : data.content} : item))
+          break
+        case 'delete' : 
+          setComments(comments.filter(item => item.id !== data.commentId))
+          break
+      }
     }
-  }
-
   // Base Info
   useEffect(() => {
     if (!postId) return;
     setPost(null);
     setComments([]);
+    cursor.current = null
+    setHasMore(true)
     async function run(){
       try{
         const isExisted = await getDetailPost()
@@ -152,17 +147,18 @@ export default function usePostDetail() {
       }
     }
    run()  
-  }, [postId]);
+  }, [postId])
 
   useEffect(()=>{ 
     if(!realTimeComments) return
+    console.log("GET REALTIME COMMENT!", comments) //duplicate before here
     setComments(prev=>[realTimeComments, ...prev])
     updateCommentCount(postId, comments.length + 1)
   },[realTimeComments])
     
   return {
     commentContent, 
-    comments, 
+    comments,   
     loading,
     commentLoading, 
     isFollowerHasMore,
@@ -174,7 +170,7 @@ export default function usePostDetail() {
     followersLoading,
     getComment, 
     setCommentContent, 
-    onUpdateComment, 
+    onUpdateComment,
     postComment, 
     setResult,
     fetchFollowers,

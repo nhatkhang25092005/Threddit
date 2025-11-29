@@ -88,7 +88,6 @@ export default function useClientPage() {
     // call and handle api response
     try {
       const response = await handleGetClientPost(clientName, cursor.current);
-      console.log(response)
       // check has more post
       if (response.data === null) {
         setLoading(false);

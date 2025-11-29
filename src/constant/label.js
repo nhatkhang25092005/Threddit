@@ -23,5 +23,6 @@ export const LABEL = {
     FOLLOWING_POSTS:"Theo dõi",
     WRITE_COMMENT : "Viết bình luận...",
     EDIT_COMMENT : "Chỉnh sửa bình luận",
-    DELETE_COMMENT : "Xóa bình luận"
+    DELETE_COMMENT : "Xóa bình luận",
+    BACK_TO_LOGIN: "Quay về trang đăng nhập"
 }

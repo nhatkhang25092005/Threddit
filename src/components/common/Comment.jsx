@@ -126,7 +126,7 @@ export default function Comment({
   return(
     <BlockContent customStyle={{mt:2}} key={index}>
       <Box sx={{display:"flex",flexDirection:"row", alignItems:'flex-start',justifyContent:"flex-start"}}>
-        <Typography fontWeight={"bold"} variant="h7"> {comment?.commenter?.username}</Typography>
+        <Typography fontWeight={"bold"} variant="h7" sx={{whiteSpace:"nowrap"}}> {comment?.commenter?.username}</Typography>
         {comment.isCommenter
         ? <Typography variant="sub" sx={{ml:"5px"}}>({TEXT.ITS_YOU})</Typography>
         : undefined}

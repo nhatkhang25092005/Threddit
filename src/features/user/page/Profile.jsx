@@ -24,7 +24,7 @@ export default function Profile() {
   function handleChange(e){ setEditName(e.target.value) }
   return (
     <>
-      <PopupNotification title={result?.title} open={popup} content={result?.message} onClose={()=>setPopup(false)}/>
+      <PopupNotification btnTitle={LABEL.BACK_TO_LOGIN} title={result?.title} open={popup} content={result?.message} onClose={()=>{result?.fallback ? result.fallback() : setPopup(false)}}/>
       <LoadingScreen control={loading} />
       <Box
         sx={{
@@ -69,6 +69,7 @@ export default function Profile() {
             <DisplayField
               name={"username"}
               value={editName}
+              onKeyDown={(e)=>{if(e.key === "Enter"){saveChange(userInfo.username, editName)}}} 
               onChange={(e)=>handleChange(e)}
               sx={{ fontSize: "17px" }}
             />

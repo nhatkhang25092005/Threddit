@@ -92,7 +92,7 @@ export default function Post({
       
       if (postState?.comment) {
         if(postState.comment.updatedAt > lastUpdateTimeRef.current){
-          console.log("PostState.comment listening =)")
+          console.log(postState.comment.commentNumber) // Basically corrected print
           setCurrentItem(prev => ({
             ...prev,
             commentNumber: postState.comment.commentNumber
@@ -111,11 +111,9 @@ export default function Post({
     onLoadMore : getMoreComment
   })
 
-  // Get comments list
-  useEffect(()=>{
-    setComments(commentList)
-    if(commentList) setCurrentItem(prev=>({...prev, commentNumber : commentList.length}))
-  },[commentList])
+  // Get comments list when a new comment is created
+  useEffect(()=>{ setComments(commentList) },[commentList])
+
   // Handle navigation
   const handleNavigateToPost = () => {
     if (onNavigate && editingPostId !== currentItem.id) {
@@ -126,7 +124,6 @@ export default function Post({
   async function handlePin(postId, currentPinStatus){
     try{
       const result = currentPinStatus ? await unpinPost(postId) : await pinPost(postId)
-      console.log("Result of the handle Pin:", result)
       if(result.isSuccess){
         setCurrentItem(prev => ({...prev, isPinned: !currentPinStatus}))
         onPostUpdatedRendering({
@@ -168,7 +165,6 @@ export default function Post({
     try {
       setEditLoading(true);
       const response = await handleEditMyPost(postId, editContent, extractUsernames(editContent));
-      console.log(response)
       if (response.isOk()) {
         setCurrentItem(prev => ({ ...prev, content: editContent }));
         

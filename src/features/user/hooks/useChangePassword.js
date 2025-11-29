@@ -4,6 +4,7 @@ import {handleChangePasswordRequest} from "../../../services/request/userRequest
 import { Result } from "../../../class";
 import { DISPLAY, ROUTES, TEXT, TITLE } from "../../../constant";
 import { replace, useNavigate } from "react-router-dom";
+import { handleSignoutRequest } from '../../../services/request/authRequest';
 export default function useChangePassword(){
     const navigate = useNavigate()
     const [result, setResult] = useState(null);
@@ -11,8 +12,11 @@ export default function useChangePassword(){
 
 
     const handleLogout =async () => {
-        localStorage.removeItem("accessToken")
-        navigate(ROUTES.LOGIN, replace) 
+        const response = await handleSignoutRequest()
+        if(response.isOk()){
+            localStorage.clear()
+            navigate(ROUTES.LOGIN, replace) 
+        }
     }
 
     const changePassword = async  (data) => {

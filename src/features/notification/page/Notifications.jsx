@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import useInfiniteScroll from "../../../hooks/useInfiniteScroll"
 export default function Notifications() {
   // elements of page, using for render on screen
-  const { list, error, loadMore, hasMore, loading, markAsRead, readAll } = useNotificationList();
+  const { list, error, loadMore, hasMore, loading, markAsRead } = useNotificationList();
 
   // Popup for display errors have type "popup"
   const [popup, setPopup] = useState(false)
@@ -32,7 +32,6 @@ export default function Notifications() {
       <PopupNotification open={popup} onClose={()=>setPopup(false)} title={TITLE.ERROR} content={error}/>
       <Column customStyle={{ pt: "2rem", width: "60%", mx: "auto",pb:"0", position:"relative"}} >
         <Typography variant="title">{TITLE.NOTIFICATION}</Typography>
-        <Button onClick={readAll} variant="contained" sx={{height:"fit-content", position:"absolute", right:"1rem"}}>{TEXT.READ_ALL}</Button>
         <BoxContent customStyle={{ mx: 0, px: 0, height:"fit-content",py:0,mt:2,mb:"5rem" }}>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
 
@@ -65,7 +64,7 @@ export default function Notifications() {
                     {!notification.isRead 
                     ? <Typography className="newNotification" sx={{color:"#43ff2bff", visibility:"visible", position:'absolute', right:"1.5rem"}}>{TEXT.NOT_READ}</Typography>
                     : <Typography sx={{color:"#9898989e"}}>{TEXT.READ}</Typography>}
-                    {!notification.isRead && <Button onClick={(e)=>{e.stopPropagation();markAsRead(notification.id)}} variant="contained" className="markAsRead" sx={{visibility:"hidden",height:"fit-content" ,border:"solid #ffffff60 1px", fontSize:"12px", bgcolor:"#f5ffd0ff"}}>{TEXT.MARK_AS_READ}</Button>}
+                    {!notification.isRead && <Button onClick={(e)=>{e.stopPropagation();markAsRead(notification.id)}} variant="contained" className="markAsRead" sx={{visibility:"hidden",height:"fit-content" ,border:"solid #ffffff60 1px", fontSize:"12px", bgcolor:"#ffffffff"}}>{TEXT.MARK_AS_READ}</Button>}
                   </Box>
                 }  
                 >

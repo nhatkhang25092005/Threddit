@@ -34,6 +34,7 @@ function PostProvider({children}){
     },[])
 
     const updateCommentCount = useCallback((postId, commentNumber)=>{
+        console.log("The comment number in provider:", commentNumber) // wrong number from the start
         setPostsState(prev=>({
             ...prev,
             [postId]:{

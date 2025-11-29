@@ -125,9 +125,9 @@ function PostDetailContent({ onClose }) {
     followers,
     followersLoading,
     isFollowerHasMore,
+    onUpdateComment,
     postComment,
     setResult,
-    onUpdateComment,
     fetchFollowers,
     getComment,
     setCommentContent,
@@ -142,9 +142,6 @@ function PostDetailContent({ onClose }) {
   const [openPopup, setOpenPopup] = useState(false)
   const [openSnack, setOpenSnack] = useState(false)
   useEffect(() => {
-    console.log("HELLO FROM RESULT OBSERVER")
-    console.log(result)
-    console.log(loading)
     if (result?.type === DISPLAY.POPUP) setOpenPopup(true)
     if (result?.type === DISPLAY.SNACKBAR) setOpenSnack(true)
   }, [result])
