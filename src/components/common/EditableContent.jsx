@@ -190,13 +190,13 @@ export default function EditableContent({
                 pl:"0.5rem",
                 pr:'0.5rem',
                 width: "100%",
+                ...nonEditStyle,
                 ...(!isExpanded && {
                     display: '-webkit-box',
                     WebkitLineClamp: 10,
                     WebkitBoxOrient: 'vertical',
                     overflow: 'hidden',
                 }),
-                ...nonEditStyle
             }}
                 ref={contentRef}
             >
@@ -205,7 +205,7 @@ export default function EditableContent({
             {showButton && <Button
                 variant="text"
                 sx={{display:"block",margin:"0 auto"}}
-                onClick={() => setIsExpanded(!isExpanded)}
+                onClick={() => {setIsExpanded(!isExpanded)}}
             >
                 {isExpanded ? 'Thu gọn ▲' : 'Xem thêm ▼'}
             </Button>}
