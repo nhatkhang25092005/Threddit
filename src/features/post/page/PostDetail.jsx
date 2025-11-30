@@ -48,6 +48,8 @@ const sxForBody = {
     background: '#0A0B0B',
   },
   '&::-webkit-scrollbar-thumb': {
+    cursor:"pointer",
+      '&:hover': {background: '#777'},
     background: '#555',
     borderRadius: '4px',
   },
@@ -80,8 +82,23 @@ const sxForTextField = {
     },
     "&.Mui-focused fieldset": {
       borderColor: "#1976d2",
-    }
+    },
   },
+   '& .MuiOutlinedInput-root textarea': {
+    '&::-webkit-scrollbar': {
+      width: '8px',
+    },
+    '&::-webkit-scrollbar-track': {
+      background: '#0A0B0B',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      cursor:"pointer",
+      '&:hover': {background: '#777'},
+      background: '#555',
+      borderRadius: '4px',
+    },
+  },
+  
 }
 
 const sxForLoading = {
@@ -125,6 +142,7 @@ function PostDetailContent({ onClose }) {
     followers,
     followersLoading,
     isFollowerHasMore,
+    isCommentPosting,
     onUpdateComment,
     postComment,
     setResult,
@@ -162,7 +180,7 @@ function PostDetailContent({ onClose }) {
 
     if (e.key === 'Enter' && !e.shiftKey && !e.defaultPrevented) {
       e.preventDefault()
-      if (commentContent.trim() !== "") {
+      if (commentContent.trim() !== "" && !isCommentPosting) {
         postComment(commentContent)
       }
     }

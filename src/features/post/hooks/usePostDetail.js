@@ -22,6 +22,8 @@ export default function usePostDetail() {
   const [getMoreCommentLoading, setGetMoreCommentLoading] = useState(false)
   const cursor = useRef(null)
   const {updateCommentCount} = useContext(PostSyncContext)
+  const [isCommentPosting, setIsCommentPosting] = useState(false)
+
 
   // Fetch followings elements
   const followersCursor = useRef(null)
@@ -102,6 +104,7 @@ export default function usePostDetail() {
   // Post a comment request
   const postComment = useCallback( async (commentContent)=>{
     setCommentLoading(true)
+    setIsCommentPosting(true)
     try{
       const response = await handlePostComment(postId, commentContent, extractUsernames(commentContent))
       if(!response.isOk()){ 
@@ -113,7 +116,10 @@ export default function usePostDetail() {
       const errorMessage = error?.message || String(error)
       setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null))
     }
-    finally{setCommentLoading(false)}
+    finally{
+      setCommentLoading(false)
+      setIsCommentPosting(false)
+    }
   },[postId])
   function onUpdateComment(data){
       console.log("on Update COmment is called?")
@@ -168,6 +174,7 @@ export default function usePostDetail() {
     getMoreCommentLoading,
     followers,
     followersLoading,
+    isCommentPosting,
     getComment, 
     setCommentContent, 
     onUpdateComment,
