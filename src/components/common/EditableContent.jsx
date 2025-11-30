@@ -1,4 +1,4 @@
-import { Box, TextField, IconButton } from "@mui/material";
+import { Box, TextField, IconButton, Button } from "@mui/material";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { CircularProgress } from "@mui/material";
@@ -23,7 +23,20 @@ export default function EditableContent({
     const [hasMore, setHasMore] = useState(true)
     const [followers, setFollowers] = useState([])
     const [mentionLoading, setMentionLoading] = useState(false)
-    
+    const [isExpanded, setIsExpanded] = useState(false)
+    const [showButton, setShowButton] = useState(false)
+    const contentRef = useRef(null)
+
+    useEffect(()=>{
+        if(contentRef.current){
+            const element = contentRef.current
+            const lineHeight = parseFloat(window.getComputedStyle(element).lineHeight)
+            const maxHeight = lineHeight * 10
+            setShowButton(element.scrollHeight > maxHeight)
+        }
+    },[content])
+
+
     async function fetchFollowers() {
         if (!hasMore) return
         setMentionLoading(true)
@@ -166,19 +179,36 @@ export default function EditableContent({
     
     // If not editing, just display the content
     return (
-        <Box sx={{  
-            display: "flex",
-            alignItems: "flex-start", 
-            whiteSpace: "pre-wrap",   
-            wordBreak: "break-word",  
-            overflowWrap: "break-word", 
-            justifyContent:"flex-start",
-            pl:"0.5rem",
-            pr:'0.5rem',
-            width: "100%",
-            ...nonEditStyle
-        }}>
-            {content}
+        <Box>
+            <Box sx={{  
+                display: "flex",
+                alignItems: "flex-start", 
+                whiteSpace: "pre-wrap",   
+                wordBreak: "break-word",  
+                overflowWrap: "break-word", 
+                justifyContent:"flex-start",
+                pl:"0.5rem",
+                pr:'0.5rem',
+                width: "100%",
+                ...(!isExpanded && {
+                    display: '-webkit-box',
+                    WebkitLineClamp: 10,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                }),
+                ...nonEditStyle
+            }}
+                ref={contentRef}
+            >
+                {content}
+            </Box>
+            {showButton && <Button
+                variant="text"
+                sx={{display:"block",margin:"0 auto"}}
+                onClick={() => setIsExpanded(!isExpanded)}
+            >
+                {isExpanded ? 'Thu gọn ▲' : 'Xem thêm ▼'}
+            </Button>}
         </Box>
     );
 }

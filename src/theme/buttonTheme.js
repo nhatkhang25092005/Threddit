@@ -34,6 +34,28 @@ export const buttonTheme = {
         height:"50px",
         fontWeight:"bold"
       }
+    },
+    {
+      props:{variant:"text"},
+      style:{
+        fontWeight:"bold",
+        textTransform:"none",
+        boxShadow:"none",
+        padding: 0, 
+        color:'white',
+        minWidth: "auto", 
+        "&:hover": {
+          color:"white",
+          textDecoration: "underline", 
+        },
+        "&:active": {
+          color:'white'
+        },
+        "& .MuiTouchRipple-root": {
+          display: "none", 
+          backgroundColor:"none"
+        }
+      }
     }
   ]
 };
