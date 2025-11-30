@@ -50,32 +50,40 @@ export default function usePostDetail() {
     finally{setFollowersLoading(false)}
   },[isFollowerHasMore])
 
-  const getComment = async () => {
+  const getComment = useCallback(async (signal) => {
+    console.log(`Get Comment is called with postID ${postId} and cursor ${cursor.current}`)
     if(!hasMore &&  getMoreCommentLoading) return
     setGetMoreCommentLoading(true)
     try {
-      const response = await handleGetComments(postId, cursor.current);
+      const response = await handleGetComments(postId, cursor.current, signal);
+      console.log(signal)
+      if(signal?.aborted) return
+      console.log(`response from api: ${response.data?.comments?.length || 0}`)
       if(response.status === 204) {
         setHasMore(false)
       }
       else if(response.isOk()) {
-          const convertedTimeList = response.data.comments.map(comment => ({
+        const convertedTimeList = response.data.comments.map(comment => ({
           ...comment,
           createdAt: convertTime(comment.createdAt),
           updatedAt: convertTime(comment.updatedAt),
         }))
-        setComments(prev=>[...prev, ...convertedTimeList])
+        setComments(prev=>{
+          console.log(`Update comments:${prev.length} + new = ${convertedTimeList.length}`)
+          return [...prev, ...convertedTimeList]
+        })
         cursor.current = response.data.cursor
       } 
       else {setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null));}
     } 
     catch (err) {
+      if(err.name ==='AbortError') return
       console.log(err)
       const errorMessage = err?.message || String(err);
       setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null));
     }
     finally{setGetMoreCommentLoading(false)}
-  }
+  }, [postId, hasMore, getMoreCommentLoading])
 
   const getDetailPost = useCallback(async () => {
     setLoading(true)
@@ -129,15 +137,20 @@ export default function usePostDetail() {
   // Base Info
   useEffect(() => {
     if (!postId) return;
+    const abortController = new AbortController()
     setPost(null);
     setComments([]);
     cursor.current = null
     setHasMore(true)
+    console.log("Get base Info from usePostDetail")
     async function run(){
+      console.log("Run is called, postId:",postId)
       try{
         const isExisted = await getDetailPost()
-        if (isExisted){ 
-          await getComment()
+        if(abortController.signal.aborted) return
+        else if (isExisted){ 
+          await getComment(abortController.signal)
+          if(abortController.signal.aborted) return
           await fetchFollowers()
         }
       }
@@ -146,12 +159,13 @@ export default function usePostDetail() {
         setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null));
       }
     }
-   run()  
+    run()  
+    return () => {abortController.abort()}
   }, [postId])
 
   useEffect(()=>{ 
     if(!realTimeComments) return
-    console.log("GET REALTIME COMMENT!", comments) //duplicate before here
+    console.log("realTimeComments is called")
     setComments(prev=>[realTimeComments, ...prev])
     updateCommentCount(postId, comments.length + 1)
   },[realTimeComments])

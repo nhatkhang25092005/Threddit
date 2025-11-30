@@ -51,7 +51,6 @@ export default function Notifications() {
                 }}
                 onClick = {()=>{
                   if (!notification.isRead) markAsRead(notification.id)
-                  console.log(notification.target.postId)
                   if(typeof notification.target === "object") navigate(`${ROUTES.HOME}/${notification.target.postId}`)
                   else if(isNaN(notification.target)) navigate(`${ROUTES.CLIENT_PAGE}/${notification.target}`)
                   else navigate(`${ROUTES.HOME}/${notification.target}`)

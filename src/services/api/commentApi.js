@@ -1,10 +1,10 @@
 import axiosClient from "../axiosClient";
 const commentApi = {
   // Get comment of a post
-  getComments: (postId, cursor) => {
+  getComments: (postId, cursor, signal) => {
     const url = import.meta.env.VITE_API_POST + `/${postId}` +import.meta.env.VITE_API_COMMENT
     const finalUrl = cursor ?  `${url}?cursor=${cursor}`  : url
-    return axiosClient.get(finalUrl)
+    return axiosClient.get(finalUrl,{signal})
   },
   
   // Write a comment to a post
