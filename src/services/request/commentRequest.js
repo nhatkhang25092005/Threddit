@@ -3,12 +3,12 @@ import { ApiResponse } from "../../class";
 import { classifyError } from "../../utils/classifyError";
 
 // handle get comment list of a post
-export async function handleGetComments(id, cursor, signal){
+export async function handleGetComments(id, cursor){
     if(!id){
         console.error("Id can not be null in handleGetComments")
         return
     }
-    return commentApi.getComments(id, cursor, signal)
+    return commentApi.getComments(id, cursor)
     .then(res=>new ApiResponse(res.data.statusCode, ApiResponse.getMessageFromApi(res), res.data.data))
     .catch(err=>{
         if(err.name === 'AbortError' || err.name === 'CanceledError') {throw err}

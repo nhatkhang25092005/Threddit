@@ -51,8 +51,11 @@ export default function Notifications() {
                 }}
                 onClick = {()=>{
                   if (!notification.isRead) markAsRead(notification.id)
+                  // New comment
                   if(typeof notification.target === "object") navigate(`${ROUTES.HOME}/${notification.target.postId}`)
+                  // New post
                   else if(isNaN(notification.target)) navigate(`${ROUTES.CLIENT_PAGE}/${notification.target}`)
+                  // User Follow
                   else navigate(`${ROUTES.HOME}/${notification.target}`)
                 }}
                 header={

@@ -151,9 +151,6 @@ function PostDetailContent({ onClose }) {
     setCommentContent,
   } = usePostDetail()
 
-  //Comments is duplicated
-  console.log(comments)
-
   const followingsRef = useInfiniteScroll({
     hasMore: isFollowerHasMore,
     loading: followersLoading,
