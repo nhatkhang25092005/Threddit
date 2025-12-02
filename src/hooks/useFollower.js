@@ -10,7 +10,7 @@ const initState = {
 function reducer(state, action){
     switch(action.type){
         case 'start' : return {...state, loading:true}
-        case 'success' : return{...state, loading:false, list : [...state, action.payload]}
+        case 'success' : return{...state, loading:false, list : [...state.list, ...action.payload]}
         case 'error' : return {...state, loading:false, error:action.payload}
         case 'no_more' : return {...state, loading:false, anyMore:false}
     }
@@ -21,9 +21,11 @@ export default function useFollower(){
     const cursor = useRef(null)
     const fetchFollowers = async () => {
         if(!state.anyMore) return
+        console.log("fetchFollowers called")
         dispatch({type:'start'})
         try{
             const response = await handleGetFollowersListRequest('me', cursor.current)
+            console.log(response)
             if(response.status === 204) dispatch({type:'no_more'})
             else if(response.isOk()){
                 dispatch({type:'success', payload:response.data.followerList})

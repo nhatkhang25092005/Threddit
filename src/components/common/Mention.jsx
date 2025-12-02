@@ -17,6 +17,23 @@ export default function Mention({
   const [selectedIndex, setSelectedIndex] = useState(0)
   const mentionRef = useRef(null)
   const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0 })
+f
+  useEffect(()=>{
+    if(!showMentionList) return
+    if(!cursorPositionRef.current) return
+    const textBeforeCursor = commentContent.substring(0, cursorPositionRef.current)
+    const lastAtIndex = textBeforeCursor.lastIndexOf('@')
+    const textAfterAt = commentContent.substring(lastAtIndex + 1) 
+    if(lastAtIndex === -1) return setShowMentionList(false)
+    let filtered = []
+    if(!textAfterAt) filtered = followers.map(f=>f.follower.username)
+    else {
+      filtered = followers
+      .filter(user => user.follower.username.toLowerCase().includes(textAfterAt.toLowerCase()))
+      .map(user => user.follower.username)
+    }
+    setFilteredList(filtered)
+  },[followers, commentContent, showMentionList])
 
   function calculateMentionPosition() {
     if (!textFieldRef.current) return
@@ -64,7 +81,7 @@ export default function Mention({
     }
   }
 
-  function handleCommentChange(e) {
+  async function handleCommentChange(e) {
     const value = e.target.value
     const cursorPos = e.target.selectionStart
     cursorPositionRef.current = cursorPos
@@ -72,35 +89,13 @@ export default function Mention({
 
     const textBeforeCursor = value.substring(0, cursorPos)
     const lastAtIndex = textBeforeCursor.lastIndexOf('@')
-
-    if (lastAtIndex !== -1) {
-      const textAfterAt = textBeforeCursor.substring(lastAtIndex + 1)
-      if (!textAfterAt.includes(' ') && !textAfterAt.includes('\n')) {
-        if (!showMentionList) {
-          setShowMentionList(true)
-          setSelectedIndex(0)
-          fetchFollowers()
-        }
-
-        let filtered = []
-        if (!textAfterAt) {
-          filtered = followers.map(user => user.follower.username)
-        } else {
-          filtered = followers
-            .filter(user =>
-              user.follower.username.toLowerCase().includes(textAfterAt.toLowerCase())
-            )
-            .map(user => user.follower.username)
-        }
-        setFilteredList(filtered)
-
-        if (filtered.length === 0) setShowMentionList(false)
-      } else {
-        setShowMentionList(false)
-      }
-    } else {
-      setShowMentionList(false)
+    const textAfterAt = textBeforeCursor.substring(lastAtIndex + 1)
+    if(lastAtIndex!==-1 && !textAfterAt.includes(' ') && !textAfterAt.includes('\n')){ 
+      if(!showMentionList) setSelectedIndex(0)
+      setShowMentionList(true)
+      await fetchFollowers()
     }
+    else setShowMentionList(false)
   }
 
   function handleSelectUser(username) {

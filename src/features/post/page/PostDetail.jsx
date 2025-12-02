@@ -256,7 +256,7 @@ function PostDetailContent({ onClose }) {
                 fullWidth
                 minRows={1}
                 maxRows={4}
-                ref={textFieldRef}
+                inputRef={textFieldRef}
                 value={commentInput}
                 onChange={handleCommentChange}
                 onKeyDown={handleKeyDown}

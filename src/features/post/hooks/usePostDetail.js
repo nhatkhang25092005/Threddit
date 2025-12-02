@@ -1,5 +1,4 @@
-import { useEffect, useState, useCallback, useRef, useContext } from "react";
-import {handleGetFollowersListRequest} from "../../../services/request/followRequest"
+import { useEffect, useState, useContext } from "react";
 import { Result } from "../../../class";
 
 import { DISPLAY, TITLE } from "../../../constant";
@@ -9,10 +8,13 @@ import { PostSyncContext } from "../../../provider/PostProvider";
 
 import usePostData  from "./usePostData";
 import useComment from "./useComment";
+import useFollower from "../../../hooks/useFollower";
 
 export default function usePostDetail() {
   const { postId } = useParams();
+  // Post Data
   const {post, loading:postLoading, error:postError } = usePostData(postId)
+  // Comment
   const {
     commentsState:{
       comments, 
@@ -28,68 +30,31 @@ export default function usePostDetail() {
     deleteComment,
     postComment
   } = useComment(postId)
+  // Mention list
+  const {state, fetchFollowers} = useFollower()
 
   const [result, setResult] = useState(null);
   const {realTimeComments} = useRealtimeComments()
 
   const [commentInput, setCommentInput] = useState("")
   const {updateCommentCount} = useContext(PostSyncContext)
-  // Fetch followings elements
-  const followersCursor = useRef(null)
-  const [isFollowerHasMore, setIsFollowerHasMore] = useState(true)
-  const [followers, setFollowers] = useState([])
-  const [followersLoading, setFollowersLoading] = useState(false)
-
-  // Fetch followings
-  const fetchFollowers = useCallback(async ()=>{
-    if(!isFollowerHasMore) return
-    setFollowersLoading(true)
-    try{
-      const response = await handleGetFollowersListRequest('me', followersCursor.current)  
-      if(response.status === 204) setIsFollowerHasMore(false)
-      else if(response.isOk()){
-        setFollowers(response.data.followerList)
-        followersCursor.current = response.data.cursor
-      }
-      else setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))
-    }
-    catch(error){
-      console.error("Error occurs in fetchFollowings at usePostDetail:", error)
-      const eMessage = error?.message || String(error)
-      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, eMessage, null))
-    }
-    finally{setFollowersLoading(false)}
-  },[isFollowerHasMore])
 
   async function onPostComment(){
     const isOk = await postComment(commentInput)
     isOk ? setCommentInput('') : setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, postCmtError, null))
   }
+
   function onUpdateComment(data){
-      console.log("on Update COmment is called?")
-      switch(data.type){
-        case 'edit' : 
-          editComment(data.commentId, data.content)
-          break
-        case 'delete' : 
-          deleteComment(data.commentId)
-          break
-      }
-    }
-  // Reset state
- useEffect(() => {
-  if(!postId) return
-  async function initialize() {
-    try {
-        await fetchFollowers();
-    } catch (err) {
-      const errorMessage = err?.message || String(err);
-      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null));
+    console.log("on Update COmment is called?")
+    switch(data.type){
+      case 'edit' : 
+        editComment(data.commentId, data.content)
+        break
+      case 'delete' : 
+        deleteComment(data.commentId)
+        break
     }
   }
-
-  if(post) initialize()
-}, [postId, post]);
   
   // auto handle error from hook
   useEffect(()=>{ if(postError) setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, postError, null  ))},[postError])
@@ -107,13 +72,13 @@ export default function usePostDetail() {
     commentInput, 
     comments,   
     loading:postLoading,
-    isFollowerHasMore,
+    isFollowerHasMore : state.anyMore,
     post, 
     result, 
     hasMoreComment, 
     getMoreCommentLoading,
-    followers,
-    followersLoading,
+    followers : state.list,
+    followersLoading : state.loading,
     postCmtLoading,
     fetchComment, 
     setCommentInput, 
