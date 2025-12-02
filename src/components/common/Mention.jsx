@@ -17,7 +17,7 @@ export default function Mention({
   const [selectedIndex, setSelectedIndex] = useState(0)
   const mentionRef = useRef(null)
   const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0 })
-f
+
   useEffect(()=>{
     if(!showMentionList) return
     if(!cursorPositionRef.current) return
