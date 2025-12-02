@@ -17,6 +17,7 @@ export default function App() {
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [followLoading, setFollowLoading] = useState({})
 
 
   const currentUserId = null; // Thay bằng user ID thật
@@ -38,6 +39,8 @@ export default function App() {
         res = await followApi.searchUsers(query);
         const users = res.data?.data?.users || [];
         setResults(users);
+        setFollowLoading({})
+        users.forEach(user => setFollowLoading(prev=>({...prev, [user.id] : false})))
       }
     } catch (err) {
       console.error("Lỗi tìm kiếm:", err);
@@ -53,7 +56,8 @@ export default function App() {
   }, [tab]);
 
   // Xử lý Theo dõi / Hủy theo dõi
-  const handleFollowToggle = async (username, canFollow) => {
+  const handleFollowToggle = async (username, canFollow, id) => {
+    setFollowLoading(prev=>({...prev, [id] : true}))
     try {
       if (canFollow) {
         await followApi.followClient(username);
@@ -70,6 +74,9 @@ export default function App() {
     } catch (err) {
       alert("Lỗi khi thực hiện thao tác. Vui lòng thử lại.");
       console.error(err);
+    }
+    finally{
+      setFollowLoading(prev=>({...prev, [id] : false}))
     }
   };
 
@@ -185,6 +192,7 @@ export default function App() {
               {!loading && !error && tab === "profile" && results.length > 0 &&
                 results.map((user) => (
                   <UserFollowCard
+                    loading={followLoading[user.id]}
                     key={user.id}
                     name={user.username}
                     hideButton={user.canFollow === null}
@@ -198,7 +206,7 @@ export default function App() {
                     disabled={user.canFollow === null}
                     onFollow={() =>
                       user.canFollow !== null &&
-                      handleFollowToggle(user.username, user.canFollow)
+                      handleFollowToggle(user.username, user.canFollow, user.id)
                     }
                   />
                 ))}
