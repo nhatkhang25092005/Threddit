@@ -52,12 +52,13 @@ export default function usePostDetail() {
         break
       case 'delete' : 
         deleteComment(data.commentId)
+        updateCommentCount(postId, Number(post.commentNumber) - 1)
         break
     }
   }
   
   // auto handle error from hook
-  useEffect(()=>{ if(postError) setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, postError, null  ))},[postError])
+  useEffect(()=>{ if(postError) setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, postError, null))},[postError])
   useEffect(()=>{ if(getCommentError) setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, getCommentError, null))},[getCommentError])
   useEffect(()=>{ if(postCmtError) setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, postCmtError, null))},[postCmtError])
   
@@ -65,7 +66,8 @@ export default function usePostDetail() {
   useEffect(()=>{ 
     if(!realTimeComments) return
     updateComment(realTimeComments)
-    updateCommentCount(postId, comments.length + 1)
+    console.log(comments.length)
+    updateCommentCount(postId, Number(post.commentNumber) + 1)
   },[realTimeComments])
     
   return {
