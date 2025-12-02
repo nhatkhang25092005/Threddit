@@ -135,20 +135,19 @@ function PostDetailContent({ onClose }) {
     comments,
     loading,
     result,
-    commentLoading,
-    commentContent,
-    hasMore,
+    commentInput,
+    hasMoreComment,
     getMoreCommentLoading,
     followers,
     followersLoading,
     isFollowerHasMore,
-    isCommentPosting,
+    postCmtLoading,
     onUpdateComment,
-    postComment,
+    onPostComment,
     setResult,
     fetchFollowers,
-    getComment,
-    setCommentContent,
+    fetchComment,
+    setCommentInput,
   } = usePostDetail()
 
   const followingsRef = useInfiniteScroll({
@@ -166,8 +165,8 @@ function PostDetailContent({ onClose }) {
 
   const { handleCommentChange, handleKeyDown: handleMentionKeyDown, mentionUI } = Mention({
     textFieldRef,
-    commentContent,
-    setCommentContent,
+    commentContent : commentInput,
+    setCommentContent : setCommentInput,
     followers,
     fetchFollowers,
     followingsRef,
@@ -180,8 +179,8 @@ function PostDetailContent({ onClose }) {
 
     if (e.key === 'Enter' && !e.shiftKey && !e.defaultPrevented) {
       e.preventDefault()
-      if (commentContent.trim() !== "" && !isCommentPosting) {
-        postComment(commentContent)
+      if (commentInput.trim() !== "" && !postCmtLoading) {
+        onPostComment(commentInput)
       }
     }
   }
@@ -232,8 +231,8 @@ function PostDetailContent({ onClose }) {
               onResult={setResult}
               onUpdateComment={onUpdateComment}
               onGetMoreComment={{
-                getMoreComment: getComment,
-                hasMore: hasMore,
+                getMoreComment: fetchComment,
+                hasMore: hasMoreComment,
                 getMoreCommentLoading: getMoreCommentLoading
               }}
             />
@@ -257,19 +256,19 @@ function PostDetailContent({ onClose }) {
                 fullWidth
                 minRows={1}
                 maxRows={4}
-                ref={textFieldRef}
-                value={commentContent}
+                inputRef={textFieldRef}
+                value={commentInput}
                 onChange={handleCommentChange}
                 onKeyDown={handleKeyDown}
                 sx={sxForTextField}
               />
               
-              {commentLoading ? (
+              {postCmtLoading ? (
                 <CircularProgress sx={{ color: "white" }} size={50} />
               ) : (
-                commentContent.trim().length !== 0 ? (
+                commentInput.trim().length !== 0 ? (
                   <SendIcon
-                    onClick={() => postComment(commentContent)}
+                    onClick={() => onPostComment(commentInput)}
                     sx={sxForSendIcon}
                     fontSize='large'
                   />

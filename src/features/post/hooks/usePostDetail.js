@@ -1,196 +1,89 @@
-import { useEffect, useState, useCallback, useRef, useContext } from "react";
-import { handleGetComments, handlePostComment } from "../../../services/request/commentRequest";
-import {handleGetFollowersListRequest} from "../../../services/request/followRequest"
-import { handleGetDetailPost } from "../../../services/request/postRequest";
-import convertTime from "../../../utils/convertTime";
+import { useEffect, useState, useContext } from "react";
 import { Result } from "../../../class";
+
 import { DISPLAY, TITLE } from "../../../constant";
 import { useParams } from "react-router-dom";
-import { extractUsernames } from "../../../utils/extractUsernames";
 import { useRealtimeComments } from "../../../provider/CommentProvider";
 import { PostSyncContext } from "../../../provider/PostProvider";
+
+import usePostData  from "./usePostData";
+import useComment from "./useComment";
+import useFollower from "../../../hooks/useFollower";
+
 export default function usePostDetail() {
   const { postId } = useParams();
-  const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [commentLoading, setCommentLoading] = useState(false)
+  // Post Data
+  const {post, loading:postLoading, error:postError } = usePostData(postId)
+  // Comment
+  const {
+    commentsState:{
+      comments, 
+      getMoreCommentLoading, 
+      getCommentError, 
+      hasMoreComment, 
+      postCmtError, 
+      postCmtLoading
+    },
+    fetchComment,
+    updateComment,
+    editComment,
+    deleteComment,
+    postComment
+  } = useComment(postId)
+  // Mention list
+  const {state, fetchFollowers} = useFollower()
+
   const [result, setResult] = useState(null);
   const {realTimeComments} = useRealtimeComments()
-  const [comments, setComments] = useState([])
-  const [commentContent, setCommentContent] = useState("")
-  const [hasMore, setHasMore] = useState(true)
-  const [getMoreCommentLoading, setGetMoreCommentLoading] = useState(false)
-  const cursor = useRef(null)
+
+  const [commentInput, setCommentInput] = useState("")
   const {updateCommentCount} = useContext(PostSyncContext)
-  const [isCommentPosting, setIsCommentPosting] = useState(false)
-  console.log(postId)
-  const didFetch = useRef(false)
-  // Fetch followings elements
-  const followersCursor = useRef(null)
-  const [isFollowerHasMore, setIsFollowerHasMore] = useState(true)
-  const [followers, setFollowers] = useState([])
-  const [followersLoading, setFollowersLoading] = useState(false)
 
-  // Fetch followings
-  const fetchFollowers = useCallback(async ()=>{
-    if(!isFollowerHasMore) return
-    setFollowersLoading(true)
-    try{
-      const response = await handleGetFollowersListRequest('me', followersCursor.current)  
-      if(response.status === 204) setIsFollowerHasMore(false)
-      else if(response.isOk()){
-        setFollowers(response.data.followerList)
-        followersCursor.current = response.data.cursor
-      }
-      else setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))
-    }
-    catch(error){
-      console.error("Error occurs in fetchFollowings at usePostDetail:", error)
-      const eMessage = error?.message || String(error)
-      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, eMessage, null))
-    }
-    finally{setFollowersLoading(false)}
-  },[isFollowerHasMore])
-
-  const getComment = useCallback(async () => {
-    if(!hasMore || getMoreCommentLoading) return
-    setGetMoreCommentLoading(true)
-    try {
-      const response = await handleGetComments(postId, cursor.current);
-      console.log(`response from api: ${response.data?.comments?.length || 0}`)
-      if(response.status === 204) {
-        setHasMore(false)
-      }
-      else if(response.isOk()) {
-        const convertedTimeList = response.data.comments.map(comment => ({
-          ...comment,
-          createdAt: convertTime(comment.createdAt),
-          updatedAt: convertTime(comment.updatedAt),
-        }))
-        setComments(prev=>{
-          console.log(`Update comments:${prev.length} + new = ${convertedTimeList.length}`)
-          return [...prev, ...convertedTimeList]
-        })
-        cursor.current = response.data.cursor
-      } 
-      else {setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null));}
-    } 
-    catch (err) {
-      if(err.name ==='AbortError') return
-      console.log(err)
-      const errorMessage = err?.message || String(err);
-      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null));
-    }
-    finally{setGetMoreCommentLoading(false)}
-  }, [postId, hasMore, getMoreCommentLoading])
-
-  const getDetailPost = useCallback(async () => {
-    setLoading(true)
-    console.log(postId)
-    try {
-      const response = await handleGetDetailPost(postId);
-      if (response.isOk()) {
-        setPost({
-          ...response.data,
-          createdAt: convertTime(response.data.createdAt),
-          updatedAt: convertTime(response.data.updatedAt),
-        });
-        return true
-      } else {
-        setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null));
-        return false
-      }
-    } catch (error) {
-      const errorMessage = error?.message || String(error);
-      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null));
-    }
-    finally{setLoading(false)}
-  }, [postId]);
-
-  // Post a comment request
-  const postComment = useCallback( async (commentContent)=>{
-    setCommentLoading(true)
-    setIsCommentPosting(true)
-    try{
-      const response = await handlePostComment(postId, commentContent, extractUsernames(commentContent))
-      if(!response.isOk()){ 
-        setResult(new Result(response.displayType, TITLE.ERROR, response.data.message, null))
-      }
-      else setCommentContent('')
-    }
-    catch(error){
-      const errorMessage = error?.message || String(error)
-      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null))
-    }
-    finally{
-      setCommentLoading(false)
-      setIsCommentPosting(false)
-    }
-  },[postId])
-  function onUpdateComment(data){
-      console.log("on Update COmment is called?")
-      switch(data.type){
-        case 'edit' : 
-          setComments(comments.map(item => item.id === data.commentId ? {...item, content : data.content} : item))
-          break
-        case 'delete' : 
-          setComments(comments.filter(item => item.id !== data.commentId))
-          break
-      }
-    }
-  // Reset state
- useEffect(() => {
-  if(!postId || didFetch.current) return
-  didFetch.current = true
-  async function run() {
-    setPost(null);
-    setComments([]);
-    cursor.current = null;
-    setHasMore(true);
-
-    try {
-      const ok = await getDetailPost();
-      if (ok) {
-        await getComment();
-        await fetchFollowers();
-      }
-    } catch (err) {
-      const errorMessage = err?.message || String(err);
-      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null));
-    }
+  async function onPostComment(){
+    const isOk = await postComment(commentInput)
+    isOk ? setCommentInput('') : setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, postCmtError, null))
   }
 
-  run();
-}, [postId]);
-
-
-
-
-  // get realtime
+  function onUpdateComment(data){
+    console.log("on Update COmment is called?")
+    switch(data.type){
+      case 'edit' : 
+        editComment(data.commentId, data.content)
+        break
+      case 'delete' : 
+        deleteComment(data.commentId)
+        break
+    }
+  }
+  
+  // auto handle error from hook
+  useEffect(()=>{ if(postError) setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, postError, null  ))},[postError])
+  useEffect(()=>{ if(getCommentError) setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, getCommentError, null))},[getCommentError])
+  useEffect(()=>{ if(postCmtError) setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, postCmtError, null))},[postCmtError])
+  
+    // get realtime
   useEffect(()=>{ 
     if(!realTimeComments) return
-    console.log("realTimeComments is called")
-    setComments(prev=>[realTimeComments, ...prev])
+    updateComment(realTimeComments)
     updateCommentCount(postId, comments.length + 1)
   },[realTimeComments])
     
   return {
-    commentContent, 
+    commentInput, 
     comments,   
-    loading,
-    commentLoading, 
-    isFollowerHasMore,
+    loading:postLoading,
+    isFollowerHasMore : state.anyMore,
     post, 
     result, 
-    hasMore, 
+    hasMoreComment, 
     getMoreCommentLoading,
-    followers,
-    followersLoading,
-    isCommentPosting,
-    getComment, 
-    setCommentContent, 
+    followers : state.list,
+    followersLoading : state.loading,
+    postCmtLoading,
+    fetchComment, 
+    setCommentInput, 
     onUpdateComment,
-    postComment, 
+    onPostComment, 
     setResult,
     fetchFollowers,
   }
