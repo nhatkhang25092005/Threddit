@@ -31,6 +31,7 @@ export default function Verify({onNavigate, email}){
       {
         fields.map(field=>
           <TextField
+            type='password'
             variant='standard'
             label = {text.label[field]}
             name = {text.name[field]}
