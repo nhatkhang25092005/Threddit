@@ -1,9 +1,9 @@
 import { useGoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-import {
-  handleLoginWithGoogleRequest,
-  handleRegisterWithGoogleRequest,
-} from "../../services/request/authRequest";
+import { authApi} from "../../api/auth/auth.api";
+import { mapGooglePayload } from "../../api/auth/auth.mapper";
 import { Button } from "@mui/material";
+import { useNotify } from "../../hooks/useNotify";
+import { modal } from "../../constant/text/vi/modal";
 
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24">
@@ -26,18 +26,20 @@ const GoogleIcon = () => (
   </svg>
 );
 
+
+
 function GoogleLoginWrapper() {
+  const notify = useNotify()
   const login = useGoogleLogin({
     flow: `auth-code`,
     onSuccess: async (response) => {
-      console.log(response);
       try {
-        const apiRes = await handleLoginWithGoogleRequest(response.code);
-        console.log(apiRes);
+        const apiRes = await authApi.google(mapGooglePayload(response.code))
         if (apiRes.isOk()) {
           alert("Login with google successfully!");
         }
       } catch (e) {
+        notify.popup(modal.title.notification,e?.response?.data?.message)
         console.error("Login with google error: ", e);
       }
     },
@@ -53,36 +55,11 @@ function GoogleLoginWrapper() {
   );
 }
 
-function GoogleRegisterWrapper() {
-  const register = useGoogleLogin({
-    flow: `auth-code`,
-    onSuccess: async (response) => {
-      console.log(response);
-      try {
-        const apiRes = await handleRegisterWithGoogleRequest(
-          "Zesk2509",
-          response.code
-        );
-        console.log(apiRes);
-        if (apiRes.isOk()) {
-          alert("Register with google successfully!");
-        }
-      } catch (e) {
-        console.error("Register with google error: ", e);
-      }
-    },
-    onError: () => {
-      console.log("Register fail!");
-      alert("Can not connect to google. Please try it later");
-    },
-  });
-  return <Button onClick={register}>Register with Google</Button>;
-}
 
-export default function GoogleAuthorize({ type = "login" }) {
+export default function GoogleAuthorize() {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_GOOGLE}>
-      {type === "login" ? <GoogleLoginWrapper /> : <GoogleRegisterWrapper />}
+      <GoogleLoginWrapper />
     </GoogleOAuthProvider>
   );
 }

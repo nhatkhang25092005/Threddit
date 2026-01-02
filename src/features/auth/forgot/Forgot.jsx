@@ -20,13 +20,13 @@ export default function Forgot({onNavigate}){
         name='email'
       />
       <Button
+        disabled = {form.email === ''}
         loading={loading}
         variant='primary'
         onClick={onSubmit}
         sx={forgotStyles.button}>
           {loading ? '\u00A0' : AUTH_TEXT.forgot.submit}
         </Button>
-      <Button onClick={()=>onNavigate('verify')}>Verify</Button>
     </Box>
   )
 }

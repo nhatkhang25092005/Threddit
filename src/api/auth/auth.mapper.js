@@ -33,3 +33,7 @@ export const mapResendVerifyCode = (email) => ({
   email:email
 })
 
+export const mapGooglePayload = (code) => ({
+  googleCode:code
+})
+

@@ -1,6 +1,7 @@
 export const modal = {
   title:{
     error:'Lỗi',
+    notification:"Thông báo",
     success:{
       verify:"Xác minh thành công"
     }

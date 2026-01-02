@@ -14,5 +14,8 @@ export const authApi = {
   },
   verify_reset(payload){
     return axios.post(import.meta.env.VITE_API_VERIFY_RESET_PASSWORD, payload)
+  },
+  google(payload){
+    return axios.post(import.meta.env.VITE_API_GOOGLE, payload)
   }
 }
