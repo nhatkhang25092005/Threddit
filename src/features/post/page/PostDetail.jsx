@@ -1,5 +1,5 @@
 import { Modal, Typography, CircularProgress, Box, TextField } from "@mui/material"
-import Post from "../../../components/common/Post"
+import Post from "../../../components/common/Post/Post"
 import usePostDetail from "../hooks/usePostDetail"
 import Mention from "../../../components/common/Mention"
 import { useEffect, useRef, useState } from "react"
@@ -7,8 +7,8 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import { DISPLAY, LABEL } from "../../../constant"
 import SendIcon from '@mui/icons-material/Send'
 import CommentProvider from "../../../provider/CommentProvider"
-import PopupNotification from "../../../components/common/PopupNotification"
-import SnakeBarNotification from "../../../components/common/SnakeBarNotification"
+import PopupNotification from "../../../components/notify/PopupNotification"
+import SnakeBarNotification from "../../../components/notify/SnakeBarNotification"
 import useInfiniteScroll from "../../../hooks/useInfiniteScroll"
 const sxForTheParentBox = {
   border: "solid #a4a4a463 2px",
@@ -84,7 +84,7 @@ const sxForTextField = {
       borderColor: "#1976d2",
     },
   },
-   '& .MuiOutlinedInput-root textarea': {
+    '& .MuiOutlinedInput-root textarea': {
     '&::-webkit-scrollbar': {
       width: '8px',
     },
@@ -196,20 +196,20 @@ function PostDetailContent({ onClose }) {
   return (
     <>
       {
-        post !== null 
+        post !== null
         ?
         <>
-        <SnakeBarNotification 
-          duration={3000} 
-          message={result?.message} 
-          open={openSnack} 
-          onClose={() => setOpenSnack(false)} 
+        <SnakeBarNotification
+          duration={3000}
+          message={result?.message}
+          open={openSnack}
+          onClose={() => setOpenSnack(false)}
         />
-        <PopupNotification 
-          open={openPopup} 
-          onClose={() => setOpenPopup(false)} 
-          title={result?.title} 
-          content={result?.message} 
+        <PopupNotification
+          open={openPopup}
+          onClose={() => setOpenPopup(false)}
+          title={result?.title}
+          content={result?.message}
         />
         
         <Box sx={sxForTheParentBox}>
@@ -222,18 +222,24 @@ function PostDetailContent({ onClose }) {
 
           <Box sx={sxForBody}>
             <Post
+              post={post}
               key={post.id}
               sx={overrideSxForPost}
-              onComment={true}
-              commentList={comments}
-              item={post}
-              index={Number(post?.id)}
-              onResult={setResult}
-              onUpdateComment={onUpdateComment}
-              onGetMoreComment={{
-                getMoreComment: fetchComment,
-                hasMore: hasMoreComment,
-                getMoreCommentLoading: getMoreCommentLoading
+              comments={{
+                list:comments,
+                onUpdate:onUpdateComment,
+                pagination:{
+                  loadMore: fetchComment,
+                  loading: getMoreCommentLoading,
+                  hasMore:hasMoreComment,
+                }
+              }}
+              config={{
+                index: Number(post?.id),
+                isModal:true
+              }}
+              handlers={{
+                onResult:setResult,
               }}
             />
           </Box>
@@ -243,12 +249,12 @@ function PostDetailContent({ onClose }) {
               {localStorage.getItem("username")}
             </Typography>
             
-            <Box sx={{ 
-              display: "flex", 
-              flexDirection: "row", 
-              alignItems: 'center', 
-              gap: '1rem', 
-              position: 'relative' 
+            <Box sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: 'center',
+              gap: '1rem',
+              position: 'relative'
             }}>
               <TextField
                 multiline
@@ -284,10 +290,10 @@ function PostDetailContent({ onClose }) {
           </Box>
         </Box>
         </>
-        :<PopupNotification  
-          open={openPopup} 
-          onClose={() => {setOpenPopup(false); onClose()}} 
-          title={result?.title} 
+        :<PopupNotification
+          open={openPopup}
+          onClose={() => {setOpenPopup(false); onClose()}}
+          title={result?.title}
           content={result?.message} />
       }
     </>

@@ -1,15 +1,12 @@
 import { Box, Button, Typography } from "@mui/material";
 import useProfile from "../hooks/useProfile";
-import LoadingScreen from "../../../components/common/LoadingScreen";
 import DisplayField from "../components/DisplayField";
-import { DISPLAY, LABEL, TITLE } from "../../../constant";
+import { LABEL, TITLE } from "../../../constant";
 import { useEffect, useState} from "react";
-import PopupNotification from "../../../components/common/PopupNotification";
 
 export default function Profile() {
-  const { getUserInfo, saveChange, result, loading, userInfo } = useProfile();
+  const { getUserInfo, saveChange, userInfo } = useProfile();
   const [editName, setEditName] = useState("")
-  const [popup, setPopup] = useState(false)
 
   // call to get user info at the first rendering
   useEffect(()=>{getUserInfo()},[])
@@ -17,15 +14,10 @@ export default function Profile() {
   // create a copy of username, which user can edit
   useEffect(()=>{if(userInfo?.username) setEditName(userInfo.username)},[userInfo])
 
-  // close popup when result changes
-  useEffect(()=>{if(result?.type === DISPLAY.POPUP) setPopup(true)},[result])
-
   // handle change of username input field
   function handleChange(e){ setEditName(e.target.value) }
   return (
     <>
-      <PopupNotification btnTitle={LABEL.BACK_TO_LOGIN} title={result?.title} open={popup} content={result?.message} onClose={()=>{result?.fallback ? result.fallback() : setPopup(false)}}/>
-      <LoadingScreen control={loading} />
       <Box
         sx={{
           mt:"6rem",

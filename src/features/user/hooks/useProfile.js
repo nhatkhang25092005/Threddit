@@ -2,25 +2,25 @@ import { useState } from "react"
 import { DISPLAY, ROUTES, TEXT, TITLE } from "../../../constant"
 import { handleGetUserInfoRequest, handleUpdateUsernameRequest } from "../../../services/request/userRequest"
 import {validChangeUsername} from "../../../utils/validation"
-import { Result } from "../../../class"
 import { handleSignoutRequest } from '../../../services/request/authRequest';  
 import { useNavigate } from "react-router-dom"
+import { useNotify } from "../../../hooks/useNotify"
 
 export default function useProfile(){
-    const [loading, setLoading] = useState(false)
     const [userInfo, setUserInfo] = useState({email:"", username:""})
     const [result, setResult] = useState(null) 
     const navigate = useNavigate()
+    const notify = useNotify()
 
     //get user information
     const getUserInfo = async () => {
-        setLoading(true)
+        notify.loading(true)
         const response = await handleGetUserInfoRequest()
         if(response.isOk()) {
             const {email, username} = response.data.data
             setUserInfo({email, username})
         }
-        setLoading(false)
+        notify.loading(false)
     }
 
     const logout = async () => {
@@ -40,19 +40,19 @@ export default function useProfile(){
         //validate
         const validResult = validChangeUsername(newUsername)
         if(typeof validResult === "object" && validResult !== null){
-            setResult(new Result(DISPLAY.POPUP, TITLE.CHANGE_NAME_FAIL, validResult.username))
+            notify.popup(TITLE.CHANGE_NAME_FAIL, validResult.username)
             return
         }
 
         //call api to change username
-        setLoading(true)
+        notify.loading(true)
         const response = await handleUpdateUsernameRequest(newUsername)
         if(response.isOk()) {
-            setResult(new Result(DISPLAY.POPUP, TITLE.CHANGE_NAME_SUCCESS, TEXT.CHANGE_NAME_SUCCESS, () => logout()))
+            notify.popup(TITLE.CHANGE_NAME_SUCCESS, TEXT.CHANGE_NAME_SUCCESS, () => logout())
         }
-        else setResult(new Result(DISPLAY.POPUP, TITLE.CHANGE_NAME_FAIL, response.message) )
-        setLoading(false)
+        else notify.popup(TITLE.CHANGE_NAME_FAIL, response.message)
+        notify.loading(false)
     }
 
-    return{getUserInfo, saveChange ,result, userInfo, loading}
+    return{getUserInfo, saveChange ,result, userInfo}
 }

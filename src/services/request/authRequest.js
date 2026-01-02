@@ -120,3 +120,31 @@ export function handleSignoutRequest(){
     return new ApiResponse(status, message, data, displayType)
   })
 }
+
+// Login with Google
+export async function handleLoginWithGoogleRequest(googleCode){
+  if(!googleCode){
+    console.error("googleCode can not be null in request")
+    return
+  }
+  return authApi.loginWithGoogle(googleCode)
+  .then((res)=>new ApiResponse(res.status, ApiResponse.getMessageFromApi(res),res.data))
+  .catch((err)=>{
+    const {status, displayType, message, data} = classifyError(err)
+    return new ApiResponse(status, message, data, displayType)
+  })
+}
+
+// Register with Google
+export async function handleRegisterWithGoogleRequest(username, googleCode){
+  if(!googleCode){
+    console.error("googleCode can not be null in request")
+    return
+  }
+  return authApi.registerWithGoogle(username, googleCode)
+  .then((res)=>new ApiResponse(res.status, ApiResponse.getMessageFromApi(res),res.data))
+  .catch((err)=>{
+    const {status, displayType, message, data} = classifyError(err)
+    return new ApiResponse(status, message, data, displayType)
+  })
+}

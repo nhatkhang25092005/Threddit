@@ -144,10 +144,10 @@ export default function Comment({
                 onSave={saveEditComment}
                 onEditChange={setEditComment}
               />
-               {(comment.isCommenter && !isEditing) &&
-              <CommentMenu  
+                {(comment.isCommenter && !isEditing) &&
+              <CommentMenu
                 editComment={()=>startEditComment(comment.content)}
-                deleteComment={()=>deleteComment()}  
+                deleteComment={()=>deleteComment()}
               />}
             </Box>
             <Typography variant="sub" sx={{ml:"0.5rem", fontSize:"15px"}}>{comment.createdAt}</Typography>

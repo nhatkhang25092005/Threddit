@@ -18,7 +18,7 @@ import SearchIcon from "../../assets/icons/search.svg?react";
 import AddIcon from "../../assets/icons/plus.svg?react";
 import NotifyIcon from "../../assets/icons/bell.svg?react";
 import MoreInfoMenu from "../common/MoreInfoMenu"
-import threddit from "../../assets/icons/threddit.png"
+import logo from "../../assets/icons/logo_dark.png"
 export default function AppLayout({ customStyle }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -113,7 +113,7 @@ export default function AppLayout({ customStyle }) {
     <Box sx={{ display: "flex", height: "100vh" }}>
       <Box sx={style}>
         <img
-          src={threddit}
+          src={logo}
           style={{width:"70px",height:"70px"}}
         />
         <BottomNavigation

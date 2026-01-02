@@ -1,1 +1,1 @@
-export {default as MainThemeProvider} from "./MainTheme.jsx"
+export {default as ThemeProvider} from "./ThemeProvider.jsx"

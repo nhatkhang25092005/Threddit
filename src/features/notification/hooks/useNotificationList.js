@@ -5,17 +5,18 @@ import { Result } from "../../../class";
 import { TITLE, DISPLAY } from "../../../constant";
 import { useNotificationContext } from "../../../hooks/useNotificationContext";
 import { useLocation } from "react-router-dom";
+import { useNotify } from "../../../hooks/useNotify";
 
 export default function useNotificationList() {
   const [list, setList] = useState([]);
   const [cursor, setCursor] = useState(null);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const firstLoad = useRef(false);
   const loadingRef = useRef(null)
   const {realTimeList, readNotification, setRealTimeList} = useNotificationContext()
   const location  = useLocation()
+  const notify = useNotify()
 
   const loadMore = async () => {
     if (loadingRef.current || !hasMore || loading) return;
@@ -42,11 +43,9 @@ export default function useNotificationList() {
         // update cursor
         setCursor(response.data.cursor);
       }
-      else setError(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null));
+      else notify.popup(TITLE.ERROR, response.message, null)
   }
-    catch(err){
-      setError(new Result(DISPLAY.POPUP, TITLE.ERROR, err, null));
-    }
+    catch(err){notify.popup(TITLE.ERROR, err, null)}
   finally{
     setLoading(false);
     loadingRef.current = false
@@ -95,5 +94,5 @@ export default function useNotificationList() {
 
   }, [location.key]) 
 
-  return { list, error, loadMore, hasMore, loading, markAsRead };
+  return { list, loadMore, hasMore, loading, markAsRead };
 }

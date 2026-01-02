@@ -1,0 +1,32 @@
+export const loginStyles = {
+  container : {
+    display:'flex',
+    flexDirection:'column',
+    ml:'0.5rem',
+    height:'100%',
+  },
+  title:{
+    ml:'-0.3rem'
+  },
+  fields:{
+    marginTop:'3rem',
+    display:'flex',
+    flexDirection:'column',
+    gap:'1rem',
+    width:'100%'
+  },
+  button:{
+    width:'100%',
+    marginTop:'3rem',
+    display:'flex',
+    flexDirection:'column',
+    alignItems:'flex-end'
+  },
+  register:{
+    display:'flex',
+    flexDirection:'row',
+    mx:'auto',
+    mt:'auto',
+    gap:'0.5rem'
+  },
+}

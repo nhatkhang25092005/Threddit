@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import {Box, Typography, Tab, Tabs, Button,CircularProgress, Fade } from "@mui/material"
 import Column from "../../../components/layout/Column"
 import {LABEL, TEXT, TITLE,DISPLAY, ROUTES} from "../../../constant"
 import CustomTabPanel from "../../../components/common/CustomTabPanel"
 import BlockContent from "../../../components/common/BlockContent"
 import useFollowList from "../hooks/useFollowList"
-import PopupNotification from "../../../components/common/PopupNotification"
 import useInfiniteScroll from "../../../hooks/useInfiniteScroll"
 import { useNavigate } from "react-router-dom"
 function allyProps(index){
@@ -22,7 +21,6 @@ export default function FollowList(){
         actor,
         followers, 
         followings,  
-        error, 
         loading, 
         btnLoading, 
         followersHasMore,
@@ -37,17 +35,11 @@ export default function FollowList(){
     // value of tab
     const [value, setValue] = useState(0)
 
-    //error popup 
-    const [open, setOpen] = useState(false)
-
     // switch tag handler
     function handleChange(event, newValue){
         setTag(newValue)
         setValue(newValue)
     }
-
-    // popup handler
-    useEffect(()=>{if(error?.type===DISPLAY.POPUP)setOpen(true)},[error])
 
     // scroll handler
     const followerLoadRef = useInfiniteScroll({
@@ -61,12 +53,11 @@ export default function FollowList(){
         onLoadMore: getFollowingList})
 
     return(
-       <>   
-        <PopupNotification open={open} onClose={()=>setOpen(false)} content={error?.message || "An unexpect error occurred"} btnTitle={LABEL.CLOSE}/>
+       <>
         <Column customStyle={{pt:"1rem", width:"60%",mx:"auto", gap:"2rem"}}>
             <Typography variant="title">{TITLE.FOLLOW_LIST + ` (${actor})`}</Typography>
             <Box width={"100%"} sx={{
-                border:"solid white 1px",    
+                border:"solid white 1px",
                 borderRadius:"10px",
                 overflow:"hidden"
                 }}>

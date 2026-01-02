@@ -4,16 +4,11 @@ import Column from "../../../components/layout/Column";
 import BoxContent from "../../../components/common/BoxContent";
 import BlockContent from "../../../components/common/BlockContent";
 import useNotificationList from "../hooks/useNotificationList";
-import PopupNotification from "../../../components/common/PopupNotification";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useInfiniteScroll from "../../../hooks/useInfiniteScroll"
 export default function Notifications() {
   // elements of page, using for render on screen
-  const { list, error, loadMore, hasMore, loading, markAsRead } = useNotificationList();
-
-  // Popup for display errors have type "popup"
-  const [popup, setPopup] = useState(false)
+  const { list, loadMore, hasMore, loading, markAsRead } = useNotificationList();
 
   /** Navigate when user clicking on each notification
    *  redirect user to another user page (follow notification)
@@ -23,13 +18,9 @@ export default function Notifications() {
   // handle scroll effect, scroll down and download more notification
   const loadMoreRef = useInfiniteScroll({hasMore, loading, onLoadMore: loadMore})
 
-  // Observation of error.type status, if it has type = POPUP, set popup to open
-  useEffect(() => {if(error?.type === DISPLAY.POPUP) setPopup(true)},[error])
-
   return (
     <>
       {/* Popup for error from server (500) */}
-      <PopupNotification open={popup} onClose={()=>setPopup(false)} title={TITLE.ERROR} content={error}/>
       <Column customStyle={{ pt: "2rem", width: "60%", mx: "auto",pb:"0", position:"relative"}} >
         <Typography variant="title">{TITLE.NOTIFICATION}</Typography>
         <BoxContent customStyle={{ mx: 0, px: 0, height:"fit-content",py:0,mt:2,mb:"5rem" }}>

@@ -102,9 +102,9 @@ export function validRegister(data) {
   const errorFields = {}
 
   if (nullCheck===true) {
-    const { displayName, email, password, confirmPassword } = data;
+    const { display_name, email, password, repass } = data;
     // display name
-    if (displayName.trim().length < 8 || displayName.trim().length > 32) 
+    if (display_name.trim().length < 8 || display_name.trim().length > 32) 
         errorFields.displayName = ERRORS.DISPLAYNAME_FORMAT
     
     // email
@@ -116,8 +116,8 @@ export function validRegister(data) {
         errorFields.password = ERRORS.PASSWORD_FORMAT
 
     // confirmPassword
-    if (!(password.trim() === confirmPassword.trim()))
-         errorFields.confirmPassword = ERRORS.PASSWORD_MATCH
+    if (!(password.trim() === repass.trim()))
+        errorFields.confirmPassword = ERRORS.PASSWORD_MATCH
 
     return !Object.keys(errorFields).length ? true : errorFields
   }

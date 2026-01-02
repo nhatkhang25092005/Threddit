@@ -4,11 +4,12 @@ import { validResetRequest } from "../../../utils/validation"
 import { replace, useNavigate } from "react-router-dom"
 import { Result } from "../../../class"
 import { DISPLAY, ROUTES, TITLE } from "../../../constant"
-
+import { useNotify } from "../../../hooks/useNotify"
 export default function useForgot(){
     const navigate = useNavigate()
     const [result, setResult] = useState(null)
-    const [loading, setLoading] = useState(false)
+    const notify = useNotify()
+
     const forgot = async (email) => {
         setResult(null)
         const validResult = validResetRequest(email)
@@ -17,12 +18,12 @@ export default function useForgot(){
             return
         }
         else{
-            setLoading(true)
+            notify.loading(true)
             const res = await handleResetPasswordRequest(email)
-            setResult(res.isOk() ? navigate(ROUTES.RESET_PASSWORD_VERIFY,{state:{forgotEmail : email}, replace}) : new Result(DISPLAY.POPUP, TITLE.RESET_PASSWORD_REQUEST,res.message))
-            setLoading(false)
+            setResult(res.isOk() ? navigate(ROUTES.RESET_PASSWORD_VERIFY,{state:{forgotEmail : email}, replace}) : notify.popup(TITLE.RESET_PASSWORD_REQUEST,res.message))
+            notify.loading(false)
         }
     }
     
-    return{loading, result, forgot}
+    return{result, forgot}
 }

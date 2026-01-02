@@ -7,6 +7,8 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Result } from "../../../class"
 import { DISPLAY, TITLE } from "../../../constant"
+import { useNotify } from "../../../hooks/useNotify"
+
 export default function useFollowList(){
     // Actor : List owner 
     const actor = useLocation().state.target
@@ -28,17 +30,16 @@ export default function useFollowList(){
     const [loading, setLoading] = useState(false)
     const [btnLoading, setBtnLoading] = useState({})
 
-    // error display
-    const [error, setError] = useState(null)
-
     // control state
     const [tag, setTag]=  useState(0)
+
+    const notify = useNotify()
     
     // get followers list
     const getFollowerList = useCallback(async () => {
         // Check loading and hasMore state before call api
         if(loadingRef.current || !followersHasMore) return
-
+        notify.loading(true)
         loadingRef.current = true
         try{
             //call
@@ -54,20 +55,20 @@ export default function useFollowList(){
                 setFollowers((prev)=>[...prev, ...response.data.followerList])
                 setFollowerCursor(response.data.cursor)
             }
-            else setError(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))       
+            else notify.popup(DISPLAY.POPUP, TITLE.ERROR, response.message, null)
         }
-        catch(err){setError(new Result(DISPLAY.POPUP, TITLE.ERROR, err, null))}
+        catch(err){notify.loading(DISPLAY.POPUP, TITLE.ERROR, err, null)}
         finally{
+            notify.loading(false)
             setLoading(false)
             loadingRef.current = false
         }
-    },[actor, followerCursor, followersHasMore ])
-
+    },[actor, followerCursor, followersHasMore, notify ])
 
     // get following list
     const getFollowingList = useCallback(async ()=> {
         if(loadingRef.current || !followingHasMore) return
-
+        notify.loading(true)
         loadingRef.current = true
         try{
             setLoading(true)
@@ -85,14 +86,15 @@ export default function useFollowList(){
                 setFollowings((prev)=>[...prev, ...response.data.followingList])
                 setFollowingCursor(response.data.cursor)
             }
-            else setError(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))
+            else notify.popup(DISPLAY.POPUP, TITLE.ERROR, response.message, null)
         }
-        catch(err){setError(new Result(DISPLAY.POPUP, TITLE.ERROR, err, null))}
+        catch(err){notify.popup(DISPLAY.POPUP, TITLE.ERROR, err, null)}
         finally{
             setLoading(false)
+            notify.loading(false)
             loadingRef.current = false
         }
-    },[actor, followingCursor, followingHasMore])
+    },[actor, followingCursor, followingHasMore, notify])
 
     // handle follow request on follow button
     async function handleFollow(username){
@@ -150,9 +152,7 @@ export default function useFollowList(){
                 ))
             }
         }
-        else{
-            setError(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))
-        }
+        else{notify.popup(TITLE.ERROR, response.message, null)}
         setBtnLoading(prev=>({...prev, [username]:false}))
     }
 
@@ -160,12 +160,11 @@ export default function useFollowList(){
     async function UnFollow(username){
         setBtnLoading(prev=>({...prev, [username]:true}))
         const response = await handleUnFollow(username)
-
         if(response.isOk()){
             setFollowers(prev => prev.map(
                 item => item.follower.username === username
                 ? {...item, canFollow:true}
-                : item      
+                : item
             ))
 
             if (actor==="me") setFollowings(prev=>prev.filter(item => item.followee.username !== username))
@@ -176,10 +175,8 @@ export default function useFollowList(){
                 )
             )
         }
-        else{
-            setError(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))
-        }
-        setBtnLoading(prev=>({...prev, [username]:false})) 
+        else{notify.popup(DISPLAY.POPUP, TITLE.ERROR, response.message, null)}
+        setBtnLoading(prev=>({...prev, [username]:false}))
     }
 
     // load data handler
@@ -202,7 +199,6 @@ export default function useFollowList(){
         actor,
         followers, 
         followings, 
-        error, 
         loading,
         btnLoading,
         followersHasMore,

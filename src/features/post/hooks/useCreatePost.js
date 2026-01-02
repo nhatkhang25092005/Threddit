@@ -2,13 +2,14 @@ import { useState } from "react";
 import {handleCreatePost} from "../../../services/request/postRequest";
 import { Result } from "../../../class";
 import { DISPLAY, TITLE,TEXT } from "../../../constant";
+import { useNotify } from "../../../hooks/useNotify";
 export default function useCreatePost() {
   const [content, setContent] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
+  const [btnLoading, setBtnLoading] = useState(false);
+  const notify = useNotify()
+
   const handlePost = async (onPost) => {
-    
-    setLoading(true);
+    setBtnLoading(true);
     const mentionMatches = content.match(/@(\w+)/g);
 
     //  Lọc bỏ ký tự @
@@ -21,24 +22,23 @@ export default function useCreatePost() {
       console.log(res)
       if(res.isOk()){
         setContent("");
-        setResult(new Result(DISPLAY.POPUP,TITLE.NOTIFICATION, TEXT.CREATE_POST_SUCCESS, null))
+        notify.popup(TITLE.NOTIFICATION, TEXT.CREATE_POST_SUCCESS)
       }
       else {
-        setResult(new Result(DISPLAY.POPUP,TITLE.ERROR, res.message, null))
+        notify.popup(TITLE.ERROR, res.message, null)
       }
       if (onPost) onPost(res); // callback để reload danh sách bài viết
     } catch (error) {
-        setResult(new Result(DISPLAY.POPUP,TITLE.ERROR, error.message, null))
+      notify.popup(TITLE.ERROR, error.message, null)
     } finally {
-      setLoading(false);
+      setBtnLoading(false);
     }
   }
 
   return {
     content,
-    result,
     setContent,
-    loading,
+    btnLoading,
     handlePost,
   };
 }

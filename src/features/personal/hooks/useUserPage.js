@@ -6,6 +6,7 @@ import { Result } from "../../../class";
 import { DISPLAY, TITLE } from "../../../constant";
 import convertTime from "../../../utils/convertTime";
 import { sortPinned } from "../../../utils/sortPinned";
+import { useNotify } from "../../../hooks/useNotify.js";
 
 export default function useUserPage() {
   // Get basic information of user
@@ -33,6 +34,8 @@ export default function useUserPage() {
   // Switch between tags
   const [tag, setTag] = useState(0);
 
+  const notify = useNotify()
+
   // Handle post updates from Post component
   function handlePostUpdate(update) {
     const { type, postId, data, message, status } = update;
@@ -50,14 +53,13 @@ export default function useUserPage() {
             item.id === postId ? { ...item, content: data.content } : item
           )
         );
-        setResult(new Result(DISPLAY.SNACKBAR, TITLE.OK, message || "Đã cập nhật bài viết", null));
         break;
 
       case 'delete':
         // Remove from both lists
         setCreatedPosts((prev) => prev.filter((item) => item.id !== postId));
         setSavedPosts((prev) => prev.filter((item) => item.id !== postId));
-        setResult(new Result(DISPLAY.SNACKBAR, TITLE.SUCCESS, message || "Đã xóa bài viết", null));
+        notify.snackbar(message || "Đã xóa bài viết", 4000)
         break;
 
       case 'pin':
@@ -106,7 +108,8 @@ export default function useUserPage() {
   const getCreatedPost = useCallback(async () => {
     if (loadingRef.current || !createdPostHasMore) return;
     loadingRef.current = true;
-    setLoading(true);
+    notify.loading(true);// UI
+    setLoading(true)// Logic
     try {
       const response = await handleGetUserCreatedPost(createdCursor.current);
       if (response.data === null) {
@@ -122,19 +125,21 @@ export default function useUserPage() {
       } else {
         setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null));
       }
-    } catch (err) {
-      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, err, null));
-    } finally {
-      setLoading(false);
+    }
+    catch (err) { notify.popup(TITLE.ERROR, err.message) }
+    finally {
+      setLoading(false)
+      notify.loading(false);
       loadingRef.current = false;
     }
-  }, [createdPostHasMore]);
+  }, [createdPostHasMore, notify]);
 
   //get saved posts
   const getSavedPost = useCallback(async () => {
     if (loadingRef.current || !savedPostHasMore) return;
     loadingRef.current = true;
-    setLoading(true);
+    notify.loading(true); // UI
+    setLoading(true) // Scroll logic
     try {
       const response = await handleGetUserSavedPost(savedCursor.current);
       if (response.data === null) {
@@ -150,13 +155,14 @@ export default function useUserPage() {
       } else {
         setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null));
       }
-    } catch (err) {
-      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, err, null));
-    } finally {
-      setLoading(false);
+    }
+    catch (err) { notify.popup(TITLE.ERROR, err)} 
+    finally {
+      setLoading(false)
+      notify.loading(false);
       loadingRef.current = false;
     }
-  }, [savedPostHasMore]);
+  }, [savedPostHasMore,notify]);
 
   function adjustSavePostAfterUnsave(postId) {
     setSavedPosts((prev) => prev.filter((item) => item.id !== postId));

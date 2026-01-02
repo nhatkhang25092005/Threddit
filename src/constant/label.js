@@ -24,5 +24,9 @@ export const LABEL = {
     WRITE_COMMENT : "Viết bình luận...",
     EDIT_COMMENT : "Chỉnh sửa bình luận",
     DELETE_COMMENT : "Xóa bình luận",
-    BACK_TO_LOGIN: "Quay về trang đăng nhập"
+    BACK_TO_LOGIN: "Quay về trang đăng nhập",
+    PIN : "ghim bài viết",
+    UNPIN : "bỏ ghim bài viết" ,
+    EDIT: "Sửa",
+    DELETE : "Xóa",
 }

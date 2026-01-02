@@ -4,6 +4,10 @@ const authApi = {
   login: (email, password) =>
     axiosClient.post(import.meta.env.VITE_API_LOGIN, { email, password }), // this is example
 
+  loginWithGoogle: (googleCode) =>axiosClient.post(import.meta.env.VITE_API_LOGIN_GOOGLE, { googleCode }),
+
+  registerWithGoogle : (username, googleCode) => axiosClient.post(import.meta.env.VITE_API_REGISTER_GOOGLE, { username, googleCode}), 
+
   register: (email, username, password, confirmedPassword) =>
     axiosClient.post(import.meta.env.VITE_API_REGISTER, {
       email,

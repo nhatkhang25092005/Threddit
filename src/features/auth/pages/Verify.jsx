@@ -2,15 +2,13 @@ import Column from "../../../components/layout/Column";
 import { Button, Typography } from "@mui/material";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import { TITLE, TEXT } from "../../../constant";
-import { useState, useEffect } from "react";
-import LoadingScreen from "../../../components/common/LoadingScreen";
+import { useState } from "react";
 import useVerify from "../hooks/useVerify";
 import { DISPLAY } from "../../../constant";
-import PopupNotification from "../../../components/common/PopupNotification";
 
 export default function Verify() {
   // elements of verify feature
-  const { verify, loading, result } = useVerify();
+  const { verify, result } = useVerify();
 
   //form controller
   const [otp, setOtp] = useState("");
@@ -18,19 +16,9 @@ export default function Verify() {
     const onlyDigits = newValue.replace(/[^0-9]/g, "");
     setOtp(onlyDigits);
   }
- // modal controller (like your original code)
-  const [popup, setPopup] = useState(false);
-
-  useEffect(() => {
-    if (result?.type === DISPLAY.POPUP) {
-      setPopup(true);
-    }
-  }, [result]);
 
   return (
     <>
-      <LoadingScreen control={loading} />
-      <PopupNotification open = {popup} onClose = {()=>{result.fallback ? result.fallback() : setPopup(false)}} title={result?.title} content={result?.message} />
       <Column>
         <Typography variant="title" sx={{ mb: "1rem" }}>
           {TITLE.VALIDATION}

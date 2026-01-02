@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import Post from "../../../components/common/Post";
+import React, { useState } from "react";
+import Post from "../../../components/common/Post/Post";
 import TabMenu from "../../../components/layout/TabMenu";
 import SearchBar from "../../../components/layout/SearchBar";
 import UserFollowCard from "../../../components/layout/UserFollowCard";
@@ -9,7 +9,7 @@ import followApi from "../../../services/api/followApi";
 import convertTime from "../../../utils/convertTime";
 import Column from "../../../components/layout/Column"
 import { TITLE, ROUTES } from "../../../constant";
-import PopupNotification from "../../../components/common/PopupNotification";
+import { useNotify } from "../../../hooks/useNotify";
 export default function App() {
   const [tab, setTab] = useState("posts");
   const [query, setQuery] = useState("");
@@ -18,6 +18,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [followLoading, setFollowLoading] = useState({})
+  const notify = useNotify()
 
 
   const currentUserId = null; // Thay bằng user ID thật
@@ -45,6 +46,7 @@ export default function App() {
     } catch (err) {
       console.error("Lỗi tìm kiếm:", err);
       setError(err.response.data.message);
+      notify.popup(TITLE.ERROR, err.response.data.message)
     } finally {
       setLoading(false);
     }
@@ -84,13 +86,8 @@ export default function App() {
   const handlePostDeleted = (postId) => {
     setResults((prev) => prev.filter((p) => p.id !== postId));
   };
-
-  // Popup handler
-  const [popup, setPopup] = useState(false)
-  useEffect(()=>{if(error !== "" ) setPopup(true) },[error])
   return (
     <Column customStyle={{pt:2}}>
-      <PopupNotification open={popup} onClose={()=>setPopup(false)} title={"Lỗi"} content={error} />
       <Typography variant="title">{TITLE.SEARCH}</Typography>
       <Box
         sx={{
@@ -101,7 +98,6 @@ export default function App() {
           p: 2,
           boxShadow: "0 0 10px rgba(0,0,0,0.4)",
           width:"60%",
-         
           paddingBottom: "18px",
         }}
       >

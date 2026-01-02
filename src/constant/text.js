@@ -37,5 +37,6 @@ export const TEXT = {
     MARK_AS_READ : "Đánh dấu là đã đọc",
     MARK_AS_UNREAD : "Đánh dấu là chưa đọc",
     READ_ALL : "Đọc tất cả",
-    CHANGE_NAME_SUCCESS:"Vui lòng đăng nhập lại"
+    CHANGE_NAME_SUCCESS:"Vui lòng đăng nhập lại",
+    NO_MORE_COMMENTS:"Không còn bình luận nào!"
 }

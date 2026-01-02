@@ -2,14 +2,13 @@ import { Typography, Box, Fade, CircularProgress, Tabs, Tab } from "@mui/materia
 import Column from "../../../components/layout/Column";
 import useUserPage from "../hooks/useUserPage.js";
 import BlockContent from "../../../components/common/BlockContent";
-import { DISPLAY, ROUTES, TEXT, LABEL } from "../../../constant/";
+import { ROUTES, TEXT, LABEL } from "../../../constant/";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useInfiniteScroll from "../../../hooks/useInfiniteScroll.js";
-import PopupNotification from "../../../components/common/PopupNotification.jsx";
 import CustomTabPanel from "../../../components/common/CustomTabPanel.jsx";
-import SnakeBarNotification from "../../../components/common/SnakeBarNotification.jsx";
-import Post from "../../../components/common/Post.jsx";
+import Post from "../../../components/common/Post/Post.jsx";
+
 
 function allyProps(index) {
   return {
@@ -31,15 +30,15 @@ export default function UserPage() {
     setTag,
     createdPostHasMore,
     savedPostHasMore,
-    loading,
     username,
     follower,
+    loading,
     following,
     createdPosts,
     savedPosts,
-    result, 
   } = useUserPage();
-        
+
+
 
   const createdHasMoreRef = useInfiniteScroll({
     hasMore: createdPostHasMore,
@@ -53,28 +52,6 @@ export default function UserPage() {
     onLoadMore: getSavedPost
   });
 
-  // Result controller
-  const [openSnack, setOpenSnack] = useState(false);
-  const [openPopup, setOpenPopup] = useState(false);
-  const [resultMessage, setResultMessage] = useState(null);
-  const [resultTitle, setResultTitle] = useState(null);
-
-  // Handle result from useUserPage hook
-  useEffect(() => {
-    if (result) {
-      setResultMessage(result.message);
-      setResultTitle(result.title);
-      
-      if (result.type === DISPLAY.SNACKBAR) {
-        setOpenSnack(true);
-      } else if (result.type === DISPLAY.POPUP) {
-        setOpenPopup(true);
-      }
-    }
-  }, [result]);
-
-
-
   // switch tag handler
   function handleChange(event, newValue) {
     setTag(newValue);
@@ -85,18 +62,6 @@ export default function UserPage() {
 
   return (
     <>
-      <SnakeBarNotification 
-        open={openSnack} 
-        onClose={() => setOpenSnack(false)} 
-        duration={3000} 
-        message={resultMessage} 
-      />
-      <PopupNotification 
-        open={openPopup} 
-        onClose={() => setOpenPopup(false)} 
-        title={resultTitle} 
-        content={resultMessage} 
-      />
       <Column customStyle={{ pt: "1rem", width: "60%", mx: "auto", mb: "3rem" }}>
         <Typography variant="h6" fontWeight={"bold"}>{TEXT.USER_PAGE}</Typography>
         
@@ -158,18 +123,22 @@ export default function UserPage() {
           <CustomTabPanel value={value} index={0}>
             {
               createdPosts.length !== 0
-                ? createdPosts.map((post, index) =>
+                ? createdPosts.map((post,index) =>
                   <Post
-                    showPin
-                    location = {ROUTES.USER}
+                    key={`create_${index}`}
                     onNavigate
-                    key={post.id}
-                    item={post}
-                    index={index}
-                    createdPostsLength={createdPosts.length}
-                    onPostUpdatedRendering={handlePostUpdate}
-                    onResult={setResult}
-                    isOwner={true}
+                    post={post}
+                    config={{
+                      key:post.id,
+                      location:ROUTES.USER,
+                      showPin:true,
+                      totalPosts : createdPosts.length,
+                      isOwner:true
+                    }}
+                    handlers={{
+                      onResult:setResult,
+                      onPostUpdate:handlePostUpdate
+                    }}
                   />
                 )
                 : <BlockContent customStyle={{ display: "flex", flexDirection: "row", mx: "auto", p: "2rem" }}>
@@ -194,26 +163,29 @@ export default function UserPage() {
               savedPosts.length !== 0
                 ? savedPosts.map((post, index) =>
                   <Post
-                    showPin
+                    key={`save_${index}`}
                     onNavigate
-                    location={ROUTES.USER}
-                    key={post.id}
-                    item={post}
-                    index={index}
-                    createdPostsLength={savedPosts.length}
-                    onPostUpdatedRendering={handlePostUpdate}
-                    onResult={setResult}
+                    post={post}
+                    config={{
+                      key:post.id,
+                      location:ROUTES.USER,
+                      showPin:true,
+                      totalPosts:savedPosts.length,
+                      isOwner:post.author.username === username
+                    }}
+                    handlers={{
+                      onPostUpdate:handlePostUpdate,
+                      onResult:setResult
+                    }}
                     adjustSavePostAfterUnsave={adjustSavePostAfterUnsave}
-                    isOwner={post.author.username === username}
                   />)
                 : <BlockContent customStyle={{ display: "flex", flexDirection: "row", mx: "auto", p: "2rem" }}>
                   <Typography sx={{ textAlign: "center" }}>{TEXT.NO_POST_SAVED}</Typography>
                 </BlockContent>
             }
-
             {/* observer block */}
             <div ref={savedHasMoreRef} style={{ visibility: savedPostHasMore ? "visible" : "hidden" }} />
-
+            
             {/* Loading block */}
             <Fade in={loading} unmountOnExit>
               <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>

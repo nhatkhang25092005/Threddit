@@ -19,9 +19,9 @@ function PostProvider({children}){
     },[])
 
     const updateSave = useCallback((postId, isSaved, saveNumber)=>{
-        console.log(`updateSave: postId:${postId}, isSave:${isSaved}, saveNumber:${saveNumber}`)
+        // console.log(`updateSave: postId:${postId}, isSave:${isSaved}, saveNumber:${saveNumber}`)
         setPostsState(prev=>({
-            ...prev, 
+            ...prev,
             [postId]:{
                 ...prev[postId],
                 save:{
@@ -46,7 +46,8 @@ function PostProvider({children}){
             }
         }))
     },[])
-
+    
+    // Return the latest version of state
     const getPostState = useCallback((postId)=>{
         return postsState[postId] || null
     },[postsState])

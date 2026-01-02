@@ -12,12 +12,14 @@ import { Result } from "../../../class";
 import { DISPLAY, TITLE } from "../../../constant";
 import convertTime from "../../../utils/convertTime";
 
+import { useNotify } from "../../../hooks/useNotify";
+
 export default function useClientPage() {
   const {clientName} = useParams()
   const [follower, setFollower] = useState(0);
   const [following, setFollowing] = useState(0);
   const [follow, setFollow] = useState(false);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState(null)
 
   const [btnLoading, setBtnLoading] = useState(false)
   const [loading, setLoading] = useState(false);
@@ -30,7 +32,7 @@ export default function useClientPage() {
   const [posts, setPosts] = useState([]);
   const firstLoad  = useRef(null)
 
-
+  const notify = useNotify()
   // first execute after rendering for basic information
 
   //get user follows
@@ -44,14 +46,9 @@ export default function useClientPage() {
   async function postFollow() {
     setBtnLoading(true);
     const response = await handleFollowRequest(clientName);
-    if (response.isOk()) {
-      setFollow(true);
-    }
-    else if (response.status === 429) {
-      setResult(new Result(DISPLAY.DISABLE));
-    } else {
-      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message));
-    }
+    if (response.isOk()) {setFollow(true);}
+    else if (response.status === 429) {setResult(new Result(DISPLAY.DISABLE))} 
+    else {notify.popup(TITLE.ERROR, response.message)}
     setBtnLoading(false);
     return;
   }
@@ -106,18 +103,14 @@ export default function useClientPage() {
       }
 
       // if unexpected error occurs
-      else {
-        setResult(
-          new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null)
-        );
-      }
-    } catch (e) {
-      setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, e, null));
-    } finally {
+      else {notify.popup(TITLE.ERROR, response.message, null)}
+    } 
+    catch (e) {setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, e, null))} 
+    finally {
       setLoading(false);
       loadingRef.current = false;
     }
-  }, [clientName, hasMore]);
+  }, [clientName, hasMore, notify]);
 
   useEffect(() => {
     getFollow();

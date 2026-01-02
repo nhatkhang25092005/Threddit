@@ -6,21 +6,13 @@ import NavButton from "../../../components/common/NavButton";
 import Column from "../../../components/layout/Column";
 import InputField  from "../../../components/common/InputField";
 import useForgot from "../hooks/useForgot";
-import LoadingScreen from "../../../components/common/LoadingScreen"
-import PopupNotification from "../../../components/common/PopupNotification";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function Forgot() {
-  const {forgot, result, loading} = useForgot()
+  const {forgot, result} = useForgot()
   const [email, setEmail] = useState("")
-
-  const [popup, setPopup] = useState(false)
-  useEffect(()=>{if(result?.type === DISPLAY.POPUP) setPopup(true)},[result])
-
   return (
     <>
-      <PopupNotification open={popup} onClose={()=>{setPopup(false)}} title={result?.title} content={result?.message}  />
-      <LoadingScreen control={loading}/>
       <NavButton subTitle={TEXT.BACK_TO_LOGIN} btnText={TEXT.LOGIN} destination={ROUTES.LOGIN}/>
       <FadeSlideInVertical distance={30} duration={1000}>
         <Column>

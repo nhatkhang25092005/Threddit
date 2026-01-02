@@ -49,7 +49,6 @@ export default function useComment(postId){
 
     // Get comments
     const fetchComment = useCallback( async () => {
-        console.log("Fetch")
         dispatch({type:START})
         try{
             const response = await handleGetComments(postId, cursor.current)

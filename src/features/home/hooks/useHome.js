@@ -3,6 +3,7 @@ import convertTime from "../../../utils/convertTime"
 import { handleGetFeed, handleGetFollowingPost } from "../../../services/request/postRequest"
 import { Result } from "../../../class"
 import { DISPLAY, ERRORS, TITLE } from "../../../constant"
+import { useNotify } from "../../../hooks/useNotify"
 export default function useHome(){
     const username = localStorage.getItem("username")
     const [posts, setPosts] = useState([])
@@ -13,6 +14,7 @@ export default function useHome(){
     const [feedHasMore, setFeedHasMore] = useState(true)
     const [followingHasMore, setFollowingHasMore] = useState(true)
     const cursor = useRef(null)
+    const notify = useNotify()
     
     const [tag, setTag] = useState(0)
     
@@ -33,6 +35,7 @@ export default function useHome(){
     // Get feed
     const getFeed = useCallback(async () => {
         if(loadingForFeed) return
+
         setLoadingForFeed(true)
         try{
             const response = await handleGetFeed()
@@ -52,10 +55,10 @@ export default function useHome(){
                 setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))}
             }
         catch(error){
-             const errorMessage =  error?.message || String(error)
-             setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null))}
+            const errorMessage =  error?.message || String(error)
+            notify.popup( TITLE.ERROR, errorMessage, null)}
         finally{setLoadingForFeed(false)}
-    },[loadingForFeed])
+    },[loadingForFeed, notify])
 
     // Get following posts
     const getFollowingPosts = useCallback(async ()=>{
@@ -74,13 +77,13 @@ export default function useHome(){
                 cursor.current = response.data.cursor
             }
             else if (response.status === 204){setFollowingHasMore(false)}
-            else{setResult( new Result(DISPLAY.POPUP, TITLE.ERROR, response.message, null))}
+            else{notify.popup(TITLE.ERROR, response.message)}
         }
         catch (error){
             const errorMessage =  error?.message || String(error)
-            setResult(new Result(DISPLAY.POPUP, TITLE.ERROR, errorMessage, null))}
+            setResult(notify.popup(TITLE.ERROR, errorMessage))}
         finally{setLoadingForFollow(false)}
-    },[loadingForFollow, followingHasMore])
+    },[loadingForFollow, followingHasMore, notify])
 
     return{
         getFollowingPosts,

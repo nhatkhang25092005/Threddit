@@ -5,26 +5,24 @@ import BoxContent from "../../../components/common/BoxContent";
 import BlockContent from "../../../components/common/BlockContent";
 import {TEXT, DISPLAY, ROUTES} from "../../../constant/"
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import PopupNotification from "../../../components/common/PopupNotification";
 import useInfiniteScroll  from "../../../hooks/useInfiniteScroll.js"
-import Post from "../../../components/common/Post.jsx";
+import Post from "../../../components/common/Post/Post.jsx";
 export default function ClientPage() {
   const navigate = useNavigate()
   const {
-    loading, 
-    clientName, 
-    error, 
-    follower, 
-    following, 
-    posts, 
-    follow, 
+    loading,
+    clientName,
+    error,
+    follower,
+    following,
+    posts,
+    follow,
     hasMore,
     btnLoading,
     getCreatedPost,
     handlePostResult,
     handlePostUpdate,
-    postFollow, 
+    postFollow,
     postUnFollow,
     } = useClientPage()
 
@@ -34,12 +32,8 @@ export default function ClientPage() {
       onLoadMore:getCreatedPost
     })
 
-    const [open, setOpen] = useState(false)
-    useEffect(()=>{if(error?.type === DISPLAY.POPUP) setOpen(true)},[error])
-
   return (
     <>
-    <PopupNotification open={open} onClose={()=>setOpen(false)} title={error?.title} content={error?.message}/>
       <Column customStyle={{ pt: "1rem", width:"60%", mx:"auto", mb:"3rem" }}>
         <Typography variant="h6" fontWeight={"bold"}>{TEXT.CLIENT_PAGE}{clientName}</Typography>
 
@@ -54,11 +48,11 @@ export default function ClientPage() {
                   </Box>
                 </Box>
                 <Box sx={{p:"10px",display:"flex", justifyContent:"end"}} flex={1}>
-                  <Button 
+                  <Button
                     disabled = {error?.type === DISPLAY.DISABLE ? true : false} 
-                    loadingPosition="start" 
-                    loadingIndicator={"..."} 
-                    loading={btnLoading} 
+                    loadingPosition="start"
+                    loadingIndicator={"..."}
+                    loading={btnLoading}
                     onClick={follow ? postUnFollow : postFollow} 
                     variant={follow? "darker":"contained"} 
                     sx={{width:"fit-content"}}>
@@ -67,25 +61,29 @@ export default function ClientPage() {
                     </Button>
                   </Box>
             </Box>
-        </BoxContent> 
+        </BoxContent>
 
         {/* client's posts */}
         <BoxContent>
-          {posts.length > 0   
-          ? posts.map((item,index )=>(
+          {posts.length > 0
+          ? posts.map((post,index)=>(
             <Post
-              location={ROUTES.CLIENT_PAGE + `/${clientName}`}
+              key={`client_${index}`}
               onNavigate
-              key={item.id}
-              item={item}
-              index={index}
-              createdPostsLength={posts.length}
-              onPostUpdatedRendering={handlePostUpdate}
-              onResult={handlePostResult}
-              isOwner = {false}
+              post={post}
+              config={{
+                isOwner:false,
+                totalPosts:posts.length,
+                location:ROUTES.CLIENT_PAGE + `/${clientName}`,
+                index:index
+              }}
+              handlers={{
+                onResult:handlePostResult,
+                onPostUpdate:handlePostUpdate
+              }}
             />
           ))
-          : 
+          :
           <BlockContent customStyle={{display:"flex", flexDirection:"row", mx:"auto"}}>
             <Typography>{TEXT.NO_POST_CLIENT}</Typography>
           </BlockContent>

@@ -6,14 +6,13 @@ import BlockContent from "../../../components/common/BlockContent";
 import useInfiniteScroll from "../../../hooks/useInfiniteScroll";
 import { useEffect, useState } from "react";
 import CustomTabPanel from "../../../components/common/CustomTabPanel"
-import PopupNotification from "../../../components/common/PopupNotification"
-import Post from "../../../components/common/Post"
+import Post from "../../../components/common/Post/Post"
 import { useParams } from "react-router-dom";
 import PostDetail from "../../post/page/PostDetail";
 import { useNavigate } from "react-router-dom";
 
 function allyProps(index) {
-  return {  
+  return {
     id: `simple-tab-${index}`,
     'aria-controls': `simple-tabpanel-${index}`,
   };
@@ -28,7 +27,6 @@ export default function Home() {
     getFeed,
     updateRender,
     followingPosts,
-    result,
     getFollowingPosts,
     followingHasMore,
     feedHasMore,
@@ -52,9 +50,6 @@ export default function Home() {
     setTag(newValue);
     setValue(newValue);
   }
-
-  const [open, setOpen] = useState(false)
-  useEffect(()=>{if(result?.type === DISPLAY.POPUP) setOpen(true)},[result])
   
   const [openDetail, setOpenDetail] = useState(false)
   
@@ -66,7 +61,6 @@ export default function Home() {
         setOpenDetail(false)
         navigate("..", { replace: true, relative: "path" });
       }}/>}
-      <PopupNotification open={open} onClose={()=>setOpen(false)} content={result?.message} title={result?.title} />
       <Column customStyle={{ pt: "0rem" }}>
         <Typography variant="title">Threddit</Typography>
 
@@ -105,15 +99,18 @@ export default function Home() {
               posts.length !== 0
               ? posts.map((post, index) => (
                 <Post
-                  showPin = {false}
-                  location={ROUTES.HOME}
-                  onNavigate
-                  key={`feed_${post.id}`}
-                  isOwner={false}
-                  item={post}
-                  index={index}
-                  createdPostsLength={posts.length}
-                  onPostUpdatedRendering={updateRender}
+                  config={{
+                    isOwner:false,
+                    showPin:false,
+                    location:ROUTES.HOME,
+                    index:index,
+                    totalPosts:posts.length,
+                    key:`feed_${post.id}`
+                  }}
+                  handlers = {{
+                    onPostUpdate: updateRender
+                  }}
+                  post={post}
                 />))
               : <BlockContent customStyle={{ display: "flex", flexDirection: "row", mx: "auto", p: "2rem" }}>
                   <Typography sx={{ textAlign: "center" }}>{TEXT.NO_FEED}</Typography>

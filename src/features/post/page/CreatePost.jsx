@@ -1,8 +1,5 @@
 import { Box, Typography, TextField, Button } from "@mui/material";
 import useCreatePost from "../hooks/useCreatePost";
-import { useEffect, useState } from "react";
-import PopupNotification from "../../../components/common/PopupNotification";
-import { DISPLAY } from "../../../constant";
 import BlockContent from "../../../components/common/BlockContent";
 import Column from "../../../components/layout/Column";
 import useMention from "../hooks/useMention";
@@ -10,13 +7,8 @@ import MentionList from "../../../components/common/MentionList";
 
 const username = localStorage.getItem("username");
 export default function CreatePost({ onPost, onExit }) {
-  const { result, content, setContent, loading, handlePost } = useCreatePost();
+  const { content, setContent, loading, handlePost } = useCreatePost();
 
-  // popup modal controller
-  const [open, setOpen] = useState(false);
-  useEffect(() => {
-    if (result?.type === DISPLAY.POPUP) setOpen(true);
-  }, [result]);
 
 const {inputRef, showList, list, setShowList} = useMention(content);
 
@@ -54,12 +46,6 @@ const handleSelectMention = (username) => {
 
   return (
     <>
-      <PopupNotification
-        open={open}
-        onClose={() => setOpen(false)}
-        title={result?.title}
-        content={result?.message}
-      />
       {/* <TopBar title="Tìm kiếm" onLogin={() => alert("Login")} /> */}
       <Column customStyle={{ pt: "7rem" }}>
         <BlockContent

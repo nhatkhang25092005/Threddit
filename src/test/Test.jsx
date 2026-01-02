@@ -1,69 +1,42 @@
-import { useState } from "react";
-import Post from "../components/common/Post";
-import DetailPost from "../features/post/page/PostDetail";
-import {Button} from "@mui/material"
-const data1 =  
-    {
-        "id": 39,
-        "author": {
-          "id": "6bdee0ed-eda7-40f5-8d64-1fd245f6ad77",
-          "email": "nhatkhang25092005@gmail.com",
-          "username": "Zesk2509"
-        },
-        "content": "ne.",
-        "isPinned": false,
-        "createdAt": "2025-10-26T03:07:44.661Z",
-        "updatedAt": "2025-11-11T00:25:29.711Z",
-        "mentionedUser": [],
-        "isUpvote": null,
-        "isSave": true,
-        "commentNumber": 0,
-        "saveNumber": 4,
-        "upvoteNumber": 2,
-        "downvoteNumber": 2
-      }
-const data2 = {
-        "id": 37,
-        "author": {
-          "id": "6bdee0ed-eda7-40f5-8d64-1fd245f6ad77",
-          "email": "nhatkhang25092005@gmail.com",
-          "username": "Zesk2509"
-        },
-        "content": "Ngủ trưa là nghệ thuật, mà tôi là nghệ sĩ chân chính.",
-        "isPinned": false,
-        "createdAt": "2025-10-26T03:07:44.661Z",
-        "updatedAt": "2025-11-11T00:29:29.936Z",
-        "mentionedUser": [],
-        "isUpvote": null,
-        "isSave": false,
-        "commentNumber": 0,
-        "saveNumber": 3,
-        "upvoteNumber": 2,
-        "downvoteNumber": 2
-      }
-function handleUpdateRendering(update){
-    console.log(update)
-}
- 
-function handleResult(result){
-    console.log("Result test", result)
-}
+import Surface from "../components/common/Surface";
+import {Typography, TextField, Box, Button} from '@mui/material'
+import ThemeToggleBtn from '@/components/common/button/ThemeToggleBtn'
+import { useInput } from "../hooks/useInput";
+import { useEffect, useState } from "react";
+import RowRadioInput from '../components/common/input/RowRadioInput'
+
+const fields = [
+  { value: "male", label: "Male" },
+  { value: "female", label: "Female" },
+  { value: "other", label: "Other" },
+]
 
 export default function Test(){
-  const [open, setOpen] = useState(false)
+  const [form, handleChange] = useInput({email:'',gender:''})
+  const [err, setErr] = useState(false)
 
-    return (<>
-        {/* <Post
-            onResult={handleResult}
-            sx={{width:"50%", mx:"auto",mt:"4rem"}}
-            item={data1}
-            index={1}
-            createdPostsLength={1}
-            isOwner = {true}
-            onPostUpdatedRendering = {handleUpdateRendering}
-        />
-         */}
-        <Button onClick={()=>setOpen(prev=>!prev)}>Open</Button>
-        <DetailPost onOpen={open} onClose={()=>setOpen(false)} post={data1}/>
-    </>)
+  useEffect(()=>console.log(form),[form])
+
+  const loginSimulate = (form) => {
+    if(form.email === 'false'){
+      setErr(true)
+    }
+    else setErr(false)
+  }
+  return (
+    <div style={{height:'100vh'}}>
+      <Surface variant="auth">
+        <Box sx={{display:'flex', flexDirection:'column'}}>
+          <ThemeToggleBtn/>
+          <Typography variant="normal">Normal text</Typography>
+          <Typography variant="title">Login</Typography>
+          <TextField variant='standard' name="email" onChange={handleChange} value={form.email} label="email" helperText={err ? 'error' : null} error = {err}/>
+          <RowRadioInput value={form.gender} name={'test'} fields={fields} onChange={handleChange} />
+          <Button
+            variant="primary"
+            onClick={()=>loginSimulate(form)}>Login</Button>
+        </Box>
+      </Surface>
+    </div>
+  )
 }
