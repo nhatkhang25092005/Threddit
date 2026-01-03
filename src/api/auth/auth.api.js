@@ -17,5 +17,8 @@ export const authApi = {
   },
   google(payload){
     return axios.post(import.meta.env.VITE_API_GOOGLE, payload)
+  },
+  resend_code(payload){
+    return axios.post(import.meta.env.VITE_API_RESEND, payload)
   }
 }

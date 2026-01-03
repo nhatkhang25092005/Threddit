@@ -26,8 +26,6 @@ const GoogleIcon = () => (
   </svg>
 );
 
-
-
 function GoogleLoginWrapper() {
   const notify = useNotify()
   const login = useGoogleLogin({

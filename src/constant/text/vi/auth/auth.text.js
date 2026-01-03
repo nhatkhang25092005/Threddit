@@ -51,6 +51,9 @@ export const AUTH_TEXT = {
     title:'Xác minh tài khoản',
     description:"Vui lòng nhập mã chúng tôi đã gửi đến email của bạn. Sau khi xác minh thành công, tài khoản này sẽ chính thức được đăng kí",
     submit:"Xác minh",
+    resend_ask:"Bạn chưa nhận được mã?",
+    resend_send:'Gửi lại mã',
+    resend_countdown : (second)=>(`Đã gửi lại mã! Gửi lại sau ${second}s`),
     error:{
       pattern_email:'Email không hợp lệ'
     },
@@ -82,16 +85,5 @@ export const AUTH_TEXT = {
       pattern_password:"Mật khẩu phải bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt, tối thiểu 8 ký tự",
       not_match:'Mật khẩu không khớp',
     }
-  },
-  verify_success:{
-
-  },
-
-  reset_password:{
-
-  },
-  
-  reset_success:{
-
   },
 }

@@ -18,5 +18,11 @@ export const style = {
     width: '100%',
     textTransform: 'none',
     padding: '12px'
-  }
+  },
+  resend:{
+    display:'flex',
+    flexDirection:'row',
+    gap:1,
+    mx:'auto'
+  },
 }
