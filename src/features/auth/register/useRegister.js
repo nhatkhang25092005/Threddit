@@ -3,6 +3,7 @@ import {modal} from "../../../constant/text/vi/modal"
 import {useInput} from '../../../hooks/useInput'
 import { useNotify } from "../../../hooks/useNotify";
 import { registerService } from "./register.service";
+import {isFormFilled} from '../helper/isFormFilled'
 
 export default function useRegister(onNavigate) {
   const [validate, setValidate] = useState(null);
@@ -18,6 +19,7 @@ export default function useRegister(onNavigate) {
   })
 
   const handleSubmit = async () => {
+    if(!isFormFilled(form)) return
     setValidate(null)
     const response = await notify.withLoading(()=>registerService(form))
     if(!response.success){

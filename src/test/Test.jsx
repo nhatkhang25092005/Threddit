@@ -4,11 +4,27 @@ import ThemeToggleBtn from '@/components/common/button/ThemeToggleBtn'
 import { useInput } from "../hooks/useInput";
 import { useEffect, useState } from "react";
 import RowRadioInput from '../components/common/input/RowRadioInput'
-
+import MoreInfoMenu from '../components/layout/Main/components/PositionedMenu'
+import Ok from '../components/common/button/Ok'
 const fields = [
   { value: "male", label: "Male" },
   { value: "female", label: "Female" },
   { value: "other", label: "Other" },
+]
+
+const tasks = [
+  {
+    label:'alert hello',
+    func: () => {
+      alert('hello')
+    }
+  },
+  {
+    label:'alert Zesk',
+    func: () => {
+      alert('Zesk')
+    }
+  }
 ]
 
 export default function Test(){
@@ -24,7 +40,7 @@ export default function Test(){
     else setErr(false)
   }
   return (
-    <div style={{height:'100vh'}}>
+    <div style={{height:'100vh', display:'flex'}}>
       <Surface variant="auth">
         <Box sx={{display:'flex', flexDirection:'column'}}>
           <ThemeToggleBtn/>
@@ -36,6 +52,13 @@ export default function Test(){
             variant="primary"
             onClick={()=>loginSimulate(form)}>Login</Button>
         </Box>
+        <MoreInfoMenu tasks={tasks}/>
+      </Surface>
+      <Ok type={1}/>
+      <Surface>
+        <Typography>
+          Hello
+        </Typography>
       </Surface>
     </div>
   )

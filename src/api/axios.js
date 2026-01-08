@@ -11,7 +11,7 @@ axiosClient.interceptors.response.use(
   (error) => {
     if (error?.response?.status === 401) {
       console.warn("Session expired (401), redirecting to login...");
-      window.location.href = "/auth/login";
+      window.location.href = "/auth";
     }
     return Promise.reject(error);
   }

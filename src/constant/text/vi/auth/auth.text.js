@@ -22,7 +22,7 @@ export const AUTH_TEXT = {
       username:'Username',
       email:'Email',
       display_name:'Tên hiển thị',
-      password:'Mật khẩu: 4 - 64 kí tự',
+      password:'Mật khẩu: chữ hoa, chữ thường, số, ký tự đặc biệt, tối thiểu 8 ký tự',
       repass:'Nhập lại mật khẩu',
       gender:'Giới tính',
       male:'Nam',

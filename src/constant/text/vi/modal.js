@@ -3,7 +3,9 @@ export const modal = {
     error:'Lỗi',
     notification:"Thông báo",
     success:{
-      verify:"Xác minh thành công"
+      verify:"Xác minh thành công",
+      update_password:"Thay đổi mật khẩu thành công",
+      delete_account:"Yêu cầu xóa tài khoản thành công"
     }
   },
   button:{

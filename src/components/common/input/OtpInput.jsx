@@ -1,6 +1,9 @@
 import { MuiOtpInput } from "mui-one-time-password-input"
-
-export default function OtpInput({otp, onChange}){
+import { useThemeContext } from "../../../theme/ThemeContext"
+export default function OtpInput({otp, onChange, onKeyDown}){
+  const {mode} = useThemeContext()
+  const color = mode === 'light' ? '#000' : '#fff'
+  const focus = mode === 'light' ? "green" : "#fff837ff"
   return(
     <MuiOtpInput
       validateChar={(char)=>/^[0-9]$/.test(char)}
@@ -8,7 +11,7 @@ export default function OtpInput({otp, onChange}){
         type: "tel",
         slotProps: {
           input: {
-            color:'#fff',
+            color:'##ff',
             inputMode: "numeric",
             pattern: "[0-9]*",
             onKeyDown: (e) => {
@@ -21,16 +24,16 @@ export default function OtpInput({otp, onChange}){
           width: "100%",
           height: "100%",
           "& .MuiOutlinedInput-root": {
-            "& fieldset": { borderColor: "#fff" },
+            "& fieldset": { borderColor: color },
             width:'100%',
             height:'100%',
             "&:hover fieldset": { borderColor: "#7a7a7aff" },
-            "&.Mui-focused fieldset": { borderColor: "#fff837ff" },
+            "&.Mui-focused fieldset": { borderColor: focus },
           },
           input: {
             width:'100%',
             height:'100%',
-            color: "#fff",
+            color: color,
             textAlign: "center",
             fontSize: "20px",
           },
@@ -38,6 +41,7 @@ export default function OtpInput({otp, onChange}){
       }}
       length={6}
       value={otp}
+      onKeyDown={onKeyDown}
       onChange={(newValue)=>{
         onChange({
           target:{

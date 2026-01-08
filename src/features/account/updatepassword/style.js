@@ -1,0 +1,19 @@
+export const style = {
+  container:{
+    display:'flex',
+    flexDirection:'column',
+    alignItems:'center',
+    width:'35%',
+    gap:'2rem',
+    px:'3rem'
+  },
+  title:{
+    fontStyle:'italic',
+    fontWeight:'bold'
+  },
+  button:{
+    mt:'2.5rem',
+    width:'100%',
+    mb:'1rem'
+  }
+}

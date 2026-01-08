@@ -1,4 +1,4 @@
-import { 
+import {
   surfaceProps,
   textfieldProps,
   buttonProps,
@@ -7,29 +7,32 @@ import {
   formLabelProps,
   radioProps,
   pickerProps,
-  typographyProps
+  typographyProps,
+  menuProps
 } from './componentProps';
 export const componentsTheme = {
   dark:{
-    ...textfieldProps('dark'),
-    ...surfaceProps.dark,
+    ...textfieldProps,
+    ...surfaceProps,
     ...buttonProps,
     ...linkProps('dark'),
     ...dividerProps.dark,
     ...formLabelProps('dark'),
     ...radioProps('dark'),
     ...pickerProps('dark'),
-    ...typographyProps
+    ...typographyProps,
+    ...menuProps
   },
   light:{
-    ...textfieldProps('light'),
-    ...surfaceProps.light,
+    ...textfieldProps,
+    ...surfaceProps,
     ...buttonProps,
     ...linkProps('light'),
     ...dividerProps.light,
     ...formLabelProps('light'),
     ...radioProps('light'),
     ...pickerProps('light'),
-    ...typographyProps
+    ...typographyProps,
+    ...menuProps
   }
 };

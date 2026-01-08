@@ -4,25 +4,43 @@
  * @returns
  */
 
-import { Box, Tabs, Tab, Tooltip, Badge, Button } from "@mui/material";
-import CircleNotifications from "@mui/icons-material/CircleNotifications";
+import { Box, Badge,Paper } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useNotificationContext } from "../../hooks/useNotificationContext";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useState, useEffect, useRef } from "react";
+import { useNotificationContext } from "../../../hooks/useNotificationContext";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
-import HomeIcon from "../../assets/icons/home.svg?react";
-import SearchIcon from "../../assets/icons/search.svg?react";
-import AddIcon from "../../assets/icons/plus.svg?react";
-import NotifyIcon from "../../assets/icons/bell.svg?react";
-import MoreInfoMenu from "../common/MoreInfoMenu"
-import logo from "../../assets/icons/logo_dark.png"
+import HomeIcon from "../../../assets/icons/home.svg?react";
+import SearchIcon from "../../../assets/icons/search.svg?react";
+import AddIcon from "../../../assets/icons/plus.svg?react";
+import NotifyIcon from "../../../assets/icons/bell.svg?react";
+import PositionedMenu from "./components/PositionedMenu"
+import { style } from "./style";
+import {ThemeToggleBtn} from '../../common/button'
+import Logo from '../../common/Logo'
+
+import { useMenu } from "./hooks/useMenu";
+
+const EXTEND_WIDTH = '20vw'
+const COLLAPSE_WIDTH = '8vw'
+const DELAY = 300
+
+const useHoverEffect = () => {
+  const [expand, setExpand] = useState(false)
+  const hoverTime = useRef(null)
+  return {
+    expand, setExpand, hoverTime
+  }
+}
+
 export default function AppLayout({ customStyle }) {
+  const {expand, setExpand, hoverTime} = useHoverEffect()
   const navigate = useNavigate();
   const location = useLocation();
   const [value, setValue] = useState("add");
+
+  const menuTasks = useMenu()
 
   const { count } = useNotificationContext();
 
@@ -94,28 +112,27 @@ export default function AppLayout({ customStyle }) {
     currentTab ? setValue(currentTab) : setValue(null)
   }, [location.pathname]);
 
-  const style = {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    height: "100%",
-    width: "fit-content",
-    backgroundColor: "#0f0f0f",
-    borderRight: "1px solid #222",
-    position: "fixed",
-    left: 0,
-    top: 0,
-    zIndex:"20",
-    ...customStyle,
-  };
-
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
-      <Box sx={style}>
-        <img
-          src={logo}
-          style={{width:"70px",height:"70px"}}
-        />
+      <Paper
+        variant="navigate"
+        sx={{
+          width: expand ? EXTEND_WIDTH : COLLAPSE_WIDTH,
+          transition:'width 0.1s ease',
+          ...customStyle,
+        }}
+        onMouseEnter={()=>{
+          hoverTime.current = setTimeout(()=>{
+            setExpand(true)
+          }, DELAY)
+        }}
+
+        onMouseLeave = {()=>{
+          clearTimeout(hoverTime.current)
+          setExpand(false)
+        }}
+      >
+        <Logo size={'normal'} sx={style.logo}/>
         <BottomNavigation
           value={value || false}
           onChange={handleChange}
@@ -123,6 +140,7 @@ export default function AppLayout({ customStyle }) {
             flexDirection: "column",
             width: "100%",
             height: "70%",
+            alignItems:'flex-start',
             backgroundColor: "transparent",
             "& .MuiBottomNavigationAction-root": {
               minWidth: "auto",
@@ -149,9 +167,10 @@ export default function AppLayout({ customStyle }) {
             <BottomNavigationAction key={key} value={tab.value} icon={tab.icon} />
           ))}
         </BottomNavigation>
-        <MoreInfoMenu sx={{marginTop:"30px"}}/>
-      </Box>
-      <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+        <ThemeToggleBtn sx={{width:'fit-content'}}/>
+        <PositionedMenu sx={{marginTop:"30px"}} tasks={menuTasks} onClose = {()=>setExpand(false)}/>
+      </Paper>
+      <Box sx={{flexGrow: 1, overflow: "auto", height:'100%', pt:'2rem', display:'flex',justifyContent:'center'}}>
         <Outlet />
       </Box>
     </Box>

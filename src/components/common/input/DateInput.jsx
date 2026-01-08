@@ -8,12 +8,14 @@ export default function DateInput({
   value,
   onChange,
   name,
+  onKeyDown,
   sx
 }){
   return(
     <FormControl sx={sx}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
+          onKeyDown={onKeyDown}
           label={label}
           value={value ? dayjs(value) : null}
           onChange={(newValue)=>{

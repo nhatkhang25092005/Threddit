@@ -11,10 +11,29 @@ const BASE = {
 export const COLOR = {
   background:{
     surface:{
-      default:'transparent',
+      default:{
+        dark:{
+          bg:'rgba(255,255,255,0.2)',
+          shadow:'rgba(255, 255, 255, 0.4)'
+        },
+        light:{
+          bg:'rgba(0, 0, 0, 0.1)',
+          shadow:'rgba(58, 58, 58, 0.4)',
+        }
+      },
       auth:{
         dark:'rgba(255,255,255,0.2)',
         light:'rgba(156, 156, 156, 0.4)'
+      },
+      menu:{
+        default:{
+          dark:BASE.black,
+          light:BASE.light
+        }
+      },
+      navigate:{
+        dark:'rgba(255,255,255,0.2)',
+        light:'#dfdfdfff'
       }
     },
     main:{
@@ -65,7 +84,7 @@ export const COLOR = {
           dark:'rgba(0,0,0,0.25)',
           light:'rgba(0, 0, 0, 0.18)'
         }
-      }
+      },
     },
     google:{
       bg:BASE.white,
@@ -78,7 +97,25 @@ export const COLOR = {
         light:'#c2c2c2ff'
       },
       hover:'#cacacaff'
-    }
+    },
+    warning:{
+      dark:{
+        bg:'#FF7A7A',
+        shadow:'#000000',
+        text:'#383838ff'
+      },
+      light:{
+        bg:'#ff6c6cff',
+        shadow:'#787878ff',
+        text:'#ffffffff'
+      }
+    },
+    dialog:{
+        bg:{
+          dark:'rgba(0,0,0,0.2)',
+          light:'rgba(0, 0, 0, 0.05)'
+        }
+      }
   },
   textfield:{
     border:{
@@ -153,5 +190,13 @@ export const COLOR = {
   radio:{
     dark:BASE.white,
     light:BASE.black
+  },
+  shadow:{
+    menu:{
+      default:{
+        dark:BASE.black,
+        light:'#8e8e8eff'
+      }
+    }
   }
 }

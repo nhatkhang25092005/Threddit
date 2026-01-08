@@ -7,6 +7,7 @@ import GoogleAuthorize from '../../../components/google/GoogleAuthorize'
 
 import useRegister from './useRegister'
 import { isFormFilled } from '../helper/isFormFilled'
+import {keydown} from '../../../utils/keydown'
 
 const text = AUTH_TEXT.register
 const textFieldInputs = ['username', 'display_name','email','password','repass']
@@ -25,6 +26,7 @@ export default function Register({ onNavigate }) {
         {/* Fields */}
         {textFieldInputs.map(field=>(
           <TextField
+            onKeyDown={keydown.enter(handleSubmit,{preventDefault:true})}
             key={field}
             sx={registerStyles.textfield}
             variant='standard'
@@ -42,6 +44,7 @@ export default function Register({ onNavigate }) {
         <Box sx={registerStyles.gender_and_birth}>
           {/* gender */}
           <RowRadioInput
+            onKeyDown={keydown.enter(handleSubmit,{preventDefault:true})}
             sx={registerStyles.radio}
             label={text.label.gender}
             name={text.name.gender}
@@ -56,6 +59,7 @@ export default function Register({ onNavigate }) {
 
           {/* date of birth */}
           <DateInput
+            onKeyDown={keydown.enter(handleSubmit,{preventDefault:true})}
             sx={registerStyles.birth}
             label={text.label.date_of_birth}
             name={text.name.date_of_birth}

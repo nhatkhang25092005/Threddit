@@ -5,6 +5,7 @@ import OtpInput from '../../../components/common/input/OtpInput'
 import {isOtpFilled} from '../helper/isOtpFilled'
 import useVerifyAccount from './useVerifyAccount';
 import {style} from './verifyAccountStyle'
+import {keydown} from '../../../utils/keydown';
 const text = AUTH_TEXT.verify_account
 
 export default function VerifyAccount({onNavigate, email}){
@@ -18,10 +19,10 @@ export default function VerifyAccount({onNavigate, email}){
       <Typography variant='title' sx={style.title}>{text.title}</Typography>
 
       {/* Description */}
-      <Typography sx={{}}> {text.description} </Typography>
+      <Typography> {text.description} </Typography>
 
       {/* OTP Input */}
-      <OtpInput otp={otp.otp} onChange={onChange} />
+      <OtpInput onKeyDown={keydown.enter(submit,{preventDefault:true})} otp={otp.otp} onChange={onChange} />
 
       {/* Submit Button */}
       <Button
@@ -30,7 +31,7 @@ export default function VerifyAccount({onNavigate, email}){
         variant="primary"
         sx={style.button}
       >
-        {loading.submit ? null : text.submit}
+        {loading.submit ? '\u00A0' : text.submit}
       </Button>
       <Box sx={style.resend}>
         {countdown > 0

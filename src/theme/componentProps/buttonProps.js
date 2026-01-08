@@ -1,21 +1,4 @@
 import {COLOR} from '../color'
-
-const BASE = {
-  borderRadius:'50%',
-  width:"3rem",
-  minWidth : '3rem',
-  height:'3rem',
-  marginLeft:'auto',
-  marginRight:'auto',
-  padding:'0.8em',
-  marginTop:'auto',
-  '& svg':{
-    width: '2rem',
-    height: '2rem',
-    display: 'block'
-  }
-}
-
 export const buttonProps = {
   MuiButton:{
     variants:[
@@ -37,10 +20,40 @@ export const buttonProps = {
         props:{variant:'google'},
         style:({theme})=>({
           backgroundColor:COLOR.button.google.bg,
-          ...BASE,
+          borderRadius:'50%',
+          width:"3rem",
+          minWidth : '3rem',
+          height:'3rem',
+          marginLeft:'auto',
+          marginRight:'auto',
+          padding:'0.8em',
+          marginTop:'auto',
+          '& svg':{
+            width: '2rem',
+            height: '2rem',
+            display: 'block'
+          },
           boxShadow:`4px 4px 4px ${COLOR.button.google.shadow[theme.palette.mode]}`,
           '&:hover':{
             backgroundColor:COLOR.button.google.hover,
+          }
+        })
+      },
+      {
+        props:{variant:'warning'},
+        style:({theme})=>({
+          color:COLOR.button.warning[theme.palette.mode].text,
+          backgroundColor:COLOR.button.warning[theme.palette.mode].bg,
+          boxShadow:`4px 4px 4px ${COLOR.button.warning[theme.palette.mode].shadow}`,
+        })
+      },
+      {
+        props:{variant:'dialog'},
+        style:({theme})=>({
+          backgroundColor:COLOR.button.dialog.bg[theme.palette.mode],
+          transition:'transform 0.1s ease-in-out',
+          '&:hover':{
+            transform:'scale(1.02)'
           }
         })
       }

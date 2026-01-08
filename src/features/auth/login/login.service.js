@@ -9,7 +9,6 @@ export const loginService = async (form) => {
   }
 
   const payload = mapLoginPayload(form)
-  console.log(payload)
 
   try{
     const res = mapResponse(await authApi.login(payload))

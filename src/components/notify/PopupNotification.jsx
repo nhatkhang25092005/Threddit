@@ -1,9 +1,7 @@
 import { Modal, Box, Typography, Button, Backdrop, Fade } from "@mui/material";
-
 export default function PopupNotification({ open = false, onClose, title, content, btnTitle = null, onConfirm = null }) {
 
   const handleClick = () => {
-    console.log("hello?")
     onConfirm?.()
     onClose()
   }
@@ -21,7 +19,7 @@ export default function PopupNotification({ open = false, onClose, title, conten
           timeout: 500,
         },
       }}
-      sx={{ zIndex: 100, width:"100%", height:"100%" }}
+      sx={{ zIndex: 1600, width:"100%", height:"100%" }}
     >
       <Fade in={open}>
         <Box

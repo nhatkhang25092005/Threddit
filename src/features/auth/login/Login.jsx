@@ -4,6 +4,7 @@ import GoogleAuthorize from "../../../components/google/GoogleAuthorize";
 import { AUTH_TEXT } from "../../../constant/text/vi/auth";
 import { loginStyles } from "./loginStyles";
 import {isFormFilled} from '../helper/isFormFilled'
+import { keydown } from "../../../utils/keydown";
 
 export default function Login({onNavigate}) {
   // const {login, result} = useLogin()
@@ -22,6 +23,7 @@ export default function Login({onNavigate}) {
           helperText = {helperText?.['email']}
           error = {helperText?.['email']}
           value={form.email}
+          onKeyDown={keydown.enter(submit,{preventDefault:true})}
           label={AUTH_TEXT.login.email_field}
         />
         <TextField
@@ -31,6 +33,7 @@ export default function Login({onNavigate}) {
           name="password"
           helperText = {helperText?.['password']}
           error = {helperText?.['password']}
+          onKeyDown={keydown.enter(submit,{preventDefault:true})}
           value={form.password}
           label={AUTH_TEXT.login.password_field}
         />

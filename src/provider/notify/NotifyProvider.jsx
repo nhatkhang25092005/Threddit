@@ -15,7 +15,7 @@ function NotifyProvider({children}){
      * @param {*} message
      * @param {*} duration
      */
-    snackbar : (message = LABEL.NO_CONTENT, duration = 3000) => 
+    snackbar : (message = LABEL.NO_CONTENT, duration = 3000) =>
       createSnackbar({message,duration}, setNotif)
     ,
     /**
@@ -43,7 +43,7 @@ function NotifyProvider({children}){
     withLoading: async (task, plugin = notify.loading)=> await createWithLoading(task, plugin)
   }),[])
 
-  const close = () => setNotif({open:false})
+  const close = () => setNotif(prev => prev ? {...prev, open:false} : null)
 
   const NotifyComponent = notif && NOTIFY_MAP[notif.type]
   return(

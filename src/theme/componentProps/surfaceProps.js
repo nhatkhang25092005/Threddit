@@ -18,47 +18,41 @@ const baseDefaultProps = {
   height:'fit-content',
   width:'fit-content',
   padding:'1rem',
-  backgroundColor:'transparent'
 }
 
 export const surfaceProps = {
-  dark:{
-    MuiPaper:{
-      variants:[
-        {
-          props:{variant:'auth'},
-          style:{
-            ...baseAuthProps,
-            backgroundColor: COLOR.background.surface.auth.dark,
-          }
-        },
-        {
-          props:{variant:'default'},
-          style:{
-            border:'2px solid white',
-            ...baseDefaultProps
-          }
-        }
-      ]}
-    },
-
-  light:{
-    MuiPaper:{
+  MuiPaper:{
     variants:[
       {
         props:{variant:'auth'},
-        style:{
-          backgroundColor: COLOR.background.surface.auth.light,
-          ...baseAuthProps
-        }
+        style: ({theme}) => ({
+          ...baseAuthProps,
+          backgroundColor: COLOR.background.surface.auth[theme.palette.mode],
+        })
       },
       {
         props:{variant:'default'},
-        style:{
-          ...baseDefaultProps,
-          border:'black solid 2px',
-        }
+        style:({theme})=>({
+          backgroundColor:COLOR.background.surface.default[theme.palette.mode].bg,
+          boxShadow: `1px 1px 0px 2px ${COLOR.background.surface.default[theme.palette.mode].shadow}`,
+          ...baseDefaultProps
+        })
+      },
+      {
+        props:{variant:'navigate'},
+        style:({theme})=>({
+          backgroundColor:COLOR.background.surface.navigate[theme.palette.mode],
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flexStart",
+          height: "100%",
+          borderRadius:0,
+          left: 0,
+          top: 0,
+          position:'fixed',
+          zIndex:"20",
+        })
       }
-    ]}
+    ],
   }
 }

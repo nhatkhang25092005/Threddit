@@ -8,7 +8,14 @@ export const ROUTES = {
     CLIENT_PAGE : "/app/client",
     FOLLOW_LIST : "/app/follow",
     DETAIL_POST : '/app/post/detail',
-    HOME : "/app/home",
+    home : "/app/home",
     USER : "/app/user",
     SEARCH : "/app/search"
+}
+
+export const routes = {
+    auth:'/auth',
+    home:'/app/home',
+    account:'/app/account',
+    update_password:'/app/update_password'
 }

@@ -4,5 +4,5 @@ export const mapResponse = (res) => ({
   status_code: res?.status,
   status_text: res?.statusText,
   is_success: res?.status >= 200 && res?.status < 300,
-  data: res?.data
+  data: res?.data?.data
 })

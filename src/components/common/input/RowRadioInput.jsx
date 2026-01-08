@@ -4,11 +4,12 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 
-export default function RowRadioInput({sx, label, name, value, fields = [{value:null, label:null}], onChange}) {
+export default function RowRadioInput({sx,onKeyDown, label, name, value, fields = [{value:null, label:null}], onChange}) {
   return (
     <FormControl sx={sx}>
       <FormLabel>{label}</FormLabel>
       <RadioGroup
+        onKeyDown={onKeyDown}
         onChange={onChange}
         name={name}
         value={value}
