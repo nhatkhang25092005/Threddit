@@ -5,10 +5,12 @@ import Awake from "../features/Awake.jsx";
 import Auth from '../features/auth/Auth.jsx'
 import Test from "../test/Test.jsx";
 import { NotifyProvider } from "@/provider/notify/NotifyProvider.jsx";
+import { AuthProvider } from "../provider/AuthProvider.jsx";
 export default function AppRouter() {
   return (
     <BrowserRouter>
       <Awake />
+      <AuthProvider>
       <NotifyProvider>
         <Routes >
           {/* Default route */}
@@ -26,6 +28,7 @@ export default function AppRouter() {
           <Route path='/test' element = {<Test/>}/>
         </Routes>
       </NotifyProvider>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

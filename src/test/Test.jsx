@@ -1,11 +1,13 @@
 import Surface from "../components/common/Surface";
-import {Typography, TextField, Box, Button} from '@mui/material'
+import {Typography, TextField, Box, Button, Tab, Tabs} from '@mui/material'
 import ThemeToggleBtn from '@/components/common/button/ThemeToggleBtn'
 import { useInput } from "../hooks/useInput";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import RowRadioInput from '../components/common/input/RowRadioInput'
 import MoreInfoMenu from '../components/layout/Main/components/PositionedMenu'
 import Ok from '../components/common/button/Ok'
+import Notification from "../features/notification/components/Notification";
+import TabsController from "../components/layout/TabsController";
 const fields = [
   { value: "male", label: "Male" },
   { value: "female", label: "Female" },
@@ -27,11 +29,13 @@ const tasks = [
   }
 ]
 
+
 export default function Test(){
   const [form, handleChange] = useInput({email:'',gender:''})
   const [err, setErr] = useState(false)
 
-  useEffect(()=>console.log(form),[form])
+  // useEffect(()=>{notify.popup('hello','test')},[notify])
+
 
   const loginSimulate = (form) => {
     if(form.email === 'false'){
@@ -39,6 +43,15 @@ export default function Test(){
     }
     else setErr(false)
   }
+
+  const [updateDate, setUpdateDate] = useState(0)
+  const handleClick = () => {
+    setUpdateDate(prev=>prev+1)
+  }
+  const data  = useRef(updateDate)
+  useEffect(()=>{
+    console.log(data.current)
+    console.log(updateDate)},[updateDate])
   return (
     <div style={{height:'100vh', display:'flex'}}>
       <Surface variant="auth">
@@ -50,15 +63,18 @@ export default function Test(){
           <RowRadioInput value={form.gender} name={'test'} fields={fields} onChange={handleChange} />
           <Button
             variant="primary"
-            onClick={()=>loginSimulate(form)}>Login</Button>
+            onClick={()=>loginSimulate(form)}>Login
+          </Button>
+
+          <Button onClick={handleClick}>
+            Modal Custom Demo Open
+          </Button>
         </Box>
         <MoreInfoMenu tasks={tasks}/>
       </Surface>
       <Ok type={1}/>
+      <Typography>{data.current}</Typography>
       <Surface>
-        <Typography>
-          Hello
-        </Typography>
       </Surface>
     </div>
   )

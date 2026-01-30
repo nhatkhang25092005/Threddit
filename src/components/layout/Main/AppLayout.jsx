@@ -8,7 +8,6 @@ import { Box, Badge,Paper } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import { useNotificationContext } from "../../../hooks/useNotificationContext";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import HomeIcon from "../../../assets/icons/home.svg?react";
@@ -19,7 +18,8 @@ import PositionedMenu from "./components/PositionedMenu"
 import { style } from "./style";
 import {ThemeToggleBtn} from '../../common/button'
 import Logo from '../../common/Logo'
-
+import { routes } from "../../../constant";
+import PopoverNotification from "../../../features/notification/PopoverNotification";
 import { useMenu } from "./hooks/useMenu";
 
 const EXTEND_WIDTH = '20vw'
@@ -42,10 +42,7 @@ export default function AppLayout({ customStyle }) {
 
   const menuTasks = useMenu()
 
-  const { count } = useNotificationContext();
-
   const tabs = {
-    // Notification Tab
     home: {
       value: "home",
       path: "/app/home",
@@ -81,34 +78,31 @@ export default function AppLayout({ customStyle }) {
       value: "notification",
       path: "/app/notification",
       icon: (
-        <Badge
-          color="error"
-          max={99}
-          badgeContent={count}
-          invisible={count === 0}
-          overlap="circular"
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        >
-          <NotifyIcon fontSize="large" sx={{ color: "#fff" }} />
-        </Badge>
+        <PopoverNotification closeReason={location.pathname === '/app/notification'} disable = {location.pathname === '/app/notification'} onClose={()=>setExpand(false)}/>
       ),
     },
-    user: {
-      value: "user",
-      path: "/app/user",
+    profile: {
+      value: "profile",
+      path:routes.profile,
       icon: <PersonIcon fontSize="large" sx={{ color: "#fff" }} />,
     },
   };
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
-    navigate(tabs[newValue].path);
+    if(newValue === 'notification'){
+      clearTimeout(hoverTime.current) // Clear any pending hover expansion
+      setExpand(false) // Collapse immediately
+    }
+    else {
+      setValue(newValue)
+      navigate(tabs[newValue].path)
+    }
   };
 
   useEffect(() => {
     const currentTab = Object.keys(tabs).find((key) =>
-    location.pathname.startsWith(tabs[key].path)
-  );
+    location.pathname.startsWith(tabs[key].path))
+  
     currentTab ? setValue(currentTab) : setValue(null)
   }, [location.pathname]);
 
@@ -122,6 +116,8 @@ export default function AppLayout({ customStyle }) {
           ...customStyle,
         }}
         onMouseEnter={()=>{
+          const popover = document.querySelector('[role="tooltip"]') //
+          if(popover) return
           hoverTime.current = setTimeout(()=>{
             setExpand(true)
           }, DELAY)
@@ -136,42 +132,20 @@ export default function AppLayout({ customStyle }) {
         <BottomNavigation
           value={value || false}
           onChange={handleChange}
-          sx={{
-            flexDirection: "column",
-            width: "100%",
-            height: "70%",
-            alignItems:'flex-start',
-            backgroundColor: "transparent",
-            "& .MuiBottomNavigationAction-root": {
-              minWidth: "auto",
-              color: "#ffffffff",
-              "& svg": {
-                width: 40,
-                minWidth: "auto",
-                height: 40,
-                minHeight: "auto",
-                transition: "0.2s",
-                fill: "white", // ép màu trắng cho tất cả path
-              },
-              "&:hover svg": {
-                color: "#fff",
-                transform: "scale(1.5)",
-              },
-            },
-            "& .Mui-selected": {
-              bgcolor: "#bcbdbf39",
-            },
-          }}
+          sx={style.bottom_navigation}
+      
         >
           {Object.entries(tabs).map(([key, tab]) => (
-            <BottomNavigationAction key={key} value={tab.value} icon={tab.icon} />
+            <BottomNavigationAction key={key} value={tab.value} icon={tab.icon} disableRipple/>
           ))}
         </BottomNavigation>
         <ThemeToggleBtn sx={{width:'fit-content'}}/>
         <PositionedMenu sx={{marginTop:"30px"}} tasks={menuTasks} onClose = {()=>setExpand(false)}/>
       </Paper>
-      <Box sx={{flexGrow: 1, overflow: "auto", height:'100%', pt:'2rem', display:'flex',justifyContent:'center'}}>
-        <Outlet />
+      <Box sx={{flexGrow: 1, overflow: "auto", height:'100%', pt:'2rem'}}>
+        <Box sx={{ minHeight: '100%', pb: '4rem', mx:"auto" }}>
+          <Outlet />
+        </Box>
       </Box>
     </Box>
   );

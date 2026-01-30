@@ -1,6 +1,6 @@
 import {Paper} from '@mui/material'
 
-const variantList = ['auth', 'default']
+const variantList = ['auth', 'default', 'modal', 'card']
 
 const resolveVariant = (v) => {
   if(!variantList.includes(v)){

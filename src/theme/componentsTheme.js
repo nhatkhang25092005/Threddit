@@ -8,7 +8,8 @@ import {
   radioProps,
   pickerProps,
   typographyProps,
-  menuProps
+  menuProps,
+  tabsProps
 } from './componentProps';
 export const componentsTheme = {
   dark:{
@@ -21,7 +22,8 @@ export const componentsTheme = {
     ...radioProps('dark'),
     ...pickerProps('dark'),
     ...typographyProps,
-    ...menuProps
+    ...menuProps,
+    ...tabsProps
   },
   light:{
     ...textfieldProps,
@@ -33,6 +35,7 @@ export const componentsTheme = {
     ...radioProps('light'),
     ...pickerProps('light'),
     ...typographyProps,
-    ...menuProps
+    ...menuProps,
+    ...tabsProps
   }
 };

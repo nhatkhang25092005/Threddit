@@ -52,6 +52,24 @@ export const surfaceProps = {
           position:'fixed',
           zIndex:"20",
         })
+      },
+      {
+        props:{variant:'modal'},
+        style:({theme}) => ({
+          backgroundColor:COLOR.background.surface.modal[theme.palette.mode],
+          padding: '1rem 2rem',
+          width:'fit-content',
+          boxShadow:`0px 8px 24px ${COLOR.shadow.modal[theme.palette.mode]}`
+        })
+      },
+      {
+        props:{variant:'card'},
+        style:({theme})=>({
+          backgroundColor:'transparent',
+          boxShadow:`2px 2px 2px ${COLOR.shadow.card[theme.palette.mode]}`,
+          padding:'1rem 2rem',
+          border:`solid ${COLOR.border.surface.card[theme.palette.mode]} 2px`
+        })
       }
     ],
   }

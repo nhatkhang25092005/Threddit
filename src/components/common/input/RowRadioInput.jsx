@@ -21,6 +21,7 @@ export default function RowRadioInput({sx,onKeyDown, label, name, value, fields 
             key={field.value}
             value={field.value}
             control={<Radio/>}
+            checked = {value === field.value}
             label={field.label}
             sx={{
               '& .MuiFormControlLabel-label': {

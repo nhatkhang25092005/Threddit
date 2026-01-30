@@ -1,13 +1,16 @@
-import { useState, createContext, useMemo } from "react";
+import { useState, createContext, useMemo, createElement, useRef } from "react";
 import { NOTIFY_MAP, LABEL } from "./const";
 import createPopup from "./handlers/createPopup";
 import createSnackbar from './handlers/createSnackbar'
 import  createWithLoading from './handlers/createWithLoading'
 import createLoading from './handlers/createLoading'
+import createCustomModal from './handlers/createCustomModal'
+
 const NotifyContext = createContext(null)
 function NotifyProvider({children}){
 
   const [notif, setNotif] = useState(null)
+  const containerRef = useRef(null)
 
   const notify = useMemo(()=>({
     /**
@@ -40,8 +43,49 @@ function NotifyProvider({children}){
      * @param {function} plugin
      * @returns
      */
-    withLoading: async (task, plugin = notify.loading)=> await createWithLoading(task, plugin)
+    withLoading: async (task, plugin = notify.loading)=> await createWithLoading(task, plugin),
+  
+    /**
+     * Creates a custom modal with notification handling.
+     *
+     * @param {React.Component} component - A React component that will be rendered inside the modal.
+     * @returns {JSX.Element} The custom modal containing the provided component.
+     */
+    customModal: (component, props) => {
+      const currentContainerId = containerRef.current
+      createCustomModal(setNotif, createElement(component, props), currentContainerId)
+    },
+
+    container : {
+      register : (containerId) => {
+        console.log(containerId)
+        containerRef.current = containerId
+      },
+
+      unregister : (containerId) => {
+        console.log('unregister')
+        containerRef.current === containerId
+        ? containerRef.current = null
+        : undefined
+      }
+    }
+
   }),[])
+
+
+  const render = () => {
+  
+    if(!notif || !NotifyComponent) return
+    const element = (
+      <NotifyComponent
+        open = {notif.open}
+        onClose={close}
+        container = {notif?.containerId ? document.getElementById(notif.containerId) : undefined}
+        {...notif.props}
+      />
+    )
+    return element
+  }
 
   const close = () => setNotif(prev => prev ? {...prev, open:false} : null)
 
@@ -49,13 +93,7 @@ function NotifyProvider({children}){
   return(
     <NotifyContext.Provider value={{notify}}>
       {children}
-      {notif && NotifyComponent &&
-        <NotifyComponent
-          open = {notif.open}
-          {...notif.props}
-          onClose={close}
-        />
-      }
+      {render()}
     </NotifyContext.Provider>
   )
 }

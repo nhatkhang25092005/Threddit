@@ -1,6 +1,6 @@
 import { useEffect, useReducer } from "react";
 import { handleGetDetailPost } from "../../../services/request/postRequest";
-import convertTime from "../../../utils/convertTime";
+import {convertTime} from "../../../utils/formatDate";
 
 const initState = {
     post:null,

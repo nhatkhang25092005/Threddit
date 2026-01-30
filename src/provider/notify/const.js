@@ -1,11 +1,12 @@
 import LoadingScreen from "../../components/notify/LoadingScreen";
 import PopupNotification from "../../components/notify/PopupNotification";
 import SnakeBarNotification from "../../components/notify/SnakeBarNotification";
-
+import CustomModal from "../../components/notify/CustomModal";
 export const NOTIFY_MAP = {
   snackbar: SnakeBarNotification,
   popup: PopupNotification,
-  loading: LoadingScreen
+  loading: LoadingScreen,
+  customModal: CustomModal
 }
 
 export const LABEL = {

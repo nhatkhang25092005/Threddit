@@ -34,7 +34,11 @@ export const COLOR = {
       navigate:{
         dark:'rgba(255,255,255,0.2)',
         light:'#dfdfdfff'
-      }
+      },
+      modal:{
+        dark:'#4a4e4e',
+        light:'#FAFAFA'
+      },
     },
     main:{
       dark:BASE.black,
@@ -59,8 +63,8 @@ export const COLOR = {
     primary:{
       default:{
         bg:{
-        dark:BASE.white,
-        light:BASE.black,
+          dark:BASE.white,
+          light:BASE.black,
         },
         text:{
           dark:BASE.black,
@@ -85,6 +89,26 @@ export const COLOR = {
           light:'rgba(0, 0, 0, 0.18)'
         }
       },
+    },
+    secondary:{
+      bg:{
+        dark:'#686868',
+        light:'#969696'
+      },
+      text:{
+        dark:'#ffffff',
+        light:'#000000'
+      },
+      shadow:{
+        dark:'rgba(0,0,0,0.25)',
+        light:'rgba(0, 0, 0, 0.18)'
+      },
+      hover:{
+        bg:{
+          dark:'#949494',
+          light:'#d6d6d6'
+        }
+      }
     },
     google:{
       bg:BASE.white,
@@ -196,6 +220,32 @@ export const COLOR = {
       default:{
         dark:BASE.black,
         light:'#8e8e8eff'
+      }
+    },
+    modal:{
+      dark:'rgba(0, 0, 0, 0.6)',
+      light:'rgba(0, 0, 0, 0.15)'
+    },
+    card:{
+      dark:BASE.black,
+      light:'#858585'
+    }
+  },
+  tabs:{
+    indicator:{
+      dark:BASE.white,
+      light:BASE.black
+    },
+    text:{
+      dark:BASE.white,
+      light:BASE.black
+    }
+  },
+  border:{
+    surface:{
+      card:{
+        light:"#fff",
+        dark:'#727272'
       }
     }
   }

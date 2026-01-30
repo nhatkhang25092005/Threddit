@@ -1,113 +1,115 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useRef } from "react";
 
 /**
- * A custom React hook for implementing **infinite scroll** behavior.
+ * useInfiniteScroll
+ * -----------------
+ * A custom React hook that implements **infinite scrolling** using the
+ * `IntersectionObserver` API.
+ *
+ * The hook observes a target DOM element (usually a sentinel element placed
+ * at the end of a list). When the element enters the viewport, the provided
+ * `onLoadMore` callback is invoked to load additional data.
+ *
+ * This hook is designed to be safe against:
+ * - stale closures
+ * - duplicate fetch triggers
+ * - unnecessary re-renders
  *
  * ---
- * ## 📘 Description
- * This hook uses the `IntersectionObserver` API to detect when a target element
- * (usually the last item or a sentinel div at the bottom of a list)
- * becomes visible within the viewport.  
- * When that happens, it automatically calls the provided `onLoadMore` callback
- * to load additional content (e.g., fetch the next batch of data).
+ * ## Parameters
+ * @param {Object} options - Configuration object.
+ * @param {boolean} options.hasMore
+ *   Indicates whether more data is available.
+ *   If `false`, the observer will not be attached.
+ *
+ * @param {boolean} options.loading
+ *   Indicates whether a load operation is currently in progress.
+ *   Prevents the `onLoadMore` callback from being triggered multiple times.
+ *
+ * @param {Function} options.onLoadMore
+ *   Callback invoked when the target element intersects the viewport.
+ *   This function should handle fetching and appending additional data.
+ *
+ * @param {number} [options.threshold=0.1]
+ *   A value between `0` and `1` indicating how much of the target element
+ *   must be visible before triggering the callback.
+ *
+ * @param {string} [options.rootMargin="200px"]
+ *   Margin around the viewport used to trigger loading earlier or later.
+ *   Useful for preloading data before the user reaches the end.
  *
  * ---
- * ## ⚠️ Important
- * - The hook **must** receive a **single object** as an argument.
- * - All property names are **case-sensitive** and must match exactly:
- *   `{ hasMore, loading, onLoadMore, threshold, rootMargin }`.
- * - If you misspell a key (e.g. `loadmore` instead of `onLoadMore`),
- *   the hook will silently fail and not trigger the observer.
+ * ## Returns
+ * @returns {(node: HTMLElement | null) => void}
+ * A **callback ref** function.
+ * Attach this ref to the DOM element that should be observed.
+ *
+ * React will automatically call this function:
+ * - with a DOM node when the element is mounted
+ * - with `null` when the element is unmounted
  *
  * ---
- * ## 🧩 Parameters
- * @param {Object} options - Configuration object. **Required.**
- * @param {boolean} options.hasMore - Whether there’s more data to load.
- *   - If `false`, the observer will not activate.
- * @param {boolean} options.loading - Indicates whether data is currently being fetched.
- *   - Prevents multiple triggers while loading.
- * @param {Function} options.onLoadMore - Callback fired when the target enters the viewport.
- *   - Should handle loading and appending new data.
- * @param {number} [options.threshold=0.1] - How much of the target should be visible
- *   before triggering the callback (value between `0` and `1`).
- * @param {string} [options.rootMargin="200px"] - Margin around the viewport for early trigger.
- *   - Useful for preloading before the user reaches the end.
- *
- * ---
- * ##  Returns
- * @returns {React.RefObject<HTMLElement>} A React ref.
- * Attach this ref to the DOM element you want the observer to track.
- *
- * ---
- * ## 💡 Example
+ * ## Usage Example
  * ```jsx
- * import useInfiniteScroll from "./useInfiniteScroll";
+ * const targetRef = useInfiniteScroll({
+ *   hasMore,
+ *   loading,
+ *   onLoadMore: loadMore,
+ * });
  *
- * function PostList() {
- *   const [posts, setPosts] = useState([]);
- *   const [loading, setLoading] = useState(false);
- *   const [hasMore, setHasMore] = useState(true);
- *
- *   const loadMore = async () => {
- *     setLoading(true);
- *     const newPosts = await fetchNextPosts(); // Your fetch logic
- *     setPosts((prev) => [...prev, ...newPosts]);
- *     setHasMore(newPosts.length > 0);
- *     setLoading(false);
- *   };
- *
- *   // ✅ Always pass an object with correct key names
- *   const targetRef = useInfiniteScroll({
- *     hasMore,
- *     loading,
- *     onLoadMore: loadMore,
- *     threshold: 0.2,
- *     rootMargin: "150px"
- *   });
- *
- *   return (
- *     <div>
- *       {posts.map((post) => (
- *         <Post key={post.id} data={post} />
- *       ))}
- *       <div ref={targetRef} />
- *       {loading && <p>Loading...</p>}
- *     </div>
- *   );
- * }
+ * return (
+ *   <>
+ *     {items.map(item => (
+ *       <Item key={item.id} data={item} />
+ *     ))}
+ *     <div ref={targetRef} />
+ *   </>
+ * );
  * ```
  */
 
-
 export default function useInfiniteScroll({
-    hasMore,
-    loading,
-    onLoadMore,
-    threshold = 0.1,
-    rootMargin = "200px"
-}){
-    const targetRef = useRef(null)
-    const loadingRef = useRef(loading)
-    const onLoadMoreRef = useRef(onLoadMore)
-    useEffect(()=>{
-        loadingRef.current = loading
-    },[loading])
-    useEffect(()=>{
-        onLoadMoreRef.current = onLoadMore
-    },[onLoadMore])
-    useEffect(()=>{
-        if(!hasMore) return
-        const observer = new IntersectionObserver(
-            (entries)=>{
-                const target = entries[0]
-                if(target.isIntersecting && !loadingRef.current && typeof onLoadMoreRef.current === "function") {
-                    onLoadMoreRef.current()}
-            },
-            {threshold,rootMargin})
-        if(targetRef.current) observer.observe(targetRef.current)
-        return ()=>{
-            observer.disconnect()}
-    },[hasMore, threshold, rootMargin])
+  hasMore,
+  loading,
+  onLoadMore,
+  threshold = 0.1,
+  rootMargin = "200px",
+}) {
+  const observerRef = useRef(null);
+  const loadingRef = useRef(loading);
+  const onLoadMoreRef = useRef(onLoadMore);
 
-    return targetRef
+  loadingRef.current = loading;
+  onLoadMoreRef.current = onLoadMore
+
+  const targetRef = useCallback(
+    (node) => {
+      // clean observer
+      if (observerRef.current) observerRef.current.disconnect();
+
+      // check element and hasMore data
+      if (!node || !hasMore) return;
+
+      observerRef.current = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          if (
+            entry.isIntersecting &&
+            !loadingRef.current &&
+            typeof onLoadMoreRef.current === "function"
+          ) {
+            onLoadMoreRef.current();
+          }
+        },
+        { threshold, rootMargin },
+      );
+      observerRef.current.observe(node)
+      return () => {
+        observerRef.current.disconnect();
+      };
+    },
+    [hasMore, threshold, rootMargin],
+  );
+
+  return targetRef;
 }

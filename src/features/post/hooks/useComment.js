@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { handleGetComments, handlePostComment } from "../../../services/request/commentRequest";
-import convertTime from "../../../utils/convertTime";
+import {convertTime} from "../../../utils/formatDate";
 import { extractUsernames } from "../../../utils/extractUsernames";
 
 const initState = {

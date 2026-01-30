@@ -1,5 +1,4 @@
 import {useState, useEffect, useCallback, useRef} from "react"
-import convertTime from "../../../utils/convertTime"
 import { handleGetFeed, handleGetFollowingPost } from "../../../services/request/postRequest"
 import { Result } from "../../../class"
 import { DISPLAY, ERRORS, TITLE } from "../../../constant"
@@ -43,8 +42,6 @@ export default function useHome(){
                 const posts = Array.isArray(response.data) ? response.data : []
                 const convertedTimeList = posts.map(post=>({
                     ...post,
-                    createdAt : convertTime(post.createdAt),
-                    updatedAt : convertTime(post.updatedAt)
                 }))
                 setPosts(prev=>[...prev,...convertedTimeList])
             }
@@ -70,8 +67,6 @@ export default function useHome(){
                 const posts = Array.isArray(response.data.posts) ? response.data.posts : []
                 const convertedTimeList = posts.map(post=>({
                     ...post,
-                    createdAt : convertTime(post.createdAt),
-                    updatedAt : convertTime(post.updatedAt)
                 }))
                 setFollowingPosts(prev => [...prev, ...convertedTimeList])
                 cursor.current = response.data.cursor

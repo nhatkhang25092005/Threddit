@@ -1,6 +1,6 @@
 import { useEffect, useState, createContext, useContext } from "react";
 import { useParams } from "react-router-dom";
-import convertTime from "../utils/convertTime";
+import {convertTime} from "../utils/formatDate";
 
 const CommentContext = createContext()
 

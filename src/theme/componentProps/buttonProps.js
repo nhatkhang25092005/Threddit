@@ -17,6 +17,18 @@ export const buttonProps = {
         })
       },
       {
+        props:{variant:'secondary'},
+        style:({theme})=>({
+          textTransform:'none',
+          backgroundColor:COLOR.button.secondary.bg[theme.palette.mode],
+          color:COLOR.button.secondary.text[theme.palette.mode],
+          boxShadow:`4px 4px 4px ${COLOR.button.secondary.shadow[theme.palette.mode]}`,
+          '&:hover':{
+            backgroundColor:COLOR.button.secondary.hover.bg[theme.palette.mode],
+          }
+        })
+      },
+      {
         props:{variant:'google'},
         style:({theme})=>({
           backgroundColor:COLOR.button.google.bg,

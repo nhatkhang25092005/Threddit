@@ -17,5 +17,7 @@ export const routes = {
     auth:'/auth',
     home:'/app/home',
     account:'/app/account',
-    update_password:'/app/update_password'
+    update_password:'/app/update_password',
+    profile:'/app/profile',
+    notification:'/app/notification'
 }
