@@ -19,6 +19,15 @@ export const ACTIONS = {
   UPDATE_DISPLAY_NAME_LOADING:'update_display_name_loading',
   UPDATE_DISPLAY_NAME_SUCCESS:'update_display_name_success',
 
+  // Folloư
+  FOLLOW_LOADING: 'follow_loading',
+  FOLLOW_SUCCESS: 'follow_success',
+
+  UNFOLLOW_LOADING: 'unfollow_loading',
+  UNFOLLOW_SUCCESS: 'unfollow_success',
+
+  // Friend
+  SET_FRIEND_STATUS: 'set_friend_status',
 }
 
 export const setProfile = (profileData) => ({
@@ -84,4 +93,29 @@ export const editDisplaynameLoading = (isLoading) => ({
 export const editDisplaynameSuccess = (newDisplayname) => ({
   type:ACTIONS.UPDATE_DISPLAY_NAME_SUCCESS,
   payload:newDisplayname
+})
+
+// Follow
+export const followLoading = (isLoading) => ({
+  type: ACTIONS.FOLLOW_LOADING,
+  payload: isLoading
+})
+
+export const followSuccess = () => ({
+  type: ACTIONS.FOLLOW_SUCCESS
+})
+
+export const unfollowLoading = (isLoading) => ({
+  type: ACTIONS.UNFOLLOW_LOADING,
+  payload: isLoading
+})
+
+export const unfollowSuccess = () => ({
+  type: ACTIONS.UNFOLLOW_SUCCESS
+})
+
+// Friend status
+export const setFriendStatus = (status) => ({
+  type: ACTIONS.SET_FRIEND_STATUS,
+  payload: status
 })

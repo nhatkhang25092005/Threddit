@@ -2,35 +2,35 @@ import { useEffect, useCallback, useRef } from "react"
 import { useNotify } from '../../../hooks/useNotify'
 import { services } from "../services"
 import { modal } from '../../../constant/text/vi/modal'
-import { follower, loading, hasMore, resetFollow } from "../actions"
+import { following, loading, hasMore, resetFollow } from "../actions"
 import { shouldRetry } from "../../../utils/shouldRetry"
 
-export function useGetFollowers(dispatch, username){
+export function useGetFollowings(dispatch, username){
   const notify = useNotify()
   const cursor = useRef(null)
   const abortRef = useRef(null)
   const retryRef = useRef(0)
   const REFETCH_LIMIT = 3
 
-  const getFollowers = useCallback(async () => {
+  const getFollowings = useCallback(async () => {
 
     // ===== abort previous request =====
     abortRef.current?.abort()
     abortRef.current = new AbortController()
 
     const response = await notify.withLoading(
-      () => services.getFollowers(username, cursor.current, abortRef.current.signal),
-      (bool) => dispatch(loading.getFollower(bool))
+      () => services.getFollowings(username, cursor.current, abortRef.current.signal),
+      (bool) => dispatch(loading.getFollowing(bool))
     )
-
 
     if(response.code === 'ERR_CANCELED') return
 
     if(response.success){
-      if(response.data.followerList.length == 0){
-        dispatch(hasMore.follower(false))
+      if(response.data.followingList.length === 0){
+        dispatch(hasMore.following(false))
       }
-      dispatch(follower.setList(response.data.followerList))
+
+      dispatch(following.setList(response.data.followingList))
       retryRef.current = 0
       cursor.current = response.data.cursor
       return
@@ -39,7 +39,7 @@ export function useGetFollowers(dispatch, username){
     // ===== backoff retry =====
     if(shouldRetry(response) && retryRef.current < REFETCH_LIMIT){
       retryRef.current += 1
-      setTimeout(() => getFollowers(), 300 * retryRef.current)
+      setTimeout(() => getFollowings(), 300 * retryRef.current)
       return
     }
 
@@ -51,15 +51,15 @@ export function useGetFollowers(dispatch, username){
 
 
   useEffect(()=>{
-    cursor.current = null
+    cursor.current = null,
     retryRef.current = 0
-    dispatch(resetFollow.followerList())
-    getFollowers()
+    dispatch(resetFollow.followingList())
+    getFollowings()
     // ===== abort when unmount =====
     return () => abortRef.current?.abort()
-  },[getFollowers, dispatch, username])
+  },[getFollowings, username, dispatch])
 
   return{
-    getFollowers
+    getFollowings
   }
 }

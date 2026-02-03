@@ -1,3 +1,11 @@
+import { ACTION_CLASS } from "./actions"
+
+import { followerHandler } from './handlers/follower'
+import { followingHandler } from './handlers/following'
+import { hasMoreHandler } from './handlers/hasmore'
+import { loadingHandler } from './handlers/loading'
+import { resetHandler } from './handlers/reset.js'
+
 export const initState = {
   followerList: [],
   followingList: [],
@@ -15,113 +23,27 @@ export const initState = {
   }
 }
 
+
 export const reducer = (state, action) => {
-  switch(action.type) {
+  switch (action.classType) {
 
-    // ===== SET DATA =====
-    case 'SET_FOLLOWERS':
-      return {
-        ...state,
-        followerList: action.payload
-      }
+    case ACTION_CLASS.FOLLOWER:
+      return followerHandler(state, action)
 
-    case 'SET_FOLLOWING':
-      return {
-        ...state,
-        followingList: action.payload
-      }
+    case ACTION_CLASS.FOLLOWING:
+      return followingHandler(state, action)
 
-    // ===== ADD =====
-    case 'ADD_FOLLOWER':
-      return {
-        ...state,
-        followerList: [action.payload, ...state.followerList]
-      }
+    case ACTION_CLASS.HAS_MORE:
+      return hasMoreHandler(state, action)
 
-    case 'ADD_FOLLOWING':
-      return {
-        ...state,
-        followingList: [action.payload, ...state.followingList]
-      }
+    case ACTION_CLASS.LOADING:
+      return loadingHandler(state, action)
 
-    // ===== HAS MORE =====
-    case 'SET_HAS_MORE_FOLLOWER':
-      return {
-        ...state,
-        hasMore: {
-          ...state.hasMore,
-          follower: action.payload
-        }
-      }
-
-    case 'SET_HAS_MORE_FOLLOWING':
-      return {
-        ...state,
-        hasMore: {
-          ...state.hasMore,
-          following: action.payload
-        }
-      }
-
-    // ===== REMOVE =====
-    case 'REMOVE_FOLLOWER':
-      return {
-        ...state,
-        followerList: state.followerList.filter(
-          item => item.id !== action.payload
-        )
-      }
-
-    case 'REMOVE_FOLLOWING':
-      return {
-        ...state,
-        followingList: state.followingList.filter(
-          item => item.id !== action.payload
-        )
-      }
-
-    // ===== LOADING =====
-    case 'GET_FOLLOWER_LOADING':
-      return {
-        ...state,
-        loading: {
-          ...state.loading,
-          get_follower: action.payload
-        }
-      }
-
-    case 'GET_FOLLOWING_LOADING':
-      return {
-        ...state,
-        loading: {
-          ...state.loading,
-          get_following: action.payload
-        }
-      }
-
-    case 'START_FOLLOW_LOADING':
-      return {
-        ...state,
-        loading: {
-          ...state.loading,
-          start_follow: action.payload
-        }
-      }
-
-    case 'CANCEL_FOLLOW_LOADING':
-      return {
-        ...state,
-        loading: {
-          ...state.loading,
-          cancel_follow: action.payload
-        }
-      }
-
-    // ===== RESET =====
-    case 'RESET_FOLLOW':
-      return initState
+    case ACTION_CLASS.RESET:
+      return resetHandler(state,action)
 
     default:
       return state
   }
 }
+

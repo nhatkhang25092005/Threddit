@@ -59,7 +59,26 @@ export const style = {
         textTransform:'none',
         '&:hover':{bgcolor:'#d8d8d8'}
       },
-
+      follow_button:{
+        btn_container:{
+          my:'auto',
+          height:'fit-content',
+          textTransform:'none',
+          py:0,
+          maxWidth:'100%',
+          width:'auto',
+          ml:2,
+          minWidth:'unset',
+          whiteSpace: 'nowrap',
+          alignItems: 'center',
+        },
+        content_box:{
+          alignItems: 'center',
+          display: 'inline-flex',
+          gap: 1,
+          whiteSpace: 'nowrap'
+        }
+      },
       edit_button:{
         height:'fit-content',
         width:'7rem',

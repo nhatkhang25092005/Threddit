@@ -1,8 +1,9 @@
 import { mapResponse, mapErrResponse } from '../../api/helper'
 // import { delay } from '../../utils/delaySimulator'
 import { followApi } from '../../api/follow/follow.api'
+import { follower } from './actions'
 
-export const services = {
+const api = {
 
   // ===== COUNT =====
   getFollowCount: async () => {
@@ -32,9 +33,9 @@ export const services = {
   },
 
   // ===== FOLLOWERS =====
-  getFollowers: async (cursor, signal) => {
+  getFollowers: async (username = null, cursor, signal) => {
     try {
-      const response = mapResponse(await followApi.getFollowers(cursor, signal))
+      const response = mapResponse(await followApi.getFollowers(username, cursor, signal))
       return {
         success: response.is_success,
         message: response.message,
@@ -59,9 +60,9 @@ export const services = {
   },
 
   // ===== FOLLOWINGS =====
-  getFollowings: async () => {
+  getFollowings: async (username, cursor, signal) => {
     try {
-      const response = mapResponse(await followApi.getFollowings())
+      const response = mapResponse(await followApi.getFollowings(username, cursor, signal))
       return {
         success: response.is_success,
         message: response.message,
@@ -113,29 +114,43 @@ export const services = {
   },
 
   // ===== ACTIONS =====
-  follow: async (username) => {
+   // Follower a user
+  followUser: async (username) => {
     try {
-      const response = mapResponse(await followApi.follow(username))
+      const res = mapResponse(await followApi.follow(username))
       return {
-        success: response.is_success,
-        message: response.message,
-        data: response.data
+        success: res.is_success,
+        message: res.message,
+        data: res.data
       }
-    } catch (e) {
-      return mapErrResponse(e)
+    } catch (err) {
+      return mapErrResponse(err)
     }
   },
 
-  unfollow: async (username) => {
+  // Unfollow a user
+  unfollowUser: async (username) => {
     try {
-      const response = mapResponse(await followApi.unfollow(username))
+      const res = mapResponse(await followApi.unfollow(username))
       return {
-        success: response.is_success,
-        message: response.message,
-        data: response.data
+        success: res.is_success,
+        message: res.message,
+        data: res.data
       }
-    } catch (e) {
-      return mapErrResponse(e)
+    } catch (err) {
+      return mapErrResponse(err)
     }
-  },
+  }
+}
+
+const domain = {
+  createSyncFollow:(dispatch) => ({
+    addFollower: (user) => dispatch(follower.add(user)),
+    removeFollower: (user) => dispatch(follower.remove(user)),
+  })
+}
+
+export const services = {
+  ...api,
+  ...domain
 }

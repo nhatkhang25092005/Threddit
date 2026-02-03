@@ -29,7 +29,7 @@ export default function useLogin() {
       notify.popup(modal.title.error,res.message)
     }
     else{
-      setUser(res.data.username)
+      setUser(res.data)
       navigate(routes.account,{replace:true})
     }
   }

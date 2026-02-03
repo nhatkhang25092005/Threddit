@@ -1,17 +1,13 @@
-import { Box, Avatar, Typography } from '@mui/material';
+import { Box, Avatar, Typography, Button, useTheme } from '@mui/material';
 import Surface from "./Surface";
-import HorizonMenu from './button/HorizonMenu';
-
-const DEFAULT_TASKS = [
-  { label: 'test1', func: () => alert('hello') }
-];
 
 export default function UserCard({
+  relationStatus  = false,
   avatar = null,
-  togetherFriendNum = null,
   username = 'username',
-  tasks = DEFAULT_TASKS
+  tasks = null
 }) {
+  const theme = useTheme().palette.mode
   return (
     <Surface
       variant="card"
@@ -28,22 +24,24 @@ export default function UserCard({
         <Typography variant="subtitle1" sx={styles.username}>
           {username}
         </Typography>
-        {togetherFriendNum !== null && (
-          <Typography variant="body2" sx={styles.subText}>
-            {togetherFriendNum}
-          </Typography>
-        )}
       </Box>
 
-      {/* Menu */}
-      <HorizonMenu tasks={tasks} />
-    </Surface>
+      {tasks && <Button variant='dialog' sx={styles.button(relationStatus, theme)} onClick={tasks.func}>{tasks.label}</Button>}    </Surface>
   );
 }
 
 /* ================= STYLES ================= */
 
 const styles = {
+  button:(relationStatus, theme)=>({
+    height:'fit-content',
+    fontSize:'12px',
+    textTransform: 'none',
+    ...(relationStatus && {
+      border: `1px solid ${theme === "dark" ? "#d3d3d3" : "#a7a7a7"}`,
+      bgcolor: theme === "dark" ? "#595959" : "#f4f4f4",
+    }),
+  }),
   card: {
     display: 'flex',
     flexDirection: 'row',
@@ -57,7 +55,6 @@ const styles = {
     alignSelf: 'stretch',
   },
   avatar: {
-    bgcolor: 'red',
     width: 56,
     height: 56,
     flexShrink: 0,

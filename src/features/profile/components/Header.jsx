@@ -6,6 +6,7 @@ import CreateFeedBtn from "./CreateFeedBtn"
 import BackgroundImage from './BackgroundImage'
 import {memo} from 'react'
 import EditInfoButton from './EditInfoButton'
+import FollowBtn from './FollowBtn'
 const sx=style.header
 const Header = memo(function Header(){
   return(
@@ -15,6 +16,7 @@ const Header = memo(function Header(){
         <ProfileAvatar />
         <BaseInfo/>
         <CreateFeedBtn/>
+        <FollowBtn/>
         <EditInfoButton/>
       </Box>
     </Box>

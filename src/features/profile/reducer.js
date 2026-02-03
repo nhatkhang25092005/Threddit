@@ -4,6 +4,7 @@ const textDefault = profile.default
 export const initState = {
   displayName: textDefault.display_name,
   dateOfBirth: textDefault.date_of_birth,
+  username:null,
   gender: textDefault.gender,
   email: textDefault.email,
   friendNumber:textDefault.num_of_friends,
@@ -13,12 +14,15 @@ export const initState = {
   backgroundImageUrl: textDefault.background_image_url,
   educationalLevel:'',
   relationshipStatus:'',
+  friendshipStatus:null,
+  isFollowing:false,
   loading:{
     get_profile:false,
     update_background_image:false,
     update_avatar:false,
     update_profile:false,
-    update_displayname:false
+    update_displayname:false,
+    follow:false
   }
 }
 
@@ -32,6 +36,7 @@ export const reducer = (state, action) => {
         displayName:action.payload.displayName,
         dateOfBirth:action.payload.dateOfBirth,
         gender:action.payload.gender,
+        username:action.payload.username,
         email:action.payload.email,
         avatarUrl:action.payload.avatarUrl,
         backgroundImageUrl:action.payload.backgroundImageUrl,
@@ -39,7 +44,9 @@ export const reducer = (state, action) => {
         followingNumber:action.payload.followingNumber,
         friendNumber:action.payload.friendNumber,
         educationalLevel:action.payload.educationalLevel,
-        relationshipStatus:action.payload.relationshipStatus
+        relationshipStatus:action.payload.relationshipStatus,
+        isFollowing: action.payload.isFollowing,
+        friendshipStatus: action.payload.friendshipStatus
       }
     }
       
@@ -133,5 +140,39 @@ export const reducer = (state, action) => {
         ...state,
         avatarUrl:`${action.payload}?t=${Date.now()}`
       }
+
+    // Follow
+    case ACTIONS.FOLLOW_LOADING:
+    case ACTIONS.UNFOLLOW_LOADING:
+      return {
+        ...state,
+        loading:{
+          ...state.loading,
+          follow: action.payload
+        }
+      }
+
+    case ACTIONS.FOLLOW_SUCCESS:
+      return {
+        ...state,
+        isFollowing: true,
+        followerNumber: state.followerNumber + 1
+      }
+
+    case ACTIONS.UNFOLLOW_SUCCESS:
+      return {
+        ...state,
+        isFollowing: false,
+        followerNumber: Math.max(0, state.followerNumber - 1)
+      }
+
+    // Friend
+    case ACTIONS.SET_FRIEND_STATUS:
+      return {
+        ...state,
+        friendshipStatus: action.payload
+      }
+    
+    default: return state
   }
 }

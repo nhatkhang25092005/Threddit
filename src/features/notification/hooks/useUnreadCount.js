@@ -24,7 +24,6 @@ export function useUnreadCount(dispatch){
     if (response?.code === 'ERR_CANCELED') return
 
     if (response.success) {
-      console.log(response)
       dispatch(unreadCountActions.setUnreadCount(response.data))
       retryRef.current = 0
       return

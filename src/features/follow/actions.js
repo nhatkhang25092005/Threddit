@@ -1,104 +1,167 @@
-// ================= TYPES =================
-export const FOLLOW_TYPES = {
-  // ===== DATA =====
-  SET_FOLLOWERS: 'SET_FOLLOWERS',
-  SET_FOLLOWING: 'SET_FOLLOWING',
-  ADD_FOLLOWER: 'ADD_FOLLOWER',
-  ADD_FOLLOWING: 'ADD_FOLLOWING',
-  REMOVE_FOLLOWER: 'REMOVE_FOLLOWER',
-  REMOVE_FOLLOWING: 'REMOVE_FOLLOWING',
+// ================= ACTION CLASS =================
+export const ACTION_CLASS = {
+  FOLLOWER: 'FOLLOWER',
+  FOLLOWING: 'FOLLOWING',
+  HAS_MORE: 'HAS_MORE',
+  LOADING: 'LOADING',
+  RESET: 'RESET'
+}
 
-  // ===== LOADING =====
-  GET_FOLLOWER_LOADING: 'GET_FOLLOWER_LOADING',
-  GET_FOLLOWING_LOADING: 'GET_FOLLOWING_LOADING',
-  START_FOLLOW_LOADING: 'START_FOLLOW_LOADING',
-  CANCEL_FOLLOW_LOADING: 'CANCEL_FOLLOW_LOADING',
+// ================= FOLLOWER TYPES =================
+export const FOLLOWER_TYPES = {
+  SET_LIST: 'SET_LIST',
+  ADD: 'ADD',
+  REMOVE: 'REMOVE',
+  UPDATE_CAN_FOLLOW: 'UPDATE_CAN_FOLLOW'
+}
 
-  // ===== HAS MORE =====
-  SET_HAS_MORE_FOLLOWER:'SET_HAS_MORE_FOLLOWER',
-  SET_HAS_MORE_FOLLOWING:'SET_HAS_MORE_FOLLOWING',
+// ================= FOLLOWING TYPES =================
+export const FOLLOWING_TYPES = {
+  SET_LIST: 'SET_LIST',
+  ADD: 'ADD',
+  REMOVE: 'REMOVE'
+}
 
-  // ===== RESET =====
-  RESET_FOLLOW: 'RESET_FOLLOW',
+// ================= HAS MORE TYPES =================
+export const HAS_MORE_TYPES = {
+  FOLLOWER: 'FOLLOWER',
+  FOLLOWING: 'FOLLOWING'
+}
+
+// ================= LOADING TYPES =================
+export const LOADING_TYPES = {
+  GET_FOLLOWER: 'GET_FOLLOWER',
+  GET_FOLLOWING: 'GET_FOLLOWING',
+  FOLLOW: 'FOLLOW',
+  CANCEL_FOLLOW: 'CANCEL_FOLLOW'
+}
+
+export const RESET_TYPES = {
+  ALL: 'RESET/ALL',
+
+  FOLLOWER: 'RESET/FOLLOWER_LIST',
+  FOLLOWING: 'RESET/FOLLOWING_LIST',
+
+  HAS_MORE: 'RESET/HAS_MORE',
+  LOADING: 'RESET/LOADING'
 }
 
 
 // ================= FOLLOWER ACTIONS =================
 export const follower = {
-  // ---- data ----
   setList: (data) => ({
-    type: FOLLOW_TYPES.SET_FOLLOWERS,
+    classType: ACTION_CLASS.FOLLOWER,
+    type: FOLLOWER_TYPES.SET_LIST,
     payload: data
   }),
 
   add: (user) => ({
-    type: FOLLOW_TYPES.ADD_FOLLOWER,
+    classType: ACTION_CLASS.FOLLOWER,
+    type: FOLLOWER_TYPES.ADD,
     payload: user
   }),
 
-  remove: (id) => ({
-    type: FOLLOW_TYPES.REMOVE_FOLLOWER,
-    payload: id
+  remove: (user) => ({
+    classType: ACTION_CLASS.FOLLOWER,
+    type: FOLLOWER_TYPES.REMOVE,
+    payload: user
   }),
 
-  // ---- loading ----
-  setLoadingGet: (bool) => ({
-    type: FOLLOW_TYPES.GET_FOLLOWER_LOADING,
-    payload: bool
-  }),
-
-  // ---- reset ----
-  reset: () => ({
-    type: FOLLOW_TYPES.RESET_FOLLOW
-  }),
-
-  setHasMoreFollower: (bool)=>({ type:FOLLOW_TYPES.SET_HAS_MORE_FOLLOWER, payload:bool })
+  updateCanFollow: (username, canFollow) => ({
+    classType:ACTION_CLASS.FOLLOWER,
+    type: FOLLOWER_TYPES.UPDATE_CAN_FOLLOW,
+    payload: { username, canFollow }
+  })
 }
 
 
 // ================= FOLLOWING ACTIONS =================
 export const following = {
-  // ---- data ----
   setList: (data) => ({
-    type: FOLLOW_TYPES.SET_FOLLOWING,
+    classType: ACTION_CLASS.FOLLOWING,
+    type: FOLLOWING_TYPES.SET_LIST,
     payload: data
   }),
 
   add: (user) => ({
-    type: FOLLOW_TYPES.ADD_FOLLOWING,
+    classType: ACTION_CLASS.FOLLOWING,
+    type: FOLLOWING_TYPES.ADD,
     payload: user
   }),
 
-  remove: (id) => ({
-    type: FOLLOW_TYPES.REMOVE_FOLLOWING,
-    payload: id
-  }),
-
-  // ---- loading ----
-  setLoadingGet: (bool) => ({
-    type: FOLLOW_TYPES.GET_FOLLOWING_LOADING,
-    payload: bool
-  }),
-
-  // ---- reset ----
-  reset: () => ({
-    type: FOLLOW_TYPES.RESET_FOLLOW
-  }),
-  setHasMoreFollowing: (bool)=>({ type:FOLLOW_TYPES.SET_HAS_MORE_FOLLOWING, payload:bool })
-
+  remove: (user) => ({
+    classType: ACTION_CLASS.FOLLOWING,
+    type: FOLLOWING_TYPES.REMOVE,
+    payload: user
+  })
 }
 
-
-// ================= FOLLOW ACTIONS =================
-export const followAction = {
-  // ---- loading ----
-  startLoading: (bool) => ({
-    type: FOLLOW_TYPES.START_FOLLOW_LOADING,
+export const hasMore = {
+  follower: (bool) => ({
+    classType: ACTION_CLASS.HAS_MORE,
+    type: HAS_MORE_TYPES.FOLLOWER,
     payload: bool
   }),
 
-  cancelLoading: (bool) => ({
-    type: FOLLOW_TYPES.CANCEL_FOLLOW_LOADING,
+  following: (bool) => ({
+    classType: ACTION_CLASS.HAS_MORE,
+    type: HAS_MORE_TYPES.FOLLOWING,
+    payload: bool
+  })
+}
+
+export const loading = {
+  getFollower: (bool) => ({
+    classType: ACTION_CLASS.LOADING,
+    type: LOADING_TYPES.GET_FOLLOWER,
     payload: bool
   }),
+
+  getFollowing: (bool) => ({
+    classType: ACTION_CLASS.LOADING,
+    type: LOADING_TYPES.GET_FOLLOWING,
+    payload: bool
+  }),
+
+  follow: (bool) => ({
+    classType: ACTION_CLASS.LOADING,
+    type: LOADING_TYPES.FOLLOW,
+    payload: bool
+  }),
+
+  cancelFollow: (bool) => ({
+    classType: ACTION_CLASS.LOADING,
+    type: LOADING_TYPES.CANCEL_FOLLOW,
+    payload: bool
+  })
+}
+
+export const resetFollow = {
+  // ===== reset all =====
+  all: () => ({
+    classType: ACTION_CLASS.RESET,
+    type: RESET_TYPES.ALL
+  }),
+
+  // ===== reset lists =====
+  followerList: () => ({
+    classType: ACTION_CLASS.RESET,
+    type: RESET_TYPES.FOLLOWER
+  }),
+
+  followingList: () => ({
+    classType: ACTION_CLASS.RESET,
+    type: RESET_TYPES.FOLLOWING
+  }),
+
+  // ===== reset flags =====
+  hasMore: () => ({
+    classType: ACTION_CLASS.RESET,
+    type: RESET_TYPES.HAS_MORE
+  }),
+
+  loading: () => ({
+    classType: ACTION_CLASS.RESET,
+    type: RESET_TYPES.LOADING
+  })
 }

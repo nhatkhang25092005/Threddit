@@ -57,5 +57,10 @@ export const profile = {
   notify:{
     update_bio_success:'Chỉnh sửa thông tin giới thiệu thành công!',
     update_displayname_success:"Chỉnh sửa tên hiển thị thành công"
+  },
+
+  tab_label:{
+    profile:"Bài viết",
+    follow:'Theo dõi'
   }
 }

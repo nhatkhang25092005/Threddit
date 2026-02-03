@@ -9,8 +9,14 @@ import {
 } from '../../api/profile/profile.map'
 import { mapResponse, mapErrResponse } from '../../api/helper'
 
+import {
+  followLoading,
+  followSuccess,
+  unfollowSuccess,
+} from "./actions"
 
-export const services = {
+
+const api = {
   getProfileInfo : async (username) => {
     try{
       const res = mapResponse(await profileApi.get_profile(username))
@@ -122,5 +128,26 @@ export const services = {
     catch(e){
       return mapErrResponse(e)
     }
-  }
+  },
+}
+
+const domain = {
+  createFollowSync : (dispatch) => {
+    return {
+      setFollowLoading(bool) {
+        dispatch(followLoading(bool))
+      },
+      followSuccess() {
+        dispatch(followSuccess())
+      },
+      unfollowSuccess() {
+        dispatch(unfollowSuccess())
+      },
+    }
+  },
+}
+
+export const services = {
+  ...api,
+  ...domain
 }

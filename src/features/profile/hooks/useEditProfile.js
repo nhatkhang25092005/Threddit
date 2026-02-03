@@ -36,6 +36,7 @@ export function useEditProfile(dispatch){
       notify.snackbar(profile.notify.update_displayname_success, 3000)
     }
     else notify.popup(modal.title.error, res.message)
+    return form.displayName
   },[notify, dispatch])
 
   return{
