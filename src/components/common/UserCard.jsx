@@ -5,13 +5,19 @@ export default function UserCard({
   relationStatus  = false,
   avatar = null,
   username = 'username',
-  tasks = null
+  tasks = null,
+  onClick
 }) {
   const theme = useTheme().palette.mode
+  const isClickable = typeof onClick === 'function'
   return (
     <Surface
       variant="card"
-      sx={styles.card}
+      sx={{
+        ...styles.card,
+        cursor:isClickable ? 'pointer': 'default'
+      }}
+      onClick = {onClick}
     >
       {/* Avatar */}
       <Avatar

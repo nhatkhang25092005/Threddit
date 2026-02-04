@@ -5,10 +5,13 @@ import { useFollowContext } from '../hooks/useFollowContext'
 import useAuth from "../../../hooks/useAuth"
 import EmptyListUI from "./EmptyListUI"
 import LoadingUI from "./LoadingUI"
+import { useNavigate } from "react-router-dom"
+import {routes} from '../../../constant/routes'
 
 /* ===================== UI ===================== */
 
 function FollowerListUI({ followerList, toggleFollow, actorName }) {
+  const navigate = useNavigate()
   return (
     <Grid container spacing={2} width="100%">
       {followerList.map(({ follower, canFollow }) => (
@@ -19,6 +22,7 @@ function FollowerListUI({ followerList, toggleFollow, actorName }) {
           sx={{ display: "flex", width: "49%" }}
         >
           <UserCard
+            onClick={()=>navigate(`${routes.profile}/${follower.username}`)}
             avatar={follower.avatarUrl}
             username={follower.displayName}
             relationStatus={canFollow}
