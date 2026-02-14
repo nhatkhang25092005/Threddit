@@ -9,7 +9,6 @@ export async function orchestrate({
     onStart.forEach(fn => fn())
 
     const response = await service()
-    console.log(response)
 
     // success phase
     onSuccess.forEach(fn => fn(response))

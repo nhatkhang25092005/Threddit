@@ -18,8 +18,8 @@ function NotifyProvider({children}){
      * @param {*} message
      * @param {*} duration
      */
-    snackbar : (message = LABEL.NO_CONTENT, duration = 3000) =>
-      createSnackbar({message,duration}, setNotif)
+    snackbar : (message = LABEL.NO_CONTENT, duration = 3000, type='success') =>
+      createSnackbar({message, duration, type}, setNotif)
     ,
     /**
      * Show a Popup modal onto the screen

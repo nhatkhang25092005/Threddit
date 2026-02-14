@@ -3,7 +3,8 @@ export const profile = {
   hard_text:{
     follower:" người theo dõi ",
     following:" đang theo dõi",
-    friend:" người bạn"
+    friend:" người bạn",
+    mutual:' bạn chung'
   },
   default:{
     display_name:'Chưa có thông tin',
@@ -61,6 +62,7 @@ export const profile = {
 
   tab_label:{
     profile:"Bài viết",
-    follow:'Theo dõi'
+    follow:'Theo dõi',
+    friend:'Bạn bè'
   }
 }

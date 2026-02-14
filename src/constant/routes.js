@@ -21,3 +21,12 @@ export const routes = {
     profile:'/app/profile',
     notification:'/app/notification'
 }
+
+export const routeState = {
+  profile:{
+    friends:{
+      friendList:'tab=friends',
+      
+    }
+  }
+}

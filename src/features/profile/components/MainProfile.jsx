@@ -14,7 +14,7 @@ import { mapping } from '../../../utils/mapping';
 
 const sx = style.body.main_profile
 const MainProfile = memo(function MainProfile(){
-  const {state, actions} = useProfileContext()
+  const {state, actions, isOwner} = useProfileContext()
   function Field ({field, data}){
     if(data)
       return (
@@ -53,9 +53,9 @@ const MainProfile = memo(function MainProfile(){
           <Field field={profile.bio.relationship} data={mapping.RELATIONSHIP_MAP[state.relationshipStatus]}/>
         </Box>
 
-        <Button variant='primary' sx={sx.button} onClick={()=>actions.modalManager.openModal('edit_bio')}>
+        {isOwner && <Button variant='primary' sx={sx.button} onClick={()=>actions.modalManager.openModal('edit_bio')}>
           {profile.bio.button}
-        </Button>
+        </Button>}
       </Surface>
       {/* Posts-build later */}
     </Box>

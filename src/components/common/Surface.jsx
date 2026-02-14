@@ -13,7 +13,11 @@ const resolveVariant = (v) => {
 export default function Surface({variant = 'default', children, sx = {}, onClick}){
   let variantKey = resolveVariant(variant)
   return(
-    <Paper variant={variantKey} sx={sx} onClick = {onClick}>
+    <Paper
+      variant={variantKey}
+      sx={sx}
+      onClick = {onClick}
+    >
       {children}
     </Paper>
   )

@@ -139,7 +139,17 @@ export const COLOR = {
           dark:'rgba(0,0,0,0.2)',
           light:'rgba(0, 0, 0, 0.05)'
         }
+    },
+    outline:{
+      bg:{
+        dark:'#222222',
+        light:'#eae9e9'
+      },
+      border:{
+        dark:'#fff',
+        light:'#767676'
       }
+    }
   },
   textfield:{
     border:{

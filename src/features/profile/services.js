@@ -13,6 +13,11 @@ import {
   followLoading,
   followSuccess,
   unfollowSuccess,
+  increaseFriendNumber,
+  decreaseFriendNumber,
+  setFriendStatus,
+  setMutualNumber,
+  setMutualNumberLoading,
 } from "./actions"
 
 
@@ -132,19 +137,19 @@ const api = {
 }
 
 const domain = {
-  createFollowSync : (dispatch) => {
-    return {
-      setFollowLoading(bool) {
-        dispatch(followLoading(bool))
-      },
-      followSuccess() {
-        dispatch(followSuccess())
-      },
-      unfollowSuccess() {
-        dispatch(unfollowSuccess())
-      },
-    }
-  },
+  createFollowSync : (dispatch) => ({
+    setFollowLoading(bool){ dispatch(followLoading(bool)) },
+    followSuccess(){ dispatch(followSuccess()) },
+    unfollowSuccess(){ dispatch(unfollowSuccess()) },
+  }),
+
+  createFriendSync : (dispatch) => ({
+    increaseFriendNumber(){ dispatch(increaseFriendNumber()) },
+    decreaseFriendNumber(){ dispatch(decreaseFriendNumber()) },
+    setFriendStatus(status){ dispatch(setFriendStatus(status)) },
+    setMutualNumber(number){ dispatch(setMutualNumber(number)) },
+    setMutualNumberLoading(loading){ dispatch(setMutualNumberLoading(loading)) }
+  }),
 }
 
 export const services = {

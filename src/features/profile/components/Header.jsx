@@ -8,6 +8,7 @@ import {memo} from 'react'
 import EditInfoButton from './EditInfoButton'
 import FollowBtn from './FollowBtn'
 import { useProfileContext } from '../hooks'
+import FriendButton from './FriendButton'
 const sx=style.header
 const Header = memo(function Header(){
   const {isOwn} = useProfileContext()
@@ -18,8 +19,9 @@ const Header = memo(function Header(){
         <ProfileAvatar />
         <BaseInfo/>
         <CreateFeedBtn/>
+        <FriendButton/>
         <FollowBtn/>
-        {isOwn &&<EditInfoButton/>}
+        {isOwn && <EditInfoButton/>}
       </Box>
     </Box>
   )

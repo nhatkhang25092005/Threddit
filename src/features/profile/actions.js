@@ -28,6 +28,12 @@ export const ACTIONS = {
 
   // Friend
   SET_FRIEND_STATUS: 'set_friend_status',
+  INCREASE_FRIEND_NUMBER: 'increase_friend_number',
+  DECREASE_FRIEND_NUMBER: 'decrease_friend_number',
+
+  // Mutual
+  SET_MUTUAL_NUMBER: 'set_mutual_number',
+  SET_MUTUAL_NUMBER_LOADING: 'set_mutual_number_loading'
 }
 
 export const setProfile = (profileData) => ({
@@ -118,4 +124,22 @@ export const unfollowSuccess = () => ({
 export const setFriendStatus = (status) => ({
   type: ACTIONS.SET_FRIEND_STATUS,
   payload: status
+})
+
+export const increaseFriendNumber = () => ({
+  type: ACTIONS.INCREASE_FRIEND_NUMBER
+})
+
+export const decreaseFriendNumber = () => ({
+  type: ACTIONS.DECREASE_FRIEND_NUMBER
+})
+
+export const setMutualNumber = (number) => ({
+  type: ACTIONS.SET_MUTUAL_NUMBER,
+  payload: number
+})
+
+export const setMutualNumberLoading = (loading) => ({
+  type:ACTIONS.SET_MUTUAL_NUMBER_LOADING,
+  payload:loading
 })

@@ -16,8 +16,10 @@ export const initState = {
   relationshipStatus:'',
   friendshipStatus:null,
   isFollowing:false,
+  mutualNumber:0,
   loading:{
     get_profile:false,
+    get_mutual_number:false,
     update_background_image:false,
     update_avatar:false,
     update_profile:false,
@@ -171,6 +173,33 @@ export const reducer = (state, action) => {
       return {
         ...state,
         friendshipStatus: action.payload
+      }
+
+    case ACTIONS.INCREASE_FRIEND_NUMBER:
+      return {
+        ...state,
+        friendNumber: state.friendNumber + 1
+      }
+
+    case ACTIONS.DECREASE_FRIEND_NUMBER:
+      return {
+        ...state,
+        friendNumber: Math.max(0, state.friendNumber - 1)
+      }
+
+    // mutual
+    case ACTIONS.SET_MUTUAL_NUMBER:
+      return {
+        ...state,
+        mutualNumber: action.payload
+      }
+
+    case ACTIONS.SET_MUTUAL_NUMBER_LOADING:
+      return{
+        ...state,
+        loading:{
+          get_mutual_number:action.payload
+        }
       }
     
     default: return state

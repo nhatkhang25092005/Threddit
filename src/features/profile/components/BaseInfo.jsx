@@ -5,7 +5,7 @@ import { profile } from "../../../constant/text/vi/profile.text"
 import Displayname from './Displayname'
 const sx = style.header.info_container
 export default function BaseInfo(){
-  const {state} = useProfileContext()
+  const {state, isOwner} = useProfileContext()
   const loading = state.loading.get_profile
 
   function Loading(){
@@ -22,7 +22,7 @@ export default function BaseInfo(){
     return(
       <Box>
         <Displayname/>
-        <Typography fontSize={13}>{state.friendNumber}{profile.hard_text.friend}</Typography>
+        <Typography fontSize={13}>{state.friendNumber}{profile.hard_text.friend}{isOwner ? null : `- ${state.mutualNumber}${profile.hard_text.mutual}`}</Typography>
         <Typography fontSize={13}>{state.followerNumber}{profile.hard_text.follower} - {state.followingNumber}{profile.hard_text.following} </Typography>
       </Box>
     )

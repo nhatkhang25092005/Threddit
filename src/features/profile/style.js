@@ -79,6 +79,39 @@ export const style = {
           whiteSpace: 'nowrap'
         }
       },
+
+      friend_button: {
+        btn_container: {
+          my: 'auto',
+          height: 'fit-content',
+          textTransform: 'none',
+          py: 0,
+          px: 2,
+          maxWidth: '100%',
+          width: 'auto',
+          ml: 1,
+          minWidth: 'unset',
+          whiteSpace: 'nowrap',
+          alignItems: 'center',
+
+          borderRadius: 999,
+          
+
+
+          '&:hover': {
+            backgroundColor: 'action.hover'
+          }
+        },
+
+        content_box: {
+          alignItems: 'center',
+          display: 'inline-flex',
+          gap: 0.75,               // gap nhỏ hơn follow
+          whiteSpace: 'nowrap',
+          opacity: 0.9             // nhìn dịu hơn follow
+        }
+      },
+
       edit_button:{
         height:'fit-content',
         width:'7rem',

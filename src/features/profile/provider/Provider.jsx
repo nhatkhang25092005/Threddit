@@ -33,15 +33,15 @@ export default function ProfileProvider({ children, username = null }) {
   const owner = username ? isOwner(username) : true
 
   /* ---------------- follow sync API ---------------- */
-  // const syncFollow = useMemo(
-  //   () => ({
-  //     setLoading: (bool) => dispatch(followLoading(bool)),
-  //     followSuccess: () => dispatch(followSuccess()),
-  //     unfollowSuccess: () => dispatch(unfollowSuccess()),
-  //   }),
-  //   [dispatch]
-  // )
-  const profileSync = services.createFollowSync(dispatch)
+  const profileSync = useMemo(
+    () => services.createFollowSync(dispatch),
+    [dispatch]
+  )
+
+  const friendSync = useMemo(
+    () => services.createFriendSync(dispatch),
+    [dispatch]
+  )
 
   const modalManager = useMemo(() => createModalManager(setModal),[])
 
@@ -80,6 +80,7 @@ export default function ProfileProvider({ children, username = null }) {
       isOwner: owner,
       state,
       actions: {
+        friendSync,
         profileSync,
         background: {
           presignBackgroundImage,
@@ -94,6 +95,7 @@ export default function ProfileProvider({ children, username = null }) {
       owner,
       state,
       profileSync,
+      friendSync,
       presignBackgroundImage,
       confirmBackgroundImage,
       avatarActions,

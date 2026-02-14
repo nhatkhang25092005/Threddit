@@ -3,8 +3,8 @@ import { Grid } from "@mui/material"
 import { follow } from '../../../constant/text/vi/follow.text'
 import { useFollowContext } from '../hooks/useFollowContext'
 import useAuth from "../../../hooks/useAuth"
-import EmptyListUI from "./EmptyListUI"
-import LoadingUI from "./LoadingUI"
+import EmptyListUI from "../../../components/common/list/EmptyListUI"
+import LoadingUI from "../../../components/common/list/LoadingUI"
 import { useNavigate } from "react-router-dom"
 import {routes} from '../../../constant/routes'
 

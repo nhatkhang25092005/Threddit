@@ -68,6 +68,17 @@ export const buttonProps = {
             transform:'scale(1.02)'
           }
         })
+      },
+      {
+        props:{variant:'outline'},
+        style:({theme})=>({
+          backgroundColor:COLOR.button.outline.bg[theme.palette.mode],
+          border:`solid ${COLOR.button.outline.border[theme.palette.mode]} 1px`,
+          transition:'transform 0.1s ease-in-out',
+          '&:hover':{
+            transform:'scale(1.02)'
+          }
+        })
       }
     ]
   }

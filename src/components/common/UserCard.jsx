@@ -10,6 +10,12 @@ export default function UserCard({
 }) {
   const theme = useTheme().palette.mode
   const isClickable = typeof onClick === 'function'
+  const taskList = !tasks
+    ? []
+    : Array.isArray(tasks)
+      ? tasks
+      : [tasks]
+
   return (
     <Surface
       variant="card"
@@ -32,7 +38,29 @@ export default function UserCard({
         </Typography>
       </Box>
 
-      {tasks && <Button variant='dialog' sx={styles.button(relationStatus, theme)} onClick={tasks.func}>{tasks.label}</Button>}    </Surface>
+      {taskList.map((task, index)=>{
+        if(task.component){
+          return(
+            <Box key={index} onClick={(e)=>{e.stopPropagation();task?.func()}}>
+              {task.component}
+            </Box>
+          )
+        }
+
+        return(
+          <Button
+            variant='dialog'
+            sx={styles.button(relationStatus, theme)}
+            onClick={(e)=>{
+              e.stopPropagation()
+              task?.func()}
+          }>
+            {task.label}
+        </Button>
+        )
+      })}
+
+      </Surface>
   );
 }
 

@@ -10,7 +10,8 @@ const style = {
   }
 }
 export default function Displayname(){
-  const {state, actions} = useProfileContext()
+  const {state, actions, isOwner} = useProfileContext()
+  console.log(isOwner)
   const [open, setOpen] = useState(false)
   const [form, onChange] = useInput({displayName:state.displayName})
 
@@ -52,7 +53,7 @@ export default function Displayname(){
       ) : (
         open
           ? <Ok onClick={handleExecute} />
-          : <Edit onClick={() => setOpen(!open)} />
+          : isOwner ?  <Edit onClick={() => setOpen(!open)} /> : null
       )}
     </Box>
   )
