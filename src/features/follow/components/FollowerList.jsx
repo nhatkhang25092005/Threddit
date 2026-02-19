@@ -2,27 +2,25 @@ import UserCard from "../../../components/common/UserCard"
 import { Grid } from "@mui/material"
 import { follow } from '../../../constant/text/vi/follow.text'
 import { useFollowContext } from '../hooks/useFollowContext'
-import useAuth from "../../../hooks/useAuth"
+import useAuth from "../../../core/auth/useAuth"
 import EmptyListUI from "../../../components/common/list/EmptyListUI"
 import LoadingUI from "../../../components/common/list/LoadingUI"
-import { useNavigate } from "react-router-dom"
+import { useBlockContext } from "../../../core/block/hooks/useBlockContext"
 import {routes} from '../../../constant/routes'
-
 /* ===================== UI ===================== */
 
-function FollowerListUI({ followerList, toggleFollow, actorName }) {
-  const navigate = useNavigate()
+function FollowerListUI({ followerList, toggleFollow, actorName, navigateChecker }) {
   return (
     <Grid container spacing={2} width="100%">
       {followerList.map(({ follower, canFollow }) => (
         <Grid
-          item
           xs={6}
           key={follower.username}
           sx={{ display: "flex", width: "49%" }}
         >
           <UserCard
-            onClick={()=>navigate(`${routes.profile}/${follower.username}`)}
+            key={follower.username}
+            onClick={()=>navigateChecker(routes.profile, follower.username)}
             avatar={follower.avatarUrl}
             username={follower.displayName}
             relationStatus={canFollow}
@@ -51,6 +49,9 @@ export default function FollowerList() {
     actions: { toggleFollow },
   } = useFollowContext()
 
+
+  const {actions:{canNavigateToUser}} = useBlockContext()
+
   const { user } = useAuth()
 
   if (loading.get_follower) {
@@ -63,6 +64,7 @@ export default function FollowerList() {
 
   return (
     <FollowerListUI
+      navigateChecker = {canNavigateToUser}
       followerList={followerList}
       toggleFollow={toggleFollow}
       actorName={user.username}

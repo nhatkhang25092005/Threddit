@@ -1,22 +1,22 @@
 import { memo } from "react"
 import { Grid } from "@mui/material"
 import UserCard from "../../../components/common/UserCard"
-import useAuth from '../../../hooks/useAuth'
+import useAuth from '../../../core/auth/useAuth'
 import { follow } from "../../../constant/text/vi/follow.text"
 import { useFollowContext } from "../hooks/useFollowContext"
 import EmptyListUI from "../../../components/common/list/EmptyListUI"
 import LoadingUI from "../../../components/common/list/LoadingUI"
-import { useNavigate } from "react-router-dom"
 import { routes } from "../../../constant/routes"
+import { useBlockContext } from "../../../core/block/hooks/useBlockContext"
 
 /* ===================== UI ===================== */
 
 const FollowingListUI = memo(function FollowingListUI({
   list,
   toggleFollow,
-  actorName
+  actorName,
+  navigateChecker
 }) {
-  const navigate = useNavigate()
 
   return (
     <Grid container spacing={2} width="100%">
@@ -24,9 +24,10 @@ const FollowingListUI = memo(function FollowingListUI({
         const user = ele.followee
         if (!user) return null
         return (
-          <Grid item xs={6} key={user.id} sx={{ display: "flex", width: "49%" }}>
+          <Grid  item xs={6} key={user.username} sx={{ display: "flex", width: "49%" }}>
             <UserCard
-              onClick={() => navigate(`${routes.profile}/${user.username}`) }
+              key={user.username}
+              onClick={() => navigateChecker(routes.profile,user.username)}
               avatar={user.avatarUrl}
               username={user.displayName}
               tasks={
@@ -53,6 +54,8 @@ const FollowingList = memo(function FollowingList() {
     actions: { toggleFollow },
   } = useFollowContext()
 
+    const {actions:{canNavigateToUser}} = useBlockContext()
+
   const { user } = useAuth()
 
   if (loading.get_following) {
@@ -65,6 +68,7 @@ const FollowingList = memo(function FollowingList() {
 
   return (
     <FollowingListUI
+      navigateChecker = {canNavigateToUser}
       list={followingList}
       toggleFollow={toggleFollow}
       actorName={user.username}

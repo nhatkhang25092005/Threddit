@@ -5,20 +5,21 @@ import { friend } from "../../../constant/text/vi/friend.text"
 import { useFriendshipContext } from "../hooks/useFriendshipContext"
 import EmptyListUI from "../../../components/common/list/EmptyListUI"
 import LoadingUI from "../../../components/common/list/LoadingUI"
-import { useNavigate } from "react-router-dom"
 import { routes } from "../../../constant/routes"
 import PersonAddIcon from "@mui/icons-material/PersonAdd"
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline"
 import IconButton from "../../../components/common/button/IconButton"
 import ContainerForList from './ContainerForList'
+import { useBlockContext } from "../../../core/block/hooks/useBlockContext"
+
 /* ===================== UI ===================== */
 function RequestListUI({
   perRequestLoading,
   requestList,
   acceptRequest,
   rejectRequest,
+  navigateChecker
 }) {
-  const navigate = useNavigate()
 
   const requestTasks = useCallback(
     (requester, friendshipId) => {
@@ -62,11 +63,7 @@ function RequestListUI({
             sx={{ display: "flex", width: "49%" }}
           >
             <UserCard
-              onClick={() =>
-                navigate(
-                  `${routes.profile}/${requester.username}`
-                )
-              }
+              onClick={() =>navigateChecker(routes.profile,requester.username)}
               avatar={requester.avatarUrl}
               username={requester.displayName}
               relationStatus="request"
@@ -88,6 +85,8 @@ export default function RequestList() {
     state: { requestList, loading, requestCount },
     actions: { acceptRequest, rejectRequest },
   } = useFriendshipContext()
+
+    const {actions:{canNavigateToUser}} = useBlockContext()
 
   if (loading.global.get_request_list) {
     return (
@@ -118,6 +117,7 @@ export default function RequestList() {
         perRequestLoading={loading.perRequest}
         requestList={requestList}
         acceptRequest={acceptRequest}
+        navigateChecker = {canNavigateToUser}
         rejectRequest={rejectRequest}
       />
     </ContainerForList>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate} from "react-router-dom";
-import useAuth from "../../../hooks/useAuth";
+import useAuth from "../../../core/auth/useAuth";
 import { modal } from "../../../constant/text/vi/modal";
 import { useNotify } from "../../../hooks/useNotify";
 import { loginService } from "./login.service";

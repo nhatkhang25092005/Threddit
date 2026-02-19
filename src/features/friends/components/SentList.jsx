@@ -4,19 +4,19 @@ import { friend } from "../../../constant/text/vi/friend.text"
 import { useFriendshipContext } from "../hooks/useFriendshipContext"
 import EmptyListUI from "../../../components/common/list/EmptyListUI"
 import LoadingUI from "../../../components/common/list/LoadingUI"
-import { useNavigate } from "react-router-dom"
 import { routes } from "../../../constant/routes"
 import CancelIcon from "@mui/icons-material/Cancel"
 import IconButton from "../../../components/common/button/IconButton"
 import ContainerForList from './ContainerForList.jsx'
+import { useBlockContext } from "../../../core/block/hooks/useBlockContext.js"
 /* ===================== UI ===================== */
 
 function SentListUI({
   sentList,
   cancelRequest,
   loadingCancel,
+  navigateChecker
 }) {
-  const navigate = useNavigate()
   const sentTasks = (friendshipId) => ([
     {component:
       loadingCancel[friendshipId]?.cancel_request ? (
@@ -37,13 +37,12 @@ function SentListUI({
       {sentList.map(({recipient, friendshipId}) => (
         <Grid
           key={recipient.username}
-          item
           xs={6}
           sx={{ display: "flex", width: "49%" }}
         >
           <UserCard
             onClick={() =>
-              navigate(`${routes.profile}/${recipient.username}`)
+              navigateChecker(routes.profile, recipient.username)
             }
             avatar={recipient.avatarUrl}
             username={recipient.displayName}
@@ -63,6 +62,8 @@ export default function SentList() {
     state: { sentList, loading, sentCount },
     actions: { cancelRequest },
   } = useFriendshipContext()
+
+    const {actions:{canNavigateToUser}} = useBlockContext()
 
   if (loading.global.get_sent_list) {
     return (
@@ -90,6 +91,7 @@ export default function SentList() {
       text = {`${sentCount}${friend.text_on_sent_list.sent_count}`}
     >
       <SentListUI
+        navigateChecker = {canNavigateToUser}
         sentList={sentList}
         cancelRequest={cancelRequest}
         loadingCancel={loading.perRequest}

@@ -3,8 +3,11 @@ import { useEffect, useCallback } from 'react'
 import { useNotify } from '../../../hooks/useNotify'
 import {getProfileLoading, setProfile} from '../actions'
 import { modal } from '../../../constant/text/vi/modal'
+import {useBackToPreviousUrl} from '../../../hooks/useBackToPreviousUrl'
 export function useGetProfile(dispatch, username){
   const notify = useNotify()
+  const backToPrevious = useBackToPreviousUrl()
+
   
   const getProfile = useCallback(async () => {
     const res = await notify.withLoading(
@@ -13,9 +16,11 @@ export function useGetProfile(dispatch, username){
     )
     if(res.success){
       dispatch(setProfile(res.data))
+      return
     }
-    else notify.popup(modal.title.error, res.message)
-  },[dispatch, notify, username])
+
+    else notify.popup(modal.title.error, res.message,'Back', () => backToPrevious())
+  },[dispatch, notify, username, backToPrevious])
 
   useEffect(()=>{
     getProfile()

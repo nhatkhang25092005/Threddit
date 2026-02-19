@@ -1,15 +1,13 @@
-import { useReducer, useMemo, useState } from "react"
-import { Modal, Fade } from "@mui/material"
+import { useReducer, useMemo } from "react"
 
 import { ProfileContext } from "./context"
 import { reducer, initState } from "../reducer"
-// import { followLoading, followSuccess, unfollowSuccess } from "../actions"
 
 import { services } from "../services"
 
-import { createModalManager, MODALS } from "../utils/modalManager"
+import {MODALS} from '../modals'
 
-import useAuth from "../../../hooks/useAuth"
+import useAuth from "../../../core/auth/useAuth"
 import {
   useGetProfile,
   useBackground,
@@ -17,16 +15,11 @@ import {
   useEditProfile,
 } from "../hooks"
 
+import { ModalProvider } from "../../../core/modal"
+
 export default function ProfileProvider({ children, username = null }) {
   /* ---------------- state ---------------- */
   const [state, dispatch] = useReducer(reducer, initState)
-  const [modal, setModal] = useState({
-    open: false,
-    type: null,
-    props: null,
-  })
-
-  const ModalComponent = modal.type ? MODALS[modal.type] : null
 
   /* ---------------- auth / owner ---------------- */
   const { isOwner, updateAvatar, updateDisplayname } = useAuth()
@@ -43,7 +36,7 @@ export default function ProfileProvider({ children, username = null }) {
     [dispatch]
   )
 
-  const modalManager = useMemo(() => createModalManager(setModal),[])
+  // const modalManager = useMemo(() => createModalManager(setModal),[])
 
   /* ---------------- side-effect hooks ---------------- */
   useGetProfile(dispatch, username)
@@ -88,7 +81,7 @@ export default function ProfileProvider({ children, username = null }) {
         },
         avatar: avatarActions,
         info: infoActions,
-        modalManager,
+        // modalManager,
       },
     }),
     [
@@ -100,30 +93,14 @@ export default function ProfileProvider({ children, username = null }) {
       confirmBackgroundImage,
       avatarActions,
       infoActions,
-      modalManager,
     ]
   )
 
   return (
     <ProfileContext.Provider value={value}>
-      {children}
-      <Modal
-        open={modal.open}
-        sx={{ zIndex: 1600 }}
-        onClose={modalManager.closeModal}
-        closeAfterTransition
-      >
-        <Fade in={modal.open}>
-          <div>
-            {ModalComponent && (
-              <ModalComponent
-                {...modal.props}
-                onClose={modalManager.closeModal}
-              />
-            )}
-          </div>
-        </Fade>
-      </Modal>
+      <ModalProvider modals={MODALS}>
+        {children}
+      </ModalProvider>
     </ProfileContext.Provider>
   )
 }

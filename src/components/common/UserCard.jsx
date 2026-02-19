@@ -49,6 +49,7 @@ export default function UserCard({
 
         return(
           <Button
+            key={index}
             variant='dialog'
             sx={styles.button(relationStatus, theme)}
             onClick={(e)=>{

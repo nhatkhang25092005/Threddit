@@ -60,7 +60,7 @@ export function useGetMutualList(dispatch) {
 
   useEffect(() => {
     // ===== Skip if viewing own profile =====
-    if (isOwner) {
+    if (isOwner || username === null) {
       dispatch(mutualListActions.reset())
       return
     }
@@ -73,7 +73,8 @@ export function useGetMutualList(dispatch) {
 
     // ===== abort when unmount =====
     return () => abortRef.current?.abort()
-  }, [getMutualList, dispatch, username, isOwner])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [username])
 
   return {
     getMutualList

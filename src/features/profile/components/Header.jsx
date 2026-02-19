@@ -1,5 +1,5 @@
 import {style} from '../style'
-import {Box} from '@mui/material'
+import {Box, Button} from '@mui/material'
 import ProfileAvatar from "./ProfileAvatar"
 import BaseInfo from "./BaseInfo"
 import CreateFeedBtn from "./CreateFeedBtn"
@@ -9,19 +9,25 @@ import EditInfoButton from './EditInfoButton'
 import FollowBtn from './FollowBtn'
 import { useProfileContext } from '../hooks'
 import FriendButton from './FriendButton'
+import BlockUserButton from './BlockUserButton'
 const sx=style.header
 const Header = memo(function Header(){
-  const {isOwn} = useProfileContext()
+  const {isOwner} = useProfileContext()
   return(
     <Box sx={sx.container}>
       <BackgroundImage/>
       <Box sx={sx.info_container.container}>
         <ProfileAvatar />
         <BaseInfo/>
-        <CreateFeedBtn/>
-        <FriendButton/>
-        <FollowBtn/>
-        {isOwn && <EditInfoButton/>}
+        <Box sx={sx.info_container.button_container} >
+          <Box sx={sx.info_container.contract_buttons}>
+            <CreateFeedBtn/>
+            <FriendButton/>
+            <FollowBtn/>
+            {isOwner && <EditInfoButton/>}
+          </Box>
+          {!isOwner && <BlockUserButton color='white'/>}
+        </Box>
       </Box>
     </Box>
   )

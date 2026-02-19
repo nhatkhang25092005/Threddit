@@ -5,7 +5,7 @@ import { modal } from "../../../constant/text/vi/modal"
 import { orchestrate } from "../../../utils/orchestrate"
 import { useProfileContext } from "../../profile/hooks/useProfileContext"
 import { loadingActions, friendListActions } from "../store/actions"
-import useAuth from "../../../hooks/useAuth"
+import useAuth from "../../../core/auth/useAuth"
 
 export function useDeleteFriend(dispatch) {
   const notify = useNotify()

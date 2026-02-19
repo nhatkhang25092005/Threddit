@@ -11,7 +11,6 @@ const style = {
 }
 export default function Displayname(){
   const {state, actions, isOwner} = useProfileContext()
-  console.log(isOwner)
   const [open, setOpen] = useState(false)
   const [form, onChange] = useInput({displayName:state.displayName})
 

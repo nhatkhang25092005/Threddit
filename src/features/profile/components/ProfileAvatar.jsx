@@ -3,13 +3,14 @@ import {style} from '../style'
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { useProfileContext } from '../hooks';
 import ImageInput from '../../../components/common/input/ImageInput';
-
+import { useModal } from '../../../core/modal';
 export default function ProfileAvatar({hasStory = false}){
   const mode = useTheme().palette.mode
   const {state, actions, isOwner} = useProfileContext()
+  const {openModal} = useModal()
   const handleChangeAvatar = async (e) => {
     const temp = await actions.avatar.presignAvatar(e)
-    actions.modalManager.openModal('confirm_avatar',{src:temp,confirm:actions.avatar.confirmAvatar})
+    openModal('confirm_avatar',{src:temp,confirm:actions.avatar.confirmAvatar})
   }
   
   // Change Avatar Button

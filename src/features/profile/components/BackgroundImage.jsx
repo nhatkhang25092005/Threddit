@@ -3,15 +3,16 @@ import {Fade, Skeleton} from '@mui/material'
 import { useProfileContext } from "../hooks"
 import {memo} from 'react'
 import {style} from '../style'
+import { useModal } from "../../../core/modal"
 const sx = style.header
 const BackgroundImage = memo(function BackgroundImage() {
   const {state, actions, isOwner} = useProfileContext()
   const backgroundActions = actions.background
-
+  const {openModal} = useModal()
   // Presign, then open modal with the src
   const handleUpload = async (e) => {
     const data = await backgroundActions.presignBackgroundImage(e)
-    actions.modalManager.openModal('confirm_background',{src:data, confirm:backgroundActions.confirmBackgroundImage})
+    openModal('confirm_background',{src:data, confirm:backgroundActions.confirmBackgroundImage})
   }
   return(
     <>

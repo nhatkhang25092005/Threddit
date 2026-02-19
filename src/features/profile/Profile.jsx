@@ -11,8 +11,11 @@ import FollowProvider from '../follow/provider/FollowProvider'
 import {profile} from '../../constant/text/vi/profile.text'
 import FriendshipProvider from "../friends/FriendshipProvider"
 import Friend from '../friends/Friend'
+import BlockList from "./components/BlockList"
+import { useProfileContext } from "./hooks"
 
 const Content = memo(function Content(){
+  const {isOwner} = useProfileContext()
   return (
     <Box sx={style.container}>
       <Header/>
@@ -24,11 +27,11 @@ const Content = memo(function Content(){
         <MainProfile label={profile.tab_label.profile} name='profile'/>
         <Follow label={profile.tab_label.follow} name='follow'/>
         <Friend label={profile.tab_label.friend} name='friends'/>
+        {isOwner && <BlockList label={profile.tab_label.block} name='block'/>}
       </TabsController>
     </Box>
   )
 })
-
 
 export default function Profile(){
   const {username} = useParams()
@@ -36,9 +39,9 @@ export default function Profile(){
   return(
     <Provider username={username}>
       <FriendshipProvider>
-      <FollowProvider>
-        <Content/>
-      </FollowProvider>
+        <FollowProvider>
+          <Content/>
+        </FollowProvider>
       </FriendshipProvider>
     </Provider>
   )

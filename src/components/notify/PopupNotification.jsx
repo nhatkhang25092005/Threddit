@@ -5,7 +5,6 @@ export default function PopupNotification({ open = false, onClose, title, conten
     onConfirm?.()
     onClose()
   }
-  console.log('hello')
   return (
     <Modal
       open={open}

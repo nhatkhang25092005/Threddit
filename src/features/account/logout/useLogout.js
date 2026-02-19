@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import {services} from '../account.service'
 import { useNotify } from '../../../hooks/useNotify';
 import { modal } from '../../../constant/text/vi/modal';
-import useAuth from '../../../hooks/useAuth';
+import useAuth from '../../../core/auth/useAuth';
 export function useLogout(){
   const notify = useNotify()
   const navigate = useNavigate()

@@ -1,146 +1,37 @@
-import { mapResponse, mapErrResponse } from '../../api/helper'
-// import { delay } from '../../utils/delaySimulator'
+import { handleRequest } from '../../api/helper'
 import { followApi } from '../../api/follow/follow.api'
 import { follower } from './actions'
 
 const api = {
+  getFollowCount: async () =>
+    handleRequest(() => followApi.getFollowCount()),
 
-  // ===== COUNT =====
-  getFollowCount: async () => {
-    try {
-      const response = mapResponse(await followApi.getFollowCount())
-      return {
-        success: response.is_success,
-        message: response.message,
-        data: response.data
-      }
-    } catch (e) {
-      return mapErrResponse(e)
-    }
-  },
+  getUserFollowCount: async (username) =>
+    handleRequest(() => followApi.getUserFollowCount(username)),
 
-  getUserFollowCount: async (username) => {
-    try {
-      const response = mapResponse(await followApi.getUserFollowCount(username))
-      return {
-        success: response.is_success,
-        message: response.message,
-        data: response.data
-      }
-    } catch (e) {
-      return mapErrResponse(e)
-    }
-  },
+  getFollowers: async (username = null, cursor, signal) =>
+    handleRequest(() => followApi.getFollowers(username, cursor, signal)),
 
-  // ===== FOLLOWERS =====
-  getFollowers: async (username = null, cursor, signal) => {
-    try {
-      const response = mapResponse(await followApi.getFollowers(username, cursor, signal))
-      return {
-        success: response.is_success,
-        message: response.message,
-        data: response.data
-      }
-    } catch (e) {
-      return mapErrResponse(e)
-    }
-  },
+  getUserFollowers: async (username) =>
+    handleRequest(() => followApi.getUserFollowers(username)),
 
-  getUserFollowers: async (username) => {
-    try {
-      const response = mapResponse(await followApi.getUserFollowers(username))
-      return {
-        success: response.is_success,
-        message: response.message,
-        data: response.data
-      }
-    } catch (e) {
-      return mapErrResponse(e)
-    }
-  },
+  getFollowings: async (username, cursor, signal) =>
+    handleRequest(() => followApi.getFollowings(username, cursor, signal)),
 
-  // ===== FOLLOWINGS =====
-  getFollowings: async (username, cursor, signal) => {
-    try {
-      const response = mapResponse(await followApi.getFollowings(username, cursor, signal))
-      return {
-        success: response.is_success,
-        message: response.message,
-        data: response.data
-      }
-    } catch (e) {
-      return mapErrResponse(e)
-    }
-  },
+  getUserFollowings: async (username) =>
+    handleRequest(() => followApi.getUserFollowings(username)),
 
-  getUserFollowings: async (username) => {
-    try {
-      const response = mapResponse(await followApi.getUserFollowings(username))
-      return {
-        success: response.is_success,
-        message: response.message,
-        data: response.data
-      }
-    } catch (e) {
-      return mapErrResponse(e)
-    }
-  },
+  getFollow: async (username) =>
+    handleRequest(() => followApi.getFollow(username)),
 
-  // ===== SINGLE USER FOLLOW =====
-  getFollow: async (username) => {
-    try {
-      const response = mapResponse(await followApi.getFollow(username))
-      return {
-        success: response.is_success,
-        message: response.message,
-        data: response.data
-      }
-    } catch (e) {
-      return mapErrResponse(e)
-    }
-  },
+  getFollowStatus: async (username) =>
+    handleRequest(() => followApi.getFollowStatus(username)),
 
-  getFollowStatus: async (username) => {
-    try {
-      const response = mapResponse(await followApi.getFollowStatus(username))
-      return {
-        success: response.is_success,
-        message: response.message,
-        data: response.data
-      }
-    } catch (e) {
-      return mapErrResponse(e)
-    }
-  },
+  followUser: async (username) =>
+    handleRequest(() => followApi.follow(username)),
 
-  // ===== ACTIONS =====
-   // Follower a user
-  followUser: async (username) => {
-    try {
-      const res = mapResponse(await followApi.follow(username))
-      return {
-        success: res.is_success,
-        message: res.message,
-        data: res.data
-      }
-    } catch (err) {
-      return mapErrResponse(err)
-    }
-  },
-
-  // Unfollow a user
-  unfollowUser: async (username) => {
-    try {
-      const res = mapResponse(await followApi.unfollow(username))
-      return {
-        success: res.is_success,
-        message: res.message,
-        data: res.data
-      }
-    } catch (err) {
-      return mapErrResponse(err)
-    }
-  }
+  unfollowUser: async (username) =>
+    handleRequest(() => followApi.unfollow(username)),
 }
 
 const domain = {

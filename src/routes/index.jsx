@@ -5,29 +5,29 @@ import Awake from "../features/Awake.jsx";
 import Auth from '../features/auth/Auth.jsx'
 import Test from "../test/Test.jsx";
 import { NotifyProvider } from "@/provider/notify/NotifyProvider.jsx";
-import { AuthProvider } from "../provider/AuthProvider.jsx";
+import { AuthProvider } from "../core/auth/AuthProvider.jsx";
 export default function AppRouter() {
   return (
     <BrowserRouter>
       <Awake />
       <AuthProvider>
-      <NotifyProvider>
-        <Routes >
-          {/* Default route */}
-          <Route path="/" element={<Navigate to="/app/home" replace />} />
-        
-          {/* Auth Routes */}
-          <Route path="/auth" element={<Auth />} />
-        
-          {/* Main App Route */}
-          <Route path="/app/*" element={<AppRoute />} />
-        
-          {/* Not Found */}
-          <Route path="*" element={<Notfound />} />
-        
-          <Route path='/test' element = {<Test/>}/>
-        </Routes>
-      </NotifyProvider>
+        <NotifyProvider>
+              <Routes >
+                {/* Default route */}
+                <Route path="/" element={<Navigate to="/app/home" replace />} />
+              
+                {/* Auth Routes */}
+                <Route path="/auth" element={<Auth />} />
+              
+                {/* Main App Route */}
+                <Route path="/app/*" element={<AppRoute />} />
+              
+                {/* Not Found */}
+                <Route path="*" element={<Notfound />} />
+              
+                <Route path='/test' element = {<Test/>}/>
+              </Routes>
+        </NotifyProvider>
       </AuthProvider>
     </BrowserRouter>
   );

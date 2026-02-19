@@ -69,7 +69,6 @@ export const friendApi = {
   },
 
   getNumberOfMutualFriendWith: (username) => {
-    console.log(`${BASE}/${username}${LIST}${MANUAL}${COUNT}`)
     return axios.get(`${BASE}/${username}${LIST}${MANUAL}${COUNT}`)
   },
 

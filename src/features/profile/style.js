@@ -24,6 +24,20 @@ export const style = {
         display:'flex',
         flexDirection:'row'
       },
+      button_container:{
+        display:'flex',
+        flexDirection:'column',
+        gap:1,
+        pt:'4.5rem',
+        alignItems:'flex-end',
+      },
+      contract_buttons:{
+        display:'flex',
+        flexDirection:'row',
+        gap:1,
+        alignItems:'center',
+        justifyContent:'center',
+      },
       base_info:{
         container:{
           display:'flex',
@@ -93,11 +107,7 @@ export const style = {
           minWidth: 'unset',
           whiteSpace: 'nowrap',
           alignItems: 'center',
-
           borderRadius: 999,
-          
-
-
           '&:hover': {
             backgroundColor: 'action.hover'
           }
@@ -232,6 +242,160 @@ export const style = {
 
       submit_button:{
         textTransform:'none'
+      }
+    },
+
+    block:{
+      modalSx:(t, fadeSlideIn) => ({
+        mx: "auto",
+        mt: "5rem",
+        width: { xs: "92vw", sm: "26rem" },
+        borderRadius: "1.25rem",
+        overflow: "hidden",
+        animation: `${fadeSlideIn} 0.25s cubic-bezier(.22,.68,0,1.2) both`,
+        background:
+          t.palette.mode === "dark"
+            ? "#0A0B0B"
+            : "linear-gradient(160deg,#ffffff 0%,#f5f5f8 100%)",
+        border: `1px solid ${
+          t.palette.mode === "dark"
+            ? "rgba(255,255,255,0.07)"
+            : "rgba(0,0,0,0.08)"
+        }`,
+        boxShadow: "0 32px 64px rgba(0,0,0,0.3)",
+        p: 0,
+        position: "relative",
+      }),
+
+      closeBtnSx:{
+        position: "absolute",
+        top: "1rem",
+        right: "1rem",
+        width: 32,
+        height: 32,
+        borderRadius: "50%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: "pointer",
+        bgcolor: "action.hover",
+        transition: "background 0.15s, transform 0.15s",
+        "&:hover": {
+          bgcolor: "action.selected",
+          transform: "scale(1.1)",
+        },
+      },
+      bodySx:{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "1.25rem",
+        px: "2rem",
+        pt: "2rem",
+        pb: "1.5rem",
+      },
+      avatarWrapperSx:{
+        position: "relative",
+      },
+      avatarSx:{
+        width: 72,
+        height: 72,
+        border: "3px solid",
+        borderColor: "background.paper",
+        boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
+      },
+      blockIconWrapperSx:(pulse)=>({
+        position: "absolute",
+        bottom: -4,
+        right: -4,
+        width: 28,
+        height: 28,
+        borderRadius: "50%",
+        bgcolor: "#ef4444",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        border: "2px solid",
+        borderColor: "background.paper",
+        animation: `${pulse} 2s ease-in-out infinite`,
+      }),
+      textWrapperSx:{
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.4rem",
+      },
+      titleSxL:{
+        fontWeight: 700,
+        fontSize: "1.1rem",
+        lineHeight: 1.3,
+      },
+      descriptionSx:{
+        color: "text.secondary",
+        fontSize: "0.85rem",
+        lineHeight: 1.6,
+        maxWidth: "20rem",
+      },
+      dividerSx:{
+        width: "100%",
+        opacity: 0.5,
+      },
+      consequencesBoxSx:{
+        width: "100%",
+        bgcolor: "action.hover",
+        borderRadius: "0.75rem",
+        px: "1.25rem",
+        py: "0.9rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.5rem",
+      },
+      dotSx:{
+        width: 6,
+        height: 6,
+        borderRadius: "50%",
+        bgcolor: "#ef4444",
+        flexShrink: 0,
+      },
+      consequenceTextSx: {
+        fontSize: "0.82rem",
+        color: "text.secondary",
+      },
+      actionsWrapperSx:{
+        display: "flex",
+        gap: "0.75rem",
+        width: "100%",
+        mt: "0.25rem",
+      },
+      cancelBtnSx:{
+        borderRadius: "0.75rem",
+        textTransform: "none",
+        fontWeight: 500,
+        py: "0.65rem",
+        borderColor: "divider",
+        color: "text.primary",
+        "&:hover": { borderColor: "text.secondary" },
+      },
+      confirmBtnSx:{
+        borderRadius: "0.75rem",
+        textTransform: "none",
+        fontWeight: 600,
+        py: "0.65rem",
+        background: "linear-gradient(135deg,#ef4444,#dc2626)",
+        color: "#fff",
+        boxShadow: "0 4px 14px rgba(239,68,68,0.4)",
+        "&:hover": {
+          background: "linear-gradient(135deg,#dc2626,#b91c1c)",
+          boxShadow: "0 6px 20px rgba(239,68,68,0.5)",
+          transform: "translateY(-1px)",
+        },
+        "&:active": { transform: "translateY(0)" },
+        transition: "all 0.2s ease",
+      },
+      consequenceItemSx : {
+        display: "flex",
+        alignItems: "center",
+        gap: "0.6rem",
       }
     }
   }

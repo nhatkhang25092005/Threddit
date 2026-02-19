@@ -6,8 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import RowRadioInput from '../components/common/input/RowRadioInput'
 import MoreInfoMenu from '../components/layout/Main/components/PositionedMenu'
 import Ok from '../components/common/button/Ok'
-import Notification from "../features/notification/components/Notification";
-import TabsController from "../components/layout/TabsController";
 const fields = [
   { value: "male", label: "Male" },
   { value: "female", label: "Female" },

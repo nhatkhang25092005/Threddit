@@ -2,18 +2,17 @@ import UserCard from "../../../components/common/UserCard"
 import { Grid, CircularProgress } from "@mui/material"
 import { friend } from '../../../constant/text/vi/friend.text'
 import { useFriendshipContext } from '../hooks/useFriendshipContext'
-import useAuth from "../../../hooks/useAuth"
+import useAuth from "../../../core/auth/useAuth"
 import EmptyListUI from "../../../components/common/list/EmptyListUI"
 import LoadingUI from "../../../components/common/list/LoadingUI"
-import { useNavigate } from "react-router-dom"
 import { routes } from '../../../constant/routes'
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import ButtonIcon from "../../../components/common/button/IconButton"
 import { useProfileContext } from "../../profile/hooks/useProfileContext"
+import {useBlockContext} from '../../../core/block/hooks/useBlockContext'
 /* ===================== UI ===================== */
 // Presentational component for rendering friend list UI
-function FriendListUI({ friendList, deleteFriend, actorName, loading, isOwner }) {
-  const navigate = useNavigate()
+function FriendListUI({ friendList, deleteFriend, actorName, loading, isOwner, navigateChecker }) {
   
   // Action button for each friend (delete or loading state)
   function TaskButton({ func, username }) {
@@ -35,13 +34,12 @@ function FriendListUI({ friendList, deleteFriend, actorName, loading, isOwner })
     <Grid container spacing={2} width="100%">
       {friendList.map(({friend}) => (
         <Grid
-          item
           xs={6}
           key={friend.username}
           sx={{ display: "flex", width: "49%" }}
         >
           <UserCard
-            onClick={() => navigate(`${routes.profile}/${friend.username}`)}
+            onClick={() => navigateChecker(routes.profile, friend.username)}
             avatar={friend.avatarUrl}
             username={friend.displayName}
             relationStatus
@@ -67,6 +65,7 @@ export default function FriendList() {
   const {isOwner} = useProfileContext()
   const { user } = useAuth()
 
+    const {actions:{canNavigateToUser}} = useBlockContext()
   
   // Loading state for fetching friend list
   if (loading.global.get_friend_list) {
@@ -85,6 +84,7 @@ export default function FriendList() {
   
   return (
     <FriendListUI
+      navigateChecker = {canNavigateToUser}
       isOwner={isOwner}
       friendList={friendList}
       deleteFriend={deleteFriend}

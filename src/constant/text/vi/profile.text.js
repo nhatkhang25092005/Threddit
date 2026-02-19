@@ -63,6 +63,7 @@ export const profile = {
   tab_label:{
     profile:"Bài viết",
     follow:'Theo dõi',
-    friend:'Bạn bè'
+    friend:'Bạn bè',
+    block:'Sổ đen'
   }
 }

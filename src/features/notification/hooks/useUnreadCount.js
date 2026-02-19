@@ -12,7 +12,7 @@ export function useUnreadCount(dispatch){
   const REFETCH_LIMIT = 3
 
   const getUnreadCount = useCallback(async () => {
-    console.log('hello')
+
     abortRef.current?.abort()
     abortRef.current = new AbortController()
 
