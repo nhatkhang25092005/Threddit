@@ -29,7 +29,6 @@ export function useAvatar(dispatch){
 
   const presignAvatar = useCallback(async (e) => {
     const data = upload.image(e)
-    console.log(data)
     const res = await notify.withLoading(
       () => services.presignAvatar(data),
       (bool) => dispatch(presignAvatarLoading(bool))
