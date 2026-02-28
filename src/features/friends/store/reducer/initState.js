@@ -1,10 +1,12 @@
 export const initState = {
-  friendList: [],
+  myFriendList:[],
+  friendList:[],
   requestList:[],
   sentList:[],
   mutualList:[],
   requestCount: 0,
   sentCount: 0,
+
 
   hasMore:{
     friend_list:true,

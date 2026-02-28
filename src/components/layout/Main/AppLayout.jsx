@@ -13,7 +13,6 @@ import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import HomeIcon from "../../../assets/icons/home.svg?react";
 import SearchIcon from "../../../assets/icons/search.svg?react";
 import AddIcon from "../../../assets/icons/plus.svg?react";
-import NotifyIcon from "../../../assets/icons/bell.svg?react";
 import PositionedMenu from "./components/PositionedMenu"
 import { style } from "./style";
 import {ThemeToggleBtn} from '../../common/button'

@@ -12,10 +12,10 @@ import {profile} from '../../constant/text/vi/profile.text'
 import FriendshipProvider from "../friends/FriendshipProvider"
 import Friend from '../friends/Friend'
 import BlockList from "./components/BlockList"
-import { useProfileContext } from "./hooks"
+import useAuth from "../../core/auth/useAuth"
 
 const Content = memo(function Content(){
-  const {isOwner} = useProfileContext()
+  const { isOwner } = useAuth()
   return (
     <Box sx={style.container}>
       <Header/>
@@ -38,11 +38,9 @@ export default function Profile(){
 
   return(
     <Provider username={username}>
-      <FriendshipProvider>
-        <FollowProvider>
-          <Content/>
-        </FollowProvider>
-      </FriendshipProvider>
+      <FollowProvider>
+        <Content/>
+      </FollowProvider>
     </Provider>
   )
 }

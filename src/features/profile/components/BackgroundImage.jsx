@@ -1,15 +1,17 @@
 import BackgroundImg from "../../../components/image/BackgroundImg"
 import {Fade, Skeleton} from '@mui/material'
 import { useProfileContext } from "../hooks"
+import useAuth from "../../../core/auth/useAuth"
 import {memo} from 'react'
 import {style} from '../style'
-import { useModal } from "../../../core/modal"
+import { useProfileModal } from "../provider/useProfileModal"
 const sx = style.header
 const BackgroundImage = memo(function BackgroundImage() {
-  const {state, actions, isOwner} = useProfileContext()
+  const { state, actions } = useProfileContext()
+  const { isOwner } = useAuth()
   const backgroundActions = actions.background
-  const {openModal} = useModal()
-  // Presign, then open modal with the src
+  const {openModal} = useProfileModal()
+  
   const handleUpload = async (e) => {
     const data = await backgroundActions.presignBackgroundImage(e)
     openModal('confirm_background',{src:data, confirm:backgroundActions.confirmBackgroundImage})

@@ -3,6 +3,7 @@ import { style } from '../style'
 import { useProfileContext } from '../hooks/useProfileContext'
 import { useDomainFollow} from '../../follow/hooks/useDomainFollow'
 import {follow} from '../../../constant/text/vi/follow.text'
+import useAuth from '../../../core/auth/useAuth'
 
 const sx = style.header.info_container.follow_button
 
@@ -30,8 +31,8 @@ function UI({isFollowing, hidden, loading, onClick}){
 
 
 export default function FollowBtn() {
+  const { isOwner } = useAuth()
   const {
-    isOwner,
     state: {
       loading,
       username,

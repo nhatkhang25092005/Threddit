@@ -1,9 +1,11 @@
 import { createContext, useState, useMemo } from "react"
+import { matchPath, useLocation } from "react-router-dom"
 
 const AuthContext = createContext()
 const AUTH_KEY = 'actor'
 
 function AuthProvider({ children }) {
+  const location = useLocation()
 
   // ===== state =====
   const [user, setUserState] = useState(() => {
@@ -12,8 +14,6 @@ function AuthProvider({ children }) {
   })
 
   // ===== actions =====
-
-  // set full profile (sau login / refetch)
   const setUser = (profile) => {
     if (!profile) return
     setUserState(profile)
@@ -26,9 +26,26 @@ function AuthProvider({ children }) {
     localStorage.removeItem(AUTH_KEY)
   }
 
-  // check owner
-  const isOwner = (username) =>
-    user?.username === username
+  const profileRouteMatch = useMemo(
+    () => (
+      matchPath('/app/profile/:username', location.pathname)
+      ?? matchPath('/app/profile', location.pathname)
+    ),
+    [location.pathname]
+  )
+
+  const paramsUsername = profileRouteMatch?.params?.username ?? null
+  const profileUsername = profileRouteMatch
+    ? (paramsUsername ?? user?.username ?? null)
+    : null
+
+  // check owner by any username
+  const isOwnerByUsername = (username) => user?.username === username
+
+  // owner state for current profile route
+  const isOwner = profileRouteMatch
+    ? (paramsUsername ? isOwnerByUsername(paramsUsername) : true)
+    : false
 
   // update username only
   const updateDisplayname = (displayName) => {
@@ -53,13 +70,15 @@ function AuthProvider({ children }) {
   // ===== value =====
   const value = useMemo(() => ({
     user,
+    profileUsername,
     setUser,
     clearUser,
+    isOwnerByUsername,
     isOwner,
     updateDisplayname,
     updateAvatar
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }), [user])
+  }), [user, profileUsername, isOwner])
 
   return (
     <AuthContext.Provider value={value}>

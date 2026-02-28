@@ -1,8 +1,15 @@
 import { useState, useMemo, useCallback } from "react"
 import { Modal, Fade } from "@mui/material"
-import { ModalContext } from "./modalContext"
 
-export default function ModalProvider({ children, modals = {}, zIndex = 1600 }) {
+export default function ModalProvider({
+  children,
+  modals = {},
+  zIndex = 1600,
+  Ctx = null,
+}) {
+  if (!Ctx) {
+    throw new Error("ModalProvider requires Ctx prop")
+  }
   const [modal, setModal] = useState({ open: false, type: null, props: null })
 
   const openModal = useCallback(
@@ -20,30 +27,19 @@ export default function ModalProvider({ children, modals = {}, zIndex = 1600 }) 
     setModal({ open: false, type: null, props: null })
   }, [])
 
-  const value = useMemo(
-    () => ({ openModal, closeModal }),
-    [openModal, closeModal]
-  )
-
+  const value = useMemo(() => ({ openModal, closeModal }), [openModal, closeModal])
   const ModalComponent = modal.type ? modals[modal.type] : null
 
   return (
-    <ModalContext.Provider value={value}>
+    <Ctx.Provider value={value}>
       {children}
-      <Modal
-        open={modal.open}
-        sx={{ zIndex }}
-        onClose={closeModal}
-        closeAfterTransition
-      >
+      <Modal open={modal.open} sx={{ zIndex }} onClose={closeModal} closeAfterTransition>
         <Fade in={modal.open}>
           <div>
-            {ModalComponent && (
-              <ModalComponent {...modal.props} onClose={closeModal} />
-            )}
+            {ModalComponent && <ModalComponent {...modal.props} onClose={closeModal} />}
           </div>
         </Fade>
       </Modal>
-    </ModalContext.Provider>
+    </Ctx.Provider>
   )
 }

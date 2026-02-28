@@ -9,7 +9,6 @@ export function useEditProfile(dispatch){
 
   // Edit bio
   const editBio = useCallback(async (form) => {
-    console.log(form)
     const response = await notify.withLoading(
       () => services.editProfile(form),
       (bool) => dispatch(editBioLoading(bool))

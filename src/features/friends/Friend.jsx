@@ -3,11 +3,11 @@ import Surface from "../../components/common/Surface";
 import FriendList from './components/FriendsList'
 import RequestList from "./components/RequestList";
 import MutualList from "./components/MutualList";
-import {useProfileContext} from "../profile/hooks/useProfileContext";
+import useAuth from "../../core/auth/useAuth";
 import { friend } from '../../constant/text/vi/friend.text'
 import SentList from "./components/SentList";
 export default function Friend(){
-  const {isOwner} = useProfileContext()
+  const { isOwner } = useAuth()
 
   const shouldDisplay = [
     <FriendList label={friend.text_on_profile.label.friends_list} name='friends_list'/>,

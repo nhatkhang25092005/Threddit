@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Edit, Ok } from "../../../components/common/button"
 import { useInput } from '../../../hooks/useInput'
 import { useProfileContext } from '../hooks'
+import useAuth from '../../../core/auth/useAuth'
 const style = {
   editing:{
     width:'fit-content',
@@ -10,7 +11,8 @@ const style = {
   }
 }
 export default function Displayname(){
-  const {state, actions, isOwner} = useProfileContext()
+  const { state, actions } = useProfileContext()
+  const { isOwner } = useAuth()
   const [open, setOpen] = useState(false)
   const [form, onChange] = useInput({displayName:state.displayName})
 

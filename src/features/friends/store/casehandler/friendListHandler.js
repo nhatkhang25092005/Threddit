@@ -2,6 +2,9 @@ import { createPerFriendLoading } from '../model/perFriendLoading.model'
 import {FRIENDS_LIST_ACTIONS} from '../type'
 
 const {
+  DELETE_MY_FRIEND,
+  ADD_MY_FRIEND,
+  ADD_MY_FRIENDS,
   ADD_FRIENDS,
   ADD_FRIEND,
   SET_HAS_MORE,
@@ -58,13 +61,33 @@ export const friendListHandler = (state, action) => {
           ...state.hasMore,
           friend_list:action.payload
         }
-
       }
-    case RESET_FRIEND_LIST: return {
-      ...state,
-      friendList:[]
-    }
 
+    case RESET_FRIEND_LIST:
+        return {
+        ...state,
+        friendList:[]
+      }
+
+    case ADD_MY_FRIENDS:
+      return {
+        ...state,
+        myFriendList:[...action.payload, ...state.myFriendList]
+      }
+    
+    case ADD_MY_FRIEND:
+      return{
+        ...state,
+        myFriendList:[action.payload, ...state.myFriendList]
+      }
+
+    case DELETE_MY_FRIEND:
+      return{
+        ...state,
+        myFriendList:state.myFriendList.filter(
+          (item)=>item.friend.username !== action.payload
+        )
+      }
     default: return state
   }
 }

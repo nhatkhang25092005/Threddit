@@ -7,12 +7,12 @@ import BackgroundImage from './BackgroundImage'
 import {memo} from 'react'
 import EditInfoButton from './EditInfoButton'
 import FollowBtn from './FollowBtn'
-import { useProfileContext } from '../hooks'
 import FriendButton from './FriendButton'
 import BlockUserButton from './BlockUserButton'
+import useAuth from '../../../core/auth/useAuth'
 const sx=style.header
 const Header = memo(function Header(){
-  const {isOwner} = useProfileContext()
+  const { isOwner } = useAuth()
   return(
     <Box sx={sx.container}>
       <BackgroundImage/>

@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useRef } from "react"
-import { useProfileContext } from "../../profile/hooks"
+import useAuth from "../../../core/auth/useAuth"
 import { useNotify } from "../../../hooks/useNotify"
 import { apiService } from "../services/api.service"
 import { modal } from "../../../constant/text/vi/modal"
@@ -8,7 +8,7 @@ import { shouldRetry } from "../../../utils/shouldRetry"
 
 export function useGetFriendList(dispatch){
   const notify = useNotify()
-  const { state:{ username } } = useProfileContext()
+  const { profileUsername: username, isOwner } = useAuth()
 
   const cursor = useRef(null)
   const abortRef = useRef(null)
@@ -16,7 +16,7 @@ export function useGetFriendList(dispatch){
   const REFETCH_LIMIT = 3
 
   const getFriendList = useCallback(async () => {
-
+    if (!username) return
     // ===== abort previous request =====
     abortRef.current?.abort()
     abortRef.current = new AbortController()

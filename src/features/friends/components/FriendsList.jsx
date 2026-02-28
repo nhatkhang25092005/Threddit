@@ -8,7 +8,6 @@ import LoadingUI from "../../../components/common/list/LoadingUI"
 import { routes } from '../../../constant/routes'
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import ButtonIcon from "../../../components/common/button/IconButton"
-import { useProfileContext } from "../../profile/hooks/useProfileContext"
 import {useBlockContext} from '../../../core/block/hooks/useBlockContext'
 /* ===================== UI ===================== */
 // Presentational component for rendering friend list UI
@@ -62,8 +61,7 @@ export default function FriendList() {
     state: { friendList, loading },
     actions: { deleteFriend },
   } = useFriendshipContext()
-  const {isOwner} = useProfileContext()
-  const { user } = useAuth()
+  const { user, isOwner } = useAuth()
 
     const {actions:{canNavigateToUser}} = useBlockContext()
   

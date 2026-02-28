@@ -1,11 +1,13 @@
 import {Box, Typography, Skeleton} from "@mui/material"
 import { useProfileContext } from "../hooks"
+import useAuth from "../../../core/auth/useAuth"
 import { style } from "../style"
 import { profile } from "../../../constant/text/vi/profile.text"
 import Displayname from './Displayname'
 const sx = style.header.info_container
 export default function BaseInfo(){
-  const {state, isOwner} = useProfileContext()
+  const { state } = useProfileContext()
+  const { isOwner } = useAuth()
   const loading = state.loading.get_profile
 
   function Loading(){

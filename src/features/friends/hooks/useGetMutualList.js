@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useRef } from "react"
-import { useProfileContext } from "../../profile/hooks"
+import useAuth from "../../../core/auth/useAuth"
 import { useNotify } from "../../../hooks/useNotify"
 import { apiService } from "../services/api.service"
 import { modal } from "../../../constant/text/vi/modal"
@@ -8,7 +8,7 @@ import { shouldRetry } from "../../../utils/shouldRetry"
 
 export function useGetMutualList(dispatch) {
   const notify = useNotify()
-  const { state: { username }, isOwner } = useProfileContext()
+  const { profileUsername: username, isOwner } = useAuth()
 
   const cursor = useRef(null)
   const abortRef = useRef(null)
@@ -17,7 +17,7 @@ export function useGetMutualList(dispatch) {
 
   const getMutualList = useCallback(async () => {
     // ===== Skip if viewing own profile =====
-    if (isOwner) return
+    if (isOwner || !username) return
 
     // ===== abort previous request =====
     abortRef.current?.abort()
@@ -74,10 +74,9 @@ export function useGetMutualList(dispatch) {
     // ===== abort when unmount =====
     return () => abortRef.current?.abort()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [username])
+  }, [username, isOwner])
 
   return {
     getMutualList
   }
 }
-

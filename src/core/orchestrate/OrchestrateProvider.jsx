@@ -6,7 +6,12 @@ export default function OrchestrateProvider({children}){
   
   const dispatch = useCallback((feature, actionName, payload) => {
     const entry = dispatchRegistry.current[feature]
-    entry?.dispatch(entry.action[actionName](payload))
+    const action = entry?.action?.[actionName]
+    if (!action) {
+      if (entry) console.warn(`orchestrate action not found: ${feature}.${actionName}`)
+      return
+    }
+    entry.dispatch(action(payload))
   }, [])
 
   const registerDispatch = useCallback((featureName, dispatch, action)=>{
@@ -21,12 +26,40 @@ export default function OrchestrateProvider({children}){
   },[])
 
   const sync = useMemo(()=>({
-    blockUser : (user)=>{
-      dispatch('block','addBlockUser',user)
-      // dispatchRegistry.current['follow']?.({type:'',payload:user})
-      // dispatchRegistry.current['friends']?.({type:'',payload:user})
+    block: {
+      addBlockUser: (user) => {
+        dispatch('block', 'addBlockUser', user)
+      },
     },
-    // more
+    profile: {
+      setFollowLoading: (loading) => {
+        dispatch('profile', 'setFollowLoading', loading)
+      },
+      followSuccess: () => {
+        dispatch('profile', 'followSuccess')
+      },
+      unfollowSuccess: () => {
+        dispatch('profile', 'unfollowSuccess')
+      },
+      acceptRequestSuccess: () => {
+        dispatch('profile', 'increaseFriendNumber')
+      },
+      requestFriendSuccess: () => {
+        dispatch('profile', 'setFriendStatus', 'pending_sent')
+      },
+      deleteFriendSuccess: ({ onProfile = false } = {}) => {
+        dispatch('profile', 'decreaseFriendNumber')
+        if (onProfile) {
+          dispatch('profile', 'setFriendStatus', null)
+        }
+      },
+      getMutualNumberLoading: (loading) => {
+        dispatch('profile', 'setMutualNumberLoading', loading)
+      },
+      getMutualNumberSuccess: (count) => {
+        dispatch('profile', 'setMutualNumber', count)
+      },
+    },
   }),[dispatch])
     
   const value = useMemo(()=>({

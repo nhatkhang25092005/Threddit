@@ -55,21 +55,6 @@ function NotifyProvider({children}){
       const currentContainerId = containerRef.current
       createCustomModal(setNotif, createElement(component, props), currentContainerId)
     },
-
-    container : {
-      register : (containerId) => {
-        console.log(containerId)
-        containerRef.current = containerId
-      },
-
-      unregister : (containerId) => {
-        console.log('unregister')
-        containerRef.current === containerId
-        ? containerRef.current = null
-        : undefined
-      }
-    }
-
   }),[])
 
 

@@ -4,6 +4,7 @@ import { useFriendshipContext } from '../../friends/hooks/useFriendshipContext'
 import RequestFriendButton from '../../friends/components/RequestFriendButton'
 import CancelRequestButton from '../../friends/components/CancelRequestButton'
 import UnfriendButton from '../../friends/components/UnfriendButton'
+import useAuth from '../../../core/auth/useAuth'
 
 function UI({ status, hidden, loading, onClick }) {
   // Do not render button if hidden is true (the page owner is the user)
@@ -31,8 +32,8 @@ function UI({ status, hidden, loading, onClick }) {
 }
 
 export default function FriendButton() {
+  const { isOwner } = useAuth()
   const {
-    isOwner,
     state: {friendshipStatus, username }
   } = useProfileContext()
 
@@ -52,11 +53,7 @@ export default function FriendButton() {
       loading={loading}
       onClick={{
         request:()=>requestFriend(username),
-        unfriend:()=>deleteFriend(username, true),
-        respond_request:{
-          accept:()=>alert('accept'),
-          reject:()=>alert('reject')
-        }
+        unfriend:()=>deleteFriend(username, true)
       }}
     />
   )

@@ -2,12 +2,14 @@ import {Avatar, Badge, useTheme} from '@mui/material'
 import {style} from '../style'
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { useProfileContext } from '../hooks';
+import useAuth from '../../../core/auth/useAuth';
 import ImageInput from '../../../components/common/input/ImageInput';
-import { useModal } from '../../../core/modal';
+import { useProfileModal } from '../provider/useProfileModal';
 export default function ProfileAvatar({hasStory = false}){
   const mode = useTheme().palette.mode
-  const {state, actions, isOwner} = useProfileContext()
-  const {openModal} = useModal()
+  const { state, actions } = useProfileContext()
+  const { isOwner } = useAuth()
+  const {openModal} = useProfileModal()
   const handleChangeAvatar = async (e) => {
     const temp = await actions.avatar.presignAvatar(e)
     openModal('confirm_avatar',{src:temp,confirm:actions.avatar.confirmAvatar})

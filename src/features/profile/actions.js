@@ -143,3 +143,26 @@ export const setMutualNumberLoading = (loading) => ({
   type:ACTIONS.SET_MUTUAL_NUMBER_LOADING,
   payload:loading
 })
+
+export const sync = {
+  follow: {
+    setFollowLoading: followLoading,
+    followSuccess,
+    unfollowSuccess,
+  },
+  friend: {
+    setFriendStatus,
+    increaseFriendNumber,
+    decreaseFriendNumber,
+  },
+  mutual: {
+    setMutualNumber,
+    setMutualNumberLoading,
+  },
+}
+
+export const profileOrchestrateActions = {
+  ...sync.follow,
+  ...sync.friend,
+  ...sync.mutual
+}

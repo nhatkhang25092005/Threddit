@@ -1,6 +1,6 @@
 import { Button, Tooltip, Box, CircularProgress } from "@mui/material"
 import BlockIcon from '@mui/icons-material/Block';
-import { useModal } from "../../../core/modal";
+import { useProfileModal } from "../provider/useProfileModal";
 const btnSx = {
   my: "auto",
   height: "fit-content",
@@ -38,7 +38,7 @@ export default function BlockUserButton({
   loading = false,
   disabled = false,
 }){
-  const {openModal} = useModal()
+  const {openModal} = useProfileModal()
   return (
     <Tooltip title="Thêm vào danh sách chặn" placement="top">
       <Button

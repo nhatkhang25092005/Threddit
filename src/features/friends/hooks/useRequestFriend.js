@@ -1,33 +1,28 @@
-import {useProfileContext} from '../../profile/hooks/useProfileContext'
 import {useNotify} from '../../../hooks/useNotify'
 import { useCallback } from 'react'
 import { apiService } from '../services/api.service'
-import {orchestrate} from '../../../utils/orchestrate'
 import { createFriend } from '../store/model/friend.model'
 import { aFriendActions, loadingActions } from '../store/actions'
 import { modal } from '../../../constant/text/vi/modal'
+import { useOrchestrate } from '../../../core/orchestrate/useOrchestrate'
 
 export function useRequestFriend(dispatch){
   const notify = useNotify()
-  const {actions:{friendSync:{setFriendStatus}}} = useProfileContext()
+  const { sync } = useOrchestrate()
   const requestFriend = useCallback(async (username) => {
-    const r = await orchestrate({
-      service: async () => notify.withLoading(
-        () => apiService.requestFriend(username),
-        (bool) => dispatch(loadingActions.requestFriend(bool))
-      ),
-      onSuccess: [
-        () => setFriendStatus('pending_sent'),
-        () => dispatch(aFriendActions.request(createFriend(username))),
-      ]
-    })
+    const r = await notify.withLoading(
+      () => apiService.requestFriend(username),
+      (bool) => dispatch(loadingActions.requestFriend(bool))
+    )
 
     if(r.success){
+      sync.profile.requestFriendSuccess()
+      dispatch(aFriendActions.request(createFriend(username)))
       notify.snackbar(`${r.message}.\nVề trang cá nhân để hủy`,3000)
       return
     }
     else notify.popup(modal.title.error, r.message)
-  },[notify, setFriendStatus, dispatch])
+  },[notify, sync, dispatch])
 
   return {
     requestFriend

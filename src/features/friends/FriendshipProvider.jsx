@@ -8,17 +8,18 @@ import { useGetMutualList } from './hooks/useGetMutualList'
 import { useAcceptRequest } from './hooks/useAcceptRequest'
 import { useRejectRequest } from './hooks/useRejectRequest'
 import { useCancelRequest } from './hooks/useCancelRequest'
-import { useProfileContext } from '../profile/hooks'
 import { useDeleteFriend } from './hooks/useDeleteFriend'
 import { useRequestFriend } from './hooks/useRequestFriend'
 import { useGetMutualNumber } from './hooks/useGetMutualNumber'
 import { useGetRequestNumber } from './hooks/useGetRequestNumber'
 import { useGetSentNumber } from './hooks/useGetSentNumber'
+import { useInitMyFriendList } from './hooks/useInitMyFriendList'
+import useAuth from '../../core/auth/useAuth'
 
 
 export default function FriendshipProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initState)
-  const {isOwner} = useProfileContext()
+  const { isOwner } = useAuth()
   const {getFriendList} = useGetFriendList(dispatch)
   const {getRequestList} = useGetRequestList(dispatch, isOwner)
   const {getSentList} = useGetSentList(dispatch, isOwner)
@@ -29,6 +30,7 @@ export default function FriendshipProvider({ children }) {
   const {deleteFriend} = useDeleteFriend(dispatch)
   const {requestFriend} = useRequestFriend(dispatch)
   useGetMutualNumber()
+  useInitMyFriendList(dispatch)
   useGetRequestNumber(dispatch)
   useGetSentNumber(dispatch)
 
@@ -64,7 +66,6 @@ const value = useMemo(() => ({
     </FriendshipContext.Provider>
   )
 }
-
 
 
 

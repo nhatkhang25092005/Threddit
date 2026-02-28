@@ -9,16 +9,16 @@ export function useCanNavigateToUser(){
   const getBlockStatus = useGetBlockStatus()
   const navigate = useNavigate()
   const notify = useNotify()
-  const {isOwner} = useAuth()
+  const {isOwnerByUsername} = useAuth()
   const canNavigateToUser = useCallback(async (baseUrl, username) => {
-    if(isOwner(username)) return navigate(`${baseUrl}/${username}`)
+    if(isOwnerByUsername(username)) return navigate(`${baseUrl}/${username}`)
     const isBlocked = await getBlockStatus(username)
     if(isBlocked){
       notify.popup(modal.title.notification, 'Bạn đã chặn người dùng này. Vui lòng gỡ chặn để truy cập')
       return
     }
     else navigate(`${baseUrl}/${username}`)
-  },[ getBlockStatus, notify, navigate, isOwner])
+  },[ getBlockStatus, notify, navigate, isOwnerByUsername])
 
   return canNavigateToUser
 }

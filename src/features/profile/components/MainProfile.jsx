@@ -8,13 +8,18 @@ import SchoolIcon from '@mui/icons-material/School';
 import PeopleIcon from '@mui/icons-material/People';
 import { profile } from '../../../constant/text/vi/profile.text'
 import { useProfileContext } from '../hooks';
+import useAuth from '../../../core/auth/useAuth';
 import {formatDate} from '../../../utils/formatDate'
 import {formatGender} from '../../../utils/formatGender'
 import { mapping } from '../../../utils/mapping';
+import { useProfileModal } from '../provider/useProfileModal';
+import PostContainer from './PostContainer';
 
 const sx = style.body.main_profile
 const MainProfile = memo(function MainProfile(){
-  const {state, actions, isOwner} = useProfileContext()
+  const { state } = useProfileContext()
+  const { isOwner } = useAuth()
+  const {openModal}  =useProfileModal()
   function Field ({field, data}){
     if(data)
       return (
@@ -53,11 +58,12 @@ const MainProfile = memo(function MainProfile(){
           <Field field={profile.bio.relationship} data={mapping.RELATIONSHIP_MAP[state.relationshipStatus]}/>
         </Box>
 
-        {isOwner && <Button variant='primary' sx={sx.button} onClick={()=>actions.modalManager.openModal('edit_bio')}>
+        {isOwner && <Button variant='primary' sx={sx.button} onClick={()=>openModal('edit_bio')}>
           {profile.bio.button}
         </Button>}
       </Surface>
       {/* Posts-build later */}
+      <PostContainer/>
     </Box>
   )
 })

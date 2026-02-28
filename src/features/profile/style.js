@@ -159,10 +159,11 @@ export const style = {
         justifyContent:'space-between',
         display:'flex',
         px:'0',
+        gap:'1rem',
         margin:'0'
       },
       surface:{
-        width:'30%',
+        width:'40%',
         display:'flex',
         flexDirection:'column',
         alignItems:'start',

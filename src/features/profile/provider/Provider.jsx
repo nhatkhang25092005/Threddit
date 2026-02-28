@@ -1,7 +1,8 @@
-import { useReducer, useMemo } from "react"
+import { useReducer, useMemo, useEffect } from "react"
 
 import { ProfileContext } from "./context"
 import { reducer, initState } from "../reducer"
+import { profileOrchestrateActions } from "../actions"
 
 import { services } from "../services"
 
@@ -15,15 +16,17 @@ import {
   useEditProfile,
 } from "../hooks"
 
-import { ModalProvider } from "../../../core/modal"
+import ProfileModalProvider from "./ProfileModalProvider"
+import { useOrchestrate } from "../../../core/orchestrate/useOrchestrate"
 
 export default function ProfileProvider({ children, username = null }) {
   /* ---------------- state ---------------- */
   const [state, dispatch] = useReducer(reducer, initState)
+  const { registerDispatch, unregisterDispatch } = useOrchestrate()
 
   /* ---------------- auth / owner ---------------- */
-  const { isOwner, updateAvatar, updateDisplayname } = useAuth()
-  const owner = username ? isOwner(username) : true
+  const { isOwner, isOwnerByUsername, updateAvatar, updateDisplayname } = useAuth()
+  const owner = username ? isOwnerByUsername(username) : isOwner
 
   /* ---------------- follow sync API ---------------- */
   const profileSync = useMemo(
@@ -36,7 +39,11 @@ export default function ProfileProvider({ children, username = null }) {
     [dispatch]
   )
 
-  // const modalManager = useMemo(() => createModalManager(setModal),[])
+  useEffect(() => {
+    registerDispatch('profile', dispatch, profileOrchestrateActions)
+    return () => { unregisterDispatch('profile') }
+  }, [registerDispatch, unregisterDispatch, dispatch])
+
 
   /* ---------------- side-effect hooks ---------------- */
   useGetProfile(dispatch, username)
@@ -98,9 +105,9 @@ export default function ProfileProvider({ children, username = null }) {
 
   return (
     <ProfileContext.Provider value={value}>
-      <ModalProvider modals={MODALS}>
+      <ProfileModalProvider modals={MODALS}>
         {children}
-      </ModalProvider>
+      </ProfileModalProvider>
     </ProfileContext.Provider>
   )
 }

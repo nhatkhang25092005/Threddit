@@ -3,10 +3,11 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-export default function ButtonMenu({label, actions, buttonSx, buttonVariant}) {
+export default function ButtonMenu({label, actions, buttonSx, buttonVariant, buttonDisabled = false}) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
+    if (buttonDisabled) return;
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -18,6 +19,7 @@ export default function ButtonMenu({label, actions, buttonSx, buttonVariant}) {
       <Button
         variant={buttonVariant || 'primary'}
         sx={buttonSx}
+        disabled={buttonDisabled}
         id="basic-button"
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
@@ -38,9 +40,10 @@ export default function ButtonMenu({label, actions, buttonSx, buttonVariant}) {
         }}
       >
         {actions.map((action, index) => (
-          <MenuItem key={index} onClick={async () => {
-            await action?.callback()
+          <MenuItem key={index} disabled={Boolean(action?.disabled)} onClick={ () => {
+            if (action?.disabled) return
             handleClose()
+            action?.callback()
           }}>
             {action.label}
           </MenuItem>
