@@ -41,6 +41,7 @@ export function useGetPostList (dispatch, hasMore) {
       )
     )
 
+    console.log(r)
     if(!r) return
 
     if(r.success){
