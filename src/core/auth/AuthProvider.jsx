@@ -15,10 +15,10 @@ function AuthProvider({ children }) {
 
   // ===== actions =====
   const setUser = (profile) => {
-    console.log(`${profile.avatarUrl}?t=${Date.now()}`)
+    const normalize = {...profile, avatarUrl:`${profile.avatarUrl}?t=${Date.now()}`}
     if (!profile) return
-    setUserState({...profile, avatarUrl:`${profile.avatarUrl}?t=${Date.now()}`})
-    localStorage.setItem(AUTH_KEY, JSON.stringify(profile))
+    setUserState(normalize)
+    localStorage.setItem(AUTH_KEY, JSON.stringify(normalize))
   }
 
   // clear on logout
