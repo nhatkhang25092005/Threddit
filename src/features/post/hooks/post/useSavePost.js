@@ -8,59 +8,59 @@ export function useSavePost(dispatch){
   const notify = useNotify()
   const pendingById = useRef(new Set())
 
-  const savePost = useCallback(async (contentId) => {
-    if (contentId == null) return null
-    if (pendingById.current.has(contentId)) return null
-    pendingById.current.add(contentId)
+  const savePost = useCallback(async (id) => {
+    if (id == null) return null
+    if (pendingById.current.has(id)) return null
+    pendingById.current.add(id)
 
-    dispatch(loadingAction.setPostSaveLoading(contentId, true))
-    dispatch(postByIdActions.setSaved(contentId, true))
+    dispatch(loadingAction.setPostSaveLoading(id, true))
+    dispatch(postByIdActions.setSaved(id, true))
 
     try {
-      const res = await postService.savePost(contentId)
+      const res = await postService.savePost(id)
       if (!res?.success) {
         notify.popup(modal.title.error, res?.message)
-        dispatch(postByIdActions.setSaved(contentId, false))
+        dispatch(postByIdActions.setSaved(id, false))
         return res
       }
 
       const saveNumber = res?.data?.saveNumber
       if (Number.isFinite(saveNumber)) {
-        dispatch(postByIdActions.setSaved(contentId, true, saveNumber))
+        dispatch(postByIdActions.setSaved(id, true, saveNumber))
       }
       notify.snackbar(res.message, 3000)
       return res
     } finally {
-      dispatch(loadingAction.setPostSaveLoading(contentId, false))
-      pendingById.current.delete(contentId)
+      dispatch(loadingAction.setPostSaveLoading(id, false))
+      pendingById.current.delete(id)
     }
   }, [dispatch, notify])
 
-  const unsavePost = useCallback(async (contentId) => {
-    if (contentId == null) return null
-    if (pendingById.current.has(contentId)) return null
-    pendingById.current.add(contentId)
+  const unsavePost = useCallback(async (id) => {
+    if (id == null) return null
+    if (pendingById.current.has(id)) return null
+    pendingById.current.add(id)
 
-    dispatch(loadingAction.setPostSaveLoading(contentId, true))
-    dispatch(postByIdActions.setSaved(contentId, false))
+    dispatch(loadingAction.setPostSaveLoading(id, true))
+    dispatch(postByIdActions.setSaved(id, false))
 
     try {
-      const res = await postService.unsavePost(contentId)
+      const res = await postService.unsavePost(id)
       if (!res?.success) {
         notify.popup(modal.title.error, res?.message)
-        dispatch(postByIdActions.setSaved(contentId, true))
+        dispatch(postByIdActions.setSaved(id, true))
         return res
       }
 
       const saveNumber = res?.data?.saveNumber
       if (Number.isFinite(saveNumber)) {
-        dispatch(postByIdActions.setSaved(contentId, false, saveNumber))
+        dispatch(postByIdActions.setSaved(id, false, saveNumber))
       }
       notify.snackbar(res.message, 3000)
       return res
     } finally {
-      dispatch(loadingAction.setPostSaveLoading(contentId, false))
-      pendingById.current.delete(contentId)
+      dispatch(loadingAction.setPostSaveLoading(id, false))
+      pendingById.current.delete(id)
     }
   }, [dispatch, notify])
 

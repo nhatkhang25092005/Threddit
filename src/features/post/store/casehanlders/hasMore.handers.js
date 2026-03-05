@@ -3,17 +3,17 @@ import { HAS_MORE } from "../type"
 export const hasMoreHandlers = (state, action) => {
   switch(action.type){
     case HAS_MORE.INIT_USERS_POST_HAS_MORE: {
-      const {username, hasMore} = action.payload || {}
+      const {username} = action.payload || {}
       if (!username) return state
 
-      const existed = Object.prototype.hasOwnProperty.call(state.hasMore, username)
+      const existed = Object.prototype.hasOwnProperty.call(state.userPostHasMore, username)
       if (existed) return state
 
       return {
         ...state,
-        hasMore: {
-          ...state.hasMore,
-          [username]: hasMore ?? true
+        userPostHasMore: {
+          ...state.userPostHasMore,
+          [username]:true
         }
       }
     }
@@ -22,12 +22,19 @@ export const hasMoreHandlers = (state, action) => {
       const {username, hasMore} = action.payload
       return{
         ...state,
-        hasMore:{
-          ...state.hasMore,
+        userPostHasMore:{
+          ...state.userPostHasMore,
           [username]:hasMore // boolean
         }
       }
     }
+
+    case HAS_MORE.SET_SAVED_HAS_MORE:
+      return{
+        ...state,
+        mySavedHasMore:action.payload
+      }
+    
     default: return state
   }
 }

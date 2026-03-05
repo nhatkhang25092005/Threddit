@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useHandleGetList } from "../../../hooks/useHandleGetList";
+import { useSafeRequest } from "../../../hooks/useSafeRequest";
 import { apiService } from "../services/api.service";
 import { friendListActions } from "../store/actions"
 import { mentionFriendModel } from "../store/model/mentionFriend.model";
 
 export function useInitMyFriendList(dispatch) {
   const cursorRef = useRef(null);
-  const runRequest = useHandleGetList();
+  const runRequest = useSafeRequest();
 
   const getInitFriendList = useCallback(async () => {
     cursorRef.current = null; // reset khi init

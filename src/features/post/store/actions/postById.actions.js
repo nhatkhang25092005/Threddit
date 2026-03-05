@@ -10,11 +10,19 @@ export const postByIdActions ={
     )
   ),
 
-  setSaved: (contentId, isSaved, saveNumber) => (
+  addPost: (postData) => (
+    createAction(
+      CLASS_TYPE.POST_BY_ID,
+      POST_BY_ID.ADD_POST_BY_ID,
+      postData
+    )
+  ),
+
+  setSaved: (id, isSaved, saveNumber) => (
     createAction(
       CLASS_TYPE.POST_BY_ID,
       POST_BY_ID.SET_POST_SAVED,
-      { contentId, isSaved, saveNumber }
+      { id, isSaved, saveNumber }
     )
   ),
 }

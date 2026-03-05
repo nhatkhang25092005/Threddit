@@ -1,13 +1,12 @@
-/**
- * Map form/UI data to create post API payload.
- * @param {Object} data - { text, isHadMediaFiles?, mentionedUsers?, mediaFilesNumber?, mediaContentTypes? }
- */
 export const mapCreatePost = (data) => ({
-  text: data.text ?? '',
-  isHadMediaFiles: Boolean(data.isHadMediaFiles),
-  mentionedUsers: Array.isArray(data.mentionedUsers) ? data.mentionedUsers : [],
-  mediaFilesNumber: Number(data.mediaFilesNumber) || 0,
-  mediaContentTypes: Array.isArray(data.mediaContentTypes) ? data.mediaContentTypes : [],
+  type: data?.type ?? 'post',
+  text: data?.text ?? '',
+  mentionedUsers: Array.isArray(data?.mentionedUsers)
+    ? data.mentionedUsers
+    : [],
+  ...(data?.uploadSessionId != null && {
+    uploadSessionId: data.uploadSessionId
+  })
 })
 
 /**

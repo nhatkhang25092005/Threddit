@@ -1,20 +1,48 @@
-export const postByIdModel = (data) => ({
-  contentId: data.contentId,
+import { mediaModel } from "./media.model"
+function mapAuthor(author){
+  return author !== null
+  ? {
+      username: author?.username || null,
+      displayName: author?.displayName || null,
+      avatarUrl: author?.avatarUrl || null,
+    }
+  : null
+}
 
-  author: {
-    username: data.author?.username || null,
-    displayName: data.author?.displayName || null,
-    avatarUrl: data.author?.avatarUrl || null,
+function mapSharer(sharer){
+  return sharer !== null
+  ? {
+      username:sharer?.username || null,
+      displayName:sharer?.displayName || null,
+      avatarUrl:sharer?.avatarUrl || null
+    }
+  : null
+}
+
+export const postByIdModel = (data) => ({
+  id: data.contentId || data.id,
+
+  time:{
+    createdAt:data.createdAt || null,
+    updatedAt:data.updatedAt || null,
+    sharedAt:data.sharedAt || null
   },
 
+  isPinned:data.isPinned || false,
   text: data.text || "",
-  mediaFiles: data.mediaFiles || [],
-  contentType: data.contentType || "post",
 
+  type:data.type || 'post',
+
+  author: mapAuthor(data.author),
+  sharer:mapSharer(data.sharer) ,
+
+  isOwner:data.isOwner,
   mentionedUsers: data.mentionedUsers || [],
 
-  createdAt: data.contentCreatedAt || null,
-  updatedAt: data.contentUpdatedAt || null,
+
+  mediaFiles: Array.isArray(data?.mediaFiles)
+    ? data.mediaFiles.map((item) => mediaModel(item))
+    : [],
 
   stats: {
     commentNumber: data.commentNumber ?? 0,
@@ -26,5 +54,9 @@ export const postByIdModel = (data) => ({
   viewer: {
     isSaved: data.isSaved || false,
     reaction: data.reaction || null,
-  }
+    isShared:data.isShared || false,
+    shareMessage:data.shareMessage || null
+  },
+
+  shareId:data.shareId || null
 })

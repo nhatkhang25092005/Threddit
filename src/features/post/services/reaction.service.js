@@ -2,12 +2,12 @@ import { handleRequest } from '../../../api/helper'
 import { reactionApi } from '../../../api/content/reaction/reaction.api'
 
 export const reactionService = {
-  react: async (contentId, payload, signal) =>
-    handleRequest(() => reactionApi.react(contentId, payload, signal)),
+  react: async (id, payload, signal) =>
+    handleRequest(() => reactionApi.react(id, payload, signal)),
 
-  updateReaction: async (contentId, payload, signal) =>
-    handleRequest(() => reactionApi.updateReaction(contentId, payload, signal)),
+  updateReaction: async (id, payload, signal) =>
+    handleRequest(() => reactionApi.updateReaction(id, payload, signal)),
 
-  unreact: async (contentId, signal) =>
-    handleRequest(() => reactionApi.unreact(contentId, signal)),
+  unreact: async (id, signal) =>
+    handleRequest(() => reactionApi.unreact(id, signal)),
 }

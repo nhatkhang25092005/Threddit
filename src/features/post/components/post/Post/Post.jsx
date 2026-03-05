@@ -24,30 +24,33 @@ const formatCount = (value = 0) => {
   return `${shortValue.replace(".0", "")}K`;
 };
 
-const resolvePrimaryMedia = (mediaFiles = []) => {
-  const firstMedia = mediaFiles[0] || {};
-  return {
-    src: firstMedia.url || firstMedia.mediaUrl || firstMedia.fileUrl || "",
-    type: firstMedia.contentType || firstMedia.mediaType || "",
-  };
-};
+const resolveMedia = (mediaFiles = []) => (
+  [...(Array.isArray(mediaFiles) ? mediaFiles : [])]
+    .map((media, index) => ({ ...media, __idx: index }))
+    .sort((a, b) => {
+      const aOrder = Number.isFinite(a?.sortOrder) ? a.sortOrder : Number.MAX_SAFE_INTEGER;
+      const bOrder = Number.isFinite(b?.sortOrder) ? b.sortOrder : Number.MAX_SAFE_INTEGER;
+      return aOrder - bOrder || a.__idx - b.__idx;
+    })
+);
 
 export default function Post({ post }) {
   const safePost = post ?? {};
-
-  const createdAt = formatDateTime(safePost.timelineCreatedAt);
-  const media = resolvePrimaryMedia(safePost.mediaFiles);
-  const author = safePost.author || safePost.timelineOwner || {};
-  const reactionNumber = safePost.reactionNumber
-  const commentNumber = safePost.commentNumber
-  const shareNumber = safePost.shareNumber
-  const saveNumber = safePost.saveNumber
+  const createdAt = formatDateTime(safePost.time?.createdAt);
+  const media = resolveMedia(safePost.mediaFiles);
+  const author = safePost.viewer?.isShared
+    ? (safePost.sharer || safePost.author || {})
+    : (safePost.author || {});
+  const reactionNumber = safePost.stats?.reactionNumber ?? 0
+  const commentNumber = safePost.stats?.commentNumber ?? 0
+  const shareNumber = safePost.stats?.shareNumber ?? 0
+  const saveNumber = safePost.stats?.saveNumber ?? 0
 
   return (
     <Surface  sx={sx.card}>
-      <PostHeader sx={sx} author={author} createdAt={createdAt} postId={safePost.contentId} />
+      <PostHeader sx={sx} author={author} createdAt={createdAt} postId={safePost.id} />
       <PostText sx={sx} text={safePost.text} />
-      <PostMedia sx={sx} src={media.src} type={media.type} />
+      <PostMedia items={media} />
       <PostStats
         sx={sx}
         reactionNumber={reactionNumber}
@@ -56,7 +59,7 @@ export default function Post({ post }) {
         formatCount={formatCount}
         saveNumber={saveNumber}
       />
-      <PostActions sx={sx} postId={safePost.contentId}/>
+      <PostActions sx={sx} postId={safePost.id}/>
     </Surface>
   );
 }

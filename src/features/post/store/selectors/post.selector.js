@@ -1,4 +1,6 @@
 export const createPostSelector = (state) => {
+  const getPostKey = (username) => username || "pinned_post"
+
   const getPostById = (postId) => {
     if (postId == null) return null
     return state.postById?.[postId] || null
@@ -17,9 +19,31 @@ export const createPostSelector = (state) => {
     return Boolean(getPostLoadingById(postId)?.savePost)
   }
 
+  const getUsersPostIds = (username) =>
+    state.contentList.usersPost?.[username] ?? []
+
+  const getPinnedPostIds = (username) => {
+    const key = getPostKey(username)
+    const rawPinnedPost = state.pinnedContents?.post
+    if (Array.isArray(rawPinnedPost)) return rawPinnedPost
+    return rawPinnedPost?.[key] ?? []
+  }
+
+  const getUserPostList = (username) => {
+    const postIds = getUsersPostIds(username)
+    const pinnedIds = getPinnedPostIds(username)
+    const ids = [...pinnedIds, ...postIds].filter((id) => id != null)
+    const uniqueIds = [...new Set(ids)]
+    const byId = state.postById ?? {}
+    return uniqueIds.map((id) => byId[id]).filter(Boolean)
+  }
+
   return{
     getPostById,
+    getUsersPostIds,
+    getPinnedPostIds,
     getSaveStatusByPostIdOf,
-    getSaveLoadingByPostIdOf
+    getSaveLoadingByPostIdOf,
+    getUserPostList
   }
 }

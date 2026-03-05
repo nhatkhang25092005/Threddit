@@ -9,10 +9,10 @@ const normalizeReaction = (reaction) => {
 export const reactionHandlers = (state, action) => {
   switch (action.type) {
     case REACTION.SET_POST_REACTION: {
-      const { contentId, reaction } = action.payload || {}
-      if (contentId == null) return state
+      const { id, reaction } = action.payload || {}
+      if (id == null) return state
 
-      const currentPost = state.postById?.[contentId]
+      const currentPost = state.postById?.[id]
       if (!currentPost) return state
 
       const previousReaction = normalizeReaction(currentPost.viewer?.reaction)
@@ -34,7 +34,7 @@ export const reactionHandlers = (state, action) => {
         ...state,
         postById: {
           ...state.postById,
-          [contentId]: {
+          [id]: {
             ...currentPost,
             stats: {
               ...currentPost.stats,

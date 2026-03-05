@@ -8,5 +8,13 @@ export const userPostActions = {
       USERS_POST.ADD_TIMELINE_INDEX,
       { username, timelineIndexList }
     )
+  ),
+
+  prependTimelineIndex: (username, timelineIndex) => (
+    createAction(
+      CLASS_TYPE.USERS_POST,
+      USERS_POST.PREPEND_TIMELINE_INDEX,
+      { username, timelineIndex }
+    )
   )
 }

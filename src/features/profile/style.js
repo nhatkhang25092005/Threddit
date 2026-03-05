@@ -154,7 +154,7 @@ export const style = {
       container:{
         width:'100%',
         height:'fit-content',
-        flexDirection:'row',
+        flexDirection:{xs:'column', md:'row'},
         alignItems:'flex-start',
         justifyContent:'space-between',
         display:'flex',
@@ -162,8 +162,63 @@ export const style = {
         gap:'1rem',
         margin:'0'
       },
+      leftColumn:{
+        display:'flex',
+        flexDirection:'column',
+        width:{xs:'100%', md:'41%'},
+        gap:'1rem',
+        position:{xs:'static', md:'sticky'},
+        top:'-1rem',
+        alignSelf:'flex-start',
+        minWidth:0
+      },
+      stickyProfileOverlay:{
+        position:'absolute',
+        top:0,
+        left:0,
+        right:0,
+        zIndex:5,
+        pointerEvents:'none',
+        px:'0.2rem'
+      },
+      stickyProfileCard:{
+        display:'flex',
+        alignItems:'center',
+        gap:'0.75rem',
+        p:'0.6rem 0.75rem',
+        borderRadius:'0.75rem',
+        bgcolor:(t)=>(t.palette.mode === 'dark' ? 'rgba(12, 12, 12, 0.9)' : 'rgba(255, 255, 255, 0.92)'),
+        border:(t)=>(`1px solid ${t.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`),
+        backdropFilter:'blur(6px)'
+      },
+      stickyProfileAvatar:{
+        width:'2.25rem',
+        height:'2.25rem'
+      },
+      stickyProfileMeta:{
+        minWidth:0
+      },
+      stickyProfileName:{
+        fontSize:'0.9rem',
+        fontWeight:700,
+        lineHeight:1.2,
+        whiteSpace:'nowrap',
+        overflow:'hidden',
+        textOverflow:'ellipsis'
+      },
+      stickyProfileUsername:{
+        fontSize:'0.8rem',
+        color:'text.secondary',
+        whiteSpace:'nowrap',
+        overflow:'hidden',
+        textOverflow:'ellipsis'
+      },
+      rightColumn:{
+        width:{xs:'100%', md:'59%'},
+        minWidth:0
+      },
       surface:{
-        width:'40%',
+        width:'100%',
         display:'flex',
         flexDirection:'column',
         alignItems:'start',

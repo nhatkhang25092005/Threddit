@@ -6,7 +6,9 @@ export const postByIdHandlers = (state, action) => {
       const posts = action.payload || []
 
       const byId = Object.fromEntries(
-        posts.map(p => [p.contentId, p])
+        posts
+          .filter((post) => post?.id != null)
+          .map((post) => [post.id, post])
       )
 
       return {
@@ -18,11 +20,24 @@ export const postByIdHandlers = (state, action) => {
       }
     }
 
-    case POST_BY_ID.SET_POST_SAVED: {
-      const { contentId, isSaved, saveNumber } = action.payload || {}
-      if (contentId == null) return state
+    case POST_BY_ID.ADD_POST_BY_ID: {
+      const post = action.payload || null
+      if (!post || post.id == null) return state
 
-      const currentPost = state.postById?.[contentId]
+      return {
+        ...state,
+        postById: {
+          ...state.postById,
+          [post.id]: post
+        }
+      }
+    }
+
+    case POST_BY_ID.SET_POST_SAVED: {
+      const { id, isSaved, saveNumber } = action.payload || {}
+      if (id == null) return state
+
+      const currentPost = state.postById?.[id]
       if (!currentPost) return state
 
       const previousIsSaved = Boolean(currentPost.viewer?.isSaved)
@@ -54,7 +69,7 @@ export const postByIdHandlers = (state, action) => {
         ...state,
         postById: {
           ...state.postById,
-          [contentId]: {
+          [id]: {
             ...currentPost,
             stats: {
               ...currentPost.stats,

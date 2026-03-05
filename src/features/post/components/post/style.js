@@ -3,6 +3,7 @@ export const style = {
     surface:{
       width:'100%',
       display:'flex',
+      pb:0,
       flexDirection:'row',
       gap:'1rem',
       alignItems:'flex-start'
@@ -39,6 +40,11 @@ export const style = {
     icon:{
       width:'1rem',
       height:'1rem'
+    },
+    actionIconButton:{
+      width:'2rem',
+      height:'2rem',
+      p:0
     }
   },
   createPostModal:{
@@ -365,18 +371,110 @@ export const style = {
       lineHeight: 1.45,
       fontSize: "0.97rem",
     },
-    media: {
-      display: "block",
-      width: "100%",
-      maxHeight: "30rem",
-      objectFit: "cover",
-      backgroundColor: "#000000",
-    },
-    audioMedia: {
-      display: "block",
-      width: "100%",
-      padding: "0.5rem",
-      backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#2A2B2D" : "#F0F2F5"),
+    media:{
+      mediaBlock: {
+        width: "100%",
+        my: "0.2rem",
+        overflow: "hidden",
+      },
+      mediaGrid: (count) => ({
+        width: "100%",
+        display: "grid",
+        gap: "2px",
+        height:'100%',
+        gridTemplateColumns: count === 1 ? "1fr" : "repeat(2, minmax(0, 1fr))",
+        gridAutoRows: count === 1
+          ? "auto"
+          : {
+              xs: "7.3rem",
+              sm: "9.8rem",
+              md: "12rem",
+            },
+      }),
+      videoPlayOverlay:{
+        position:'absolute',
+        top:'50%',
+        cursor:'pointer',
+        transition:'transform 0.2s ease',
+        "&:hover": {
+          transform: "translate(-50%, -50%) scale(1.15)"
+        },
+        left:'50%',
+        transform:'translate(-50%, -50%)'
+      },
+      mediaTile: (count, index) => ({
+        position: "relative",
+        overflow: "hidden",
+
+        backgroundColor: "#000000",
+        ...(count === 1 && {
+          height: "100%",
+          // maxHeight: {
+          //   xs: "21rem",
+          //   sm: "30rem",
+          // },
+        }),
+        ...(count === 2 && {
+          width:'100%',
+          
+        }),
+        ...(count === 3 && index === 0 && {
+          gridRow: "1 / span 2",
+        }),
+        ...((count === 3 && index > 0) || count >= 4
+          ? {
+              aspectRatio: "1/1",
+              height:'100%',
+              width:'100%',
+              objectFit:'cover'
+            }
+          : {}),
+      }),
+      mediaElement: {
+        display: "block",
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+        position:'relative',
+        backgroundColor: "#000000",
+      },
+      mediaMoreOverlay: {
+        position: "absolute",
+        inset: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "rgba(0,0,0,0.55)",
+        backdropFilter: "blur(1px)",
+        zIndex: 2,
+      },
+      mediaMoreText: {
+        color: "#ffffff",
+        fontWeight: 700,
+        fontSize: {
+          xs: "1.5rem",
+          sm: "2rem",
+        },
+        lineHeight: 1,
+        textShadow: "0 2px 8px rgba(0,0,0,0.5)",
+      },
+      audioList: {
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.35rem",
+        py: "0.4rem",
+        px: "0.4rem",
+      },
+      audioMedia: {
+        display: "block",
+        width: "100%",
+        height: "2.35rem",
+        borderRadius: "999rem",
+        bgcolor:'white',
+        border:(t)=> t.palette.mode==='dark'
+          ? 'solid white 1px'
+          : 'solid black 1px'
+      },
     },
     stats: {
       py: "0.55rem",

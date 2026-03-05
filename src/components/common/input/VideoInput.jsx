@@ -1,7 +1,7 @@
 import { useRef } from "react"
 import {Box} from '@mui/material'
 
-export default function VideoInput({children, onClick, sx}){
+export default function VideoInput({children, onClick, sx, multiple = false}){
   const ref = useRef(null)
   const handleInputFile = () => ref.current?.click()
 
@@ -12,6 +12,7 @@ export default function VideoInput({children, onClick, sx}){
         style={{display:'none'}}
         ref = {ref}
         accept="video/*"
+        multiple={multiple}
         onChange={onClick}
       />
       <Box onClick = {handleInputFile} >

@@ -10,11 +10,35 @@ export const loadingAction = {
     )
   ),
 
-  setPostSaveLoading: (contentId, isLoading) => (
+  getSavedListLoading: (isLoading) => (
     createAction(
       CLASS_TYPE.LOADING,
       LOADING.SET_POST_SAVE_LOADING,
-      { contentId, isLoading }
+      isLoading
+    )
+  ),
+
+  setPostSaveLoading: (id, isLoading) => (
+    createAction(
+      CLASS_TYPE.LOADING,
+      LOADING.SET_POST_SAVE_LOADING,
+      { id, isLoading }
+    )
+  ),
+
+  setCreatePostLoading: (isLoading) => (
+    createAction(
+      CLASS_TYPE.LOADING,
+      LOADING.SET_CREATE_POST_LOADING,
+      isLoading
+    )
+  ),
+
+  setPresignLoading: (isLoading) => (
+    createAction(
+      CLASS_TYPE.LOADING,
+      LOADING.SET_PRESIGN_LOADING,
+      isLoading
     )
   )
 }

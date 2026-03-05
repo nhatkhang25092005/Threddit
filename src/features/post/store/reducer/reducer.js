@@ -4,11 +4,12 @@ import {
   hasMoreHandlers,
   feedsHandlers,
   postByIdHandlers,
+  storyHandlers,
   reactionHandlers,
   savedPostHandlers,
-  timelineByIdHandlers,
   followersPostHandlers,
-  usersPostHandlers
+  usersPostHandlers,
+  pinHandlers
 } from "../casehanlders"
 
 export const reducer = (state, action) => {
@@ -17,11 +18,11 @@ export const reducer = (state, action) => {
     case CLASS_TYPE.POST_BY_ID:
       return postByIdHandlers(state, action)
 
+    case CLASS_TYPE.STORY:
+      return storyHandlers(state, action)
+
     case CLASS_TYPE.REACTION:
       return reactionHandlers(state, action)
-
-    case CLASS_TYPE.TIMELINE_BY_ID:
-      return timelineByIdHandlers(state, action)
 
     case CLASS_TYPE.FEEDS:
       return feedsHandlers(state, action)
@@ -40,6 +41,9 @@ export const reducer = (state, action) => {
 
     case CLASS_TYPE.HAS_MORE:
       return hasMoreHandlers(state, action)
+
+    case CLASS_TYPE.PIN:
+      return pinHandlers(state, action)
 
     default:
       return state

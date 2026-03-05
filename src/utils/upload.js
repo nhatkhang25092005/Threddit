@@ -10,35 +10,44 @@ const createUploadHandler = ({
   errorLogLabel,
   unknownErrorMessage,
 }) => {
-  return (event) => {
+  return (event, multiple = false) => {
     try {
-      const file = event.target.files?.[0];
+      const files = Array.from(event.target.files || []);
 
-      if (!file) {
+      if (!files.length) {
         return null;
       }
 
-      if (!file.type.startsWith(typePrefix)) {
-        alert(typeErrorMessage);
-        resetInput(event);
-        return null;
+      const filesToUpload = multiple ? files : [files[0]];
+
+      for (const file of filesToUpload) {
+        if (!file.type.startsWith(typePrefix)) {
+          alert(typeErrorMessage);
+          resetInput(event);
+          return null;
+        }
+
+        if (file.size > maxSize) {
+          alert(sizeErrorMessage);
+          resetInput(event);
+          return null;
+        }
       }
 
-      if (file.size > maxSize) {
-        alert(sizeErrorMessage);
-        resetInput(event);
-        return null;
-      }
-
-      const fileUrl = URL.createObjectURL(file);
-      resetInput(event);
-
-      return {
-        url: fileUrl,
+      const uploadedFiles = filesToUpload.map((file) => ({
+        url: URL.createObjectURL(file),
         contentLength: file.size,
         contentType: file.type,
         file: file,
-      };
+      }));
+
+      resetInput(event);
+
+      if (multiple) {
+        return uploadedFiles;
+      }
+
+      return uploadedFiles[0] || null;
     } catch (error) {
       console.error(errorLogLabel, error);
       alert(unknownErrorMessage);

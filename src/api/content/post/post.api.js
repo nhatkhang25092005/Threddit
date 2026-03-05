@@ -12,7 +12,7 @@ const buildSaveUrl = (contentId) => `${BASE}/${contentId}${SAVE}`
 const buildUnsaveUrl = (contentId) => `${BASE}/${contentId}${UNSAVE}`
 
 export const postApi = {
-  getTimelineContent(username, cursor, signal) {
+  getPostContent(username, cursor, signal) {
     const url = `${BASE}/${username}${OTHER_TIMELINE}`
     return axios.get(url, { params: { cursor }, signal })
   },
@@ -23,7 +23,7 @@ export const postApi = {
   },
 
   createPost(payload) {
-    const url = `${BASE}${CREATE_POST}`
+    const url = `${BASE}`
     return axios.post(url, payload)
   },
 

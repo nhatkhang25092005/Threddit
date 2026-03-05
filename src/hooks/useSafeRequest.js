@@ -7,7 +7,7 @@ function isAbortError(error) {
   return error?.name === "AbortError" || error?.code === CANCELED_CODE
 }
 
-export function useHandleGetList() {
+export function useSafeRequest() {
   const abortRef = useRef(null)
   const requestIdRef = useRef(0)
   

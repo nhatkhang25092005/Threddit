@@ -65,6 +65,7 @@ const removeMediaIconSx = {
 export default function CreatePostModalEditor({
   sx,
   mention,
+  loading,
   images,
   videos,
   sounds,
@@ -81,6 +82,7 @@ export default function CreatePostModalEditor({
         placeholder={`${displayName} ơi, hôm nay bạn thế nào`}
         sx={sx.editor(hasMedia)}
         {...mention.bind}
+        disabled={loading}
       />
       {mention.overlay}
       {images.map((image, index) =>

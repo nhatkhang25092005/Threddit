@@ -1,6 +1,10 @@
 export const initState = {
+  pinnedContents:{
+    story:{},
+    post:{}
+  },
   postById:{},
-  timelineById:{},
+  storyList:{}, // [username]: [contentId]
   contentList:{
     home:{
       feeds:[],
@@ -9,7 +13,8 @@ export const initState = {
     usersPost:{}, // [username] -> [1, 2, 3]
     savedPost:[]
   },
-  hasMore:{
+  mySavedHasMore:true,
+  userPostHasMore:{
     //[username]:boolean
   },
   loading:{

@@ -1,6 +1,6 @@
 import { useRef } from "react"
 import {Box} from '@mui/material'
-export default function ImageInput({children, onClick, sx}){
+export default function ImageInput({children, onClick, sx, multiple = false}){
   const ref = useRef(null)
   const handleInputFile = () => ref.current?.click()
   return(
@@ -10,6 +10,7 @@ export default function ImageInput({children, onClick, sx}){
         style={{display:'none'}}
         ref = {ref}
         accept="image/*"
+        multiple={multiple}
         onChange={onClick}
       />
       <Box onClick = {handleInputFile} >

@@ -1,11 +1,11 @@
-﻿import { Box, Button, Divider } from "@mui/material";
+﻿import { Box, Button, Divider, CircularProgress } from "@mui/material";
 import { useCallback, useState } from "react";
 import Surface from "../../../../../components/common/Surface";
 import useAuth from "../../../../../core/auth/useAuth";
 import { useMention } from "../../../../../hooks/useMention";
 import { upload } from "../../../../../utils/upload";
 import MentionListModal from "../../shared/MentionListModal";
-import { style } from "../style";
+import { style } from "../style"
 import {
   CreatePostModalActionBar,
   CreatePostModalAuthor,
@@ -20,21 +20,21 @@ import CloseAlert from "./components/CloseAlert";
 const sx = style.createPostModal;
 
 const uploadImage = (event, setImage) => {
-  const nextImage = upload.image(event);
-  if (!nextImage) return;
-  setImage((prev) => [nextImage, ...prev]);
+  const nextImages = upload.image(event, true)
+  if (!nextImages?.length) return;
+  setImage((prev) => [...nextImages, ...prev]);
 };
 
 const uploadVideo = (event, setVideo) => {
-  const nextVideo = upload.video(event);
-  if (!nextVideo) return;
-  setVideo((prev) => [nextVideo, ...prev]);
+  const nextVideos = upload.video(event, true);
+  if (!nextVideos?.length) return;
+  setVideo((prev) => [...nextVideos, ...prev]);
 };
 
 const uploadSound = (event, setSound) => {
-  const nextSound = upload.sound(event);
-  if (!nextSound) return;
-  setSound((prev) => [nextSound, ...prev]);
+  const nextSounds = upload.sound(event, true);
+  if (!nextSounds?.length) return;
+  setSound((prev) => [...nextSounds, ...prev]);
 };
 
 const removeMediaByIndex = (setMedia, index) => {
@@ -44,29 +44,43 @@ const removeMediaByIndex = (setMedia, index) => {
     const next = [...prev];
     const [removed] = next.splice(index, 1);
 
-    if (removed?.url) {
-      URL.revokeObjectURL(removed.url);
-    }
+    if (removed?.url) URL.revokeObjectURL(removed.url)
 
-    return next;
+    return next
   });
 };
 
-export default function CreatePostModal({ onClose }) {
+export default function CreatePostModal({
+  onClose,
+  initialImages = [],
+  initialVideos = [],
+  initialSounds = [],
+}) {
   const { user } = useAuth();
-  const {actions:{createPost}} = usePostContext()
-
+  const {actions:{createPost}, selector} = usePostContext()
   const mention = useMention({ minChars: 0 });
   const [openCloseAlert, setOpenCloseAlert] = useState(false);
-  const [images, setImage] = useState([]);
-  const [videos, setVideo] = useState([]);
-  const [sounds, setSound] = useState([]);
-  const [openMentionList, setOpenMentionList] = useState(false);
+  const [images, setImage] = useState(() =>
+    Array.isArray(initialImages) ? initialImages : []
+  )
+  const [videos, setVideo] = useState(() =>
+    Array.isArray(initialVideos) ? initialVideos : []
+  )
+  const [sounds, setSound] = useState(() =>
+    Array.isArray(initialSounds) ? initialSounds : []
+  )
+  const [openMentionList, setOpenMentionList] = useState(false)
+  const loading = selector.loading.getCreatePostLoading()
 
   const displayName = user?.displayName || user?.username || "Ban";
   const mediaCount = images.length + videos.length + sounds.length;
-  const hasMedia = mediaCount > 0;
-
+  const hasMedia = mediaCount > 0
+  const disableSubmit =
+    !mention.value
+    && images.length == 0
+    && sounds.length == 0
+    && videos.length == 0
+    || loading
   useAdjustLayout(mention, mediaCount);
 
   const handleUploadImage = useCallback((event) => {
@@ -115,27 +129,14 @@ export default function CreatePostModal({ onClose }) {
   }, [onClose]);
 
   const handleSubmit = useCallback(async () => {
-    const imagesCount = images.length;
-    const soundsCount = sounds.length;
-    const videosCount = videos.length;
-
-    const mediaFilesNumber = imagesCount + soundsCount + videosCount;
-    const isHadMediaFiles = mediaFilesNumber > 0;
-
-    const mediaContentTypes = [
-      imagesCount > 0 && "image/*",
-      soundsCount > 0 && "audio/*",
-      videosCount > 0 && "video/*",
-    ].filter(Boolean);
 
     await createPost({
       text: mention.value || "",
-      isHadMediaFiles,
+      type:'post',
       mentionedUsers: getMentions(mention.value || ""),
-      mediaFilesNumber,
-      mediaContentTypes,
-    });
-  }, [images.length, sounds.length, videos.length, mention.value, createPost]);
+      media:[...images, ...sounds, ...videos]
+    }, onClose);
+  }, [createPost, mention.value, images, sounds, videos, onClose]);
 
   return (
     <Surface variant="modal" sx={sx.surface}>
@@ -153,6 +154,7 @@ export default function CreatePostModal({ onClose }) {
         <CreatePostModalEditor
           sx={sx}
           mention={mention}
+          loading={loading}
           images={images}
           videos={videos}
           sounds={sounds}
@@ -172,8 +174,8 @@ export default function CreatePostModal({ onClose }) {
           onOpenMentionList={handleOpenMentionList}
         />
 
-        <Button variant="primary" fullWidth sx={sx.submitButton} onClick={handleSubmit}>
-          Đăng
+        <Button disabled={disableSubmit} variant="primary" fullWidth sx={sx.submitButton} onClick={handleSubmit}>
+          {loading ? <CircularProgress size={20} color="inherit"/> : 'Đăng'}
         </Button>
       </Box>
 

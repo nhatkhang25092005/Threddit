@@ -16,5 +16,13 @@ export const hasMoreActions = {
       HAS_MORE.SET_USERS_POST_HAS_MORE,
       {username, hasMore}
     )
+  ),
+
+  setSavedHasMore:(hasMore) => (
+    createAction(
+      CLASS_TYPE.HAS_MORE,
+      HAS_MORE.SET_SAVED_HAS_MORE,
+      hasMore
+    )
   )
 }

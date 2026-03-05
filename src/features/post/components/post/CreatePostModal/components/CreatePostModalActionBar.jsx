@@ -35,19 +35,19 @@ export default function CreatePostModalActionBar({
       <Typography sx={sx.addToPostLabel}>Thêm vào bài viết của bạn</Typography>
 
       <Box sx={sx.actionList}>
-        <MediaInput accept="image/*" onChange={onUploadImage} sx={mediaInputSx}>
+        <MediaInput multiple accept="image/*" onChange={onUploadImage} sx={mediaInputSx}>
           <IconButton component="span" sx={sx.actionIconButton} aria-label="Them anh">
             <AddPhotoAlternateIcon sx={sx.photoIcon} />
           </IconButton>
         </MediaInput>
 
-        <MediaInput accept="video/*" onChange={onUploadVideo} sx={mediaInputSx}>
+        <MediaInput multiple accept="video/*" onChange={onUploadVideo} sx={mediaInputSx}>
           <IconButton component="span" sx={sx.actionIconButton} aria-label="Them video">
             <VideocamIcon sx={videoIconSx} />
           </IconButton>
         </MediaInput>
 
-        <MediaInput accept="audio/*" onChange={onUploadSound} sx={mediaInputSx}>
+        <MediaInput multiple accept="audio/*" onChange={onUploadSound} sx={mediaInputSx}>
           <IconButton component="span" sx={sx.actionIconButton} aria-label="Them am thanh">
             <MusicNoteIcon sx={audioIconSx} />
           </IconButton>
