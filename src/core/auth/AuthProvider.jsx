@@ -15,8 +15,9 @@ function AuthProvider({ children }) {
 
   // ===== actions =====
   const setUser = (profile) => {
+    console.log(`${profile.avatarUrl}?t=${Date.now()}`)
     if (!profile) return
-    setUserState(profile)
+    setUserState({...profile, avatarUrl:`${profile.avatarUrl}?t=${Date.now()}`})
     localStorage.setItem(AUTH_KEY, JSON.stringify(profile))
   }
 
@@ -61,7 +62,7 @@ function AuthProvider({ children }) {
   const updateAvatar = (avatarUrl) => {
     setUserState(prev => {
       if (!prev) return prev
-      const next = { ...prev, avatarUrl }
+      const next = { ...prev, avatarUrl:`${avatarUrl}?t=${Date.now()}`}
       localStorage.setItem(AUTH_KEY, JSON.stringify(next))
       return next
     })

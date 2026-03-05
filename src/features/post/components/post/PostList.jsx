@@ -5,7 +5,7 @@ import { useEffect, useMemo } from "react";
 import Post from "./Post/Post"
 import useInfiniteScroll from '../../../../hooks/useInfiniteScroll'
 import LoadingGetPost from "./LoadingGetPost";
-
+import NoPost from "./NoPost";
 const VARIANT_CONFIG = {
   userPost: {
     selectPost: (selector, username) => selector.post.getUserPostList(username),
@@ -47,9 +47,12 @@ export default function PostList({ variant = "userPost" }) {
 
   return (
     <Box>
-      {posts.map((post) => (
+      {posts.length > 0
+        ? posts.map((post) => (
         <Post key={post.id} post={post} />
-      ))}
+      ))
+        : (!isLoading ? <NoPost message={'Người dùng này chưa có bài viết nào'}/> : null)
+      }
       <div ref={targetRef}/>
       {isLoading ? <LoadingGetPost count={posts.length > 0 ? 1 : 2} /> : null}
     </Box>

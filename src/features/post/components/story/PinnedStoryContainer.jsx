@@ -12,7 +12,7 @@ import useAuth from '../../../../core/auth/useAuth'
 const sx = style.pinnedStoryContainer
 
 export default function PinnedStoryContainer() {
-  const {profileUsername} = useAuth()
+  const {profileUsername, isOwner} = useAuth()
   const { actions, selector } = usePostContext()
   const { getPinnedStory } = actions
   const pinnedStoryList = selector.story.getPinnedStoryListOf(profileUsername)
@@ -51,7 +51,7 @@ export default function PinnedStoryContainer() {
             />
           ))}
         </Box>
-        <EditPinnedStory/>
+        {isOwner && <EditPinnedStory/>}
       </Box>
     </Surface>
   )

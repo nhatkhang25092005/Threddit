@@ -3,7 +3,7 @@ export const style = {
     surface:{
       width:'100%',
       display:'flex',
-      pb:0,
+      pb:'1rem',
       flexDirection:'row',
       gap:'1rem',
       alignItems:'flex-start'
@@ -685,6 +685,150 @@ export const style = {
       height:'1.75rem',
       borderRadius:'0.55rem',
       bgcolor:(theme)=>theme.palette.mode === 'dark' ? '#343941' : '#E8ECF3'
+    }
+  },
+  noPost:{
+    wrapper:{
+      position:'relative',
+      width:'100%',
+      maxWidth:'42rem',
+      py:0,
+      px:{
+        xs:'0.3rem',
+        sm:0
+      }
+    },
+    glow:{
+      position:'absolute',
+      inset:'1.1rem 0.8rem',
+      borderRadius:'1.25rem',
+      filter:'blur(28px)',
+      opacity:0.55,
+      pointerEvents:'none',
+      background:(theme)=>theme.palette.mode === 'dark'
+        ? 'radial-gradient(circle at 35% 30%, rgba(43,121,255,0.35), transparent 58%), radial-gradient(circle at 75% 75%, rgba(77,214,160,0.28), transparent 60%)'
+        : 'radial-gradient(circle at 35% 30%, rgba(43,121,255,0.22), transparent 58%), radial-gradient(circle at 75% 75%, rgba(33,178,130,0.18), transparent 60%)'
+    },
+    card:{
+      position:'relative',
+      zIndex:1,
+      overflow:'hidden',
+      borderRadius:'0.4rem',
+      border:'1px solid',
+      borderColor:(theme)=>theme.palette.mode === 'dark' ? '#3A3F46' : '#D7DEE8',
+      background:(theme)=>theme.palette.mode === 'dark'
+        ? 'linear-gradient(140deg, #1B1E22 0%, #23272D 100%)'
+        : 'linear-gradient(140deg, #FFFFFF 0%, #F4F8FD 100%)',
+      boxShadow:(theme)=>theme.palette.mode === 'dark'
+        ? '0 14px 30px rgba(0,0,0,0.26)'
+        : '0 12px 30px rgba(35,60,85,0.11)',
+      display:'flex',
+      flexDirection:'column',
+      alignItems:'center',
+      textAlign:'center',
+      py:{
+        xs:'1.5rem',
+        sm:'1.9rem'
+      },
+      px:{
+        xs:'1rem',
+        sm:'1.35rem'
+      },
+      '&::before':{
+        content:'""',
+        position:'absolute',
+        top:'-55%',
+        left:'-22%',
+        width:'58%',
+        height:'220%',
+        transform:'rotate(18deg)',
+        pointerEvents:'none',
+        background:'linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent)',
+        animation:'noPostShine 3.6s linear infinite'
+      },
+      '@keyframes noPostShine':{
+        '0%':{
+          transform:'translateX(-50%) rotate(18deg)'
+        },
+        '100%':{
+          transform:'translateX(245%) rotate(18deg)'
+        }
+      }
+    },
+    iconWrap:{
+      position:'relative',
+      width:'4.3rem',
+      height:'4.3rem',
+      mb:'0.9rem'
+    },
+    iconBadge:{
+      width:'100%',
+      height:'100%',
+      borderRadius:'1.1rem',
+      display:'grid',
+      placeItems:'center',
+      border:'1px solid',
+      borderColor:(theme)=>theme.palette.mode === 'dark' ? '#4A5360' : '#C7D7EA',
+      background:(theme)=>theme.palette.mode === 'dark'
+        ? 'linear-gradient(145deg, #5e6267 0%, #000000 100%)'
+        : 'linear-gradient(145deg, #e7e7e7 0%, #ffffff 100%)',
+      boxShadow:(theme)=>theme.palette.mode === 'dark'
+        ? '0 8px 18px rgba(0,0,0,0.25)'
+        : '0 8px 18px rgba(1, 1, 1, 0.2)'
+    },
+    mainIcon:{
+      fontSize:'2rem',
+      color:(theme)=>theme.palette.mode === 'dark' ? 'white' : 'black'
+    },
+    sparkleLeft:{
+      position:'absolute',
+      top:'-0.45rem',
+      left:'-0.7rem',
+      fontSize:'1.1rem',
+      color:(theme)=>theme.palette.mode === 'dark' ? '#dcdcdc' : '#22282e',
+      animation:'noPostSparkle 1.9s ease-in-out infinite'
+    },
+    sparkleRight:{
+      position:'absolute',
+      right:'-0.66rem',
+      bottom:'-0.2rem',
+      fontSize:'0.95rem',
+      color:(theme)=>theme.palette.mode === 'dark' ? '#ffffff' : '#000000',
+      animation:'noPostSparkle 1.9s ease-in-out infinite 0.5s'
+    },
+    '@keyframes noPostSparkle':{
+      '0%':{
+        transform:'translateY(0) scale(0.95)',
+        opacity:0.7
+      },
+      '50%':{
+        transform:'translateY(-0.28rem) scale(1.08)',
+        opacity:1
+      },
+      '100%':{
+        transform:'translateY(0) scale(0.95)',
+        opacity:0.7
+      }
+    },
+    title:{
+      fontSize:{
+        xs:'1.08rem',
+        sm:'1.2rem'
+      },
+      fontWeight:800,
+      lineHeight:1.2,
+      letterSpacing:'0.01em',
+      color:(theme)=>theme.palette.mode === 'dark' ? '#F1F5FA' : '#1E2B3B'
+    },
+    message:{
+      mt:'0.5rem',
+      maxWidth:'31rem',
+      fontSize:{
+        xs:'0.9rem',
+        sm:'0.95rem'
+      },
+      lineHeight:1.5,
+      color:(theme)=>theme.palette.mode === 'dark' ? '#AEB9C8' : '#5A6B80'
     }
   }
 }

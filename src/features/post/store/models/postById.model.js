@@ -4,7 +4,7 @@ function mapAuthor(author){
   ? {
       username: author?.username || null,
       displayName: author?.displayName || null,
-      avatarUrl: author?.avatarUrl || null,
+      avatarUrl: author?.avatarUrl+'?t='+Date.now() || null,
     }
   : null
 }
