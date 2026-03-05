@@ -9,7 +9,7 @@ export const loadingHandlers = (state, action) => {
           ...state.loading,
           global:{
             ...state.loading.global,
-            getFollowPost:action.payload
+            getUserPost:action.payload
           }
         }
       }

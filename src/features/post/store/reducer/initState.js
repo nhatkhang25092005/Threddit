@@ -23,7 +23,8 @@ export const initState = {
       presign:false,
       getFeeds:false,
       getFollowPost:false,
-      share:false
+      share:false,
+      getUserPost:false
     },
     item:{
       //username : itemModel()

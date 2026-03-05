@@ -505,4 +505,186 @@ export const style = {
       gap: "0.25rem",
     },
   },
+  loadingGetPost:{
+    list:{
+      width:'100%',
+      display:'flex',
+      flexDirection:'column',
+      gap:'1rem',
+      mt:'1rem'
+    },
+    card:{
+      position:'relative',
+      width:'100%',
+      maxWidth:'42rem',
+      borderRadius:'0.95rem',
+      overflow:'hidden',
+      border:'1px solid',
+      borderColor:(theme)=>theme.palette.mode === 'dark' ? '#3E4042' : '#DADDE1',
+      background:(theme)=>theme.palette.mode === 'dark'
+        ? 'linear-gradient(140deg, #1C1D21 0%, #25272B 100%)'
+        : 'linear-gradient(140deg, #FFFFFF 0%, #F7F9FC 100%)',
+      boxShadow:(theme)=>theme.palette.mode === 'dark'
+        ? '0 10px 22px rgba(0,0,0,0.22)'
+        : '0 10px 22px rgba(27,39,51,0.08)',
+      p:'0.9rem 1rem',
+      '&::after':{
+        content:'""',
+        position:'absolute',
+        top:0,
+        left:'-40%',
+        width:'40%',
+        height:'100%',
+        transform:'skewX(-12deg)',
+        background:'linear-gradient(90deg, transparent, rgba(255,255,255,0.23), transparent)',
+        animation:'loadingGetPostShimmer 1.75s ease-in-out infinite'
+      },
+      '@keyframes loadingGetPostShimmer':{
+        '0%':{
+          left:'-45%'
+        },
+        '100%':{
+          left:'130%'
+        }
+      }
+    },
+    header:{
+      display:'flex',
+      alignItems:'center',
+      gap:'0.75rem'
+    },
+    avatar:{
+      width:'2.6rem',
+      height:'2.6rem',
+      flexShrink:0,
+      bgcolor:(theme)=>theme.palette.mode === 'dark' ? '#3D4046' : '#D9DEE7'
+    },
+    authorMeta:{
+      width:'100%',
+      display:'flex',
+      flexDirection:'column',
+      gap:'0.2rem'
+    },
+    displayName:{
+      width:'40%',
+      minWidth:'8.5rem',
+      height:'1rem',
+      transform:'scale(1)',
+      transformOrigin:'left',
+      bgcolor:(theme)=>theme.palette.mode === 'dark' ? '#4A4F57' : '#DEE4ED'
+    },
+    subMeta:{
+      width:'28%',
+      minWidth:'5.2rem',
+      height:'0.8rem',
+      transform:'scale(1)',
+      transformOrigin:'left',
+      bgcolor:(theme)=>theme.palette.mode === 'dark' ? '#3B3F46' : '#E7EBF2'
+    },
+    body:{
+      mt:'0.95rem',
+      display:'grid',
+      gap:'0.42rem'
+    },
+    lineWide:{
+      height:'0.78rem',
+      width:'96%',
+      transform:'scale(1)',
+      transformOrigin:'left',
+      bgcolor:(theme)=>theme.palette.mode === 'dark' ? '#484D54' : '#E1E7F0'
+    },
+    lineMedium:{
+      height:'0.78rem',
+      width:'82%',
+      transform:'scale(1)',
+      transformOrigin:'left',
+      bgcolor:(theme)=>theme.palette.mode === 'dark' ? '#434850' : '#E7ECF4'
+    },
+    lineShort:{
+      height:'0.78rem',
+      width:'57%',
+      transform:'scale(1)',
+      transformOrigin:'left',
+      bgcolor:(theme)=>theme.palette.mode === 'dark' ? '#3F444B' : '#EDF1F7'
+    },
+    mediaWrap:{
+      mt:'0.9rem',
+      display:'grid',
+      gap:'0.35rem',
+      gridTemplateColumns:{
+        xs:'1fr',
+        sm:'1.5fr 1fr'
+      },
+      minHeight:{
+        xs:'12rem',
+        sm:'10.8rem'
+      }
+    },
+    mediaMain:{
+      width:'100%',
+      height:{
+        xs:'10rem',
+        sm:'100%'
+      },
+      bgcolor:(theme)=>theme.palette.mode === 'dark' ? '#30343B' : '#E3E8F1'
+    },
+    mediaSide:{
+      display:'grid',
+      gridTemplateColumns:{
+        xs:'repeat(2, minmax(0, 1fr))',
+        sm:'1fr'
+      },
+      gap:'0.35rem',
+      minHeight:{
+        xs:'5rem',
+        sm:'100%'
+      }
+    },
+    mediaSub:{
+      width:'100%',
+      height:'100%',
+      minHeight:{
+        xs:'4.8rem',
+        sm:'5rem'
+      },
+      bgcolor:(theme)=>theme.palette.mode === 'dark' ? '#3B4048' : '#E9EDF4'
+    },
+    reactionRow:{
+      mt:'0.75rem',
+      display:'flex',
+      alignItems:'center',
+      justifyContent:'space-between'
+    },
+    reactionLeft:{
+      width:'26%',
+      minWidth:'5rem',
+      height:'0.72rem',
+      transform:'scale(1)',
+      transformOrigin:'left',
+      bgcolor:(theme)=>theme.palette.mode === 'dark' ? '#49505A' : '#DDE4EE'
+    },
+    reactionRight:{
+      width:'20%',
+      minWidth:'3.4rem',
+      height:'0.72rem',
+      transform:'scale(1)',
+      transformOrigin:'right',
+      bgcolor:(theme)=>theme.palette.mode === 'dark' ? '#454C56' : '#E7ECF4'
+    },
+    actionRow:{
+      mt:'0.75rem',
+      borderTop:'1px solid',
+      borderColor:(theme)=>theme.palette.mode === 'dark' ? '#3A3F46' : '#E3E7EE',
+      pt:'0.65rem',
+      display:'grid',
+      gridTemplateColumns:'repeat(3, minmax(0, 1fr))',
+      gap:'0.35rem'
+    },
+    actionItem:{
+      width:'100%',
+      height:'1.75rem',
+      borderRadius:'0.55rem',
+      bgcolor:(theme)=>theme.palette.mode === 'dark' ? '#343941' : '#E8ECF3'
+    }
+  }
 }

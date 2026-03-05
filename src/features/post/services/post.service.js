@@ -3,9 +3,7 @@ import { postApi } from '../../../api/content/post/post.api'
 
 export const postService = {
   getPostContent: async (username, cursor, signal) =>
-    handleRequest(() =>
-      postApi.getPostContent(username, cursor, signal)
-    ),
+    handleRequest(() =>postApi.getPostContent(username, cursor, signal)),
 
   getSavedContent: async (cursor, signal) =>
     handleRequest(() => postApi.getSavedContent(cursor, signal)),

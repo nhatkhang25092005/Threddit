@@ -38,12 +38,17 @@ export const createPostSelector = (state) => {
     return uniqueIds.map((id) => byId[id]).filter(Boolean)
   }
 
+  const getUserPostListHasMore = (username) => {
+    return state.userPostHasMore[username]
+  }
+
   return{
     getPostById,
     getUsersPostIds,
     getPinnedPostIds,
     getSaveStatusByPostIdOf,
     getSaveLoadingByPostIdOf,
-    getUserPostList
+    getUserPostList,
+    getUserPostListHasMore
   }
 }

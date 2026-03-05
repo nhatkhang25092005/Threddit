@@ -18,7 +18,7 @@ export const usersPostHandlers = (state, action) => {
           ...state.contentList,
           usersPost: {
             ...state.contentList.usersPost,
-            [username]: [...nextIndexes,...existingIndexes]
+            [username]: [...existingIndexes, ...nextIndexes]
           }
         }
       }
