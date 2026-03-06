@@ -14,7 +14,7 @@ function mapSharer(sharer){
   ? {
       username:sharer?.username || null,
       displayName:sharer?.displayName || null,
-      avatarUrl:sharer?.avatarUrl || null
+      avatarUrl:sharer?.avatarUrl+'?t='+Date.now()|| null
     }
   : null
 }

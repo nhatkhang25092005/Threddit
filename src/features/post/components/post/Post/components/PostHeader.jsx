@@ -1,13 +1,14 @@
-import { Avatar, Box, IconButton, Typography } from "@mui/material";
-
+import { Avatar, Box, Typography } from "@mui/material";
+import PushPinIcon from '@mui/icons-material/PushPin';
 import PostMenu from "./PostMenu";
-export default function PostHeader({ sx, author, createdAt, postId }) {
+import { post } from "../../../../../../constant/text/vi/post/post";
+export default function PostHeader({ sx,isPinned, author, createdAt, postId, hideMenu = false }) {
   return (
     <Box sx={{ ...sx.section, ...sx.header }}>
       <Box sx={sx.authorWrap}>
         <Avatar src={author?.avatarUrl} sx={sx.avatar} />
         <Box sx={sx.authorMeta}>
-          <Typography sx={sx.authorName}>{author?.displayName || "Unknown"}</Typography>
+          <Typography sx={sx.authorName}>{author?.displayName || post.fallbackAuthorName}</Typography>
           <Box sx={sx.subMeta}>
             <Typography component="span" sx={{ fontSize: "inherit" }}>
               {createdAt}
@@ -15,8 +16,8 @@ export default function PostHeader({ sx, author, createdAt, postId }) {
           </Box>
         </Box>
       </Box>
-
-      <PostMenu postId={postId}/>
+      {isPinned ? <PushPinIcon sx={{color:'yellow'}}/> : null}
+      {!hideMenu ? <PostMenu postId={postId} /> : null}
     </Box>
   );
 }

@@ -17,7 +17,10 @@ export const postService = {
   unsavePost: async (id) =>
     handleRequest(() => postApi.unsavePost(id)),
 
-  confirmContentUploadedMedia: async (payload) =>
-    handleRequest(() => postApi.confirmContentUploadedMedia(payload)),
+  pinPost: async (id) =>
+    handleRequest(()=> postApi.pinPost(id)),
+
+  unPinPost: async (id) =>
+    handleRequest(()=> postApi.unPinPost(id))
 }
 

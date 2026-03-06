@@ -3,6 +3,7 @@ import useAuth from "../../../../core/auth/useAuth";
 import { Box } from "@mui/material";
 import { useEffect, useMemo } from "react";
 import Post from "./Post/Post"
+import SharePost from "./SharePost"
 import useInfiniteScroll from '../../../../hooks/useInfiniteScroll'
 import LoadingGetPost from "./LoadingGetPost";
 import NoPost from "./NoPost";
@@ -21,15 +22,7 @@ const VARIANT_CONFIG = {
 export default function PostList({ variant = "userPost" }) {
   const { profileUsername } = useAuth();
   const { actions, selector} = usePostContext()
-
-  const config = VARIANT_CONFIG[variant] ?? VARIANT_CONFIG.userPost;
-  const targetRef = useInfiniteScroll({
-    hasMore:config.hasMore(selector, profileUsername),
-    loading:config.loading(selector),
-    onLoadMore:()=>config.fetch(actions,profileUsername)
-  })
-
-
+  const config = VARIANT_CONFIG[variant] ?? VARIANT_CONFIG.userPost
   const timelines = useMemo(() => {
     if (!profileUsername) return [];
 
@@ -38,23 +31,35 @@ export default function PostList({ variant = "userPost" }) {
 
   const posts = useMemo(() => timelines, [timelines]);
   const isLoading = config.loading(selector)
+  const isEmpty = posts.length === 0
+  const isInitLoading = isLoading && isEmpty
+  const isLoadMore = isLoading && !isEmpty
+  const showNoPost = !isLoading && isEmpty
+
+
+  const targetRef = useInfiniteScroll({
+    hasMore:config.hasMore(selector, profileUsername),
+    loading:isLoading,
+    onLoadMore:()=>config.fetch(actions,profileUsername)
+  })
 
   useEffect(() => {
     if (!profileUsername) return;
     config.fetch(actions, profileUsername);
   }, [profileUsername, actions, config]);
 
-
   return (
     <Box>
-      {posts.length > 0
-        ? posts.map((post) => (
-        <Post key={post.id} post={post} />
-      ))
-        : (!isLoading ? <NoPost message={'Người dùng này chưa có bài viết nào'}/> : null)
-      }
+      {posts.map((post) => (
+          post?.viewer?.isShared
+            ? <SharePost key={post.id} post={post} />
+            : <Post key={post.id} post={post} />
+      ))}
+      { showNoPost && <NoPost message={'Người dùng này chưa có bài viết nào'}/>}
+      
       <div ref={targetRef}/>
-      {isLoading ? <LoadingGetPost count={posts.length > 0 ? 1 : 2} /> : null}
+      {isInitLoading && <LoadingGetPost count={2} />}
+      {isLoadMore && <LoadingGetPost count={1} />}
     </Box>
   );
 }

@@ -45,10 +45,11 @@ export default function Post({ post }) {
   const commentNumber = safePost.stats?.commentNumber ?? 0
   const shareNumber = safePost.stats?.shareNumber ?? 0
   const saveNumber = safePost.stats?.saveNumber ?? 0
+  const isPinned = safePost?.isPinned ?? false
 
   return (
     <Surface  sx={sx.card}>
-      <PostHeader sx={sx} author={author} createdAt={createdAt} postId={safePost.id} />
+      <PostHeader sx={sx} isPinned={isPinned} author={author} createdAt={createdAt} postId={safePost.id} />
       <PostText sx={sx} text={safePost.text} />
       <PostMedia items={media} />
       <PostStats

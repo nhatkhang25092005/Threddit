@@ -5,6 +5,7 @@ import createSnackbar from './handlers/createSnackbar'
 import  createWithLoading from './handlers/createWithLoading'
 import createLoading from './handlers/createLoading'
 import createCustomModal from './handlers/createCustomModal'
+import { createSnackbarLoading } from "./handlers/createSnackbarLoading";
 
 const NotifyContext = createContext(null)
 function NotifyProvider({children}){
@@ -55,26 +56,34 @@ function NotifyProvider({children}){
       const currentContainerId = containerRef.current
       createCustomModal(setNotif, createElement(component, props), currentContainerId)
     },
+    
+    /**
+     * Show a snackbar with a loading indicator.
+     * Useful for displaying a loading state while an async task is running.
+     *
+     * @param {string} message - Message displayed inside the snackbar.
+     * @param {boolean} isLoading - Controls whether the loading snackbar is visible.
+     * @returns {void}
+     */
+    snackbarLoading: (message, isLoading) => createSnackbarLoading(message, isLoading, setNotif)
+    
   }),[])
 
+  const close = () => setNotif(prev => prev ? {...prev, open:false} : null)
 
+  const NotifyComponent = notif && NOTIFY_MAP[notif.type]
   const render = () => {
-  
     if(!notif || !NotifyComponent) return
     const element = (
       <NotifyComponent
         open = {notif.open}
         onClose={close}
-        container = {notif?.containerId ? document.getElementById(notif.containerId) : undefined}
         {...notif.props}
       />
     )
     return element
   }
 
-  const close = () => setNotif(prev => prev ? {...prev, open:false} : null)
-
-  const NotifyComponent = notif && NOTIFY_MAP[notif.type]
   return(
     <NotifyContext.Provider value={{notify}}>
       {children}

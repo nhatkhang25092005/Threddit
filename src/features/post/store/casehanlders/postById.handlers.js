@@ -1,5 +1,5 @@
 import { POST_BY_ID } from "../type"
-
+import { itemModel } from "../models/item.model"
 export const postByIdHandlers = (state, action) => {
   switch (action.type){
     case POST_BY_ID.ADD_POSTS_BY_ID:{
@@ -11,11 +11,24 @@ export const postByIdHandlers = (state, action) => {
           .map((post) => [post.id, post])
       )
 
+      const loadingItem = Object.fromEntries(
+        posts
+          .filter(post => post?.id != null)
+          .map(post => [post.id, itemModel()])
+      )
+
       return {
         ...state,
         postById: {
           ...state.postById,
           ...byId
+        },
+        loading:{
+          ...state.loading,
+          item:{
+            ...state.loading.item,
+            ...loadingItem
+          }
         }
       }
     }
@@ -79,6 +92,28 @@ export const postByIdHandlers = (state, action) => {
               ...currentPost.viewer,
               isSaved: nextIsSaved
             }
+          }
+        }
+      }
+    }
+
+    case POST_BY_ID.SET_POST_PINNED: {
+      const { id, isPinned } = action.payload || {}
+      if (id == null) return state
+
+      const currentPost = state.postById?.[id]
+      if (!currentPost) return state
+
+      const nextIsPinned = Boolean(isPinned)
+      if (Boolean(currentPost.isPinned) === nextIsPinned) return state
+
+      return {
+        ...state,
+        postById: {
+          ...state.postById,
+          [id]: {
+            ...currentPost,
+            isPinned: nextIsPinned
           }
         }
       }

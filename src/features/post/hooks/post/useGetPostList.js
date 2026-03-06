@@ -1,5 +1,5 @@
 import { useNotify } from '../../../../hooks/useNotify'
-import { useRef, useCallback } from 'react'
+import { useRef, useCallback, useEffect } from 'react'
 import { postService } from '../../services/post.service'
 import {modal} from '../../../../constant/text/vi/modal'
 import { combineActions, loadingAction, hasMoreActions, postByIdActions, pinActions } from '../../store/actions'
@@ -27,10 +27,15 @@ function setData(dispatch, data, username){
 export function useGetPostList (dispatch, hasMore) {
   const notify = useNotify()
   const cursor = useRef({}) // {[username] = cursor}
+  const hasMoreRef = useRef(hasMore)
   const runRequest = useSafeRequest()
 
+  useEffect(() => {
+    hasMoreRef.current = hasMore
+  }, [hasMore])
+
   const getPostList = useCallback(async (username) => {
-    if(hasMore?.[username] === false) return
+    if(hasMoreRef.current?.[username] === false) return
 
     dispatch(hasMoreActions.initHasMore(username))
 
@@ -41,7 +46,6 @@ export function useGetPostList (dispatch, hasMore) {
       )
     )
 
-    console.log(r)
     if(!r) return
 
     if(r.success){
@@ -55,7 +59,7 @@ export function useGetPostList (dispatch, hasMore) {
     else{
       notify.popup(modal.title.error, r.message)
     }
-  },[dispatch, notify, hasMore, runRequest])
+  },[dispatch, notify, runRequest])
 
   return getPostList
 }

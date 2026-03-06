@@ -27,7 +27,7 @@ export const initState = {
       getUserPost:false
     },
     item:{
-      //username : itemModel()
+      //[id] : itemModel()
     }
   }
 

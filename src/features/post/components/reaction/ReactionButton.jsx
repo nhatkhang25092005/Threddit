@@ -5,6 +5,7 @@ import { REACTION_META } from '../../../../constant/emoji';
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ReactionBar from './ReactionBar'
 import { usePostContext } from '../../hooks';
+import { post } from "../../../../constant/text/vi/post/post";
 const OPEN_DELAY = 300
 const CLOSE_DELAY = 120
 const sx = style.reaction
@@ -101,7 +102,7 @@ export default function ReactionButton({postId}){
         ) : (
           <Box sx={{display:'flex', alignItems:'center'}}>
             <ThumbUpAltIcon sx={sx.actionIcon} />
-            <Typography fontSize='0.9rem' color='white'>Thích</Typography>
+            <Typography fontSize='0.9rem' color='white'>{post.actionLike}</Typography>
           </Box>
         )}
       </ButtonBase>

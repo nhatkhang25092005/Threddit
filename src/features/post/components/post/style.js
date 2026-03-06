@@ -371,6 +371,24 @@ export const style = {
       lineHeight: 1.45,
       fontSize: "0.97rem",
     },
+    sharedCard: {
+      mx: "1rem",
+      mt: "0.2rem",
+      mb: "0.9rem",
+      border: "1px solid",
+      borderColor: (theme) => (theme.palette.mode === "dark" ? "#3E4042" : "#DADDE1"),
+      borderRadius: "0.75rem",
+      backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#18191A" : "#FFFFFF"),
+      overflow: "hidden",
+    },
+    sharedCardBody: {
+      pb: "0.3rem",
+    },
+    sharedUnavailable: {
+      py: "0.9rem",
+      fontSize: "0.86rem",
+      color: (theme) => (theme.palette.mode === "dark" ? "#B0B3B8" : "#65676B"),
+    },
     media:{
       mediaBlock: {
         width: "100%",

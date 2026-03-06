@@ -26,6 +26,14 @@ export const loadingAction = {
     )
   ),
 
+  setPostPinLoading: (id, isLoading) => (
+    createAction(
+      CLASS_TYPE.LOADING,
+      LOADING.SET_POST_PIN_LOADING,
+      { id, isLoading }
+    )
+  ),
+
   setCreatePostLoading: (isLoading) => (
     createAction(
       CLASS_TYPE.LOADING,

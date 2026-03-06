@@ -19,6 +19,10 @@ export const createPostSelector = (state) => {
     return Boolean(getPostLoadingById(postId)?.savePost)
   }
 
+  const getPinLoadingByPostIdOf = (postId) => {
+    return Boolean(getPostLoadingById(postId)?.pinPost)
+  }
+
   const getUsersPostIds = (username) =>
     state.contentList.usersPost?.[username] ?? []
 
@@ -42,13 +46,24 @@ export const createPostSelector = (state) => {
     return state.userPostHasMore[username]
   }
 
+  const getPostPinStatusOf = (postId) => {
+    return state.postById[postId].isPinned
+  }
+
+  const getPostPinLoadingOf = (postId) => {
+    return state.loading.item?.[postId]?.pinPost
+  }
+
   return{
     getPostById,
     getUsersPostIds,
     getPinnedPostIds,
     getSaveStatusByPostIdOf,
     getSaveLoadingByPostIdOf,
+    getPinLoadingByPostIdOf,
     getUserPostList,
-    getUserPostListHasMore
+    getUserPostListHasMore,
+    getPostPinStatusOf,
+    getPostPinLoadingOf
   }
 }

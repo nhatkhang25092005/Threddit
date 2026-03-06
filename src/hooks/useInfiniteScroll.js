@@ -78,9 +78,10 @@ export default function useInfiniteScroll({
   const observerRef = useRef(null);
   const loadingRef = useRef(loading);
   const onLoadMoreRef = useRef(onLoadMore);
+  const triggerLockRef = useRef(false);
 
   loadingRef.current = loading;
-  onLoadMoreRef.current = onLoadMore
+  onLoadMoreRef.current = onLoadMore;
 
   const targetRef = useCallback(
     (node) => {
@@ -88,7 +89,7 @@ export default function useInfiniteScroll({
       if (observerRef.current) observerRef.current.disconnect();
 
       // check element and hasMore data
-      if (!node || !hasMore) return;
+      if (!node || !hasMore || loading) return;
 
       observerRef.current = new IntersectionObserver(
         (entries) => {
@@ -96,19 +97,20 @@ export default function useInfiniteScroll({
           if (
             entry.isIntersecting &&
             !loadingRef.current &&
+            !triggerLockRef.current &&
             typeof onLoadMoreRef.current === "function"
           ) {
-            onLoadMoreRef.current();
+            triggerLockRef.current = true;
+            Promise.resolve(onLoadMoreRef.current()).finally(() => {
+              triggerLockRef.current = false;
+            });
           }
         },
         { threshold, rootMargin },
       );
-      observerRef.current.observe(node)
-      return () => {
-        observerRef.current.disconnect();
-      };
+      observerRef.current.observe(node);
     },
-    [hasMore, threshold, rootMargin],
+    [hasMore, loading, threshold, rootMargin],
   );
 
   return targetRef;

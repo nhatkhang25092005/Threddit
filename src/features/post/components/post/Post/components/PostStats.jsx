@@ -1,4 +1,5 @@
 import { Box, Typography } from "@mui/material";
+import { post } from "../../../../../../constant/text/vi/post/post";
 
 export default function PostStats({
   sx,
@@ -13,19 +14,19 @@ export default function PostStats({
       <Box sx={sx.stats}>
         <Box sx={sx.reactWrap}>
           <Typography component="span" sx={{ fontSize: "inherit" }}>
-            {`${formatCount(reactionNumber)} lượt tương tác`}
+            {`${formatCount(reactionNumber)} ${post.statsReaction}`}
           </Typography>
         </Box>
 
         <Box sx={sx.statsRight}>
           <Typography component="span" sx={{ fontSize: "inherit" }}>
-            {formatCount(saveNumber)} Lượt lưu
+            {`${formatCount(saveNumber)} ${post.statsSave}`}
           </Typography>
           <Typography component="span" sx={{ fontSize: "inherit" }}>
-            {formatCount(commentNumber)} bình luận
+            {`${formatCount(commentNumber)} ${post.statsComment}`}
           </Typography>
           <Typography component="span" sx={{ fontSize: "inherit" }}>
-            {formatCount(shareNumber)} lượt chia sẻ
+            {`${formatCount(shareNumber)} ${post.statsShare}`}
           </Typography>
         </Box>
       </Box>

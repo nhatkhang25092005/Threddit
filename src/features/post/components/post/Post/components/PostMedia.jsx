@@ -1,5 +1,6 @@
 import { Box, Typography, Tooltip } from "@mui/material";
 import { style } from "../../style";
+import { post } from "../../../../../../constant/text/vi/post/post";
 const normalizeType = (type = "") => String(type || "").toLowerCase();
 
 const isImageType = (type = "") => {
@@ -51,7 +52,7 @@ export default function PostMedia({ items = [] }) {
               return (
                 <Box key={key} sx={sx.mediaTile(visualPreviewList.length, index)}>
                   {isImageType(mediaType) && (
-                    <Box component="img" src={item.url} alt="Post media" sx={sx.mediaElement} />
+                    <Box loading="lazy" component="img" src={item.url} alt={post.mediaAlt} sx={sx.mediaElement} />
                   )}
 
                   {isVideoType(mediaType) && (
@@ -63,7 +64,7 @@ export default function PostMedia({ items = [] }) {
                           preload="metadata"
                           sx={sx.mediaElement}
                         />
-                        {visualPreviewList.length > 1 && <Tooltip title="Phát" placement="top"><Box sx={sx.videoPlayOverlay}>▶</Box></Tooltip>}
+                        {visualPreviewList.length > 1 && <Tooltip title={post.mediaPlayTooltip} placement="top"><Box sx={sx.videoPlayOverlay}>▶</Box></Tooltip>}
                       </>
                     )}
 

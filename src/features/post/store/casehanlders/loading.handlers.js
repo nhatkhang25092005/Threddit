@@ -37,6 +37,29 @@ export const loadingHandlers = (state, action) => {
       }
     }
 
+    case LOADING.SET_POST_PIN_LOADING: {
+      const { id, isLoading } = action.payload || {}
+      if (id == null) return state
+
+      const currentItemLoading = state.loading.item?.[id] || itemModel()
+      const nextPinLoading = Boolean(isLoading)
+      if (currentItemLoading.pinPost === nextPinLoading) return state
+
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          item: {
+            ...state.loading.item,
+            [id]: {
+              ...currentItemLoading,
+              pinPost: nextPinLoading
+            }
+          }
+        }
+      }
+    }
+
     case LOADING.SET_CREATE_POST_LOADING:
       return {
         ...state,

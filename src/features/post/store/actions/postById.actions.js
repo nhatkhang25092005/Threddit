@@ -25,4 +25,12 @@ export const postByIdActions ={
       { id, isSaved, saveNumber }
     )
   ),
+
+  setPinned: (id, isPinned) => (
+    createAction(
+      CLASS_TYPE.POST_BY_ID,
+      POST_BY_ID.SET_POST_PINNED,
+      { id, isPinned }
+    )
+  ),
 }

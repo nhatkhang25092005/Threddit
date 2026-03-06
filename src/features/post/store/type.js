@@ -14,6 +14,7 @@ export const CLASS_TYPE = {
 export const LOADING = {
   GET_POST_LIST:"get post list",
   SET_POST_SAVE_LOADING: "set post save loading",
+  SET_POST_PIN_LOADING: "set post pin loading",
   SET_CREATE_POST_LOADING: "set create post loading",
   SET_PRESIGN_LOADING: "set presign loading",
 }
@@ -27,7 +28,8 @@ export const HAS_MORE = {
 export const POST_BY_ID = {
   ADD_POSTS_BY_ID : 'ADD POST BY ID',
   ADD_POST_BY_ID: 'ADD POST BY ID ITEM',
-  SET_POST_SAVED: 'SET POST SAVED'
+  SET_POST_SAVED: 'SET POST SAVED',
+  SET_POST_PINNED: 'SET POST PINNED'
 }
 
 export const STORY = {
