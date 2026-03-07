@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import Surface from "../../../../../components/common/Surface";
 import { style } from "../style";
-import { PostHeader, PostMedia, PostStats, PostText } from "../Post/components";
+import { PostHeader, PostMedia, PostStats, PostText, PostActions } from "../Post/components";
 
 const sx = style.post;
 
@@ -86,6 +86,7 @@ export default function SharePost({ post }) {
               saveNumber={saveNumber}
               formatCount={formatCount}
             />
+            <PostActions sx={sx} postId={safePost.id}/>
           </Box>
         ) : (
           <Box sx={sx.section}>

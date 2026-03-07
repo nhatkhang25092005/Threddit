@@ -13,7 +13,7 @@ export const initState = {
     usersPost:{}, // [username] -> [1, 2, 3]
     savedPost:[]
   },
-  mySavedHasMore:true,
+  mySavedHasMore:undefined,
   userPostHasMore:{
     //[username]:boolean
   },
@@ -24,6 +24,7 @@ export const initState = {
       getFeeds:false,
       getFollowPost:false,
       share:false,
+      getSavedPost:false,
       getUserPost:false
     },
     item:{

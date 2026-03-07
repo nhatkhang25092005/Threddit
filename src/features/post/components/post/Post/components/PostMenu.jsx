@@ -3,8 +3,10 @@ import {CircularProgress} from '@mui/material'
 import ButtonMenu from "../../../../../../components/common/button/ButtonMenu"
 import { usePostContext } from "../../../../hooks"
 import { post } from "../../../../../../constant/text/vi/post/post";
+import useAuth from "../../../../../../core/auth/useAuth";
+import { resolvePinOption } from "../../../../utils/resolvePinOption";
 
-export default function PostMenu({ postId }) {
+export default function PostMenu({ postId, postContext }) {
   const {
     actions: {
       savePost,
@@ -21,6 +23,7 @@ export default function PostMenu({ postId }) {
       }
     }
   } = usePostContext()
+  const {isOwner} = useAuth()
 
   const isSaved = getSaveStatusByPostIdOf(postId)
   const isSaveLoading = getSaveLoadingByPostIdOf(postId)
@@ -53,7 +56,7 @@ export default function PostMenu({ postId }) {
 
   const actions = [
     saveAction,
-    pinActions
+    ...(resolvePinOption(isOwner, postContext) ? [pinActions] : [])
   ]
 
   return (

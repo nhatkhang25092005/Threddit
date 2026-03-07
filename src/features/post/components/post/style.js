@@ -318,8 +318,8 @@ export const style = {
       width: "100%",
       maxWidth: "42rem",
       padding: 0,
-      overflow: "hidden",
-      my: "1rem",
+      mb: "1rem",
+      pb:'0.4rem'
     },
     section: {
       px: "1rem",
@@ -374,12 +374,12 @@ export const style = {
     sharedCard: {
       mx: "1rem",
       mt: "0.2rem",
-      mb: "0.9rem",
+      mb: "1rem",
+
       border: "1px solid",
       borderColor: (theme) => (theme.palette.mode === "dark" ? "#3E4042" : "#DADDE1"),
       borderRadius: "0.75rem",
       backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#18191A" : "#FFFFFF"),
-      overflow: "hidden",
     },
     sharedCardBody: {
       pb: "0.3rem",

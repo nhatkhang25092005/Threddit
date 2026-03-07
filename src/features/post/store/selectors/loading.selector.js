@@ -5,8 +5,12 @@ export const createLoadingSelector = (state) => {
   const getUserPostFetchingLoading = () => (
     state.loading.global.getUserPost
   )
+  const getSavedPostFetchingLoading = () => (
+    state.loading.global.getSavedPost
+  )
   return {
     getCreatePostLoading,
-    getUserPostFetchingLoading
+    getUserPostFetchingLoading,
+    getSavedPostFetchingLoading
   }
 }

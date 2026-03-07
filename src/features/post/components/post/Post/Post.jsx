@@ -2,7 +2,6 @@ import Surface from "../../../../../components/common/Surface";
 import { style } from "../style";
 import { PostActions, PostHeader, PostMedia, PostStats, PostText } from "./components"
 const sx = style.post;
-// const CLOSE_REACTION_DELAY_MS = 120;
 
 const formatDateTime = (isoString) => {
   const date = new Date(isoString);
@@ -35,21 +34,19 @@ const resolveMedia = (mediaFiles = []) => (
 );
 
 export default function Post({ post }) {
-  const safePost = post ?? {};
+  const safePost = post ?? {}
   const createdAt = formatDateTime(safePost.time?.createdAt);
   const media = resolveMedia(safePost.mediaFiles);
-  const author = safePost.viewer?.isShared
-    ? (safePost.sharer || safePost.author || {})
-    : (safePost.author || {});
+  const author  = safePost?.author || null
   const reactionNumber = safePost.stats?.reactionNumber ?? 0
   const commentNumber = safePost.stats?.commentNumber ?? 0
   const shareNumber = safePost.stats?.shareNumber ?? 0
   const saveNumber = safePost.stats?.saveNumber ?? 0
   const isPinned = safePost?.isPinned ?? false
-
+  const postContext = safePost?.context ?? null
   return (
     <Surface  sx={sx.card}>
-      <PostHeader sx={sx} isPinned={isPinned} author={author} createdAt={createdAt} postId={safePost.id} />
+      <PostHeader sx={sx} context={postContext}  isPinned={isPinned} author={author} createdAt={createdAt} postId={safePost.id} />
       <PostText sx={sx} text={safePost.text} />
       <PostMedia items={media} />
       <PostStats

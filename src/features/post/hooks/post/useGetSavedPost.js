@@ -1,5 +1,5 @@
 import { useNotify } from '../../../../hooks/useNotify'
-import { useRef, useCallback } from 'react'
+import { useRef, useCallback, useEffect } from 'react'
 import { postService } from '../../services/post.service'
 import { modal } from '../../../../constant/text/vi/modal'
 import { combineActions, loadingAction, hasMoreActions } from '../../store/actions'
@@ -7,34 +7,46 @@ import { useSafeRequest } from '../../../../hooks/useSafeRequest'
 
 export function useGetSavedPost(dispatch, hasMore) {
   const notify = useNotify()
-  const cursor = useRef({}) // {[username] = cursor}
+  const cursor = useRef(null)
+  const hasMoreRef = useRef(hasMore)
   const runRequest = useSafeRequest()
 
-  const getSavedPost = useCallback(async (username) => {
-    const key = username || 'savedPost'
-    if (hasMore?.[key] === false) return
+  useEffect(() => {
+    hasMoreRef.current = hasMore
+  }, [hasMore])
 
-    const r = await runRequest(
+  const getSavedPost = useCallback(async () => {
+    if (hasMoreRef.current === false) return
+
+    if (hasMoreRef.current === undefined) {
+      dispatch(hasMoreActions.setSavedHasMore(true))
+    }
+
+    const response = await runRequest(
       (signal) =>
         notify.withLoading(
-          () => postService.getSavedContent(cursor.current[key], signal),
-          (bool) => dispatch(loadingAction.getPostListLoading(bool))
+          () => postService.getSavedContent(cursor.current, signal),
+          (bool) => dispatch(loadingAction.getSavedListLoading(bool))
         )
     )
 
-    if (!r) return
+    if (!response) return
 
-    if (r.success) {
-      cursor.current[key] = r.data.cursor
-      if (!Array.isArray(r.data?.timelineItems) || r.data.timelineItems.length === 0) {
+    if (response.success) {
+      cursor.current = response.data?.cursor
+
+      if (!Array.isArray(response.data?.savedContents) || response.data.savedContents.length === 0) {
         dispatch(hasMoreActions.setSavedHasMore(false))
-        return
+        return response
       }
-      combineActions.getPostListSuccess(dispatch, key, r.data.timelineItems)
-    } else {
-      notify.popup(modal.title.error, r.message)
+
+      combineActions.getSavedPostListSuccess(dispatch, response.data.savedContents)
+      return response
     }
-  }, [dispatch, notify, hasMore, runRequest])
+
+    notify.popup(modal.title.error, response.message)
+    return response
+  }, [dispatch, notify, runRequest])
 
   return getSavedPost
 }

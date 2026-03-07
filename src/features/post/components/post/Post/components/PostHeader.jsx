@@ -1,8 +1,10 @@
 import { Avatar, Box, Typography } from "@mui/material";
 import PushPinIcon from '@mui/icons-material/PushPin';
 import PostMenu from "./PostMenu";
-import { post } from "../../../../../../constant/text/vi/post/post";
-export default function PostHeader({ sx,isPinned, author, createdAt, postId, hideMenu = false }) {
+import { post } from "../../../../../../constant/text/vi/post/post"
+import useAuth from "../../../../../../core/auth/useAuth";
+export default function PostHeader({context, sx,isPinned, author, createdAt, postId, hideMenu = false }) {
+  const {isOwner} = useAuth()
   return (
     <Box sx={{ ...sx.section, ...sx.header }}>
       <Box sx={sx.authorWrap}>
@@ -16,8 +18,8 @@ export default function PostHeader({ sx,isPinned, author, createdAt, postId, hid
           </Box>
         </Box>
       </Box>
-      {isPinned ? <PushPinIcon sx={{color:'yellow'}}/> : null}
-      {!hideMenu ? <PostMenu postId={postId} /> : null}
+      {isPinned && isOwner ? <PushPinIcon sx={{color:'yellow'}}/> : null}
+      {!hideMenu ? <PostMenu postContext = {context} postId={postId} /> : null}
     </Box>
   );
 }

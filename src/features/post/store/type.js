@@ -13,6 +13,7 @@ export const CLASS_TYPE = {
 
 export const LOADING = {
   GET_POST_LIST:"get post list",
+  GET_SAVED_LIST:"get saved list",
   SET_POST_SAVE_LOADING: "set post save loading",
   SET_POST_PIN_LOADING: "set post pin loading",
   SET_CREATE_POST_LOADING: "set create post loading",
@@ -41,6 +42,12 @@ export const STORY = {
 export const USERS_POST = {
   ADD_TIMELINE_INDEX: "ADD USERS POST TIMELINE INDEX",
   PREPEND_TIMELINE_INDEX: "PREPEND USERS POST TIMELINE INDEX"
+}
+
+export const SAVED_POST = {
+  ADD_TIMELINE_INDEX: "ADD SAVED POST TIMELINE INDEX",
+  PREPEND_TIMELINE_INDEX: "PREPEND SAVED POST TIMELINE INDEX",
+  REMOVE_TIMELINE_INDEX: "REMOVE SAVED POST TIMELINE INDEX"
 }
 
 export const REACTION = {

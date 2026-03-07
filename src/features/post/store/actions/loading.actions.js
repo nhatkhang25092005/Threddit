@@ -13,7 +13,7 @@ export const loadingAction = {
   getSavedListLoading: (isLoading) => (
     createAction(
       CLASS_TYPE.LOADING,
-      LOADING.SET_POST_SAVE_LOADING,
+      LOADING.GET_SAVED_LIST,
       isLoading
     )
   ),

@@ -21,10 +21,10 @@ function mapSharer(sharer){
 
 export const postByIdModel = (data) => ({
   id: data.contentId || data.id,
-
+  context : null,
   time:{
-    createdAt:data.createdAt || null,
-    updatedAt:data.updatedAt || null,
+    createdAt:data.createdAt || data.contentCreatedAt || null,
+    updatedAt:data.updatedAt || data.contentUpdatedAt || null,
     sharedAt:data.sharedAt || null
   },
 

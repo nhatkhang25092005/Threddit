@@ -14,6 +14,18 @@ export const loadingHandlers = (state, action) => {
         }
       }
 
+    case LOADING.GET_SAVED_LIST:
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          global: {
+            ...state.loading.global,
+            getSavedPost: Boolean(action.payload)
+          }
+        }
+      }
+
     case LOADING.SET_POST_SAVE_LOADING: {
       const { id, isLoading } = action.payload || {}
       if (id == null) return state

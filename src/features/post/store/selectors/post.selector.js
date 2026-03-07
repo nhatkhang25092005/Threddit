@@ -26,6 +26,9 @@ export const createPostSelector = (state) => {
   const getUsersPostIds = (username) =>
     state.contentList.usersPost?.[username] ?? []
 
+  const getSavedPostIds = () =>
+    state.contentList.savedPost ?? []
+
   const getPinnedPostIds = (username) => {
     const key = getPostKey(username)
     const rawPinnedPost = state.pinnedContents?.post
@@ -42,8 +45,17 @@ export const createPostSelector = (state) => {
     return uniqueIds.map((id) => byId[id]).filter(Boolean)
   }
 
+  const getSavedPostList = () => {
+    const byId = state.postById ?? {}
+    return getSavedPostIds().map((id) => ({...byId[id], context:'savedPost'})).filter(Boolean)
+  }
+
   const getUserPostListHasMore = (username) => {
     return state.userPostHasMore[username]
+  }
+
+  const getSavedPostListHasMore = () => {
+    return state.mySavedHasMore
   }
 
   const getPostPinStatusOf = (postId) => {
@@ -57,12 +69,15 @@ export const createPostSelector = (state) => {
   return{
     getPostById,
     getUsersPostIds,
+    getSavedPostIds,
     getPinnedPostIds,
     getSaveStatusByPostIdOf,
     getSaveLoadingByPostIdOf,
     getPinLoadingByPostIdOf,
     getUserPostList,
+    getSavedPostList,
     getUserPostListHasMore,
+    getSavedPostListHasMore,
     getPostPinStatusOf,
     getPostPinLoadingOf
   }

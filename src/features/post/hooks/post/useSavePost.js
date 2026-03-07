@@ -2,7 +2,7 @@ import { useCallback, useRef } from "react";
 import { useNotify } from "../../../../hooks/useNotify";
 import { modal } from "../../../../constant/text/vi/modal";
 import { postService } from "../../services/post.service";
-import { postByIdActions } from "../../store/actions";
+import { loadingAction, postByIdActions, savedPostActions } from "../../store/actions";
 
 export function useSavePost(dispatch){
   const notify = useNotify()
@@ -13,6 +13,7 @@ export function useSavePost(dispatch){
     if (pendingById.current.has(id)) return null
     pendingById.current.add(id)
 
+    dispatch(loadingAction.setPostSaveLoading(id, true))
     dispatch(postByIdActions.setSaved(id, true))
 
     try {
@@ -30,9 +31,11 @@ export function useSavePost(dispatch){
       if (Number.isFinite(saveNumber)) {
         dispatch(postByIdActions.setSaved(id, true, saveNumber))
       }
+      dispatch(savedPostActions.prependTimelineIndex(id))
       notify.snackbar(res.message, 3000)
       return res
     } finally {
+      dispatch(loadingAction.setPostSaveLoading(id, false))
       pendingById.current.delete(id)
     }
   }, [dispatch, notify])
@@ -42,6 +45,7 @@ export function useSavePost(dispatch){
     if (pendingById.current.has(id)) return null
     pendingById.current.add(id)
 
+    dispatch(loadingAction.setPostSaveLoading(id, true))
     dispatch(postByIdActions.setSaved(id, false))
 
     try {
@@ -59,9 +63,11 @@ export function useSavePost(dispatch){
       if (Number.isFinite(saveNumber)) {
         dispatch(postByIdActions.setSaved(id, false, saveNumber))
       }
+      dispatch(savedPostActions.removeTimelineIndex(id))
       notify.snackbar(res.message, 3000)
       return res
     } finally {
+      dispatch(loadingAction.setPostSaveLoading(id, false))
       pendingById.current.delete(id)
     }
   }, [dispatch, notify])
