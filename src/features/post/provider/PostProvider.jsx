@@ -3,7 +3,7 @@ import PostModalProvider from "./PostModalProvider"
 import { PostContext } from "./postContext"
 import { reducer, initState } from "../store/reducer"
 import { modal } from "./modals"
-import { useGetPostList, useGetSavedPost, useCreatePost, useReaction, useSavePost, useGetPinnedStory, usePostPinActions } from "../hooks"
+import { useGetPostList, useGetSavedPost, useCreatePost, useCreateStory, useReaction, useSavePost, useGetPinnedStory, usePostPinActions } from "../hooks"
 import {
   createReactionSelector,
   createPostSelector,
@@ -19,6 +19,7 @@ export default function PostProvider({ children }) {
   const getSavedPostList = useGetSavedPost(dispatch, state.mySavedHasMore)
   const getPinnedStory = useGetPinnedStory(dispatch)
   const createPost = useCreatePost(dispatch)
+  const createStory = useCreateStory(dispatch)
   const reaction = useReaction(dispatch)
   const { savePost, unsavePost } = useSavePost(dispatch)
   const { pinPost, unpinPost } = usePostPinActions(dispatch)
@@ -41,13 +42,14 @@ export default function PostProvider({ children }) {
       getSavedPostList: () => getSavedPostList(),
       getPinnedStory: (username, options) => getPinnedStory(username, options),
       createPost,
+      createStory,
       reaction,
       savePost,
       unsavePost,
       pinPost,
       unpinPost,
     }),
-    [getPostList, getSavedPostList, getPinnedStory, createPost, reaction, savePost, unsavePost, pinPost, unpinPost]
+    [getPostList, getSavedPostList, getPinnedStory, createPost, createStory, reaction, savePost, unsavePost, pinPost, unpinPost]
   )
 
   /* ---------------- provider value ---------------- */

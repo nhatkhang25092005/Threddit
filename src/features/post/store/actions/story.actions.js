@@ -18,6 +18,14 @@ export const storyActions = {
     )
   ),
 
+  prependStoryIndex: (username = null, storyId = null) => (
+    createAction(
+      CLASS_TYPE.STORY,
+      STORY.PREPEND_STORY_INDEX,
+      { username, storyId }
+    )
+  ),
+
   clearStoryList: (username = null) => (
     createAction(
       CLASS_TYPE.STORY,

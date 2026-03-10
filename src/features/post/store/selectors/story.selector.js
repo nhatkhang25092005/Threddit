@@ -3,13 +3,12 @@ export const createStorySelector = (state) => {
 
   const getStoryById = (storyId) => {
     if (storyId == null) return null
-    return state.postById?.[storyId] || null
+    return state.storyById?.[storyId] || null
   }
 
   const getPinnedStoryIdsOf = (username) => {
     const key = getStoryKey(username)
-    if (Array.isArray(state.storyList)) return state.storyList
-    return state.storyList?.[key] ?? []
+    return state.pinnedContents.story?.[key] ?? []
   }
 
   const getPinnedStoryListOf = (username) => {

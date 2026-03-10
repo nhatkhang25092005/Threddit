@@ -6,13 +6,13 @@ const getContentId = (item) => (
 )
 
 export const pinActions = {
-  setPinnedList: (username = null, list = []) => (
+  setPinnedList: (username = null, list = [], type = "post") => (
     createAction(
       CLASS_TYPE.PIN,
       PIN.SET_PIN_LIST,
       {
         username,
-        type: "post",
+        type: type === "story" ? "story" : "post",
         idList: (Array.isArray(list) ? list : [])
           .map(getContentId)
           .filter((id) => id != null)

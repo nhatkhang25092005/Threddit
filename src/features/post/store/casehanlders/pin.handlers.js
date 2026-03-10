@@ -1,6 +1,8 @@
 import { PIN } from "../type"
 
-const getPinKey = (username) => username || "pinned_post"
+const getPinKey = (username, type = "post") => (
+  username || (type === "story" ? "pinned_story" : "pinned_post")
+)
 
 export const pinHandlers = (state, action) => {
   switch(action.type){
@@ -9,7 +11,7 @@ export const pinHandlers = (state, action) => {
       const username = payload.username
       const type = payload.type === "story" ? "story" : "post"
       const idList = payload.idList || []
-      const key = getPinKey(username)
+      const key = getPinKey(username, type)
       const normalizedIds = [...new Set((idList || []).filter((id) => id != null))]
       const currentPinned = (
         state.pinnedContents && typeof state.pinnedContents === "object"

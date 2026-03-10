@@ -84,6 +84,18 @@ export const loadingHandlers = (state, action) => {
         }
       }
 
+    case LOADING.SET_CREATE_STORY_LOADING:
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          global: {
+            ...state.loading.global,
+            createStory: Boolean(action.payload)
+          }
+        }
+      }
+
     case LOADING.SET_PRESIGN_LOADING:
       return {
         ...state,

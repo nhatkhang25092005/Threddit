@@ -19,7 +19,7 @@ function setData(dispatch, data, username){
   }
 
   // set Pinned
-  dispatch(pinActions.setPinnedList(username, pins))
+  dispatch(pinActions.setPinnedList(username, pins, 'post'))
   // Set Post
   combineActions.getPostListSuccess(dispatch, username, posts)
 }

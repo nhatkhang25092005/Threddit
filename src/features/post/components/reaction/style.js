@@ -3,7 +3,12 @@ export const style = {
     root: {
       display: 'flex',
       flexDirection: 'row',
-      alignItems: 'center'
+      alignItems: 'center',
+      "&.Mui-disabled": {
+        opacity: 0.4,
+        color: "action.disabled",
+        cursor: "not-allowed",
+      },
     },
     icon: {
       color: '#F7B928',

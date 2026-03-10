@@ -2,7 +2,7 @@ import {style} from '../style'
 import {Box, Button} from '@mui/material'
 import ProfileAvatar from "./ProfileAvatar"
 import BaseInfo from "./BaseInfo"
-import CreateFeedBtn from "./CreateFeedBtn"
+import CreateStoryButton from "../../post/components/story/CreateStoryButton"
 import BackgroundImage from './BackgroundImage'
 import {memo} from 'react'
 import EditInfoButton from './EditInfoButton'
@@ -21,7 +21,7 @@ const Header = memo(function Header(){
         <BaseInfo/>
         <Box sx={sx.info_container.button_container} >
           <Box sx={sx.info_container.contract_buttons}>
-            <CreateFeedBtn/>
+            <CreateStoryButton/>
             <FriendButton/>
             <FollowBtn/>
             {isOwner && <EditInfoButton/>}

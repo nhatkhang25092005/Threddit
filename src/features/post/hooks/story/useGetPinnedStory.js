@@ -3,17 +3,18 @@ import { useNotify } from "../../../../hooks/useNotify"
 import { modal } from "../../../../constant/text/vi/modal"
 import { useSafeRequest } from "../../../../hooks/useSafeRequest"
 import { storyService } from "../../services"
-import { postByIdModel } from "../../store/models/postById.model"
-import { postByIdActions, storyActions } from "../../store/actions"
-import { getPostList } from "../../utils/getPostList"
+import { storyByIdModel } from "../../store/models/storyById.model"
+import { storyActions, storyByIdActions } from "../../store/actions"
+import { getStoryList } from "../../utils/getStoryList"
+import { pinActions } from "../../store/actions"
 
 function setStoryData(dispatch, username, pinnedStories, shouldReplace = false){
-  const stories = Array.isArray(pinnedStories) ? pinnedStories : []
-  const posts = stories.map(postByIdModel)
-  const storyIndexList = getPostList(posts)
+  const stories = (Array.isArray(pinnedStories) ? pinnedStories : []).map(storyByIdModel)
+  const storyIndexList = getStoryList(stories)
 
-  dispatch(postByIdActions.addPosts(posts))
+  dispatch(storyByIdActions.addStories(stories))
   if (shouldReplace) {
+    dispatch(pinActions.setPinnedList(username, storyIndexList, 'story'))
     dispatch(storyActions.setStoryList(username, storyIndexList))
     return
   }

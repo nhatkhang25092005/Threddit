@@ -4,6 +4,7 @@ export const initState = {
     post:{}
   },
   postById:{},
+  storyById:{},
   storyList:{}, // [username]: [contentId]
   contentList:{
     home:{
@@ -20,6 +21,7 @@ export const initState = {
   loading:{
     global:{
       createPost:false,
+      createStory:false,
       presign:false,
       getFeeds:false,
       getFollowPost:false,

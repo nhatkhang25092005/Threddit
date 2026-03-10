@@ -36,7 +36,9 @@ const insertEmojiAtCaret = (emojiChar, mention) => {
 
 export default function Emoji({mention}) {
   const [anchorEl, setAnchorEl] = useState(null);
-  const handleOpen = (event) => {setAnchorEl(event.currentTarget);  };
+  const handleOpen = (event) => {
+    setAnchorEl(event.currentTarget)
+  };
   return (
     <Box sx={sx.root}>
       <MoodIcon

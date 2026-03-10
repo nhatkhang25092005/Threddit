@@ -43,6 +43,25 @@ export const storyHandlers = (state, action) => {
       }
     }
 
+    case STORY.PREPEND_STORY_INDEX: {
+      const payload = action.payload || {}
+      const username = payload.username
+      const storyId = payload.storyId
+      if (storyId == null) return state
+
+      const key = getStoryKey(username)
+      const existingIds = state.storyList?.[key] || []
+      const nextIds = [storyId, ...existingIds.filter((id) => id !== storyId)]
+
+      return {
+        ...state,
+        storyList: {
+          ...(state.storyList || {}),
+          [key]: nextIds
+        }
+      }
+    }
+
     case STORY.CLEAR_STORY_LIST: {
       const payload = action.payload || {}
       const username = typeof payload === "object" ? payload.username : null

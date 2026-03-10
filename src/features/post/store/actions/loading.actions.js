@@ -42,6 +42,14 @@ export const loadingAction = {
     )
   ),
 
+  setCreateStoryLoading: (isLoading) => (
+    createAction(
+      CLASS_TYPE.LOADING,
+      LOADING.SET_CREATE_STORY_LOADING,
+      isLoading
+    )
+  ),
+
   setPresignLoading: (isLoading) => (
     createAction(
       CLASS_TYPE.LOADING,

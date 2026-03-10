@@ -1,5 +1,6 @@
 export const CLASS_TYPE = {
   POST_BY_ID:'post by id',
+  STORY_BY_ID:'story by id',
   STORY:'story',
   FEEDS:'feeds',
   FOLLOWERS_POST:'followers post',
@@ -17,6 +18,7 @@ export const LOADING = {
   SET_POST_SAVE_LOADING: "set post save loading",
   SET_POST_PIN_LOADING: "set post pin loading",
   SET_CREATE_POST_LOADING: "set create post loading",
+  SET_CREATE_STORY_LOADING: "set create story loading",
   SET_PRESIGN_LOADING: "set presign loading",
 }
 
@@ -33,9 +35,16 @@ export const POST_BY_ID = {
   SET_POST_PINNED: 'SET POST PINNED'
 }
 
+export const STORY_BY_ID = {
+  ADD_STORIES_BY_ID: 'ADD STORIES BY ID',
+  ADD_STORY_BY_ID: 'ADD STORY BY ID ITEM',
+  SET_STORY_PINNED: 'SET STORY PINNED',
+}
+
 export const STORY = {
   SET_STORY_LIST: 'SET STORY LIST',
   ADD_STORY_INDEX: 'ADD STORY INDEX',
+  PREPEND_STORY_INDEX: 'PREPEND STORY INDEX',
   CLEAR_STORY_LIST: 'CLEAR STORY LIST'
 }
 

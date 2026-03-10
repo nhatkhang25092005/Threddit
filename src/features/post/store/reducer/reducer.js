@@ -4,6 +4,7 @@ import {
   hasMoreHandlers,
   feedsHandlers,
   postByIdHandlers,
+  storyByIdHandlers,
   storyHandlers,
   reactionHandlers,
   savedPostHandlers,
@@ -17,6 +18,9 @@ export const reducer = (state, action) => {
 
     case CLASS_TYPE.POST_BY_ID:
       return postByIdHandlers(state, action)
+
+    case CLASS_TYPE.STORY_BY_ID:
+      return storyByIdHandlers(state, action)
 
     case CLASS_TYPE.STORY:
       return storyHandlers(state, action)
