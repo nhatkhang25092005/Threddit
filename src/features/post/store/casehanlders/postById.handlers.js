@@ -4,7 +4,7 @@ export const postByIdHandlers = (state, action) => {
   switch (action.type){
     case POST_BY_ID.ADD_POSTS_BY_ID:{
       const posts = action.payload || []
-
+      
       const byId = Object.fromEntries(
         posts
           .filter((post) => post?.id != null)
@@ -16,7 +16,7 @@ export const postByIdHandlers = (state, action) => {
           .filter(post => post?.id != null)
           .map(post => [post.id, itemModel()])
       )
-
+      
       return {
         ...state,
         postById: {
@@ -98,26 +98,50 @@ export const postByIdHandlers = (state, action) => {
     }
 
     case POST_BY_ID.SET_POST_PINNED: {
-      const { id, isPinned } = action.payload || {}
-      if (id == null) return state
+    const { id, isPinned, username } = action.payload || {};
+    if (id == null || !username) return state;
 
-      const currentPost = state.postById?.[id]
-      if (!currentPost) return state
+    const currentPost = state.postById?.[id];
+    if (!currentPost) return state;
 
-      const nextIsPinned = Boolean(isPinned)
-      if (Boolean(currentPost.isPinned) === nextIsPinned) return state
+    const nextIsPinned = Boolean(isPinned);
+    const currentIsPinned = Boolean(currentPost.isPinned);
 
-      return {
-        ...state,
-        postById: {
-          ...state.postById,
-          [id]: {
-            ...currentPost,
-            isPinned: nextIsPinned
-          }
-        }
-      }
-    }
+    if (currentIsPinned === nextIsPinned) return state;
+
+    const currentPinnedPostIds = state.pinnedContents?.post ?? [];
+    const currentUserPostIds = state.contentList?.usersPost?.[username] ?? [];
+
+    const nextPinnedPostIds = nextIsPinned
+      ? [id, ...currentPinnedPostIds.filter((postId) => postId !== id)]
+      : currentPinnedPostIds.filter((postId) => postId !== id);
+
+    const nextUserPostIds = nextIsPinned
+      ? currentUserPostIds.filter((postId) => postId !== id)
+      : [id, ...currentUserPostIds.filter((postId) => postId !== id)];
+
+    return {
+      ...state,
+      pinnedContents: {
+        ...state.pinnedContents,
+        post: nextPinnedPostIds,
+      },
+      contentList: {
+        ...state.contentList,
+        usersPost: {
+          ...state.contentList.usersPost,
+          [username]: nextUserPostIds,
+        },
+      },
+      postById: {
+        ...state.postById,
+        [id]: {
+          ...currentPost,
+          isPinned: nextIsPinned,
+        },
+      },
+    };
+  }
 
     default:
       return state

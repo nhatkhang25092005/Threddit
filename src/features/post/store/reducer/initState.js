@@ -1,11 +1,10 @@
 export const initState = {
   pinnedContents:{
-    story:{},
-    post:{}
+    story:{},// [username]: [contentId]
+    post:[], //just my pinned post
   },
   postById:{},
   storyById:{},
-  storyList:{}, // [username]: [contentId]
   contentList:{
     home:{
       feeds:[],

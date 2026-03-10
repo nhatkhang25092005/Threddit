@@ -4,11 +4,11 @@ import { modal } from "../../../../constant/text/vi/modal";
 import { postService } from "../../services";
 import { postByIdActions } from "../../store/actions";
 import { resolvePinnedStatus } from "../../utils/resolvePinnedStatus";
-
+import useAuth from '../../../../core/auth/useAuth'
 export function usePostPinActions(dispatch) {
   const notify = useNotify()
   const pendingRef = useRef(new Set())
-
+  const {profileUsername} = useAuth()
   const handlePinAction = useCallback(async (id, shouldPin) => {
     if (id == null) return null
     if(pendingRef.current.has(id)) return
@@ -31,7 +31,7 @@ export function usePostPinActions(dispatch) {
       }
 
       const nextPinned = resolvePinnedStatus(response, shouldPin)
-      dispatch(postByIdActions.setPinned(id, nextPinned))
+      dispatch(postByIdActions.setPinned(id, nextPinned, profileUsername))
 
       if (response?.message) notify.snackbar(response.message, 3000)
 

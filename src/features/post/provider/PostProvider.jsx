@@ -1,4 +1,4 @@
-import { useMemo, useReducer } from "react"
+import { useEffect, useMemo, useReducer } from "react"
 import PostModalProvider from "./PostModalProvider"
 import { PostContext } from "./postContext"
 import { reducer, initState } from "../store/reducer"
@@ -34,6 +34,7 @@ export default function PostProvider({ children }) {
     // list selector
     // item selector
   }),[state])
+  useEffect(()=>{console.log(state)},[state])
 
   /* ---------------- exposed actions (wrapped for consumer) ---------------- */
   const actions = useMemo(

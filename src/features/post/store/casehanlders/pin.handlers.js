@@ -16,17 +16,26 @@ export const pinHandlers = (state, action) => {
       const currentPinned = (
         state.pinnedContents && typeof state.pinnedContents === "object"
           ? state.pinnedContents
-          : { story: {}, post: {} }
+          : { story: {}, post: []}
       )
+
+      const setPinStates =
+        type === 'story'
+          ? {
+            story:{
+              ...(currentPinned?.[type] || {}),
+              [key]: normalizedIds
+            }
+          }
+          :{
+            post:normalizedIds
+          }
 
       return{
         ...state,
         pinnedContents: {
           ...currentPinned,
-          [type]: {
-            ...(currentPinned?.[type] || {}),
-            [key]: normalizedIds
-          }
+          ...setPinStates
         }
       }
     }

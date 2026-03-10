@@ -39,10 +39,17 @@ export const createPostSelector = (state) => {
   const getUserPostList = (username) => {
     const postIds = getUsersPostIds(username)
     const pinnedIds = getPinnedPostIds(username)
-    const ids = [...pinnedIds, ...postIds].filter((id) => id != null)
-    const uniqueIds = [...new Set(ids)]
     const byId = state.postById ?? {}
-    return uniqueIds.map((id) => byId[id]).filter(Boolean)
+
+    const sortDefaultPost = [...new Set(postIds)].map(id => byId[id])
+      .filter(Boolean)
+      .sort((a,b)=>new Date(b.time.createdAt) - new Date(a.time.createdAt))
+
+    const pinnedPosts = [...new Set(pinnedIds)].map(id => byId[id])
+      .filter(Boolean)
+      .sort((a,b)=>new Date(b.time.createdAt) - new Date(a.time.createdAt))
+
+    return [...pinnedPosts, ... sortDefaultPost]
   }
 
   const getSavedPostList = () => {

@@ -26,11 +26,11 @@ export const postByIdActions ={
     )
   ),
 
-  setPinned: (id, isPinned) => (
+  setPinned: (id, isPinned, username) => (
     createAction(
       CLASS_TYPE.POST_BY_ID,
       POST_BY_ID.SET_POST_PINNED,
-      { id, isPinned }
+      { id, isPinned, username }
     )
   ),
 }
