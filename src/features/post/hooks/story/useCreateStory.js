@@ -58,6 +58,7 @@ export function useCreateStory(dispatch) {
       if (createdRaw) {
         const createdStory = storyByIdModel(createdRaw)
         dispatch(storyByIdActions.addStory(createdStory))
+        dispatch(storyActions.addCurrentStoryIndex(username, [response.data.createdPost.id]))
         if (createdStory?.id != null) {
           dispatch(storyActions.prependStoryIndex(username, createdStory.id))
         }

@@ -5,13 +5,16 @@ export const initState = {
   },
   postById:{},
   storyById:{},
+  storyList:{},
+
   contentList:{
     home:{
       feeds:[],
       followersPost:[]
     },
     usersPost:{}, // [username] -> [1, 2, 3]
-    savedPost:[]
+    savedPost:[],
+    currentStory:{}
   },
   mySavedHasMore:undefined,
   userPostHasMore:{

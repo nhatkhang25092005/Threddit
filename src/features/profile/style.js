@@ -49,11 +49,21 @@ export const style = {
           flexGrow: 1
         }
       },
-      avatar:(hasStory)=>({
-        width:'9rem',
-        border: hasStory === true ? 'solid white 2px' : null,
-        height:'9rem',
-      }),
+      avatar:(haveStory)=>(haveStory
+        ? {
+            width:'8.5rem',
+            height:'8.5rem',
+            cursor:'pointer',
+            transition: 'transform 0.2s ease',
+            '&:hover': {
+              transform: 'scale(0.98)',
+            },
+          }
+        : {
+            width:'9rem',
+            height:'9rem',
+          }
+      ),
 
       bg_avatar:(mode)=>({
         width:'10rem',

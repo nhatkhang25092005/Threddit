@@ -7,9 +7,11 @@ import {
 } from "../utils";
 
 export function useStoryPreviewPlayback({
+  loop = true,
   mediaKind,
   mediaUrl,
   mode,
+  onComplete,
   playbackSeconds,
 }) {
   const audioRef = useRef(null);
@@ -17,10 +19,16 @@ export function useStoryPreviewPlayback({
   const staticTimerRef = useRef(null);
   const staticStartedAtRef = useRef(0);
   const staticProgressRef = useRef(0);
+  const completedRef = useRef(false);
+  const completeHandlerRef = useRef(onComplete);
   const [isPaused, setIsPaused] = useState(false);
   const [progressSeconds, setProgressSeconds] = useState(0);
   const isTimedPreview = isTimedStoryMedia(mediaKind);
   const showPlaybackControls = mode !== STORY_MODE.EMPTY && playbackSeconds > 0;
+
+  useEffect(() => {
+    completeHandlerRef.current = onComplete;
+  }, [onComplete]);
 
   const getActiveMediaElement = useCallback(() => {
     if (mediaKind === STORY_MEDIA_KIND.VIDEO) return videoRef.current;
@@ -45,6 +53,10 @@ export function useStoryPreviewPlayback({
       const clampedValue = updateProgress(nextValue);
       const activeElement = getActiveMediaElement();
 
+      if (clampedValue < playbackSeconds) {
+        completedRef.current = false;
+      }
+
       if (activeElement) {
         activeElement.currentTime = clampedValue;
       }
@@ -55,10 +67,19 @@ export function useStoryPreviewPlayback({
 
       return clampedValue;
     },
-    [getActiveMediaElement, isTimedPreview, updateProgress]
+    [getActiveMediaElement, isTimedPreview, playbackSeconds, updateProgress]
   );
 
+  const finishPlayback = useCallback(() => {
+    if (completedRef.current) return;
+
+    completedRef.current = true;
+    setIsPaused(true);
+    completeHandlerRef.current?.();
+  }, []);
+
   useEffect(() => {
+    completedRef.current = false;
     seekPreview(0);
     setIsPaused(false);
   }, [mediaKind, mediaUrl, mode, playbackSeconds, seekPreview]);
@@ -84,6 +105,15 @@ export function useStoryPreviewPlayback({
     staticStartedAtRef.current = Date.now() - staticProgressRef.current * 1000;
     staticTimerRef.current = window.setInterval(() => {
       const elapsedSeconds = (Date.now() - staticStartedAtRef.current) / 1000;
+
+      if (!loop && elapsedSeconds >= playbackSeconds) {
+        updateProgress(playbackSeconds);
+        window.clearInterval(staticTimerRef.current);
+        staticTimerRef.current = null;
+        finishPlayback();
+        return;
+      }
+
       const nextProgress = elapsedSeconds >= playbackSeconds
         ? elapsedSeconds % playbackSeconds
         : elapsedSeconds;
@@ -98,7 +128,7 @@ export function useStoryPreviewPlayback({
         staticTimerRef.current = null;
       }
     };
-  }, [isPaused, isTimedPreview, mediaUrl, mode, playbackSeconds, showPlaybackControls]);
+  }, [finishPlayback, isPaused, isTimedPreview, loop, mediaUrl, mode, playbackSeconds, showPlaybackControls, updateProgress]);
 
   useEffect(() => {
     const activeElement = getActiveMediaElement();
@@ -134,6 +164,13 @@ export function useStoryPreviewPlayback({
       if (!playbackSeconds) return;
 
       if (activeElement.currentTime >= playbackSeconds) {
+        if (!loop) {
+          updateProgress(playbackSeconds);
+          pauseStoryMedia(activeElement);
+          finishPlayback();
+          return;
+        }
+
         seekPreview(0);
         activeElement.currentTime = 0;
 
@@ -146,7 +183,7 @@ export function useStoryPreviewPlayback({
 
       updateProgress(activeElement.currentTime);
     },
-    [isPaused, playbackSeconds, seekPreview, updateProgress]
+    [finishPlayback, isPaused, loop, playbackSeconds, seekPreview, updateProgress]
   );
 
   const handleTogglePlayback = useCallback(() => {

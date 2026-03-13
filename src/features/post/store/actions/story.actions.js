@@ -18,6 +18,14 @@ export const storyActions = {
     )
   ),
 
+  addCurrentStoryIndex:(username = null, currentStoryIndexList = []) => (
+    createAction(
+      CLASS_TYPE.STORY,
+      STORY.PREPEND_CURRENT_STORY_INDEX,
+      {username, currentStoryIndexList}
+    )
+  ),
+
   prependStoryIndex: (username = null, storyId = null) => (
     createAction(
       CLASS_TYPE.STORY,

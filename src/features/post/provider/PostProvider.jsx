@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useReducer } from "react"
+import { useMemo, useReducer } from "react"
 import PostModalProvider from "./PostModalProvider"
 import { PostContext } from "./postContext"
 import { reducer, initState } from "../store/reducer"
 import { modal } from "./modals"
-import { useGetPostList, useGetSavedPost, useCreatePost, useCreateStory, useReaction, useSavePost, useGetPinnedStory, usePostPinActions } from "../hooks"
+import { useGetPostList, useGetSavedPost, useCreatePost, useCreateStory, useGetCurrentStory, useReaction, useSavePost, useGetPinnedStory, usePostPinActions } from "../hooks"
 import {
   createReactionSelector,
   createPostSelector,
@@ -17,6 +17,7 @@ export default function PostProvider({ children }) {
   /* ---------------- side-effect hooks (fetch, subscribe, ...) ---------------- */
   const getPostList = useGetPostList(dispatch, state.userPostHasMore)
   const getSavedPostList = useGetSavedPost(dispatch, state.mySavedHasMore)
+  const getCurrentStory = useGetCurrentStory(dispatch)
   const getPinnedStory = useGetPinnedStory(dispatch)
   const createPost = useCreatePost(dispatch)
   const createStory = useCreateStory(dispatch)
@@ -34,13 +35,13 @@ export default function PostProvider({ children }) {
     // list selector
     // item selector
   }),[state])
-  useEffect(()=>{console.log(state)},[state])
 
   /* ---------------- exposed actions (wrapped for consumer) ---------------- */
   const actions = useMemo(
     () => ({
       getPostList:  (username)=> getPostList(username),
       getSavedPostList: () => getSavedPostList(),
+      getCurrentStory: (username) => getCurrentStory(username),
       getPinnedStory: (username, options) => getPinnedStory(username, options),
       createPost,
       createStory,
@@ -50,7 +51,7 @@ export default function PostProvider({ children }) {
       pinPost,
       unpinPost,
     }),
-    [getPostList, getSavedPostList, getPinnedStory, createPost, createStory, reaction, savePost, unsavePost, pinPost, unpinPost]
+    [getPostList, getSavedPostList, getCurrentStory, getPinnedStory, createPost, createStory, reaction, savePost, unsavePost, pinPost, unpinPost]
   )
 
   /* ---------------- provider value ---------------- */

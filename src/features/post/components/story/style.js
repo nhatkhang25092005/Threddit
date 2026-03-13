@@ -1,8 +1,9 @@
 export const style = {
   storyCard : {
     container:(story)=>({
-      width: { xs: '4rem', sm: '6.2rem' },
-      height: { xs: '12rem', sm: '12.8rem' },
+      width: '6rem',
+      aspectRatio: '9 / 16',
+      height: '100%',
       flex: '0 0 auto',
       borderRadius: '0.85rem',
       overflow: 'hidden',
@@ -91,11 +92,11 @@ export const style = {
     }),
     typeBadge:{
       position: 'absolute',
-      top: '0.45rem',
-      left: '0.45rem',
+      top: '0.34rem',
+      left: '0.34rem',
       borderRadius: '999rem',
-      px: '0.42rem',
-      py: '0.18rem',
+      px: '0.34rem',
+      py: '0.14rem',
       display: 'inline-flex',
       alignItems: 'center',
       gap: '0.18rem',
@@ -105,12 +106,12 @@ export const style = {
       zIndex: 3,
     },
     typeBadgeIcon:{
-      fontSize: { xs: '0.62rem', sm: '0.74rem' },
+      fontSize: { xs: '0.56rem', sm: '0.68rem' },
       color: '#ffffff',
     },
     typeBadgeText:{
       color: '#ffffff',
-      fontSize: { xs: '0.5rem', sm: '0.57rem' },
+      fontSize: { xs: '0.45rem', sm: '0.52rem' },
       fontWeight: 700,
       textTransform: 'uppercase',
       letterSpacing: '0.02em',
@@ -118,22 +119,22 @@ export const style = {
     },
     contentWrap:(hasMedia)=>({
       position: 'absolute',
-      left: '0.65rem',
-      right: '0.65rem',
-      bottom: '0.55rem',
-      top: hasMedia ? 'auto' : '2.2rem',
+      left: '0.5rem',
+      right: '0.5rem',
+      bottom: '0.42rem',
+      top: hasMedia ? 'auto' : '1.85rem',
       zIndex: 3,
     }),
     text:(hasMedia)=>({
       color: '#ffffff',
-      fontSize: { xs: '0.56rem', sm: '0.74rem' },
+      fontSize: { xs: '0.5rem', sm: '0.66rem' },
       fontWeight: 700,
       lineHeight: 1.28,
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       display: '-webkit-box',
       WebkitBoxOrient: 'vertical',
-      WebkitLineClamp: hasMedia ? 4 : 9,
+      WebkitLineClamp: hasMedia ? 3 : 6,
       textShadow: '0 2px 8px rgba(0,0,0,0.45)',
     })
   },
@@ -187,6 +188,170 @@ export const style = {
         backgroundColor: (theme) => (theme.palette.mode === 'dark' ? '#4A4C4F' : '#CBD2D9'),
       },
     }
+  },
+
+  storyList:{
+    root:{
+      position:'fixed',
+      inset:0,
+      minHeight:'100dvh',
+      height:'100dvh',
+      zIndex:(theme)=>theme.zIndex.modal + 1,
+      isolation:'isolate',
+      overflow:'hidden',
+      background:'radial-gradient(circle at top, rgba(92,148,255,0.16), transparent 36%), linear-gradient(180deg, #0A0C11 0%, #080A0F 100%)',
+    },
+    orb:(top, right, color)=>({
+      position:'absolute',
+      top,
+      right,
+      width:'24rem',
+      height:'24rem',
+      borderRadius:'999rem',
+      background:color,
+      filter:'blur(90px)',
+      opacity:0.18,
+      pointerEvents:'none',
+    }),
+    shell:{
+      position:'relative',
+      zIndex:1,
+      width:'100%',
+      minHeight:'100dvh',
+      height:'100dvh',
+      boxSizing:'border-box',
+      display:'flex',
+      flexDirection:'column',
+      px:{
+        xs:'0.4rem',
+        sm:'0.7rem',
+        md:'1rem'
+      },
+      py:{
+        xs:'0.4rem',
+        md:'0.7rem'
+      },
+    },
+    header:{
+      display:'flex',
+      alignItems:{
+        xs:'flex-start',
+        md:'center'
+      },
+      justifyContent:'space-between',
+      gap:'0.85rem',
+      flexWrap:'nowrap',
+      minWidth:0,
+      flexShrink:0,
+    },
+    headerText:{
+      minWidth:0,
+      flex:1,
+    },
+    eyebrow:{
+      color:'rgba(226,232,240,0.7)',
+      fontSize:'0.78rem',
+      fontWeight:800,
+      lineHeight:1.1,
+      letterSpacing:'0.08em',
+      textTransform:'uppercase',
+    },
+    title:{
+      mt:'0.3rem',
+      color:'#F8FAFC',
+      fontSize:{
+        xs:'1.35rem',
+        md:'1.8rem'
+      },
+      fontWeight:900,
+      lineHeight:1.1,
+    },
+    subtitle:{
+      mt:'0.28rem',
+      color:'rgba(226,232,240,0.7)',
+      fontSize:'0.92rem',
+      lineHeight:1.45,
+      display:{
+        xs:'none',
+        sm:'block'
+      },
+    },
+    closeButton:{
+      minWidth:'unset',
+      px:'0.9rem',
+      py:'0.58rem',
+      borderRadius:'999rem',
+      border:'1px solid rgba(255,255,255,0.16)',
+      color:'#F8FAFC',
+      backgroundColor:'rgba(255,255,255,0.06)',
+      textTransform:'none',
+      fontWeight:700,
+      flexShrink:0,
+      '&:hover':{
+        backgroundColor:'rgba(255,255,255,0.12)',
+      },
+    },
+    viewerWrap:{
+      flex:1,
+      width:'100%',
+      height:'100%',
+      display:'flex',
+      alignItems:'center',
+      justifyContent:'center',
+      minHeight:0,
+      overflow:'hidden',
+    },
+    emptyState:{
+      width:'100%',
+      maxWidth:'32rem',
+      mx:'auto',
+      p:{
+        xs:'1.2rem',
+        md:'1.6rem'
+      },
+      borderRadius:'1.4rem',
+      border:'1px solid rgba(255,255,255,0.12)',
+      background:'rgba(12,16,24,0.8)',
+      textAlign:'center',
+      boxShadow:'0 28px 80px rgba(0,0,0,0.28)',
+    },
+    emptyTitle:{
+      color:'#F8FAFC',
+      fontSize:'1.18rem',
+      fontWeight:800,
+      lineHeight:1.2,
+    },
+    emptyText:{
+      mt:'0.6rem',
+      color:'rgba(226,232,240,0.72)',
+      fontSize:'0.92rem',
+      lineHeight:1.55,
+    },
+    thumbRail:{
+      display:'flex',
+      gap:{
+        xs:'0.5rem',
+        sm:'0.65rem'
+      },
+      overflowX:'auto',
+      overflowY:'hidden',
+      py:'0.1rem',
+      px:{
+        xs:'0.05rem',
+        md:'0.12rem'
+      },
+      mx:'auto',
+      width:'min(100%, 48rem)',
+      minWidth:0,
+      flexShrink:0,
+      '&::-webkit-scrollbar':{
+        height:'0.4rem',
+      },
+      '&::-webkit-scrollbar-thumb':{
+        borderRadius:'999rem',
+        backgroundColor:'rgba(255,255,255,0.22)',
+      },
+    },
   },
 
   createStoryModal:{

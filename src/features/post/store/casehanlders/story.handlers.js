@@ -78,6 +78,27 @@ export const storyHandlers = (state, action) => {
       }
     }
 
+    case STORY.PREPEND_CURRENT_STORY_INDEX:{
+      const {username, currentStoryIndexList} = action.payload
+      const currentStories = state.contentList.currentStory[username] ?? []
+      const prependList = [
+        ...new Set([
+          ...currentStoryIndexList,
+          ...currentStories
+        ])
+      ]
+      return{
+        ...state,
+        contentList:{
+          ...state.contentList,
+          currentStory:{
+            ...state.contentList.currentStory,
+            [username]:prependList
+          }
+        }
+      }
+    }
+
     default:
       return state
   }

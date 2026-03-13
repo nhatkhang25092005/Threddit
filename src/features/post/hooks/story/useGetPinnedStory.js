@@ -8,16 +8,12 @@ import { storyActions, storyByIdActions } from "../../store/actions"
 import { getStoryList } from "../../utils/getStoryList"
 import { pinActions } from "../../store/actions"
 
-function setStoryData(dispatch, username, pinnedStories, shouldReplace = false){
+function setStoryData(dispatch, username, pinnedStories){
   const stories = (Array.isArray(pinnedStories) ? pinnedStories : []).map(storyByIdModel)
   const storyIndexList = getStoryList(stories)
 
   dispatch(storyByIdActions.addStories(stories))
-  if (shouldReplace) {
-    dispatch(pinActions.setPinnedList(username, storyIndexList, 'story'))
-    dispatch(storyActions.setStoryList(username, storyIndexList))
-    return
-  }
+  dispatch(pinActions.setPinnedList(username, storyIndexList, 'story'))
   dispatch(storyActions.addStoryIndex(username, storyIndexList))
 }
 
@@ -30,8 +26,6 @@ export function useGetPinnedStory(dispatch) {
   const getPinnedStory = useCallback(async (username = null, options = {}) => {
     const key = username || "pinned_story"
     const refresh = options?.refresh === true
-    const isFirstPage = cursorRef.current[key] == null
-    const shouldReplace = refresh || isFirstPage
 
     if (refresh) {
       cursorRef.current[key] = undefined
@@ -57,11 +51,10 @@ export function useGetPinnedStory(dispatch) {
 
     if (pinnedStories.length === 0) {
       hasMoreRef.current[key] = false
-      if (shouldReplace) dispatch(storyActions.setStoryList(username, []))
       return r
     }
 
-    setStoryData(dispatch, username, pinnedStories, shouldReplace)
+    setStoryData(dispatch, username, pinnedStories)
     return r
   }, [dispatch, notify, runRequest])
 

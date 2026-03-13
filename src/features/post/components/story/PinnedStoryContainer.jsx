@@ -8,15 +8,23 @@ import { useHorizontalScroll } from './hooks/useHorizontalScroll'
 import { style } from './style'
 import { usePostContext } from '../../hooks'
 import useAuth from '../../../../core/auth/useAuth'
+import { useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { buildStoryRoute } from './storyRoute'
 
 const sx = style.pinnedStoryContainer
 
 export default function PinnedStoryContainer() {
   const {profileUsername, isOwner} = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
   const { actions, selector } = usePostContext()
   const { getPinnedStory } = actions
   const pinnedStoryList = selector.story.getPinnedStoryListOf(profileUsername)
-  getPinnedStory(profileUsername)
+
+  useEffect(() => {
+    getPinnedStory(profileUsername)
+  }, [getPinnedStory, profileUsername])
 
 
   const { scrollRef, canScrollLeft, canScrollRight, scrollStories } = useHorizontalScroll(99.2, 10.4)
@@ -47,7 +55,12 @@ export default function PinnedStoryContainer() {
           {pinnedStoryList.map((story) => (
             <StoryCard
               key={story.id}
+              onClick={() => navigate(
+                buildStoryRoute('pinned', profileUsername || story?.author?.username, story.id),
+                { state: { backgroundLocation: location } }
+              )}
               story={story}
+              variant="preview"
             />
           ))}
         </Box>

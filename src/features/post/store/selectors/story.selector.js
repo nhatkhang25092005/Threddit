@@ -1,13 +1,30 @@
 export const createStorySelector = (state) => {
-  const getStoryKey = (username) => username || "pinned_story"
+  const getStoryKey = (username) => username || "current_story"
+  const getPinnedStoryKey = (username) => username || "pinned_story"
 
   const getStoryById = (storyId) => {
     if (storyId == null) return null
     return state.storyById?.[storyId] || null
   }
 
-  const getPinnedStoryIdsOf = (username) => {
+  const getCurrentStoryIdsOf = (username) => {
     const key = getStoryKey(username)
+    console.log(state.contentList.currentStory)
+    return state.contentList.currentStory?.[key] ?? []
+  }
+
+  const getCurrentStoryListOf = (username) => {
+    const storyIds = getCurrentStoryIdsOf(username)
+    const uniqueIds = [...new Set(storyIds.filter((id) => id != null))]
+    return uniqueIds
+      .map((id) => getStoryById(id))
+      .filter(Boolean)
+  }
+
+  const isHaveCurrentStory = (username) => getCurrentStoryIdsOf(username).length > 0
+
+  const getPinnedStoryIdsOf = (username) => {
+    const key = getPinnedStoryKey(username)
     return state.pinnedContents.story?.[key] ?? []
   }
 
@@ -19,11 +36,18 @@ export const createStorySelector = (state) => {
       .filter(Boolean)
   }
 
+  const getStoryIds = () => getCurrentStoryIdsOf()
+  const getStoryList = () => getCurrentStoryListOf()
   const getPinnedStoryIds = () => getPinnedStoryIdsOf()
   const getPinnedStoryList = () => getPinnedStoryListOf()
 
   return {
+    isHaveCurrentStory,
     getStoryById,
+    getStoryIds,
+    getStoryList,
+    getCurrentStoryIdsOf,
+    getCurrentStoryListOf,
     getPinnedStoryIds,
     getPinnedStoryList,
     getPinnedStoryIdsOf,
