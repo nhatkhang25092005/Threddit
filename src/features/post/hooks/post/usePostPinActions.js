@@ -24,7 +24,6 @@ export function usePostPinActions(dispatch) {
             isLoading
           )
       )
-      console.log(response)
 
       if (!response?.success) {
         notify.popup(modal.title.error, response?.message)

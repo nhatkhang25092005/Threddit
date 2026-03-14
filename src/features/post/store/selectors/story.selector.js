@@ -9,7 +9,7 @@ export const createStorySelector = (state) => {
 
   const getCurrentStoryIdsOf = (username) => {
     const key = getStoryKey(username)
-    console.log(state.contentList.currentStory)
+
     return state.contentList.currentStory?.[key] ?? []
   }
 

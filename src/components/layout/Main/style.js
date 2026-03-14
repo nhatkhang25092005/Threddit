@@ -271,7 +271,7 @@ export const style = {
       background:
         theme.palette.mode === "dark"
           ? "radial-gradient(circle at top left, rgba(255,255,255,0.09), transparent 26%)"
-          : "radial-gradient(circle at top left, rgba(17,17,17,0.07), transparent 24%), radial-gradient(circle at bottom right, rgba(17,17,17,0.05), transparent 24%)",
+          : "radial-gradient(circle at top left, rgba(17,17,17,0.07), transparent 24%)",
       pointerEvents: "none",
     },
   }),

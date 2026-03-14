@@ -22,7 +22,6 @@ export default function StoryCardPreview({ active = false, onClick, story }) {
     : (media.name || (hasMedia ? `Story ${STORY_CARD_MEDIA_META[cardKind].label.toLowerCase()}` : 'Story'))
   const badge = STORY_CARD_MEDIA_META[cardKind] || STORY_CARD_MEDIA_META.text
   const BadgeIcon = badge.Icon
-
   return (
     <Box
       component={onClick ? 'button' : 'div'}

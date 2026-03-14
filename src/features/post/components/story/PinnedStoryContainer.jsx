@@ -3,7 +3,7 @@ import { Typography, Box, IconButton } from '@mui/material'
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded'
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded'
 import StoryCard from './StoryCard'
-import EditPinnedStory from './EditPinnedStory'
+import EditPinnedStoryButton from './EditPinnedStoryButton'
 import { useHorizontalScroll } from './hooks/useHorizontalScroll'
 import { style } from './style'
 import { usePostContext } from '../../hooks'
@@ -64,7 +64,7 @@ export default function PinnedStoryContainer() {
             />
           ))}
         </Box>
-        {isOwner && <EditPinnedStory/>}
+        {isOwner && <EditPinnedStoryButton/>}
       </Box>
     </Surface>
   )
