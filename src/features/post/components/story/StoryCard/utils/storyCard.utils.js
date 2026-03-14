@@ -4,10 +4,10 @@ import VideocamIcon from '@mui/icons-material/Videocam'
 import { STORY_MEDIA_KIND } from '../../CreateStoryModal/storyComposer'
 
 export const STORY_CARD_MEDIA_META = {
-  [STORY_MEDIA_KIND.IMAGE]: { label: 'Anh', Icon: VideocamIcon },
+  [STORY_MEDIA_KIND.IMAGE]: { label: 'Ảnh', Icon: VideocamIcon },
   [STORY_MEDIA_KIND.VIDEO]: { label: 'Video', Icon: VideocamIcon },
-  [STORY_MEDIA_KIND.SOUND]: { label: 'Am thanh', Icon: GraphicEqRoundedIcon },
-  text: { label: 'Van ban', Icon: NotesRoundedIcon },
+  [STORY_MEDIA_KIND.SOUND]: { label: 'Âm thanh', Icon: GraphicEqRoundedIcon },
+  text: { label: 'Văn bản', Icon: NotesRoundedIcon },
 }
 
 export function detectStoryCardMediaKind(type = '', src = '') {

@@ -99,6 +99,35 @@ export const storyHandlers = (state, action) => {
       }
     }
 
+    case STORY.SET_PIN_STORY:{
+      const {username, id, nextPin: shouldPin} = action.payload || {}
+      if (id == null) return state
+
+      const key = getStoryKey(username)
+      const currentPinnedStory = state.pinnedContents.story?.[key] || []
+      const nextPinList = shouldPin
+        ? [id, ...currentPinnedStory.filter(storyId => storyId !== id)]
+        : currentPinnedStory.filter(storyId => storyId !== id)
+
+      if (
+        currentPinnedStory.length === nextPinList.length
+        && currentPinnedStory.every((storyId, index) => storyId === nextPinList[index])
+      ) {
+        return state
+      }
+
+      return{
+        ...state,
+        pinnedContents:{
+          ...state.pinnedContents,
+          story:{
+            ...state.pinnedContents.story,
+            [key]:nextPinList
+          }
+        }
+      }
+    }
+
     default:
       return state
   }

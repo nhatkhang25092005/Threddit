@@ -17,10 +17,10 @@ export const postService = {
   unsavePost: async (id) =>
     handleRequest(() => postApi.unsavePost(id)),
 
-  pinPost: async (id) =>
-    handleRequest(()=> postApi.pinPost(id)),
+  pinContent: async (id) =>
+    handleRequest(()=> postApi.pinContent(id)),
 
-  unPinPost: async (id) =>
-    handleRequest(()=> postApi.unPinPost(id))
+  unPinContent: async (id) =>
+    handleRequest(()=> postApi.unPinContent(id))
 }
 

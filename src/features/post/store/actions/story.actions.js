@@ -41,4 +41,12 @@ export const storyActions = {
       { username }
     )
   ),
+
+  setPinnedStory: (username, id, nextPin) => (
+    createAction(
+      CLASS_TYPE.STORY,
+      STORY.SET_PIN_STORY,
+      {username, id, nextPin}
+    )
+  )
 }

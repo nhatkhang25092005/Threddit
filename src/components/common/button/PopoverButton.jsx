@@ -1,6 +1,17 @@
 import { Box, Popover, Typography} from '@mui/material'
 import { useEffect, useState } from 'react';
-export default function PopoverButton({closeReason ,Icon,disable, label, onClose, children, surfaceVariant, surfaceSx }){
+export default function PopoverButton({
+  closeReason,
+  Icon,
+  disable,
+  label,
+  onClose,
+  children,
+  surfaceVariant,
+  surfaceSx,
+  buttonSx,
+  labelSx
+}){
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClose = () => {
@@ -24,17 +35,31 @@ export default function PopoverButton({closeReason ,Icon,disable, label, onClose
     <>
       <Box
         id={`popover`}
-        sx={{ display: 'flex', cursor: 'pointer', }} 
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: label ? '0.45rem' : 0,
+          cursor: disable ? 'default' : 'pointer',
+          ...buttonSx
+        }}
         onClick={handleClick}
       >
         {Icon ? <Icon /> : undefined}
-        <Typography>{label}</Typography>
+        {label ? <Typography sx={labelSx}>{label}</Typography> : null}
       </Box>
       <Popover
         id='popover'
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
         slotProps={{
           paper:{
             onClick: (e) => e.stopPropagation(),
@@ -65,8 +90,6 @@ export default function PopoverButton({closeReason ,Icon,disable, label, onClose
             variant:surfaceVariant
           }
         }}
-        anchorReference="anchorPosition"
-        anchorPosition={{ top: 0, left: 100 }}
       >
         {children}
       </Popover>

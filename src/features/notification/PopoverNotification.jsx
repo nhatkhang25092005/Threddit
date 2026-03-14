@@ -9,7 +9,15 @@ import { useNotificationContext } from './hooks/useNotificationContext';
 import ReadAllBtn from './components/ReadAllBtn';
 const sx=style.popover
 const text = notification.popover
-export default function PopoverNotification({closeReason, disable= false, onClose}){
+export default function PopoverNotification({
+  closeReason,
+  disable= false,
+  onClose,
+  badgeSx,
+  buttonSx,
+  label,
+  labelSx
+}){
   const {state, actions} = useNotificationContext()
 
   
@@ -38,12 +46,16 @@ export default function PopoverNotification({closeReason, disable= false, onClos
       invisible={false}
       overlap="circular"
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      sx={badgeSx}
     >
       <PopoverButton
         closeReason={closeReason}
         onClose={onClose}
         disable={disable}
         Icon={NotificationsIcon}
+        label={label}
+        buttonSx={buttonSx}
+        labelSx={labelSx}
         surfaceVariant='modal'
         surfaceSx={{p:2}}
       >

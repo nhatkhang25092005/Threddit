@@ -34,11 +34,11 @@ export const postApi = {
     return axios.delete(buildUnsaveUrl(contentId))
   },
 
-  pinPost(contentId){
+  pinContent(contentId){
     return axios.post(`${BASE}/${contentId}${PIN}`)
   },
 
-  unPinPost(contentId){
+  unPinContent(contentId){
     return axios.delete(`${BASE}/${contentId}${PIN}`)
   }
 }

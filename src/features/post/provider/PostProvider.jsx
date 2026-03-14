@@ -3,7 +3,19 @@ import PostModalProvider from "./PostModalProvider"
 import { PostContext } from "./postContext"
 import { reducer, initState } from "../store/reducer"
 import { modal } from "./modals"
-import { useGetPostList, useGetSavedPost, useCreatePost, useCreateStory, useGetCurrentStory, useReaction, useSavePost, useGetPinnedStory, usePostPinActions } from "../hooks"
+import {
+  useGetPostList,
+  useGetSavedPost,
+  useCreatePost,
+  useCreateStory,
+  useGetCurrentStory,
+  useReaction,
+  useSavePost,
+  useGetPinnedStory,
+  usePostPinActions,
+  useStoryPinActions
+} from "../hooks"
+
 import {
   createReactionSelector,
   createPostSelector,
@@ -24,6 +36,7 @@ export default function PostProvider({ children }) {
   const reaction = useReaction(dispatch)
   const { savePost, unsavePost } = useSavePost(dispatch)
   const { pinPost, unpinPost } = usePostPinActions(dispatch)
+  const {pinStory, unpinStory} = useStoryPinActions(dispatch)
 
   /* ---------------- cross-module sync API (optional) ---------------- */
   const selector = useMemo(()=>({
@@ -50,8 +63,10 @@ export default function PostProvider({ children }) {
       unsavePost,
       pinPost,
       unpinPost,
+      unpinStory,
+      pinStory,
     }),
-    [getPostList, getSavedPostList, getCurrentStory, getPinnedStory, createPost, createStory, reaction, savePost, unsavePost, pinPost, unpinPost]
+    [pinStory, unpinStory, getPostList, getSavedPostList, getCurrentStory, getPinnedStory, createPost, createStory, reaction, savePost, unsavePost, pinPost, unpinPost]
   )
 
   /* ---------------- provider value ---------------- */

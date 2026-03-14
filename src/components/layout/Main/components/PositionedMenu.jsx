@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Icon from './Icon'
@@ -49,7 +49,7 @@ import Icon from './Icon'
  * - MenuItem click handlers do NOT auto-close the menu
  *   unless handled inside `func` or via `onClose`.
  */
-export default function PositionedMenu({sx, tasks, onClose, icon = null}) {
+export default function PositionedMenu({sx, tasks, onClose, icon = null, buttonSx = null}) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -62,15 +62,16 @@ export default function PositionedMenu({sx, tasks, onClose, icon = null}) {
 
   return (
     <div style={{...sx}}>
-      <Button
+      <IconButton
         id="demo-positioned-button"
         aria-controls={open ? 'demo-positioned-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
+        sx={buttonSx}
       >
         <Icon Icon={icon}/>
-      </Button>
+      </IconButton>
       
       <Menu
         id="demo-positioned-menu"
@@ -89,10 +90,13 @@ export default function PositionedMenu({sx, tasks, onClose, icon = null}) {
         variant='default'
       >
         {tasks.map(task=>
-          <MenuItem onClick={()=>{
+          <MenuItem
+            key={task.label}
+            onClick={()=>{
             task.func()
             handleClose()
-            }}>
+            }}
+          >
             {task.label}
           </MenuItem>
         )}
