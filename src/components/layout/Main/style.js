@@ -5,7 +5,8 @@ const LIGHT_BG = "#F4F4F4";
 
 export const style = {
   shell: (theme) => ({
-    minHeight: "100vh",
+    height: "100dvh",
+    minHeight: "100dvh",
     display: "flex",
     backgroundColor: theme.palette.mode === "dark" ? DARK_BG : LIGHT_BG,
     color: theme.palette.mode === "dark" ? "#FFFFFF" : "#111111",
@@ -16,7 +17,7 @@ export const style = {
 
   sidebar: (expand) => (theme) => ({
     width: expand ? "15.5rem" : "6rem",
-    height: "calc(100vh - 2rem)",
+    height: "calc(100dvh - 2rem)",
     left: "1rem",
     top: "1rem",
     bottom: "1rem",
@@ -257,8 +258,10 @@ export const style = {
   main: (theme) => ({
     flex: 1,
     minWidth: 0,
-    minHeight: "100vh",
+    height: "100dvh",
+    minHeight: 0,
     overflowY: "auto",
+    overflowX: "hidden",
     position: "relative",
     backgroundColor: theme.palette.mode === "dark" ? DARK_BG : LIGHT_BG,
     "&::before": {
@@ -276,7 +279,7 @@ export const style = {
   contentWrap: (isMobile) => ({
     position: "relative",
     zIndex: 1,
-    minHeight: "100vh",
+    minHeight: "100%",
     width: "min(100%, 96rem)",
     mx: "auto",
     px: { xs: "1rem", sm: "1.35rem", md: "1.75rem", lg: "2.25rem" },

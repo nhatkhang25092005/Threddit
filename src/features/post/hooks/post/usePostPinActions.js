@@ -17,13 +17,14 @@ export function usePostPinActions(dispatch) {
       pendingRef.current.add(id)
 
       const response = await notify.withLoading(
-        () => (shouldPin ? postService.pinPost(id) : postService.unPinPost(id)),
+        () => (shouldPin ? postService.pinContent(id) : postService.unPinContent(id)),
         (isLoading) =>
           notify.snackbarLoading(
             shouldPin ? 'Đang ghim bài viết...' : 'Đang gỡ ghim bài viết...',
             isLoading
           )
       )
+      console.log(response)
 
       if (!response?.success) {
         notify.popup(modal.title.error, response?.message)
