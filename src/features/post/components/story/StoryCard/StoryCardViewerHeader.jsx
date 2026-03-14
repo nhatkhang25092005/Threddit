@@ -48,7 +48,7 @@ export default function StoryCardViewerHeader({
       <Box sx={sx.badgeRow}>
         <Box sx={sx.metaPill}>{modeLabel}</Box>
         <Box sx={sx.metaPill}>{durationLabel}</Box>
-        {story?.isPinned ? <Box sx={sx.metaPill}>Pinned</Box> : null}
+
         {canTogglePin ? (
           <IconButton
             aria-label={story?.isPinned ? 'Unpin story' : 'Pin story'}

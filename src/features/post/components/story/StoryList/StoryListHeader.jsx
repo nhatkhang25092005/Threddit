@@ -20,7 +20,7 @@ export default function StoryListHeader({ onClose, pageMeta, username }) {
         startIcon={<CloseRoundedIcon />}
         sx={sx.closeButton}
       >
-        Dong
+        Đóng
       </Button>
     </Box>
   )
