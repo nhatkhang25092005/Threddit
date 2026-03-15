@@ -26,6 +26,22 @@ export const createStorySelector = (state) => {
       .filter(Boolean)
   }
 
+  const getFriendStoryIdsMap = () => (
+    state.contentList?.friendStories ?? {}
+  )
+
+  const getFriendStoryIdsOf = (username) => (
+    getFriendStoryIdsMap()?.[username] ?? []
+  )
+
+  const getFriendStoryListOf = (username) => {
+    const storyIds = getFriendStoryIdsOf(username)
+    const uniqueIds = [...new Set(storyIds.filter((id) => id != null))]
+    return uniqueIds
+      .map((id) => getStoryById(id))
+      .filter(Boolean)
+  }
+
   const isHaveCurrentStory = (username) => getCurrentStoryIdsOf(username).length > 0
 
   const getPinnedStoryIdsOf = (username) => {
@@ -56,6 +72,9 @@ export const createStorySelector = (state) => {
     getStoryLoadingById,
     getStoryIds,
     getStoryList,
+    getFriendStoryIdsMap,
+    getFriendStoryIdsOf,
+    getFriendStoryListOf,
     getCurrentStoryIdsOf,
     getCurrentStoryListOf,
     getPinnedStoryIds,

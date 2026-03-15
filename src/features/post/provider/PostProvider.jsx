@@ -11,6 +11,7 @@ import {
   useCreateStory,
   useDeleteStory,
   useGetCurrentStory,
+  useGetFriendStory,
   useReaction,
   useSavePost,
   useGetPinnedStory,
@@ -32,6 +33,7 @@ export default function PostProvider({ children }) {
   const getPostList = useGetPostList(dispatch, state.userPostHasMore)
   const getSavedPostList = useGetSavedPost(dispatch, state.mySavedHasMore)
   const getCurrentStory = useGetCurrentStory(dispatch)
+  const getFriendStory = useGetFriendStory(dispatch)
   const getPinnedStory = useGetPinnedStory(dispatch)
   const createPost = useCreatePost(dispatch)
   const createStory = useCreateStory(dispatch)
@@ -59,6 +61,7 @@ export default function PostProvider({ children }) {
       getPostList:  (username)=> getPostList(username),
       getSavedPostList: () => getSavedPostList(),
       getCurrentStory: (username) => getCurrentStory(username),
+      getFriendStory: (options) => getFriendStory(options),
       getPinnedStory: (username, options) => getPinnedStory(username, options),
       createPost,
       createStory,
@@ -72,7 +75,7 @@ export default function PostProvider({ children }) {
       unpinStory,
       pinStory,
     }),
-    [pinStory, unpinStory, getPostList, getSavedPostList, getCurrentStory, getPinnedStory, createPost, createStory, deletePost, deleteStory, reaction, savePost, unsavePost, pinPost, unpinPost]
+    [pinStory, unpinStory, getPostList, getSavedPostList, getCurrentStory, getFriendStory, getPinnedStory, createPost, createStory, deletePost, deleteStory, reaction, savePost, unsavePost, pinPost, unpinPost]
   )
 
   /* ---------------- provider value ---------------- */

@@ -18,6 +18,14 @@ export const storyActions = {
     )
   ),
 
+  addFriendStoryIndex: (friendStories = {}) => (
+    createAction(
+      CLASS_TYPE.STORY,
+      STORY.ADD_FRIEND_STORY_INDEX,
+      { friendStories }
+    )
+  ),
+
   addCurrentStoryIndex:(username = null, currentStoryIndexList = []) => (
     createAction(
       CLASS_TYPE.STORY,
@@ -39,6 +47,14 @@ export const storyActions = {
       CLASS_TYPE.STORY,
       STORY.CLEAR_STORY_LIST,
       { username }
+    )
+  ),
+
+  clearFriendStoryList: () => (
+    createAction(
+      CLASS_TYPE.STORY,
+      STORY.CLEAR_FRIEND_STORY_LIST,
+      null
     )
   ),
 

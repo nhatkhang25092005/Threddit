@@ -12,6 +12,9 @@ export const storyService = {
   getCurrentStory: async (username = null, signal, cursor) =>
     handleRequest(()=>storyApi.getCurrentStory(username, signal, cursor)),
 
+  getFriendStoryList: async (cursor = null, signal) =>
+    handleRequest(() => storyApi.getFriendStoryList(cursor, signal)),
+
   deleteStory: async (id) =>
     handleRequest(() => postApi.deleteContent(id))
 }

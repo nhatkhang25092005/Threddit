@@ -14,7 +14,10 @@ export const initState = {
     },
     usersPost:{}, // [username] -> [1, 2, 3]
     savedPost:[],
-    currentStory:{}
+    currentStory:{},
+    friendStories:{
+      //[username]:[1, 2, 3] (storyById)
+    }
   },
   mySavedHasMore:undefined,
   userPostHasMore:{

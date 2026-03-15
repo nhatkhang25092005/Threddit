@@ -43,6 +43,36 @@ export const storyHandlers = (state, action) => {
       }
     }
 
+    case STORY.ADD_FRIEND_STORY_INDEX: {
+      const friendStories = action.payload?.friendStories || {}
+      const currentFriendStories = state.contentList?.friendStories || {}
+      const nextFriendStories = { ...currentFriendStories }
+      let hasChanged = false
+
+      Object.entries(friendStories).forEach(([username, storyIds]) => {
+        if (!username) return
+
+        const currentIds = currentFriendStories?.[username] || []
+        const normalizedIds = normalizeIdList(storyIds)
+        const idsToAppend = normalizedIds.filter((id) => !currentIds.includes(id))
+
+        if (idsToAppend.length === 0) return
+
+        nextFriendStories[username] = [...currentIds, ...idsToAppend]
+        hasChanged = true
+      })
+
+      if (!hasChanged) return state
+
+      return {
+        ...state,
+        contentList: {
+          ...state.contentList,
+          friendStories: nextFriendStories
+        }
+      }
+    }
+
     case STORY.PREPEND_STORY_INDEX: {
       const payload = action.payload || {}
       const username = payload.username
@@ -77,6 +107,17 @@ export const storyHandlers = (state, action) => {
         }
       }
     }
+
+    case STORY.CLEAR_FRIEND_STORY_LIST:
+      if (Object.keys(state.contentList?.friendStories || {}).length === 0) return state
+
+      return {
+        ...state,
+        contentList: {
+          ...state.contentList,
+          friendStories: {}
+        }
+      }
 
     case STORY.PREPEND_CURRENT_STORY_INDEX:{
       const {username, currentStoryIndexList} = action.payload

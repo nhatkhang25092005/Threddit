@@ -2,6 +2,7 @@ import axios from "../../axios";
 const GET_PINNED = import.meta.env.VITE_API_PINNED_STORY
 const CONTENT_BASE = import.meta.env.VITE_API_CONTENT_BASE
 const CURRENT_STORY = import.meta.env.VITE_API_CURRENT_STORIES
+const FRIEND_STORIES = import.meta.env.VITE_API_FRIEND_STORIES
 export const storyApi = {
   getPinnedStory:(username, signal, cursor)=>{
     const url = username === null
@@ -15,5 +16,10 @@ export const storyApi = {
     ? CONTENT_BASE + CURRENT_STORY
     : `${CONTENT_BASE}/${username}${CURRENT_STORY}`
     return axios.get(url, { params: { cursor }, signal })
+  },
+
+  getFriendStoryList:(cursor = null, signal = null) => {
+    const url = CONTENT_BASE + FRIEND_STORIES
+    return axios.get(url, {params:{cursor}, signal})
   }
 }
