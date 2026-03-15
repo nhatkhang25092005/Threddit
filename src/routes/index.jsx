@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AppRoute from "./AppRoute.jsx";
 import Notfound from "../components/common/Notfound.jsx";
-import Awake from "../features/Awake.jsx";
 import Auth from '../features/auth/Auth.jsx'
 import Test from "../test/Test.jsx";
 import { NotifyProvider } from "@/provider/notify/NotifyProvider.jsx";
@@ -9,7 +8,6 @@ import { AuthProvider } from "../core/auth/AuthProvider.jsx";
 export default function AppRouter() {
   return (
     <BrowserRouter>
-      <Awake />
       <AuthProvider>
         <NotifyProvider>
               <Routes >
