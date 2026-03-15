@@ -104,7 +104,7 @@ export default function FriendStoryList() {
   const { username: activeUsername } = useParams()
   const { user } = useAuth()
   const {
-    actions: { getCurrentStory, getFriendStory },
+    actions: { getFriendStory },
     selector: {
       story: {
         getCurrentStoryListOf,
@@ -114,11 +114,9 @@ export default function FriendStoryList() {
     }
   } = usePostContext()
   const [isFetchingFriendStories, setIsFetchingFriendStories] = useState(false)
-  const [isFetchingMyStories, setIsFetchingMyStories] = useState(false)
   const friendStoryMap = getFriendStoryIdsMap()
   const hasFriendStories = Object.keys(friendStoryMap).length > 0
   const myStories = getCurrentStoryListOf(user?.username)
-  const hasMyStories = myStories.length > 0
 
   useEffect(() => {
     if (hasFriendStories) return
@@ -140,27 +138,6 @@ export default function FriendStoryList() {
       mounted = false
     }
   }, [getFriendStory, hasFriendStories])
-
-  useEffect(() => {
-    if (!user?.username || hasMyStories) return
-
-    let mounted = true
-
-    async function fetchMyStories() {
-      setIsFetchingMyStories(true)
-      await getCurrentStory(user.username)
-
-      if (mounted) {
-        setIsFetchingMyStories(false)
-      }
-    }
-
-    fetchMyStories()
-
-    return () => {
-      mounted = false
-    }
-  }, [getCurrentStory, hasMyStories, user?.username])
 
   const myStoryEntry = useMemo(() => (
     buildStoryEntry({
@@ -184,7 +161,6 @@ export default function FriendStoryList() {
 
   if (
     !isFetchingFriendStories
-    && !isFetchingMyStories
     && !myStoryEntry
     && friendStoryEntries.length === 0
   ) {
@@ -194,28 +170,17 @@ export default function FriendStoryList() {
   return (
     <Box sx={sx.friendSidebar}>
       <Box sx={sx.friendSidebarCard}>
-        {myStoryEntry || isFetchingMyStories ? (
+        {myStoryEntry ? (
           <>
             <Typography sx={sx.friendSidebarEyebrow}>Tin của bạn</Typography>
 
             <Box sx={sx.friendSidebarListSection}>
-              {isFetchingMyStories && !myStoryEntry ? (
-                <Box sx={sx.friendSidebarLoading}>
-                  <CircularProgress size={20} thickness={5} sx={{ color: '#F8FAFC' }} />
-                  <Typography sx={sx.friendSidebarLoadingText}>
-                    Đang lấy tin của bạn
-                  </Typography>
-                </Box>
-              ) : null}
-
-              {myStoryEntry ? (
-                <StorySidebarItem
-                  activeUsername={activeUsername}
-                  entry={myStoryEntry}
-                  locationState={location.state}
-                  navigate={navigate}
-                />
-              ) : null}
+              <StorySidebarItem
+                activeUsername={activeUsername}
+                entry={myStoryEntry}
+                locationState={location.state}
+                navigate={navigate}
+              />
             </Box>
           </>
         ) : null}
