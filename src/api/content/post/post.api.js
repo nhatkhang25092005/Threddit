@@ -40,5 +40,9 @@ export const postApi = {
 
   unPinContent(contentId){
     return axios.delete(`${BASE}/${contentId}${PIN}`)
+  },
+
+  deleteContent(contentId){
+    return axios.delete(`${BASE}/${contentId}`)
   }
 }

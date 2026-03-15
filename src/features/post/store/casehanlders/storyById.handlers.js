@@ -1,6 +1,18 @@
 import { itemModel } from "../models/item.model";
 import { STORY_BY_ID } from "../type";
 
+const removeIdFromList = (list = [], id) => (
+  Array.isArray(list)
+    ? list.filter((itemId) => itemId !== id)
+    : []
+);
+
+const removeIdFromRecordLists = (record = {}, id) => (
+  Object.fromEntries(
+    Object.entries(record || {}).map(([key, list]) => [key, removeIdFromList(list, id)])
+  )
+);
+
 export const storyByIdHandlers = (state, action) => {
   switch (action.type) {
     case STORY_BY_ID.ADD_STORIES_BY_ID: {
@@ -65,6 +77,35 @@ export const storyByIdHandlers = (state, action) => {
             ...currentStory,
             isPinned: nextIsPinned,
           },
+        },
+      };
+    }
+
+    case STORY_BY_ID.REMOVE_STORY_BY_ID: {
+      const { id } = action.payload || {};
+      if (id == null) return state;
+
+      const nextStoryById = { ...(state.storyById || {}) };
+      const nextLoadingItem = { ...(state.loading?.item || {}) };
+
+      delete nextStoryById[id];
+      delete nextLoadingItem[id];
+
+      return {
+        ...state,
+        pinnedContents: {
+          ...state.pinnedContents,
+          story: removeIdFromRecordLists(state.pinnedContents?.story, id),
+        },
+        storyList: removeIdFromRecordLists(state.storyList, id),
+        contentList: {
+          ...state.contentList,
+          currentStory: removeIdFromRecordLists(state.contentList?.currentStory, id),
+        },
+        storyById: nextStoryById,
+        loading: {
+          ...state.loading,
+          item: nextLoadingItem,
         },
       };
     }

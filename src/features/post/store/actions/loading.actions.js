@@ -34,6 +34,14 @@ export const loadingAction = {
     )
   ),
 
+  setContentDeleteLoading: (id, isLoading) => (
+    createAction(
+      CLASS_TYPE.LOADING,
+      LOADING.SET_CONTENT_DELETE_LOADING,
+      { id, isLoading }
+    )
+  ),
+
   setCreatePostLoading: (isLoading) => (
     createAction(
       CLASS_TYPE.LOADING,

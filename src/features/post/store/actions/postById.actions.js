@@ -33,4 +33,12 @@ export const postByIdActions ={
       { id, isPinned, username }
     )
   ),
+
+  removePost: (id) => (
+    createAction(
+      CLASS_TYPE.POST_BY_ID,
+      POST_BY_ID.REMOVE_POST_BY_ID,
+      { id }
+    )
+  ),
 }

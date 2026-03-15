@@ -10,5 +10,8 @@ export const storyService = {
     handleRequest(()=>postApi.createPost({...payload, type:'story'})),
 
   getCurrentStory: async (username = null, signal, cursor) =>
-    handleRequest(()=>storyApi.getCurrentStory(username, signal, cursor))
+    handleRequest(()=>storyApi.getCurrentStory(username, signal, cursor)),
+
+  deleteStory: async (id) =>
+    handleRequest(() => postApi.deleteContent(id))
 }

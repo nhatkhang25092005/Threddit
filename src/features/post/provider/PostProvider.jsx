@@ -7,7 +7,9 @@ import {
   useGetPostList,
   useGetSavedPost,
   useCreatePost,
+  useDeletePost,
   useCreateStory,
+  useDeleteStory,
   useGetCurrentStory,
   useReaction,
   useSavePost,
@@ -33,6 +35,8 @@ export default function PostProvider({ children }) {
   const getPinnedStory = useGetPinnedStory(dispatch)
   const createPost = useCreatePost(dispatch)
   const createStory = useCreateStory(dispatch)
+  const deletePost = useDeletePost(dispatch)
+  const deleteStory = useDeleteStory(dispatch)
   const reaction = useReaction(dispatch)
   const { savePost, unsavePost } = useSavePost(dispatch)
   const { pinPost, unpinPost } = usePostPinActions(dispatch)
@@ -58,6 +62,8 @@ export default function PostProvider({ children }) {
       getPinnedStory: (username, options) => getPinnedStory(username, options),
       createPost,
       createStory,
+      deletePost,
+      deleteStory,
       reaction,
       savePost,
       unsavePost,
@@ -66,7 +72,7 @@ export default function PostProvider({ children }) {
       unpinStory,
       pinStory,
     }),
-    [pinStory, unpinStory, getPostList, getSavedPostList, getCurrentStory, getPinnedStory, createPost, createStory, reaction, savePost, unsavePost, pinPost, unpinPost]
+    [pinStory, unpinStory, getPostList, getSavedPostList, getCurrentStory, getPinnedStory, createPost, createStory, deletePost, deleteStory, reaction, savePost, unsavePost, pinPost, unpinPost]
   )
 
   /* ---------------- provider value ---------------- */

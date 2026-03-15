@@ -23,6 +23,10 @@ export const createPostSelector = (state) => {
     return Boolean(getPostLoadingById(postId)?.pinPost)
   }
 
+  const getDeleteLoadingByPostIdOf = (postId) => {
+    return Boolean(getPostLoadingById(postId)?.deleteContent)
+  }
+
   const getUsersPostIds = (username) =>
     state.contentList.usersPost?.[username] ?? []
 
@@ -66,11 +70,11 @@ export const createPostSelector = (state) => {
   }
 
   const getPostPinStatusOf = (postId) => {
-    return state.postById[postId].isPinned
+    return Boolean(state.postById?.[postId]?.isPinned)
   }
 
   const getPostPinLoadingOf = (postId) => {
-    return state.loading.item?.[postId]?.pinPost
+    return Boolean(state.loading.item?.[postId]?.pinPost)
   }
 
   return{
@@ -81,6 +85,7 @@ export const createPostSelector = (state) => {
     getSaveStatusByPostIdOf,
     getSaveLoadingByPostIdOf,
     getPinLoadingByPostIdOf,
+    getDeleteLoadingByPostIdOf,
     getUserPostList,
     getSavedPostList,
     getUserPostListHasMore,

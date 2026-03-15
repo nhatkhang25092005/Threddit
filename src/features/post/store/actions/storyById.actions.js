@@ -25,4 +25,12 @@ export const storyByIdActions = {
       { id, isPinned }
     )
   ),
+
+  removeStory: (id) => (
+    createAction(
+      CLASS_TYPE.STORY_BY_ID,
+      STORY_BY_ID.REMOVE_STORY_BY_ID,
+      { id }
+    )
+  ),
 };

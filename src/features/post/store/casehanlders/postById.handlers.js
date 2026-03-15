@@ -1,5 +1,18 @@
 import { POST_BY_ID } from "../type"
 import { itemModel } from "../models/item.model"
+
+const removeIdFromList = (list = [], id) => (
+  Array.isArray(list)
+    ? list.filter((itemId) => itemId !== id)
+    : []
+)
+
+const removeIdFromRecordLists = (record = {}, id) => (
+  Object.fromEntries(
+    Object.entries(record || {}).map(([key, list]) => [key, removeIdFromList(list, id)])
+  )
+)
+
 export const postByIdHandlers = (state, action) => {
   switch (action.type){
     case POST_BY_ID.ADD_POSTS_BY_ID:{
@@ -142,6 +155,46 @@ export const postByIdHandlers = (state, action) => {
       },
     };
   }
+
+    case POST_BY_ID.REMOVE_POST_BY_ID: {
+      const { id } = action.payload || {}
+      if (id == null) return state
+
+      const nextUsersPost = removeIdFromRecordLists(state.contentList?.usersPost, id)
+      const nextSavedPost = removeIdFromList(state.contentList?.savedPost, id)
+      const nextPinnedPost = removeIdFromList(state.pinnedContents?.post, id)
+      const nextFeeds = removeIdFromList(state.contentList?.home?.feeds, id)
+      const nextFollowersPost = removeIdFromList(state.contentList?.home?.followersPost, id)
+
+      const nextPostById = { ...(state.postById || {}) }
+      const nextLoadingItem = { ...(state.loading?.item || {}) }
+
+      delete nextPostById[id]
+      delete nextLoadingItem[id]
+
+      return {
+        ...state,
+        pinnedContents: {
+          ...state.pinnedContents,
+          post: nextPinnedPost
+        },
+        contentList: {
+          ...state.contentList,
+          home: {
+            ...state.contentList.home,
+            feeds: nextFeeds,
+            followersPost: nextFollowersPost
+          },
+          usersPost: nextUsersPost,
+          savedPost: nextSavedPost
+        },
+        postById: nextPostById,
+        loading: {
+          ...state.loading,
+          item: nextLoadingItem
+        }
+      }
+    }
 
     default:
       return state

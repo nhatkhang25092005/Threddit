@@ -72,6 +72,29 @@ export const loadingHandlers = (state, action) => {
       }
     }
 
+    case LOADING.SET_CONTENT_DELETE_LOADING: {
+      const { id, isLoading } = action.payload || {}
+      if (id == null) return state
+
+      const currentItemLoading = state.loading.item?.[id] || itemModel()
+      const nextDeleteLoading = Boolean(isLoading)
+      if (currentItemLoading.deleteContent === nextDeleteLoading) return state
+
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          item: {
+            ...state.loading.item,
+            [id]: {
+              ...currentItemLoading,
+              deleteContent: nextDeleteLoading
+            }
+          }
+        }
+      }
+    }
+
     case LOADING.SET_CREATE_POST_LOADING:
       return {
         ...state,

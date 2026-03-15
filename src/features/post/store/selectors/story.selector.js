@@ -7,6 +7,11 @@ export const createStorySelector = (state) => {
     return state.storyById?.[storyId] || null
   }
 
+  const getStoryLoadingById = (storyId) => {
+    if (storyId == null) return null
+    return state.loading?.item?.[storyId] || null
+  }
+
   const getCurrentStoryIdsOf = (username) => {
     const key = getStoryKey(username)
 
@@ -41,9 +46,14 @@ export const createStorySelector = (state) => {
   const getPinnedStoryIds = () => getPinnedStoryIdsOf()
   const getPinnedStoryList = () => getPinnedStoryListOf()
 
+  const getDeleteLoadingByStoryIdOf = (storyId) => (
+    Boolean(getStoryLoadingById(storyId)?.deleteContent)
+  )
+
   return {
     isHaveCurrentStory,
     getStoryById,
+    getStoryLoadingById,
     getStoryIds,
     getStoryList,
     getCurrentStoryIdsOf,
@@ -51,6 +61,7 @@ export const createStorySelector = (state) => {
     getPinnedStoryIds,
     getPinnedStoryList,
     getPinnedStoryIdsOf,
-    getPinnedStoryListOf
+    getPinnedStoryListOf,
+    getDeleteLoadingByStoryIdOf
   }
 }

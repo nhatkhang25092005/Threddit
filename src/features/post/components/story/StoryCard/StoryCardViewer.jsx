@@ -31,6 +31,7 @@ export default function StoryCardViewer({
         modeLabel={getStoryModeLabel(viewer.mode)}
         onClose={onClose}
         story={story}
+        storyCount={storyCount}
       />
 
       <StoryCardViewerStage

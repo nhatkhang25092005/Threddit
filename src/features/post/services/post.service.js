@@ -21,6 +21,9 @@ export const postService = {
     handleRequest(()=> postApi.pinContent(id)),
 
   unPinContent: async (id) =>
-    handleRequest(()=> postApi.unPinContent(id))
+    handleRequest(()=> postApi.unPinContent(id)),
+
+  deletePost: async (id) =>
+    handleRequest(() => postApi.deleteContent(id))
 }
 
