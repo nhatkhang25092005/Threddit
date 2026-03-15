@@ -23,6 +23,9 @@ export const postService = {
   unPinContent: async (id) =>
     handleRequest(()=> postApi.unPinContent(id)),
 
+  editPost: async (id, payload) =>
+    handleRequest(() => postApi.editContent(id, payload)),
+
   deletePost: async (id) =>
     handleRequest(() => postApi.deleteContent(id))
 }

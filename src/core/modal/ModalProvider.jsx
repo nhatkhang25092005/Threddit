@@ -27,7 +27,14 @@ export default function ModalProvider({
     setModal({ open: false, type: null, props: null })
   }, [])
 
-  const value = useMemo(() => ({ openModal, closeModal }), [openModal, closeModal])
+  const value = useMemo(() => ({
+    openModal,
+    closeModal,
+    modal,
+    isModalOpen: Boolean(modal.open),
+    modalType: modal.type,
+    modalProps: modal.props,
+  }), [closeModal, modal, openModal])
   const ModalComponent = modal.type ? modals[modal.type] : null
 
   return (

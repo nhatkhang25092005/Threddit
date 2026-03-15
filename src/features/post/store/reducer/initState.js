@@ -27,6 +27,8 @@ export const initState = {
     global:{
       createPost:false,
       createStory:false,
+      editPost:false,
+      editStory:false,
       presign:false,
       getFeeds:false,
       getFollowPost:false,

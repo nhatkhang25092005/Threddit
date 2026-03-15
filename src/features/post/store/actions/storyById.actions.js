@@ -18,6 +18,14 @@ export const storyByIdActions = {
     )
   ),
 
+  updateStory: (id, changes = {}) => (
+    createAction(
+      CLASS_TYPE.STORY_BY_ID,
+      STORY_BY_ID.UPDATE_STORY_BY_ID,
+      { id, changes }
+    )
+  ),
+
   setPinned: (id, isPinned) => (
     createAction(
       CLASS_TYPE.STORY_BY_ID,

@@ -15,6 +15,9 @@ export const storyService = {
   getFriendStoryList: async (cursor = null, signal) =>
     handleRequest(() => storyApi.getFriendStoryList(cursor, signal)),
 
+  editStory: async (id, payload) =>
+    handleRequest(() => postApi.editContent(id, payload)),
+
   deleteStory: async (id) =>
     handleRequest(() => postApi.deleteContent(id))
 }

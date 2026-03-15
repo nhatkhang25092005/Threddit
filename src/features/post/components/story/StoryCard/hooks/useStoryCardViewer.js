@@ -9,6 +9,7 @@ import {
   shouldRenderStoryTextOnCanvas,
 } from '../../CreateStoryModal/storyComposer'
 import { useStoryPreviewPlayback } from '../../CreateStoryModal/hooks/useStoryPreviewPlayback'
+import { usePostModal } from '../../../../provider/usePostModal'
 import {
   resolveStoryPrimaryMedia,
   resolveStoryCardText,
@@ -16,6 +17,7 @@ import {
 
 export function useStoryCardViewer({ onNext, story }) {
   const [sourceDurationSeconds, setSourceDurationSeconds] = useState(0)
+  const { isModalOpen } = usePostModal()
 
   const media = useMemo(() => resolveStoryPrimaryMedia(story), [story])
   const trimmedText = useMemo(() => resolveStoryCardText(story), [story])
@@ -40,6 +42,7 @@ export function useStoryCardViewer({ onNext, story }) {
     : formatStoryDuration(playbackSeconds)
 
   const playback = useStoryPreviewPlayback({
+    forcedPaused: isModalOpen,
     loop: false,
     mediaKind: media.kind,
     mediaUrl: media.src,

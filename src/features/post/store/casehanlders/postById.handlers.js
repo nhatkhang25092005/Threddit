@@ -13,6 +13,44 @@ const removeIdFromRecordLists = (record = {}, id) => (
   )
 )
 
+const mergePostChanges = (currentPost, changes = {}) => ({
+  ...currentPost,
+  ...(changes?.text !== undefined ? { text: changes.text } : {}),
+  ...(changes?.type ? { type: changes.type } : {}),
+  ...(Array.isArray(changes?.mentionedUsers) ? { mentionedUsers: changes.mentionedUsers } : {}),
+  ...(Array.isArray(changes?.mediaFiles) ? { mediaFiles: changes.mediaFiles } : {}),
+  ...(changes?.time ? {
+    time: {
+      ...currentPost.time,
+      ...changes.time
+    }
+  } : {}),
+  ...(changes?.author ? {
+    author: {
+      ...currentPost.author,
+      ...changes.author
+    }
+  } : {}),
+  ...(changes?.sharer ? {
+    sharer: {
+      ...currentPost.sharer,
+      ...changes.sharer
+    }
+  } : {}),
+  ...(changes?.stats ? {
+    stats: {
+      ...currentPost.stats,
+      ...changes.stats
+    }
+  } : {}),
+  ...(changes?.viewer ? {
+    viewer: {
+      ...currentPost.viewer,
+      ...changes.viewer
+    }
+  } : {}),
+})
+
 export const postByIdHandlers = (state, action) => {
   switch (action.type){
     case POST_BY_ID.ADD_POSTS_BY_ID:{
@@ -55,6 +93,22 @@ export const postByIdHandlers = (state, action) => {
         postById: {
           ...state.postById,
           [post.id]: post
+        }
+      }
+    }
+
+    case POST_BY_ID.UPDATE_POST_BY_ID: {
+      const { id, changes } = action.payload || {}
+      if (id == null) return state
+
+      const currentPost = state.postById?.[id]
+      if (!currentPost) return state
+
+      return {
+        ...state,
+        postById: {
+          ...state.postById,
+          [id]: mergePostChanges(currentPost, changes)
         }
       }
     }

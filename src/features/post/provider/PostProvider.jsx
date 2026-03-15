@@ -8,8 +8,10 @@ import {
   useGetSavedPost,
   useCreatePost,
   useDeletePost,
+  useEditPost,
   useCreateStory,
   useDeleteStory,
+  useEditStory,
   useGetCurrentStory,
   useGetFriendStory,
   useReaction,
@@ -39,6 +41,8 @@ export default function PostProvider({ children }) {
   const createStory = useCreateStory(dispatch)
   const deletePost = useDeletePost(dispatch)
   const deleteStory = useDeleteStory(dispatch)
+  const editPost = useEditPost(dispatch)
+  const editStory = useEditStory(dispatch)
   const reaction = useReaction(dispatch)
   const { savePost, unsavePost } = useSavePost(dispatch)
   const { pinPost, unpinPost } = usePostPinActions(dispatch)
@@ -67,6 +71,8 @@ export default function PostProvider({ children }) {
       createStory,
       deletePost,
       deleteStory,
+      editPost,
+      editStory,
       reaction,
       savePost,
       unsavePost,
@@ -75,7 +81,7 @@ export default function PostProvider({ children }) {
       unpinStory,
       pinStory,
     }),
-    [pinStory, unpinStory, getPostList, getSavedPostList, getCurrentStory, getFriendStory, getPinnedStory, createPost, createStory, deletePost, deleteStory, reaction, savePost, unsavePost, pinPost, unpinPost]
+    [pinStory, unpinStory, getPostList, getSavedPostList, getCurrentStory, getFriendStory, getPinnedStory, createPost, createStory, deletePost, deleteStory, editPost, editStory, reaction, savePost, unsavePost, pinPost, unpinPost]
   )
 
   /* ---------------- provider value ---------------- */

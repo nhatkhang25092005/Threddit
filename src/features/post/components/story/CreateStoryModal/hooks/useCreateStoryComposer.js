@@ -15,10 +15,25 @@ import {
 } from "../utils"
 import { usePostContext } from "../../../../hooks";
 import { getMentions } from "../../../../../../utils/getMentions";
-export function useCreateStoryComposer() {
-  const {actions:{createStory}, selector:{loading:{getCreateStoryLoading}}} = usePostContext()
-  const storyLoading = getCreateStoryLoading()
-  const [media, setMedia] = useState(null);
+
+export function useCreateStoryComposer(options = {}) {
+  const {
+    actions: { createStory, editStory },
+    selector: {
+      loading: { getCreateStoryLoading, getEditStoryLoading }
+    }
+  } = usePostContext()
+  const modeRef = useRef(options?.mode === "edit" ? "edit" : "create")
+  const contentIdRef = useRef(options?.contentId ?? null)
+  const submitActionRef = useRef(
+    typeof options?.submitAction === "function" ? options.submitAction : null
+  )
+  const initialTextRef = useRef(options?.initialText || "")
+  const initialMediaRef = useRef(options?.initialMedia || null)
+  const storyLoading = modeRef.current === "edit"
+    ? getEditStoryLoading()
+    : getCreateStoryLoading()
+  const [media, setMedia] = useState(() => initialMediaRef.current);
   const [sourceDurationSeconds, setSourceDurationSeconds] = useState(0);
   const [isMentionListOpen, setIsMentionListOpen] = useState(false);
   const imageInputRef = useRef(null);
@@ -46,6 +61,10 @@ export function useCreateStoryComposer() {
     }),
     []
   );
+
+  useEffect(() => {
+    setMentionValue(initialTextRef.current);
+  }, [setMentionValue]);
 
   useEffect(() => () => revokePreviewUrl(media), [media]);
 
@@ -103,16 +122,36 @@ export function useCreateStoryComposer() {
 
   const handleSubmit = useCallback(async (onClose) => {
     if (!canSubmit) return
-    await createStory(
-      {
-        text: mention.value || "",
-        type:'story',
-        mentionedUsers: getMentions(mention.value || ""),
-        media:[media],
-      },
-      onClose
-    )
-  }, [canSubmit, createStory, media, mention.value]);
+
+    const payload = {
+      text: mention.value || "",
+      type:'story',
+      mentionedUsers: getMentions(mention.value || ""),
+      media: media ? [{ ...media, sortOrder: 1 }] : [],
+    }
+
+    if (modeRef.current === "edit") {
+      const editPayload = {
+        ...payload,
+        contentId: contentIdRef.current,
+      }
+
+      if (submitActionRef.current) {
+        await submitActionRef.current(editPayload, onClose)
+        return
+      }
+
+      await editStory(editPayload, onClose)
+      return
+    }
+
+    if (submitActionRef.current) {
+      await submitActionRef.current(payload, onClose)
+      return
+    }
+
+    await createStory(payload, onClose)
+  }, [canSubmit, createStory, editStory, media, mention.value]);
 
   return {
     canSubmit,
@@ -124,7 +163,7 @@ export function useCreateStoryComposer() {
     playbackSeconds,
     sourceDurationSeconds,
     text,
-    loading:storyLoading,
+    loading: storyLoading,
     handleCloseMentionList,
     handleMediaMetadata,
     handleOpenMentionList,

@@ -42,6 +42,22 @@ export const loadingAction = {
     )
   ),
 
+  setEditPostLoading: (isLoading) => (
+    createAction(
+      CLASS_TYPE.LOADING,
+      LOADING.SET_EDIT_POST_LOADING,
+      isLoading
+    )
+  ),
+
+  setEditStoryLoading: (isLoading) => (
+    createAction(
+      CLASS_TYPE.LOADING,
+      LOADING.SET_EDIT_STORY_LOADING,
+      isLoading
+    )
+  ),
+
   setCreatePostLoading: (isLoading) => (
     createAction(
       CLASS_TYPE.LOADING,

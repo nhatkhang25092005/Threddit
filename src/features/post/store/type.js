@@ -18,6 +18,8 @@ export const LOADING = {
   SET_POST_SAVE_LOADING: "set post save loading",
   SET_POST_PIN_LOADING: "set post pin loading",
   SET_CONTENT_DELETE_LOADING: "set content delete loading",
+  SET_EDIT_POST_LOADING: "set edit post loading",
+  SET_EDIT_STORY_LOADING: "set edit story loading",
   SET_CREATE_POST_LOADING: "set create post loading",
   SET_CREATE_STORY_LOADING: "set create story loading",
   SET_PRESIGN_LOADING: "set presign loading",
@@ -32,6 +34,7 @@ export const HAS_MORE = {
 export const POST_BY_ID = {
   ADD_POSTS_BY_ID : 'ADD POST BY ID',
   ADD_POST_BY_ID: 'ADD POST BY ID ITEM',
+  UPDATE_POST_BY_ID: 'UPDATE POST BY ID ITEM',
   SET_POST_SAVED: 'SET POST SAVED',
   SET_POST_PINNED: 'SET POST PINNED',
   REMOVE_POST_BY_ID: 'REMOVE POST BY ID ITEM',
@@ -40,6 +43,7 @@ export const POST_BY_ID = {
 export const STORY_BY_ID = {
   ADD_STORIES_BY_ID: 'ADD STORIES BY ID',
   ADD_STORY_BY_ID: 'ADD STORY BY ID ITEM',
+  UPDATE_STORY_BY_ID: 'UPDATE STORY BY ID ITEM',
   SET_STORY_PINNED: 'SET STORY PINNED',
   REMOVE_STORY_BY_ID: 'REMOVE STORY BY ID ITEM',
 }

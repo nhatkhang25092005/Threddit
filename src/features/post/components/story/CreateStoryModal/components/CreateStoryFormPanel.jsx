@@ -19,7 +19,11 @@ const FORM_TEXT = story.createStoryModal.formPanel;
 const LOADING_DURATION_TEXT = story.createStoryModal.loadingDuration;
 const sx = style.createStoryModal.formPanel;
 
-export default function CreateStoryFormPanel({ onClose }) {
+export default function CreateStoryFormPanel({
+  onClose,
+  submitLabel = FORM_TEXT.footer.submitButton,
+  closeLabel = FORM_TEXT.footer.closeButton,
+}) {
   const {
     canSubmit,
     handleSubmit,
@@ -64,7 +68,7 @@ export default function CreateStoryFormPanel({ onClose }) {
       <Box sx={sx.footer}>
         <Box sx={sx.actionRow}>
           <Button variant="secondary" sx={sx.secondaryButton} onClick={onClose}>
-            {FORM_TEXT.footer.closeButton}
+            {closeLabel}
           </Button>
           <Button
             disabled={!canSubmit || loading}
@@ -72,7 +76,7 @@ export default function CreateStoryFormPanel({ onClose }) {
             sx={sx.primaryButton}
             onClick={handleSubmit}
           >
-            {loading ? <CircularProgress size={20} color="inherit"/> : FORM_TEXT.footer.submitButton}
+            {loading ? <CircularProgress size={20} color="inherit"/> : submitLabel}
           </Button>
         </Box>
       </Box>

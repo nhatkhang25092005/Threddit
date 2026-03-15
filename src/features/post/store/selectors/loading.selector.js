@@ -5,6 +5,12 @@ export const createLoadingSelector = (state) => {
   const getCreateStoryLoading = () => (
     state.loading.global.createStory
   )
+  const getEditPostLoading = () => (
+    state.loading.global.editPost
+  )
+  const getEditStoryLoading = () => (
+    state.loading.global.editStory
+  )
   const getUserPostFetchingLoading = () => (
     state.loading.global.getUserPost
   )
@@ -14,6 +20,8 @@ export const createLoadingSelector = (state) => {
   return {
     getCreatePostLoading,
     getCreateStoryLoading,
+    getEditPostLoading,
+    getEditStoryLoading,
     getUserPostFetchingLoading,
     getSavedPostFetchingLoading
   }

@@ -48,7 +48,14 @@ const sx = {
   },
 };
 
-export default function CloseAlert({ onConfirm, onCancel }) {
+export default function CloseAlert({
+  onConfirm,
+  onCancel,
+  title = "Đóng bài viết?",
+  message = "Nếu đóng bây giờ, mọi trạng thái bài viết đang tạo sẽ bị hủy",
+  cancelLabel = "Quay lại",
+  confirmLabel = "Đóng",
+}) {
   return (
     <Portal>
       <Box sx={sx.overlay} onClick={onCancel}>
@@ -57,17 +64,15 @@ export default function CloseAlert({ onConfirm, onCancel }) {
           sx={sx.panel}
           onClick={(event) => event.stopPropagation()}
         >
-          <Typography sx={sx.title}>Đóng bài viết?</Typography>
-          <Typography sx={sx.message}>
-            Nếu đóng bây giờ, mọi trạng thái bài viết đang tạo sẽ bị hủy
-          </Typography>
+          <Typography sx={sx.title}>{title}</Typography>
+          <Typography sx={sx.message}>{message}</Typography>
 
           <Box sx={sx.actions}>
             <Button variant="secondary" sx={sx.cancelButton} onClick={onCancel}>
-              Quay lại
+              {cancelLabel}
             </Button>
             <Button variant="primary" sx={sx.confirmButton} onClick={onConfirm}>
-              Đóng
+              {confirmLabel}
             </Button>
           </Box>
         </Surface>

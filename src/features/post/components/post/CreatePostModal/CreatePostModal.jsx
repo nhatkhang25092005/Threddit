@@ -1,11 +1,14 @@
-﻿import { Box, Button, Divider, CircularProgress } from "@mui/material";
-import { useCallback, useState } from "react";
+import { Box, Button, CircularProgress, Divider } from "@mui/material";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Surface from "../../../../../components/common/Surface";
 import useAuth from "../../../../../core/auth/useAuth";
 import { useMention } from "../../../../../hooks/useMention";
 import { upload } from "../../../../../utils/upload";
+import { getMentions } from "../../../../../utils/getMentions";
 import MentionListModal from "../../shared/MentionListModal";
-import { style } from "../style"
+import { usePostContext } from "../../../hooks";
+import { style } from "../style";
+import CloseAlert from "./components/CloseAlert";
 import {
   CreatePostModalActionBar,
   CreatePostModalAuthor,
@@ -13,98 +16,129 @@ import {
   CreatePostModalHeader,
 } from "./components";
 import { useAdjustLayout } from "./hooks/useAdjustLayout";
-import { usePostContext } from "../../../hooks";
-import { getMentions } from "../../../../../utils/getMentions";
-import CloseAlert from "./components/CloseAlert";
+import {
+  buildInitialMediaItems,
+  DEFAULT_CLOSE_ALERT,
+  EDIT_CLOSE_ALERT,
+  getComposerImages,
+  getComposerSounds,
+  getComposerVideos,
+  mapComposerMediaForSubmit,
+  POST_MODAL_MODE,
+  prependUploadedMediaItems,
+  removeComposerMediaByMatcherAtIndex,
+  revokeComposerMediaPreview,
+} from "./utils";
 
 const sx = style.createPostModal;
-
-const uploadImage = (event, setImage) => {
-  const nextImages = upload.image(event, true)
-  if (!nextImages?.length) return;
-  setImage((prev) => [...nextImages, ...prev]);
-};
-
-const uploadVideo = (event, setVideo) => {
-  const nextVideos = upload.video(event, true);
-  if (!nextVideos?.length) return;
-  setVideo((prev) => [...nextVideos, ...prev]);
-};
-
-const uploadSound = (event, setSound) => {
-  const nextSounds = upload.sound(event, true);
-  if (!nextSounds?.length) return;
-  setSound((prev) => [...nextSounds, ...prev]);
-};
-
-const removeMediaByIndex = (setMedia, index) => {
-  setMedia((prev) => {
-    if (index < 0 || index >= prev.length) return prev;
-
-    const next = [...prev];
-    const [removed] = next.splice(index, 1);
-
-    if (removed?.url) URL.revokeObjectURL(removed.url)
-
-    return next
-  });
-};
 
 export default function CreatePostModal({
   onClose,
   initialImages = [],
   initialVideos = [],
   initialSounds = [],
+  initialMedia = [],
+  initialText = "",
+  contentId = null,
+  mode = POST_MODAL_MODE.CREATE,
+  title = "Tạo bài viết",
+  submitLabel = "Đăng",
+  closeAlertTitle = null,
+  closeAlertMessage = null,
 }) {
   const { user } = useAuth();
-  const {actions:{createPost}, selector} = usePostContext()
+  const {
+    actions: { createPost, editPost },
+    selector: {
+      loading: { getCreatePostLoading, getEditPostLoading }
+    }
+  } = usePostContext();
   const mention = useMention({ minChars: 0 });
+  const { setValue: setMentionValue } = mention;
+  const modeRef = useRef(mode === POST_MODAL_MODE.EDIT ? POST_MODAL_MODE.EDIT : POST_MODAL_MODE.CREATE);
+  const contentIdRef = useRef(contentId);
+  const initialTextRef = useRef(initialText || "");
+  const mediaItemsRef = useRef([]);
+  const cleanupTimeoutRef = useRef(null);
   const [openCloseAlert, setOpenCloseAlert] = useState(false);
-  const [images, setImage] = useState(() =>
-    Array.isArray(initialImages) ? initialImages : []
-  )
-  const [videos, setVideo] = useState(() =>
-    Array.isArray(initialVideos) ? initialVideos : []
-  )
-  const [sounds, setSound] = useState(() =>
-    Array.isArray(initialSounds) ? initialSounds : []
-  )
-  const [openMentionList, setOpenMentionList] = useState(false)
-  const loading = selector.loading.getCreatePostLoading()
+  const [openMentionList, setOpenMentionList] = useState(false);
+  const [mediaItems, setMediaItems] = useState(() =>
+    buildInitialMediaItems({
+      initialMedia,
+      initialImages,
+      initialVideos,
+      initialSounds,
+    })
+  );
+  const loading = modeRef.current === POST_MODAL_MODE.EDIT
+    ? getEditPostLoading()
+    : getCreatePostLoading();
+
+  mediaItemsRef.current = mediaItems;
+
+  useEffect(() => {
+    setMentionValue(initialTextRef.current);
+  }, [setMentionValue]);
+
+  useEffect(() => {
+    if (cleanupTimeoutRef.current) {
+      window.clearTimeout(cleanupTimeoutRef.current);
+      cleanupTimeoutRef.current = null;
+    }
+
+    return () => {
+      const mediaSnapshot = [...mediaItemsRef.current];
+
+      cleanupTimeoutRef.current = window.setTimeout(() => {
+        mediaSnapshot.forEach((item) => revokeComposerMediaPreview(item));
+        cleanupTimeoutRef.current = null;
+      }, 0);
+    };
+  }, []);
 
   const displayName = user?.displayName || user?.username || "Ban";
-  const mediaCount = images.length + videos.length + sounds.length;
-  const hasMedia = mediaCount > 0
-  const disableSubmit =
-    !mention.value
-    && images.length == 0
-    && sounds.length == 0
-    && videos.length == 0
-    || loading
+  const images = useMemo(() => getComposerImages(mediaItems), [mediaItems]);
+  const videos = useMemo(() => getComposerVideos(mediaItems), [mediaItems]);
+  const sounds = useMemo(() => getComposerSounds(mediaItems), [mediaItems]);
+  const mediaCount = mediaItems.length;
+  const hasMedia = mediaCount > 0;
+  const disableSubmit = (!mention.value && mediaItems.length === 0) || loading;
   useAdjustLayout(mention, mediaCount);
 
   const handleUploadImage = useCallback((event) => {
-    uploadImage(event, setImage);
+    prependUploadedMediaItems(setMediaItems, upload.image(event, true));
   }, []);
 
   const handleUploadVideo = useCallback((event) => {
-    uploadVideo(event, setVideo);
+    prependUploadedMediaItems(setMediaItems, upload.video(event, true));
   }, []);
 
   const handleUploadSound = useCallback((event) => {
-    uploadSound(event, setSound);
+    prependUploadedMediaItems(setMediaItems, upload.sound(event, true));
   }, []);
 
   const handleRemoveImage = useCallback((index) => {
-    removeMediaByIndex(setImage, index);
+    setMediaItems((prev) => removeComposerMediaByMatcherAtIndex({
+      index,
+      mediaItems: prev,
+      matcher: (item) => item?.type === "image",
+    }));
   }, []);
 
   const handleRemoveVideo = useCallback((index) => {
-    removeMediaByIndex(setVideo, index);
+    setMediaItems((prev) => removeComposerMediaByMatcherAtIndex({
+      index,
+      mediaItems: prev,
+      matcher: (item) => item?.type === "video",
+    }));
   }, []);
 
   const handleRemoveSound = useCallback((index) => {
-    removeMediaByIndex(setSound, index);
+    setMediaItems((prev) => removeComposerMediaByMatcherAtIndex({
+      index,
+      mediaItems: prev,
+      matcher: (item) => item?.type === "audio" || item?.type === "sound",
+    }));
   }, []);
 
   const handleOpenMentionList = useCallback(() => {
@@ -129,18 +163,38 @@ export default function CreatePostModal({
   }, [onClose]);
 
   const handleSubmit = useCallback(async () => {
-
-    await createPost({
+    const payload = {
       text: mention.value || "",
-      type:'post',
+      type: "post",
       mentionedUsers: getMentions(mention.value || ""),
-      media:[...images, ...sounds, ...videos]
-    }, onClose);
-  }, [createPost, mention.value, images, sounds, videos, onClose]);
+      media: mapComposerMediaForSubmit(mediaItems),
+    };
+
+    if (modeRef.current === POST_MODAL_MODE.EDIT) {
+      await editPost({
+        ...payload,
+        contentId: contentIdRef.current,
+      }, onClose);
+      return;
+    }
+
+    await createPost(payload, onClose);
+  }, [createPost, editPost, mediaItems, mention.value, onClose]);
+
+  const alertTitle = closeAlertTitle || (
+    modeRef.current === POST_MODAL_MODE.EDIT
+      ? EDIT_CLOSE_ALERT.title
+      : DEFAULT_CLOSE_ALERT.title
+  );
+  const alertMessage = closeAlertMessage || (
+    modeRef.current === POST_MODAL_MODE.EDIT
+      ? EDIT_CLOSE_ALERT.message
+      : DEFAULT_CLOSE_ALERT.message
+  );
 
   return (
     <Surface variant="modal" sx={sx.surface}>
-      <CreatePostModalHeader sx={sx} onClose={handleAttemptClose} />
+      <CreatePostModalHeader sx={sx} onClose={handleAttemptClose} title={title} />
 
       <Divider sx={sx.divider} />
 
@@ -174,8 +228,14 @@ export default function CreatePostModal({
           onOpenMentionList={handleOpenMentionList}
         />
 
-        <Button disabled={disableSubmit} variant="primary" fullWidth sx={sx.submitButton} onClick={handleSubmit}>
-          {loading ? <CircularProgress size={20} color="inherit"/> : 'Đăng'}
+        <Button
+          disabled={disableSubmit}
+          variant="primary"
+          fullWidth
+          sx={sx.submitButton}
+          onClick={handleSubmit}
+        >
+          {loading ? <CircularProgress size={20} color="inherit" /> : submitLabel}
         </Button>
       </Box>
 
@@ -184,7 +244,12 @@ export default function CreatePostModal({
       ) : null}
 
       {openCloseAlert ? (
-        <CloseAlert onConfirm={handleConfirmClose} onCancel={handleCancelClose} />
+        <CloseAlert
+          onConfirm={handleConfirmClose}
+          onCancel={handleCancelClose}
+          title={alertTitle}
+          message={alertMessage}
+        />
       ) : null}
     </Surface>
   );

@@ -95,6 +95,30 @@ export const loadingHandlers = (state, action) => {
       }
     }
 
+    case LOADING.SET_EDIT_POST_LOADING:
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          global: {
+            ...state.loading.global,
+            editPost: Boolean(action.payload)
+          }
+        }
+      }
+
+    case LOADING.SET_EDIT_STORY_LOADING:
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          global: {
+            ...state.loading.global,
+            editStory: Boolean(action.payload)
+          }
+        }
+      }
+
     case LOADING.SET_CREATE_POST_LOADING:
       return {
         ...state,

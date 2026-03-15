@@ -18,6 +18,14 @@ export const postByIdActions ={
     )
   ),
 
+  updatePost: (id, changes = {}) => (
+    createAction(
+      CLASS_TYPE.POST_BY_ID,
+      POST_BY_ID.UPDATE_POST_BY_ID,
+      { id, changes }
+    )
+  ),
+
   setSaved: (id, isSaved, saveNumber) => (
     createAction(
       CLASS_TYPE.POST_BY_ID,

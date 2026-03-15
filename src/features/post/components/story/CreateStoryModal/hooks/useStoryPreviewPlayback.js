@@ -7,6 +7,7 @@ import {
 } from "../utils";
 
 export function useStoryPreviewPlayback({
+  forcedPaused = false,
   loop = true,
   mediaKind,
   mediaUrl,
@@ -25,6 +26,7 @@ export function useStoryPreviewPlayback({
   const [progressSeconds, setProgressSeconds] = useState(0);
   const isTimedPreview = isTimedStoryMedia(mediaKind);
   const showPlaybackControls = mode !== STORY_MODE.EMPTY && playbackSeconds > 0;
+  const effectivePaused = isPaused || forcedPaused;
 
   useEffect(() => {
     completeHandlerRef.current = onComplete;
@@ -98,7 +100,7 @@ export function useStoryPreviewPlayback({
       staticTimerRef.current = null;
     }
 
-    if (!showPlaybackControls || isTimedPreview || isPaused) {
+    if (!showPlaybackControls || isTimedPreview || effectivePaused) {
       return undefined;
     }
 
@@ -128,7 +130,7 @@ export function useStoryPreviewPlayback({
         staticTimerRef.current = null;
       }
     };
-  }, [finishPlayback, isPaused, isTimedPreview, loop, mediaUrl, mode, playbackSeconds, showPlaybackControls, updateProgress]);
+  }, [effectivePaused, finishPlayback, isTimedPreview, loop, mediaUrl, mode, playbackSeconds, showPlaybackControls, updateProgress]);
 
   useEffect(() => {
     const activeElement = getActiveMediaElement();
@@ -141,7 +143,7 @@ export function useStoryPreviewPlayback({
       activeElement.currentTime = 0;
     }
 
-    if (isPaused) {
+    if (effectivePaused) {
       pauseStoryMedia(activeElement);
       return;
     }
@@ -149,7 +151,7 @@ export function useStoryPreviewPlayback({
     playStoryMedia(activeElement);
   }, [
     getActiveMediaElement,
-    isPaused,
+    effectivePaused,
     isTimedPreview,
     mediaKind,
     mediaUrl,
@@ -174,7 +176,7 @@ export function useStoryPreviewPlayback({
         seekPreview(0);
         activeElement.currentTime = 0;
 
-        if (!isPaused) {
+        if (!effectivePaused) {
           playStoryMedia(activeElement);
         }
 
@@ -183,11 +185,11 @@ export function useStoryPreviewPlayback({
 
       updateProgress(activeElement.currentTime);
     },
-    [finishPlayback, isPaused, loop, playbackSeconds, seekPreview, updateProgress]
+    [effectivePaused, finishPlayback, loop, playbackSeconds, seekPreview, updateProgress]
   );
 
   const handleTogglePlayback = useCallback(() => {
-    if (!showPlaybackControls) return;
+    if (!showPlaybackControls || forcedPaused) return;
 
     const nextPaused = !isPaused;
 
@@ -213,6 +215,7 @@ export function useStoryPreviewPlayback({
     progressSeconds,
     seekPreview,
     showPlaybackControls,
+    forcedPaused,
   ]);
 
   const handleProgressChange = useCallback(
@@ -222,12 +225,12 @@ export function useStoryPreviewPlayback({
       const nextProgress = seekPreview(nextValue);
       const activeElement = getActiveMediaElement();
 
-      if (activeElement && !isPaused) {
+      if (activeElement && !effectivePaused) {
         activeElement.currentTime = nextProgress;
         playStoryMedia(activeElement);
       }
     },
-    [getActiveMediaElement, isPaused, seekPreview, showPlaybackControls]
+    [effectivePaused, getActiveMediaElement, seekPreview, showPlaybackControls]
   );
 
   return {
@@ -235,7 +238,7 @@ export function useStoryPreviewPlayback({
     handleProgressChange,
     handleTimedMediaProgress,
     handleTogglePlayback,
-    isPaused,
+    isPaused: effectivePaused,
     progressSeconds,
     showPlaybackControls,
     videoRef,

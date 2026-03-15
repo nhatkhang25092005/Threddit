@@ -13,6 +13,38 @@ const removeIdFromRecordLists = (record = {}, id) => (
   )
 );
 
+const mergeStoryChanges = (currentStory, changes = {}) => ({
+  ...currentStory,
+  ...(changes?.text !== undefined ? { text: changes.text } : {}),
+  ...(changes?.type ? { type: changes.type } : {}),
+  ...(Array.isArray(changes?.mentionedUsers) ? { mentionedUsers: changes.mentionedUsers } : {}),
+  ...(Array.isArray(changes?.mediaFiles) ? { mediaFiles: changes.mediaFiles } : {}),
+  ...(changes?.time ? {
+    time: {
+      ...currentStory.time,
+      ...changes.time
+    }
+  } : {}),
+  ...(changes?.author ? {
+    author: {
+      ...currentStory.author,
+      ...changes.author
+    }
+  } : {}),
+  ...(changes?.stats ? {
+    stats: {
+      ...currentStory.stats,
+      ...changes.stats
+    }
+  } : {}),
+  ...(changes?.viewer ? {
+    viewer: {
+      ...currentStory.viewer,
+      ...changes.viewer
+    }
+  } : {}),
+});
+
 export const storyByIdHandlers = (state, action) => {
   switch (action.type) {
     case STORY_BY_ID.ADD_STORIES_BY_ID: {
@@ -55,6 +87,22 @@ export const storyByIdHandlers = (state, action) => {
         storyById: {
           ...state.storyById,
           [story.id]: story,
+        },
+      };
+    }
+
+    case STORY_BY_ID.UPDATE_STORY_BY_ID: {
+      const { id, changes } = action.payload || {};
+      if (id == null) return state;
+
+      const currentStory = state.storyById?.[id];
+      if (!currentStory) return state;
+
+      return {
+        ...state,
+        storyById: {
+          ...state.storyById,
+          [id]: mergeStoryChanges(currentStory, changes),
         },
       };
     }

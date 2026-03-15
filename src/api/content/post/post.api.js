@@ -44,5 +44,9 @@ export const postApi = {
 
   deleteContent(contentId){
     return axios.delete(`${BASE}/${contentId}`)
+  },
+
+  editContent(contentId, payload){
+    return axios.patch(`${BASE}/${contentId}`,payload)
   }
 }

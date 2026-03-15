@@ -1,11 +1,13 @@
 import { Avatar, Box, CircularProgress, IconButton, Typography } from '@mui/material'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded'
+import EditRoundedIcon from '@mui/icons-material/EditRounded'
 import PushPinRoundedIcon from '@mui/icons-material/PushPinRounded'
 import { storyCardViewerSx as sx } from './storyCardViewer.styles'
 import { formatStoryCardTime } from './utils/storyCard.utils'
 import {usePostContext} from '../../../hooks/usePostContext'
 import useAuth from '../../../../../core/auth/useAuth'
+import { usePostModal } from '../../../provider/usePostModal'
 
 export default function StoryCardViewerHeader({
   durationLabel,
@@ -17,28 +19,40 @@ export default function StoryCardViewerHeader({
   const {
     actions: { deleteStory, pinStory, unpinStory },
     selector: {
+      loading: {
+        getEditStoryLoading
+      },
       story: {
         getDeleteLoadingByStoryIdOf
       }
     }
   } = usePostContext()
   const { isOwnerByUsername } = useAuth()
+  const { openModal } = usePostModal()
   const canTogglePin = Boolean(
     story?.id != null
     && (story?.isOwner || isOwnerByUsername(story?.author?.username))
   )
   const canDelete = canTogglePin
+  const canEdit = canTogglePin
   const isDeleteLoading = getDeleteLoadingByStoryIdOf(story?.id)
+  const isEditLoading = getEditStoryLoading()
 
   const handlePinToggle = () => {
-    if (!canTogglePin || isDeleteLoading) return
+    if (!canTogglePin || isDeleteLoading || isEditLoading) return
 
     const action = story?.isPinned ? unpinStory : pinStory
     action(story.id, story?.author?.username)
   }
 
+  const handleOpenEdit = () => {
+    if (!canEdit || story?.id == null || isDeleteLoading || isEditLoading) return
+
+    openModal("edit_story_modal", { storyId: story.id })
+  }
+
   const handleDelete = async () => {
-    if (!canDelete || story?.id == null) return
+    if (!canDelete || story?.id == null || isEditLoading) return
 
     const response = await deleteStory(story.id)
 
@@ -58,7 +72,7 @@ export default function StoryCardViewerHeader({
 
         <Box sx={sx.authorMeta}>
           <Typography sx={sx.authorName}>
-            {story?.author?.displayName || story?.author?.username || 'Người dùng'}
+            {story?.author?.displayName || story?.author?.username || 'NgÆ°á»i dÃ¹ng'}
           </Typography>
           <Typography sx={sx.authorSubline}>
             @{story?.author?.username || 'story'} | {formatStoryCardTime(story?.time?.createdAt)}
@@ -73,7 +87,7 @@ export default function StoryCardViewerHeader({
         {canTogglePin ? (
           <IconButton
             aria-label={story?.isPinned ? 'Unpin story' : 'Pin story'}
-            disabled={isDeleteLoading}
+            disabled={isDeleteLoading || isEditLoading}
             id={story?.id != null ? `story-pin-trigger-${story.id}` : undefined}
             data-story-id={story?.id != null ? String(story.id) : undefined}
             data-story-pinned={story?.isPinned ? 'true' : 'false'}
@@ -85,12 +99,34 @@ export default function StoryCardViewerHeader({
           </IconButton>
         ) : null}
 
+        {canEdit ? (
+          <IconButton
+            aria-label="Chỉnh sửa tin"
+            disabled={isDeleteLoading || isEditLoading}
+            onClick={handleOpenEdit}
+            title="Chỉnh sửa tin"
+            sx={{
+              ...sx.closeButton,
+              border: '1px solid rgba(148, 195, 255, 0.3)',
+              backgroundColor: 'rgba(84, 139, 255, 0.14)',
+              color: '#D7E6FF',
+              '&:hover': {
+                backgroundColor: 'rgba(84, 139, 255, 0.22)',
+              },
+            }}
+          >
+            {isEditLoading
+              ? <CircularProgress size={18} color="inherit" />
+              : <EditRoundedIcon />}
+          </IconButton>
+        ) : null}
+
         {canDelete ? (
           <IconButton
-            aria-label="Xóa tin"
-            disabled={isDeleteLoading}
+            aria-label="XÃ³a tin"
+            disabled={isDeleteLoading || isEditLoading}
             onClick={handleDelete}
-            title="Xóa tin"
+            title="XÃ³a tin"
             sx={{
               ...sx.closeButton,
               border: '1px solid rgba(255, 133, 133, 0.32)',

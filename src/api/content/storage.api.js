@@ -12,5 +12,10 @@ export const storageApi = {
       headers:{'Content-Type': payload.type},
       withCredentials:false
     })
+  },
+  
+  updateMediaUpload(contentId, payload){
+    const url = `${STORAGE_REQUEST_UPLOAD}/${contentId}`
+    return axios.patch(url, payload)
   }
 };
