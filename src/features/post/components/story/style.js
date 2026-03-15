@@ -296,6 +296,16 @@ export const style = {
         backgroundColor:'rgba(255,255,255,0.18)',
       },
     },
+    friendSidebarListSection:{
+      mt:'0.35rem',
+      display:'flex',
+      flexDirection:'column',
+      gap:'0.55rem',
+    },
+    friendSidebarDivider:{
+      my:'0.2rem',
+      borderColor:'rgba(255,255,255,0.1)',
+    },
     friendSidebarLoading:{
       minHeight:'5.5rem',
       display:'flex',

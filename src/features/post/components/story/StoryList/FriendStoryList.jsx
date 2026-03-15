@@ -1,7 +1,8 @@
-import { Avatar, Box, ButtonBase, CircularProgress, Typography } from '@mui/material'
+import { Avatar, Box, ButtonBase, CircularProgress, Divider, Typography } from '@mui/material'
 import RadioButtonCheckedRoundedIcon from '@mui/icons-material/RadioButtonCheckedRounded'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import useAuth from '../../../../../core/auth/useAuth'
 import { usePostContext } from '../../../hooks'
 import { buildStoryRoute } from '../storyRoute'
 import { style } from '../style'
@@ -28,22 +29,96 @@ const sortStoriesByNewest = (stories = []) => (
   ))
 )
 
+const buildStoryEntry = ({
+  stories = [],
+  username = null,
+  fallbackAuthor = {},
+} = {}) => {
+  if (!username) return null
+
+  const sortedStories = sortStoriesByNewest(stories)
+  const latestStory = sortedStories[0] || null
+
+  if (!latestStory) return null
+
+  return {
+    username,
+    displayName: latestStory.author?.displayName || fallbackAuthor?.displayName || username,
+    avatarUrl: latestStory.author?.avatarUrl || fallbackAuthor?.avatarUrl || undefined,
+    latestStoryId: latestStory.id,
+    latestStoryTime: latestStory.time?.createdAt || null,
+    storyCount: sortedStories.length,
+  }
+}
+
+function StorySidebarItem({
+  activeUsername,
+  entry,
+  locationState,
+  navigate,
+}) {
+  const isActive = String(activeUsername || '') === String(entry.username)
+
+  return (
+    <ButtonBase
+      onClick={() => navigate(
+        buildStoryRoute('current', entry.username, entry.latestStoryId),
+        {
+          replace: true,
+          state: locationState,
+        }
+      )}
+      sx={sx.friendSidebarItem(isActive)}
+    >
+      <Avatar
+        src={entry.avatarUrl}
+        alt={entry.displayName}
+        sx={sx.friendSidebarAvatar(isActive)}
+      />
+
+      <Box sx={sx.friendSidebarMeta}>
+        <Typography sx={sx.friendSidebarName}>
+          {entry.displayName}
+        </Typography>
+        <Typography sx={sx.friendSidebarUsername}>
+          @{entry.username}
+        </Typography>
+        <Typography sx={sx.friendSidebarTime}>
+          {formatStoryTime(entry.latestStoryTime)}
+        </Typography>
+      </Box>
+
+      <Box sx={sx.friendSidebarBadgeWrap}>
+        <Box sx={sx.friendSidebarCountBadge(isActive)}>
+          {entry.storyCount}
+        </Box>
+        <RadioButtonCheckedRoundedIcon sx={sx.friendSidebarDot(isActive)} />
+      </Box>
+    </ButtonBase>
+  )
+}
+
 export default function FriendStoryList() {
   const navigate = useNavigate()
   const location = useLocation()
   const { username: activeUsername } = useParams()
+  const { user } = useAuth()
   const {
-    actions: { getFriendStory },
+    actions: { getCurrentStory, getFriendStory },
     selector: {
       story: {
+        getCurrentStoryListOf,
         getFriendStoryIdsMap,
         getFriendStoryListOf,
       }
     }
   } = usePostContext()
-  const [isFetching, setIsFetching] = useState(false)
+  const [isFetchingFriendStories, setIsFetchingFriendStories] = useState(false)
+  const [isFetchingMyStories, setIsFetchingMyStories] = useState(false)
   const friendStoryMap = getFriendStoryIdsMap()
   const hasFriendStories = Object.keys(friendStoryMap).length > 0
+  const myStories = getCurrentStoryListOf(user?.username)
+  const hasMyStories = myStories.length > 0
 
   useEffect(() => {
     if (hasFriendStories) return
@@ -51,11 +126,11 @@ export default function FriendStoryList() {
     let mounted = true
 
     async function fetchFriendStories() {
-      setIsFetching(true)
+      setIsFetchingFriendStories(true)
       await getFriendStory()
 
       if (mounted) {
-        setIsFetching(false)
+        setIsFetchingFriendStories(false)
       }
     }
 
@@ -66,89 +141,115 @@ export default function FriendStoryList() {
     }
   }, [getFriendStory, hasFriendStories])
 
+  useEffect(() => {
+    if (!user?.username || hasMyStories) return
+
+    let mounted = true
+
+    async function fetchMyStories() {
+      setIsFetchingMyStories(true)
+      await getCurrentStory(user.username)
+
+      if (mounted) {
+        setIsFetchingMyStories(false)
+      }
+    }
+
+    fetchMyStories()
+
+    return () => {
+      mounted = false
+    }
+  }, [getCurrentStory, hasMyStories, user?.username])
+
+  const myStoryEntry = useMemo(() => (
+    buildStoryEntry({
+      stories: myStories,
+      username: user?.username,
+      fallbackAuthor: user,
+    })
+  ), [myStories, user])
+
   const friendStoryEntries = useMemo(() => {
     return Object.keys(friendStoryMap)
-      .map((username) => {
-        const stories = sortStoriesByNewest(getFriendStoryListOf(username))
-        const latestStory = stories[0] || null
-
-        if (!latestStory) return null
-
-        return {
-          username,
-          displayName: latestStory.author?.displayName || username,
-          avatarUrl: latestStory.author?.avatarUrl || undefined,
-          latestStoryId: latestStory.id,
-          latestStoryTime: latestStory.time?.createdAt || null,
-          storyCount: stories.length,
-        }
-      })
+      .map((username) => buildStoryEntry({
+        username,
+        stories: getFriendStoryListOf(username),
+      }))
       .filter(Boolean)
       .sort((left, right) => (
         new Date(right.latestStoryTime || 0) - new Date(left.latestStoryTime || 0)
       ))
   }, [friendStoryMap, getFriendStoryListOf])
 
-  if (!isFetching && friendStoryEntries.length === 0) return null
+  if (
+    !isFetchingFriendStories
+    && !isFetchingMyStories
+    && !myStoryEntry
+    && friendStoryEntries.length === 0
+  ) {
+    return null
+  }
 
   return (
     <Box sx={sx.friendSidebar}>
       <Box sx={sx.friendSidebarCard}>
-        <Typography sx={sx.friendSidebarEyebrow}>Tin của bạn bè</Typography>
+        {myStoryEntry || isFetchingMyStories ? (
+          <>
+            <Typography sx={sx.friendSidebarEyebrow}>Tin của bạn</Typography>
 
-        <Box sx={sx.friendSidebarList}>
-          {isFetching && friendStoryEntries.length === 0 ? (
-            <Box sx={sx.friendSidebarLoading}>
-              <CircularProgress size={20} thickness={5} sx={{ color: '#F8FAFC' }} />
-              <Typography sx={sx.friendSidebarLoadingText}>
-                Đang lấy danh sách tin
-              </Typography>
-            </Box>
-          ) : null}
+            <Box sx={sx.friendSidebarListSection}>
+              {isFetchingMyStories && !myStoryEntry ? (
+                <Box sx={sx.friendSidebarLoading}>
+                  <CircularProgress size={20} thickness={5} sx={{ color: '#F8FAFC' }} />
+                  <Typography sx={sx.friendSidebarLoadingText}>
+                    Đang lấy tin của bạn
+                  </Typography>
+                </Box>
+              ) : null}
 
-          {friendStoryEntries.map((friend) => {
-            const isActive = String(activeUsername || '') === String(friend.username)
-
-            return (
-              <ButtonBase
-                key={friend.username}
-                onClick={() => navigate(
-                  buildStoryRoute('current', friend.username, friend.latestStoryId),
-                  {
-                    replace: true,
-                    state: location.state,
-                  }
-                )}
-                sx={sx.friendSidebarItem(isActive)}
-              >
-                <Avatar
-                  src={friend.avatarUrl}
-                  alt={friend.displayName}
-                  sx={sx.friendSidebarAvatar(isActive)}
+              {myStoryEntry ? (
+                <StorySidebarItem
+                  activeUsername={activeUsername}
+                  entry={myStoryEntry}
+                  locationState={location.state}
+                  navigate={navigate}
                 />
+              ) : null}
+            </Box>
+          </>
+        ) : null}
 
-                <Box sx={sx.friendSidebarMeta}>
-                  <Typography sx={sx.friendSidebarName}>
-                    {friend.displayName}
-                  </Typography>
-                  <Typography sx={sx.friendSidebarUsername}>
-                    @{friend.username}
-                  </Typography>
-                  <Typography sx={sx.friendSidebarTime}>
-                    {formatStoryTime(friend.latestStoryTime)}
+        {myStoryEntry && friendStoryEntries.length > 0 ? (
+          <Divider sx={sx.friendSidebarDivider} />
+        ) : null}
+
+        {friendStoryEntries.length > 0 || isFetchingFriendStories ? (
+          <>
+            <Typography sx={sx.friendSidebarEyebrow}>Tin của bạn bè</Typography>
+
+            <Box sx={sx.friendSidebarList}>
+              {isFetchingFriendStories && friendStoryEntries.length === 0 ? (
+                <Box sx={sx.friendSidebarLoading}>
+                  <CircularProgress size={20} thickness={5} sx={{ color: '#F8FAFC' }} />
+                  <Typography sx={sx.friendSidebarLoadingText}>
+                    Đang lấy danh sách tin
                   </Typography>
                 </Box>
+              ) : null}
 
-                <Box sx={sx.friendSidebarBadgeWrap}>
-                  <Box sx={sx.friendSidebarCountBadge(isActive)}>
-                    {friend.storyCount}
-                  </Box>
-                  <RadioButtonCheckedRoundedIcon sx={sx.friendSidebarDot(isActive)} />
-                </Box>
-              </ButtonBase>
-            )
-          })}
-        </Box>
+              {friendStoryEntries.map((friend) => (
+                <StorySidebarItem
+                  key={friend.username}
+                  activeUsername={activeUsername}
+                  entry={friend}
+                  locationState={location.state}
+                  navigate={navigate}
+                />
+              ))}
+            </Box>
+          </>
+        ) : null}
       </Box>
     </Box>
   )
