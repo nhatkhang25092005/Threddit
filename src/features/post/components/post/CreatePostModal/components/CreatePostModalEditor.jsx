@@ -24,8 +24,8 @@ const videoSx = {
 
 const audioSx = {
   ...mediaSx,
-  padding:'0.35rem',
-  border:'none'
+  padding: "0.35rem",
+  border: "none"
 };
 
 const mediaItemWrapSx = {
@@ -35,12 +35,12 @@ const mediaItemWrapSx = {
 
 const audioItemWrapSx = {
   ...mediaItemWrapSx,
-  pt:'2rem',
-  borderRadius:'0.6rem',
+  pt: "2rem",
+  borderRadius: "0.6rem",
   backgroundColor: (theme) =>
     theme.palette.mode === "dark" ? "#2A2B2D" : "#F0F2F5",
+};
 
-}
 const removeMediaButtonSx = {
   position: "absolute",
   right: "0.45rem",
@@ -66,21 +66,26 @@ export default function CreatePostModalEditor({
   sx,
   mention,
   loading,
-  images,
-  videos,
-  sounds,
+  images = [],
+  videos = [],
+  sounds = [],
   hasMedia,
   displayName,
-  onRemoveImage,
-  onRemoveVideo,
-  onRemoveSound,
+  onRemoveImage = () => {},
+  onRemoveVideo = () => {},
+  onRemoveSound = () => {},
+  placeholder = null,
+  editorSx = null,
 }) {
   return (
     <Box sx={editorWrapSx}>
       <Box
         component="textarea"
-        placeholder={`${displayName} ơi, hôm nay bạn thế nào`}
-        sx={sx.editor(hasMedia)}
+        placeholder={placeholder || `${displayName} ơi, hôm nay bạn thế nào`}
+        sx={{
+          ...sx.editor(hasMedia),
+          ...(editorSx || {})
+        }}
         {...mention.bind}
         disabled={loading}
       />
@@ -134,7 +139,7 @@ export default function CreatePostModalEditor({
               src={sound.url}
               controls
               preload="metadata"
-              sx={{ ...audioSx, mt:0  }}
+              sx={{ ...audioSx, mt: 0 }}
             />
           </Box>
         ) : null

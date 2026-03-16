@@ -3,6 +3,7 @@ export const itemModel = () => ({
   deletePost:false,
   deleteContent:false,
   savePost:false,
+  sharePost:false,
   reaction:false,
   comments:false
 })

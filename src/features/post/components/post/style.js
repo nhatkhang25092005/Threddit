@@ -427,10 +427,6 @@ export const style = {
         backgroundColor: "#000000",
         ...(count === 1 && {
           height: "100%",
-          // maxHeight: {
-          //   xs: "21rem",
-          //   sm: "30rem",
-          // },
         }),
         ...(count === 2 && {
           width:'100%',

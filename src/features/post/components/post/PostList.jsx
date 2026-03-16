@@ -1,5 +1,6 @@
 import { Box, Button } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useLocation, useNavigationType } from "react-router-dom";
 import useAuth from "../../../../core/auth/useAuth";
 import useInfiniteScroll from "../../../../hooks/useInfiniteScroll";
 import { usePostContext } from "../../hooks/usePostContext";
@@ -27,9 +28,12 @@ const VARIANT_CONFIG = {
 
 export default function PostList({ variant = "userPost" }) {
   const { profileUsername } = useAuth();
+  const location = useLocation();
+  const navigationType = useNavigationType();
   const { actions, selector } = usePostContext();
   const config = VARIANT_CONFIG[variant] ?? VARIANT_CONFIG.userPost;
   const [hasUserScrolled, setHasUserScrolled] = useState(false);
+  const refreshedLocationKeyRef = useRef(null);
 
   const posts = useMemo(() => {
     if (variant === "userPost" && !profileUsername) return [];
@@ -75,6 +79,20 @@ export default function PostList({ variant = "userPost" }) {
 
     config.fetch(actions, profileUsername);
   }, [actions, config, isLoading, profileUsername, shouldInitFetch, variant]);
+
+  useEffect(() => {
+    const shouldRefreshOnPop =
+      variant === "userPost" &&
+      Boolean(profileUsername) &&
+      navigationType === "POP" &&
+      hasMore !== undefined;
+
+    if (!shouldRefreshOnPop) return;
+    if (refreshedLocationKeyRef.current === location.key) return;
+
+    refreshedLocationKeyRef.current = location.key;
+    actions.refreshUserPostList?.(profileUsername);
+  }, [actions, hasMore, location.key, navigationType, profileUsername, variant]);
 
   return (
     <Box>

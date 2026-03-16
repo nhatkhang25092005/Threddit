@@ -15,8 +15,23 @@ export const createPostSelector = (state) => {
     return Boolean(getPostById(postId)?.viewer?.isSaved)
   }
 
+  const getShareStatusByPostIdOf  = (postId) => {
+    return Boolean(
+      getPostById(postId)?.viewer?.isShare ??
+      getPostById(postId)?.viewer?.isShared
+    )
+  }
+
+  const getIsOwnerByPostIdOf = (postId) => {
+    return Boolean(getPostById(postId)?.isOwner)
+  }
+
   const getSaveLoadingByPostIdOf = (postId) => {
     return Boolean(getPostLoadingById(postId)?.savePost)
+  }
+
+  const getShareLoadingByPostIdOf = (postId) => {
+    return Boolean(getPostLoadingById(postId)?.sharePost)
   }
 
   const getPinLoadingByPostIdOf = (postId) => {
@@ -83,7 +98,10 @@ export const createPostSelector = (state) => {
     getSavedPostIds,
     getPinnedPostIds,
     getSaveStatusByPostIdOf,
+    getShareStatusByPostIdOf,
+    getIsOwnerByPostIdOf,
     getSaveLoadingByPostIdOf,
+    getShareLoadingByPostIdOf,
     getPinLoadingByPostIdOf,
     getDeleteLoadingByPostIdOf,
     getUserPostList,

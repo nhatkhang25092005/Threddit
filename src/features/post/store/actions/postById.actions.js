@@ -34,6 +34,14 @@ export const postByIdActions ={
     )
   ),
 
+  setShared: (id, isShare, shareMessage) => (
+    createAction(
+      CLASS_TYPE.POST_BY_ID,
+      POST_BY_ID.SET_POST_SHARED,
+      { id, isShare, shareMessage }
+    )
+  ),
+
   setPinned: (id, isPinned, username) => (
     createAction(
       CLASS_TYPE.POST_BY_ID,

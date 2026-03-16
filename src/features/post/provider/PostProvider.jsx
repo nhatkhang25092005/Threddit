@@ -16,6 +16,7 @@ import {
   useGetFriendStory,
   useReaction,
   useSavePost,
+  useShareActionsPost,
   useGetPinnedStory,
   usePostPinActions,
   useStoryPinActions
@@ -28,11 +29,9 @@ import {
   createLoadingSelector
 } from "../store/selectors"
 export default function PostProvider({ children }) {
-  /* ---------------- state (reducer / initState) ---------------- */
   const [state, dispatch] = useReducer(reducer, initState)
 
-  /* ---------------- side-effect hooks (fetch, subscribe, ...) ---------------- */
-  const getPostList = useGetPostList(dispatch, state.userPostHasMore)
+  const { getPostList, refreshUserPostList } = useGetPostList(dispatch, state.userPostHasMore)
   const getSavedPostList = useGetSavedPost(dispatch, state.mySavedHasMore)
   const getCurrentStory = useGetCurrentStory(dispatch)
   const getFriendStory = useGetFriendStory(dispatch)
@@ -45,24 +44,21 @@ export default function PostProvider({ children }) {
   const editStory = useEditStory(dispatch)
   const reaction = useReaction(dispatch)
   const { savePost, unsavePost } = useSavePost(dispatch)
+  const { sharePost, unsharePost, toggleSharePost } = useShareActionsPost(dispatch, state.postById)
   const { pinPost, unpinPost } = usePostPinActions(dispatch)
   const {pinStory, unpinStory} = useStoryPinActions(dispatch)
 
-  /* ---------------- cross-module sync API (optional) ---------------- */
   const selector = useMemo(()=>({
-    // timeline: createTimelineSelector(state),
     reaction: createReactionSelector(state),
     post: createPostSelector(state),
     story: createStorySelector(state),
     loading: createLoadingSelector(state)
-    // list selector
-    // item selector
   }),[state])
 
-  /* ---------------- exposed actions (wrapped for consumer) ---------------- */
   const actions = useMemo(
     () => ({
       getPostList:  (username)=> getPostList(username),
+      refreshUserPostList: (username) => refreshUserPostList(username),
       getSavedPostList: () => getSavedPostList(),
       getCurrentStory: (username) => getCurrentStory(username),
       getFriendStory: (options) => getFriendStory(options),
@@ -76,15 +72,17 @@ export default function PostProvider({ children }) {
       reaction,
       savePost,
       unsavePost,
+      sharePost,
+      unsharePost,
+      toggleSharePost,
       pinPost,
       unpinPost,
       unpinStory,
       pinStory,
     }),
-    [pinStory, unpinStory, getPostList, getSavedPostList, getCurrentStory, getFriendStory, getPinnedStory, createPost, createStory, deletePost, deleteStory, editPost, editStory, reaction, savePost, unsavePost, pinPost, unpinPost]
+    [pinStory, unpinStory, getPostList, refreshUserPostList, getSavedPostList, getCurrentStory, getFriendStory, getPinnedStory, createPost, createStory, deletePost, deleteStory, editPost, editStory, reaction, savePost, unsavePost, sharePost, unsharePost, toggleSharePost, pinPost, unpinPost]
   )
 
-  /* ---------------- provider value ---------------- */
   const value = useMemo(
     () => ({
       state,

@@ -54,7 +54,8 @@ export const postByIdModel = (data) => ({
   viewer: {
     isSaved: data.isSaved || false,
     reaction: data.reaction || null,
-    isShared:data.isShared || false,
+    isShare: Boolean(data.isShare ?? data.isShared),
+    isShared: Boolean(data.isShared ?? data.isShare),
     shareMessage:data.shareMessage || null
   },
 

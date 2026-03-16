@@ -49,6 +49,29 @@ export const loadingHandlers = (state, action) => {
       }
     }
 
+    case LOADING.SET_POST_SHARE_LOADING: {
+      const { id, isLoading } = action.payload || {}
+      if (id == null) return state
+
+      const currentItemLoading = state.loading.item?.[id] || itemModel()
+      const nextShareLoading = Boolean(isLoading)
+      if (currentItemLoading.sharePost === nextShareLoading) return state
+
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          item: {
+            ...state.loading.item,
+            [id]: {
+              ...currentItemLoading,
+              sharePost: nextShareLoading
+            }
+          }
+        }
+      }
+    }
+
     case LOADING.SET_POST_PIN_LOADING: {
       const { id, isLoading } = action.payload || {}
       if (id == null) return state

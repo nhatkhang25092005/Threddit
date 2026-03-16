@@ -6,6 +6,7 @@ const SAVED_CONTENT = import.meta.env.VITE_API_CONTENT_SAVED_CONTENT
 const SAVE = import.meta.env.VITE_API_SAVE_SAVE
 const UNSAVE = import.meta.env.VITE_API_SAVE_UNSAVE
 const PIN = import.meta.env.VITE_API_CONTENT_PIN
+const SHARE = import.meta.env.VITE_API_SHARE
 
 const buildSaveUrl = (contentId) => `${BASE}/${contentId}${SAVE}`
 const buildUnsaveUrl = (contentId) => `${BASE}/${contentId}${UNSAVE}`
@@ -48,5 +49,15 @@ export const postApi = {
 
   editContent(contentId, payload){
     return axios.patch(`${BASE}/${contentId}`,payload)
+  },
+
+  shareContent(contentId, payload){
+    const url = `${BASE}/${contentId}${SHARE}`
+    return axios.post(url, payload)
+  },
+
+  unshareContent(contentId){
+    const url = `${BASE}/${contentId}${SHARE}`
+    return axios.delete(url)
   }
 }

@@ -142,7 +142,7 @@ export const style = {
     }
   },
   container:{
-    height:'100vh',
+    minHeight:'100%',
     width:'55rem',
     display:'flex',
     flexDirection:'column',

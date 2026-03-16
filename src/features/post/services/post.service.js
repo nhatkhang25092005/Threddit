@@ -17,6 +17,12 @@ export const postService = {
   unsavePost: async (id) =>
     handleRequest(() => postApi.unsavePost(id)),
 
+  sharePost: async (id, payload) =>
+    handleRequest(() => postApi.shareContent(id, payload)),
+
+  unsharePost: async (id) =>
+    handleRequest(() => postApi.unshareContent(id)),
+
   pinContent: async (id) =>
     handleRequest(()=> postApi.pinContent(id)),
 

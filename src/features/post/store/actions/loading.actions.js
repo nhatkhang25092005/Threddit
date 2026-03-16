@@ -26,6 +26,14 @@ export const loadingAction = {
     )
   ),
 
+  setPostShareLoading: (id, isLoading) => (
+    createAction(
+      CLASS_TYPE.LOADING,
+      LOADING.SET_POST_SHARE_LOADING,
+      { id, isLoading }
+    )
+  ),
+
   setPostPinLoading: (id, isLoading) => (
     createAction(
       CLASS_TYPE.LOADING,

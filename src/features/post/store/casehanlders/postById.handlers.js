@@ -164,51 +164,113 @@ export const postByIdHandlers = (state, action) => {
       }
     }
 
+    case POST_BY_ID.SET_POST_SHARED: {
+      const { id, isShare, shareMessage, shareId } = action.payload || {}
+      if (id == null) return state
+
+      const currentPost = state.postById?.[id]
+      if (!currentPost) return state
+
+      const previousIsShare = Boolean(
+        currentPost.viewer?.isShare ?? currentPost.viewer?.isShared
+      )
+      const nextIsShare = Boolean(isShare)
+
+      const currentShareNumber = currentPost.stats?.shareNumber ?? 0
+      let nextShareNumber = currentShareNumber
+
+      if (previousIsShare !== nextIsShare) {
+        nextShareNumber = Math.max(
+          0,
+          currentShareNumber + (nextIsShare ? 1 : -1)
+        )
+      }
+
+      const nextShareMessage = shareMessage !== undefined
+        ? shareMessage
+        : currentPost.viewer?.shareMessage
+
+      const nextShareId = shareId !== undefined
+        ? shareId
+        : currentPost.shareId
+
+      if (
+        previousIsShare === nextIsShare &&
+        currentShareNumber === nextShareNumber &&
+        currentPost.viewer?.shareMessage === nextShareMessage &&
+        currentPost.shareId === nextShareId &&
+        currentPost.viewer?.isShared === nextIsShare
+      ) {
+        return state
+      }
+
+      return {
+        ...state,
+        postById: {
+          ...state.postById,
+          [id]: {
+            ...currentPost,
+            ...(shareId !== undefined ? { shareId: nextShareId } : {}),
+            stats: {
+              ...currentPost.stats,
+              shareNumber: nextShareNumber
+            },
+            viewer: {
+              ...currentPost.viewer,
+              isShare: nextIsShare,
+              isShared: nextIsShare,
+              ...(shareMessage !== undefined ? { shareMessage: nextShareMessage } : {})
+            }
+          }
+        }
+      }
+    }
+
     case POST_BY_ID.SET_POST_PINNED: {
-    const { id, isPinned, username } = action.payload || {};
-    if (id == null || !username) return state;
+      const { id, isPinned, username } = action.payload || {};
+      if (id == null || !username) return state;
 
-    const currentPost = state.postById?.[id];
-    if (!currentPost) return state;
+      const currentPost = state.postById?.[id];
+      if (!currentPost) return state;
 
-    const nextIsPinned = Boolean(isPinned);
-    const currentIsPinned = Boolean(currentPost.isPinned);
+      const nextIsPinned = Boolean(isPinned);
+      const currentIsPinned = Boolean(currentPost.isPinned);
 
-    if (currentIsPinned === nextIsPinned) return state;
+      if (currentIsPinned === nextIsPinned) return state;
 
-    const currentPinnedPostIds = state.pinnedContents?.post ?? [];
-    const currentUserPostIds = state.contentList?.usersPost?.[username] ?? [];
+      const currentPinnedPostIds = state.pinnedContents?.post ?? [];
+      const currentUserPostIds = state.contentList?.usersPost?.[username] ?? [];
 
-    const nextPinnedPostIds = nextIsPinned
-      ? [id, ...currentPinnedPostIds.filter((postId) => postId !== id)]
-      : currentPinnedPostIds.filter((postId) => postId !== id);
+      const nextPinnedPostIds = nextIsPinned
+        ? [id, ...currentPinnedPostIds.filter((postId) => postId !== id)]
+        : currentPinnedPostIds.filter((postId) => postId !== id);
 
-    const nextUserPostIds = nextIsPinned
-      ? currentUserPostIds.filter((postId) => postId !== id)
-      : [id, ...currentUserPostIds.filter((postId) => postId !== id)];
+      const nextUserPostIds = nextIsPinned
+        ? currentUserPostIds.filter((postId) => postId !== id)
+        : [id, ...currentUserPostIds.filter((postId) => postId !== id)];
 
-    return {
-      ...state,
-      pinnedContents: {
-        ...state.pinnedContents,
-        post: nextPinnedPostIds,
-      },
-      contentList: {
-        ...state.contentList,
-        usersPost: {
-          ...state.contentList.usersPost,
-          [username]: nextUserPostIds,
+      return {
+        ...state,
+        pinnedContents: {
+          ...state.pinnedContents,
+          post: nextPinnedPostIds,
         },
-      },
-      postById: {
-        ...state.postById,
-        [id]: {
-          ...currentPost,
-          isPinned: nextIsPinned,
+        contentList: {
+          ...state.contentList,
+          usersPost: {
+            ...state.contentList.usersPost,
+            [username]: nextUserPostIds,
+          },
         },
-      },
-    };
-  }
+        postById: {
+          ...state.postById,
+          [id]: {
+            ...currentPost,
+            isPinned: nextIsPinned,
+          },
+        },
+      };
+    }
 
     case POST_BY_ID.REMOVE_POST_BY_ID: {
       const { id } = action.payload || {}
