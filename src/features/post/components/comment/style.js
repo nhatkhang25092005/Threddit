@@ -66,6 +66,29 @@ export const style = {
       display: "flex",
       flexDirection: "column",
       gap: "0.95rem",
+      width: "max-content",
+      minWidth: "100%",
+    },
+    threadScroll: {
+      width: "100%",
+      overflowX: "auto",
+      overflowY: "hidden",
+      scrollbarGutter: "stable",
+      pb: "0.35rem",
+      scrollbarWidth: "thin",
+      scrollbarColor: (theme) =>
+        theme.palette.mode === "dark" ? "#6A6D73 transparent" : "#C8CDD4 transparent",
+      "&::-webkit-scrollbar": {
+        height: "0.4rem",
+      },
+      "&::-webkit-scrollbar-track": {
+        backgroundColor: "transparent",
+      },
+      "&::-webkit-scrollbar-thumb": {
+        borderRadius: "999rem",
+        backgroundColor: (theme) =>
+          theme.palette.mode === "dark" ? "#6A6D73" : "#C8CDD4",
+      },
     },
     loadMoreWrap: {
       display: "flex",

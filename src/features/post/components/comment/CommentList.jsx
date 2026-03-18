@@ -85,18 +85,20 @@ export default function CommentList({
       {!thread.isLoading && thread.isEmpty ? <CommentEmptyState /> : null}
 
       {!thread.isLoading && thread.comments.length > 0 ? (
-        <Box sx={sx.threadList}>
-          {thread.comments.map((comment) => (
-            <CommentBlock
-              key={comment.id}
-              comment={comment}
-              currentUser={thread.viewer}
-              onDelete={thread.deleteComment}
-              onEdit={thread.editComment}
-              onReact={thread.reactComment}
-              onReply={thread.createComment}
-            />
-          ))}
+        <Box sx={sx.threadScroll}>
+          <Box sx={sx.threadList}>
+            {thread.comments.map((comment) => (
+              <CommentBlock
+                key={comment.id}
+                comment={comment}
+                currentUser={thread.viewer}
+                onDelete={thread.deleteComment}
+                onEdit={thread.editComment}
+                onReact={thread.reactComment}
+                onReply={thread.createComment}
+              />
+            ))}
+          </Box>
         </Box>
       ) : null}
 

@@ -13,17 +13,24 @@ export default function CommentBlockActions({
   onReact,
   viewRepliesLabel,
 }) {
-  const canInteractWithReplies = comment?.level === 0;
+  const canReply = typeof onReply === "function";
+  const canViewReplies =
+    typeof onViewReplies === "function" &&
+    (
+      isViewRepliesLoading ||
+      Boolean(comment?.hasChildComment) ||
+      Number(comment?.stats?.replyNumber ?? 0) > 0 ||
+      (Array.isArray(comment?.children) && comment.children.length > 0)
+    );
 
   return (
     <Box sx={sx.actions}>
       <CommentReactionButton
         onReact={onReact}
         reaction={comment.viewer?.reaction}
-        reactionCount={comment.stats?.reactionNumber ?? 0}
       />
 
-      {canInteractWithReplies ? (
+      {canReply ? (
         <ButtonBase onClick={onReply} sx={sx.actionButton}>
           <Typography component="span" sx={{ fontSize: "inherit", fontWeight: "inherit" }}>
             {commentText.actionReply}
@@ -31,7 +38,7 @@ export default function CommentBlockActions({
         </ButtonBase>
       ) : null}
 
-      {canInteractWithReplies ? (
+      {canViewReplies ? (
         <ButtonBase
           disabled={isViewRepliesLoading}
           onClick={onViewReplies}

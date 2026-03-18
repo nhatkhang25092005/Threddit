@@ -30,11 +30,6 @@ const buttonSx = {
   },
 };
 
-const counterSx = {
-  fontSize: "0.78rem",
-  fontWeight: 600,
-};
-
 const popoverSx = {
   position: "absolute",
   bottom: "calc(100% + 0.4rem)",
@@ -44,7 +39,6 @@ const popoverSx = {
 
 export default function CommentReactionButton({
   reaction = null,
-  reactionCount = 0,
   onReact,
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -127,11 +121,6 @@ export default function CommentReactionButton({
           </>
         )}
 
-        {reactionCount > 0 ? (
-          <Typography component="span" sx={counterSx}>
-            {reactionCount}
-          </Typography>
-        ) : null}
       </ButtonBase>
 
       {isOpen ? (

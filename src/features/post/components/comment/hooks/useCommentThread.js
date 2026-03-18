@@ -10,50 +10,13 @@ import {
   findCommentByIdInTree,
   mergeCommentPage,
   normalizeCommentItem,
+  normalizeFlatCommentTree,
   resolveReplyParentId,
   updateCommentReactionInTree,
 } from "../utils/comment.utils";
 
-const normalizeStoreComments = (items = [], viewerUsername = null) => {
-  const normalized = (Array.isArray(items) ? items : [])
-    .map((comment) =>
-      normalizeCommentItem(comment, {
-        level: comment?.parentCommentId ? 1 : 0,
-        parentId: comment?.parentCommentId || null,
-        viewerUsername,
-      })
-    )
-    .filter(Boolean)
-    .map((comment) => ({
-      ...comment,
-      children: [],
-    }));
-
-  const byId = new Map(normalized.map((comment) => [comment.id, comment]));
-  const roots = [];
-
-  normalized.forEach((comment) => {
-    const parentId = comment.parentId;
-    if (!parentId) {
-      roots.push(comment);
-      return;
-    }
-
-    const parent = byId.get(parentId);
-    if (!parent) {
-      roots.push(comment);
-      return;
-    }
-
-    parent.children = [...(parent.children || []), comment];
-    parent.stats = {
-      ...parent.stats,
-      replyNumber: parent.children.length,
-    };
-  });
-
-  return roots;
-};
+const normalizeStoreComments = (items = [], viewerUsername = null) =>
+  normalizeFlatCommentTree(items, { viewerUsername });
 
 export function useCommentThread(postId, initialCount = 0) {
   const { user } = useAuth();
@@ -142,6 +105,7 @@ export function useCommentThread(postId, initialCount = 0) {
   const createComment = useCallback(
     async ({ text = "", media = [], parentComment = null }) => {
       const parentId = parentComment ? resolveReplyParentId(parentComment) : null;
+      const level = parentComment ? (Number(parentComment?.level) || 0) + 1 : 0;
       const response = await createCommentAction(postId, {
         text,
         media,
@@ -154,16 +118,25 @@ export function useCommentThread(postId, initialCount = 0) {
 
       const createdRaw = response?.data?.createdComment || null;
       const normalizedComment = normalizeCommentItem(createdRaw, {
-        level: parentId ? 1 : 0,
+        level,
+        parentAuthor: parentComment?.author || null,
         parentId,
         viewerUsername: user?.username || null,
       });
 
       const nextComment = normalizedComment
-        ? (parentId && !normalizedComment.replyTo
-          ? { ...normalizedComment, replyTo: parentComment?.author || null, children: [] }
-          : normalizedComment)
+        ? {
+            ...normalizedComment,
+            children: Array.isArray(normalizedComment.children) ? normalizedComment.children : [],
+            level,
+            parentId,
+            replyTo:
+              parentId && !normalizedComment.replyTo
+                ? (parentComment?.author || null)
+                : normalizedComment.replyTo,
+          }
         : buildLocalComment({
+          level,
           media,
           parentId,
           replyTo: parentComment?.author || null,
@@ -208,9 +181,12 @@ export function useCommentThread(postId, initialCount = 0) {
     };
   }, []);
 
-  const reactComment = useCallback(async (commentId, nextReaction) => {
+  const reactComment = useCallback(async (commentId, nextReaction, previousReactionOverride) => {
     const targetComment = findCommentByIdInTree(commentsRef.current, commentId);
-    const previousReaction = targetComment?.viewer?.reaction ?? null;
+    const previousReaction =
+      previousReactionOverride !== undefined
+        ? previousReactionOverride
+        : targetComment?.viewer?.reaction ?? null;
 
     if (targetComment) {
       const nextComments = updateCommentReactionInTree(commentsRef.current, commentId, nextReaction);

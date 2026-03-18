@@ -98,6 +98,30 @@ const resolveRawChildren = (comment) => {
 const resolveReplyTo = (comment) =>
   comment?.replyTo || comment?.replyTarget || comment?.parentCommenter || comment?.targetCommenter || null;
 
+const resolveCommentParentId = (comment, fallbackParentId = null) =>
+  comment?.parentId ?? comment?.parentCommentId ?? fallbackParentId ?? null;
+
+const hasResolvedAuthor = (author) =>
+  Boolean(author?.username || author?.displayName);
+
+const resolveReplyAuthor = (replyTo, fallbackAuthor = null, viewerUsername = null) => {
+  if (replyTo) {
+    const resolvedAuthor = resolveCommentAuthor(replyTo, viewerUsername);
+    if (hasResolvedAuthor(resolvedAuthor)) {
+      return resolvedAuthor;
+    }
+  }
+
+  if (fallbackAuthor) {
+    const resolvedFallbackAuthor = resolveCommentAuthor(fallbackAuthor, viewerUsername);
+    if (hasResolvedAuthor(resolvedFallbackAuthor)) {
+      return resolvedFallbackAuthor;
+    }
+  }
+
+  return null;
+};
+
 const resolveCommentText = (comment) =>
   comment?.text || comment?.content || comment?.comment || comment?.message || "";
 
@@ -127,31 +151,34 @@ const resolveCommentReplyCount = (comment, children) =>
   children.length;
 
 export const normalizeCommentItem = (comment, options = {}) => {
-  const { level = 0, parentId = null, viewerUsername = null } = options;
+  const { level = 0, parentId = null, parentAuthor = null, viewerUsername = null } = options;
   const id = resolveCommentId(comment);
 
   if (!id) return null;
 
   const createdAt = resolveCommentCreatedAt(comment);
   const updatedAt = resolveCommentUpdatedAt(comment);
-  const children =
-    level >= 1
-      ? []
-      : resolveRawChildren(comment)
-          .map((child) =>
-            normalizeCommentItem(child, {
-              level: level + 1,
-              parentId: id,
-              viewerUsername,
-            })
-          )
-          .filter(Boolean);
+  const resolvedParentId = resolveCommentParentId(comment, parentId);
+  const author = resolveCommentAuthor(
+    comment?.author || comment?.commenter || comment?.actor || comment?.user,
+    viewerUsername
+  );
+  const children = resolveRawChildren(comment)
+    .map((child) =>
+      normalizeCommentItem(child, {
+        level: level + 1,
+        parentAuthor: author,
+        parentId: id,
+        viewerUsername,
+      })
+    )
+    .filter(Boolean);
 
   return {
     id,
-    parentId: comment?.parentId || comment?.parentCommentId || parentId,
+    parentId: resolvedParentId,
     level,
-    author: resolveCommentAuthor(comment?.author || comment?.commenter || comment?.actor || comment?.user, viewerUsername),
+    author,
     text: resolveCommentText(comment),
     media: resolveCommentMedia(comment),
     time: {
@@ -166,7 +193,9 @@ export const normalizeCommentItem = (comment, options = {}) => {
         Boolean(comment?.isCommenter) ||
         Boolean(viewerUsername && viewerUsername === (comment?.author?.username || comment?.commenter?.username)),
     },
-    replyTo: level > 0 ? resolveCommentAuthor(resolveReplyTo(comment), viewerUsername) : null,
+    replyTo: resolvedParentId != null
+      ? resolveReplyAuthor(resolveReplyTo(comment), parentAuthor, viewerUsername)
+      : null,
     viewer: {
       reaction: normalizeCommentReaction(comment?.viewer?.reaction || comment?.reaction || comment?.myReaction),
     },
@@ -174,8 +203,102 @@ export const normalizeCommentItem = (comment, options = {}) => {
       reactionNumber: resolveCommentReactionCount(comment),
       replyNumber: resolveCommentReplyCount(comment, children),
     },
+    hasChildComment: Boolean(
+      comment?.hasChildComment ??
+      comment?.hasChildComments ??
+      comment?.hasReplies ??
+      children.length > 0
+    ),
     children,
   };
+};
+
+const refreshCommentTreeNode = (
+  comment,
+  {
+    level = 0,
+    parentId = null,
+    parentAuthor = null,
+  } = {}
+) => {
+  const children = (Array.isArray(comment?.children) ? comment.children : [])
+    .map((child) =>
+      refreshCommentTreeNode(child, {
+        level: level + 1,
+        parentAuthor: comment?.author || null,
+        parentId: comment?.id ?? null,
+      })
+    );
+
+  return {
+    ...comment,
+    parentId,
+    level,
+    replyTo: parentId != null
+      ? resolveReplyAuthor(comment?.replyTo, parentAuthor, null)
+      : null,
+    hasChildComment: Boolean(comment?.hasChildComment || children.length > 0),
+    children,
+    stats: {
+      ...comment?.stats,
+      replyNumber: Math.max(comment?.stats?.replyNumber ?? 0, children.length),
+    },
+  };
+};
+
+export const normalizeFlatCommentTree = (
+  items = [],
+  {
+    rootLevel = 0,
+    rootParentAuthor = null,
+    rootParentId = null,
+    viewerUsername = null,
+  } = {}
+) => {
+  const rootParentKey = rootParentId == null ? null : String(rootParentId);
+  const normalized = (Array.isArray(items) ? items : [])
+    .map((comment) =>
+      normalizeCommentItem(comment, {
+        level: rootLevel,
+        parentAuthor: null,
+        parentId: rootParentId,
+        viewerUsername,
+      })
+    )
+    .filter(Boolean)
+    .map((comment) => ({
+      ...comment,
+      children: [],
+    }));
+
+  const byId = new Map(normalized.map((comment) => [String(comment.id), comment]));
+  const roots = [];
+
+  normalized.forEach((comment) => {
+    const currentParentId = comment?.parentId == null ? null : String(comment.parentId);
+
+    if (!currentParentId || currentParentId === rootParentKey) {
+      roots.push(comment);
+      return;
+    }
+
+    const parent = byId.get(currentParentId);
+    if (!parent) {
+      roots.push(comment);
+      return;
+    }
+
+    parent.children = [...(parent.children || []), comment];
+    parent.hasChildComment = true;
+  });
+
+  return roots.map((comment) =>
+    refreshCommentTreeNode(comment, {
+      level: rootLevel,
+      parentAuthor: rootParentAuthor,
+      parentId: rootParentId,
+    })
+  );
 };
 
 export const normalizeCommentResponse = (data, options = {}) => {
@@ -272,18 +395,24 @@ export const formatCommentCount = (count = 0) =>
 
 export const resolveReplyParentId = (comment) => {
   if (!comment) return null;
-  if (comment.level === 0) return comment.id;
-  return comment.parentId ?? comment.id ?? null;
+  return comment.id ?? null;
 };
 
-export const buildLocalComment = ({ media = [], parentId = null, replyTo = null, text = "", viewer = null }) => {
+export const buildLocalComment = ({
+  level = 0,
+  media = [],
+  parentId = null,
+  replyTo = null,
+  text = "",
+  viewer = null,
+}) => {
   const now = new Date().toISOString();
   localCommentSeed += 1;
 
   return {
     id: `local-comment-${Date.now()}-${localCommentSeed}`,
     parentId,
-    level: parentId ? 1 : 0,
+    level,
     author: resolveCommentAuthor(viewer, viewer?.username || null),
     text: String(text || "").trim(),
     media: normalizeComposerMediaList(media),
@@ -310,6 +439,7 @@ export const buildLocalComment = ({ media = [], parentId = null, replyTo = null,
 
 const refreshReplyCount = (comment) => ({
   ...comment,
+  hasChildComment: Array.isArray(comment.children) ? comment.children.length > 0 : Boolean(comment?.hasChildComment),
   stats: {
     ...comment.stats,
     replyNumber: Array.isArray(comment.children) ? comment.children.length : 0,
@@ -329,7 +459,15 @@ export const addCommentToTree = (comments = [], newComment, parentId = null) => 
     if (String(node.id) === targetId) {
       return refreshReplyCount({
         ...node,
-        children: [{ ...newComment, parentId: node.id, level: 1 }, ...(node.children || [])],
+        children: [
+          {
+            ...newComment,
+            parentId: node.id,
+            level: Number.isFinite(newComment?.level) ? newComment.level : (Number(node?.level) || 0) + 1,
+            replyTo: newComment?.replyTo || node?.author || null,
+          },
+          ...(node.children || []),
+        ],
       });
     }
 
