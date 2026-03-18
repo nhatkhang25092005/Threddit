@@ -24,7 +24,7 @@ const buttonSx = {
   gap: "0.28rem",
   color: (theme) => (theme.palette.mode === "dark" ? "#AAB2BD" : "#667588"),
   fontSize: "0.82rem",
-  fontWeight: 700,
+  fontWeight: 600,
   "&:hover": {
     backgroundColor: "transparent",
   },
@@ -32,7 +32,7 @@ const buttonSx = {
 
 const counterSx = {
   fontSize: "0.78rem",
-  fontWeight: 700,
+  fontWeight: 600,
 };
 
 const popoverSx = {

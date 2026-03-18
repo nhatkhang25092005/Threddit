@@ -4,6 +4,13 @@ export const style = {
       display: "flex",
       flexDirection: "column",
       gap: "0.5rem",
+      fontFamily: "inherit",
+      fontSynthesis: "none",
+      textRendering: "optimizeLegibility",
+      "& .MuiTypography-root, & .MuiButtonBase-root, & .MuiButton-root, & .MuiInputBase-input": {
+        fontFamily: "inherit",
+        fontSynthesis: "none",
+      },
     },
     row: {
       display: "flex",
@@ -47,7 +54,7 @@ export const style = {
     },
     authorName: {
       fontSize: "0.92rem",
-      fontWeight: 800,
+      fontWeight: 700,
       lineHeight: 1.2,
       wordBreak: "break-word",
     },
@@ -57,7 +64,7 @@ export const style = {
       py: "0.12rem",
       borderRadius: "999rem",
       fontSize: "0.72rem",
-      fontWeight: 700,
+      fontWeight: 600,
       color: (theme) => (theme.palette.mode === "dark" ? "#DDE6F0" : "#34506B"),
       backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#2A3340" : "#E7EFF8"),
     },
@@ -76,11 +83,12 @@ export const style = {
       wordBreak: "break-word",
       lineHeight: 1.55,
       fontSize: "0.92rem",
+      fontWeight: 400,
     },
     replyTo: {
       fontSize: "0.8rem",
       lineHeight: 1.3,
-      fontWeight: 700,
+      fontWeight: 600,
       color: (theme) => (theme.palette.mode === "dark" ? "#BDD7FF" : "#2F6AA3"),
     },
     actions: {
@@ -96,14 +104,14 @@ export const style = {
       borderRadius: "999rem",
       color: (theme) => (theme.palette.mode === "dark" ? "#AAB2BD" : "#667588"),
       fontSize: "0.82rem",
-      fontWeight: 700,
+      fontWeight: 600,
       "&:hover": {
         backgroundColor: "transparent",
       },
     },
     editedLabel: {
       fontSize: "0.76rem",
-      fontWeight: 700,
+      fontWeight: 600,
       color: (theme) => (theme.palette.mode === "dark" ? "#95A0AD" : "#7A8797"),
     },
     repliesWrap: {
@@ -157,7 +165,7 @@ export const style = {
       borderRadius: "999rem",
       color: (theme) => (theme.palette.mode === "dark" ? "#C4D1DD" : "#435B73"),
       fontSize: "0.82rem",
-      fontWeight: 700,
+      fontWeight: 600,
       "&:hover": {
         backgroundColor: "transparent",
       },
