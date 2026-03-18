@@ -48,7 +48,7 @@ export default function Post({ post }) {
     <Surface  sx={sx.card}>
       <PostHeader sx={sx} context={postContext}  isPinned={isPinned} author={author} createdAt={createdAt} postId={safePost.id} />
       <PostText sx={sx} text={safePost.text} />
-      <PostMedia items={media} />
+      <PostMedia items={media} postId={safePost.id} />
       <PostStats
         sx={sx}
         reactionNumber={reactionNumber}

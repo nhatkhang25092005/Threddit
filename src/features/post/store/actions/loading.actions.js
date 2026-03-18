@@ -18,6 +18,22 @@ export const loadingAction = {
     )
   ),
 
+  getCommentListLoading: (isLoading) => (
+    createAction(
+      CLASS_TYPE.LOADING,
+      LOADING.GET_COMMENT_LIST,
+      isLoading
+    )
+  ),
+
+  setCommentLoading: (id, isLoading) => (
+    createAction(
+      CLASS_TYPE.LOADING,
+      LOADING.SET_COMMENT_LOADING,
+      { id, isLoading }
+    )
+  ),
+
   setPostSaveLoading: (id, isLoading) => (
     createAction(
       CLASS_TYPE.LOADING,

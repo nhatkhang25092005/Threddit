@@ -7,8 +7,6 @@ export function measureCaretAnchor(textarea) {
   const caretIndex = textarea.selectionStart ?? 0;
   const computedStyle = window.getComputedStyle(textarea);
   const textareaRect = textarea.getBoundingClientRect();
-  const containerRect =
-    textarea.offsetParent?.getBoundingClientRect() ?? textareaRect;
 
   const mirror = document.createElement("div");
   mirror.style.position = "fixed";
@@ -36,16 +34,12 @@ export function measureCaretAnchor(textarea) {
   try {
     const markerRect = marker.getBoundingClientRect();
     const lineHeight = parseLineHeight(computedStyle);
+    const top = markerRect.top + lineHeight - (textarea.scrollTop || 0) + 6;
+    const left = markerRect.left - (textarea.scrollLeft || 0);
 
     return {
-      top: Math.max(
-        0,
-        markerRect.top - containerRect.top + lineHeight - (textarea.scrollTop || 0)
-      ),
-      left: Math.max(
-        0,
-        markerRect.left - containerRect.left - (textarea.scrollLeft || 0)
-      ),
+      top: Math.max(8, Math.min(window.innerHeight - 8, top)),
+      left: Math.max(8, Math.min(window.innerWidth - 236, left)),
     };
   } finally {
     document.body.removeChild(mirror);

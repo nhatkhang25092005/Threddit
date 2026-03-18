@@ -6,6 +6,7 @@ export const initState = {
   postById:{},
   storyById:{},
   storyList:{},
+  commentById:{},
 
   contentList:{
     home:{
@@ -19,6 +20,15 @@ export const initState = {
       //[username]:[1, 2, 3] (storyById)
     }
   },
+
+  commentList:{
+    //[postId]:[commentById]
+  },
+
+  subCommentList:{
+    //[commentId]:[commentById]
+  },
+  
   mySavedHasMore:undefined,
   userPostHasMore:{
     //[username]:boolean
@@ -34,6 +44,7 @@ export const initState = {
       getFollowPost:false,
       share:false,
       getSavedPost:false,
+      getCommentList:false,
       getUserPost:false
     },
     item:{

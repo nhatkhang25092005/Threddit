@@ -33,7 +33,25 @@ export default function ButtonMenu({label, actions, buttonSx, buttonVariant, but
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        variant='default'
+        sx={{
+          zIndex: (theme) => theme.zIndex.modal + 400,
+        }}
         slotProps={{
+          paper: {
+            sx: {
+              mt: '0.35rem',
+              minWidth: '10rem',
+            },
+          },
           list: {
             'aria-labelledby': 'basic-button',
           },

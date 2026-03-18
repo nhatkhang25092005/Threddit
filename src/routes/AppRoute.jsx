@@ -11,6 +11,7 @@ import  BlockProvider from '../core/block/BlockProvider.jsx'
 import OrchestrateProvider from "../core/orchestrate/OrchestrateProvider.jsx";
 import FriendshipProvider from "../features/friends/FriendshipProvider.jsx";
 import StoryList from "../features/post/components/story/StoryList";
+import DetailPostPage from "../features/post/components/post/DetailPostPage";
 
 function AppProviders({ children }) {
   return (
@@ -30,6 +31,10 @@ function AppProviders({ children }) {
 
 function StoryListPage() {
   return <StoryList />
+}
+
+function DetailPostMediaPage() {
+  return <DetailPostPage />
 }
 
 export default function AppRoute() {
@@ -57,6 +62,10 @@ export default function AppRoute() {
             path="stories/:source/:username?/:storyId?"
             element={<StoryListPage />}
           />
+          <Route
+            path="post/detail/:postId/:mediaIndex?"
+            element={<DetailPostMediaPage />}
+          />
           <Route path="*" element={<Notfound />} />
         </Routes>
 
@@ -65,6 +74,10 @@ export default function AppRoute() {
             <Route
               path="stories/:source/:username?/:storyId?"
               element={<StoryListPage />}
+            />
+            <Route
+              path="post/detail/:postId/:mediaIndex?"
+              element={<DetailPostMediaPage />}
             />
           </Routes>
         ) : null}

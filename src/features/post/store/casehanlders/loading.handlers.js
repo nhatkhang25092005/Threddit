@@ -26,6 +26,41 @@ export const loadingHandlers = (state, action) => {
         }
       }
 
+    case LOADING.GET_COMMENT_LIST:
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          global: {
+            ...state.loading.global,
+            getCommentList: Boolean(action.payload)
+          }
+        }
+      }
+
+    case LOADING.SET_COMMENT_LOADING: {
+      const { id, isLoading } = action.payload || {}
+      if (id == null) return state
+
+      const currentItemLoading = state.loading.item?.[id] || itemModel()
+      const nextCommentLoading = Boolean(isLoading)
+      if (currentItemLoading.comments === nextCommentLoading) return state
+
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          item: {
+            ...state.loading.item,
+            [id]: {
+              ...currentItemLoading,
+              comments: nextCommentLoading
+            }
+          }
+        }
+      }
+    }
+
     case LOADING.SET_POST_SAVE_LOADING: {
       const { id, isLoading } = action.payload || {}
       if (id == null) return state

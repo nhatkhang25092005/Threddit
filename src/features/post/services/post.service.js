@@ -33,6 +33,9 @@ export const postService = {
     handleRequest(() => postApi.editContent(id, payload)),
 
   deletePost: async (id) =>
-    handleRequest(() => postApi.deleteContent(id))
+    handleRequest(() => postApi.deleteContent(id)),
+
+  getPostDetail: async (id) =>
+    handleRequest(() => postApi.getPostDetail(id))
 }
 

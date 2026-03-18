@@ -59,5 +59,10 @@ export const postApi = {
   unshareContent(contentId){
     const url = `${BASE}/${contentId}${SHARE}`
     return axios.delete(url)
+  },
+
+  getPostDetail(postId){
+    const url = `${BASE}/${postId}`
+    return axios.get(url)
   }
 }

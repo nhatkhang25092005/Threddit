@@ -28,7 +28,7 @@ const actionIconSx = {
 
 const activeShareColor = "#1877F2";
 
-export default function PostActions({ sx, postId }) {
+export default function PostActions({ sx, postId, onCommentClick }) {
   const {
     actions: { unsharePost },
     selector: {
@@ -56,6 +56,17 @@ export default function PostActions({ sx, postId }) {
     openModal("create_share_post_modal", { postId });
   };
 
+  const handleCommentClick = () => {
+    if (postId == null) return;
+
+    if (typeof onCommentClick === "function") {
+      onCommentClick(postId);
+      return;
+    }
+
+    openModal("detail_post_modal", { postId });
+  };
+
   return (
     <>
       <Divider />
@@ -68,7 +79,7 @@ export default function PostActions({ sx, postId }) {
         >
           <ReactionButton postId={postId} />
 
-          <ButtonBase sx={actionButtonSx}>
+          <ButtonBase onClick={handleCommentClick} sx={actionButtonSx}>
             <ChatBubbleOutlineIcon sx={actionIconSx} />
             <Typography component="span" sx={{ fontSize: "inherit", color: "inherit" }}>
               {post.actionComment}

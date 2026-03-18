@@ -112,10 +112,14 @@ export function useMention({
   useEffect(() => {
     if (!open) return;
 
-    const handleResize = () => scheduleMentionRefresh();
-    window.addEventListener("resize", handleResize);
+    const handleViewportChange = () => scheduleMentionRefresh();
+    window.addEventListener("resize", handleViewportChange);
+    window.addEventListener("scroll", handleViewportChange, true);
 
-    return () => window.removeEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleViewportChange);
+      window.removeEventListener("scroll", handleViewportChange, true);
+    };
   }, [open, scheduleMentionRefresh]);
 
   const insertMention = useCallback(

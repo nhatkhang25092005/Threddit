@@ -42,6 +42,8 @@ export default function PostMenu({ postId, postContext }) {
   const isEditLoading = getEditPostLoading()
   const canDelete = Boolean(postItem?.isOwner || isOwnerByUsername(postItem?.author?.username))
   const canEdit = canDelete
+  const canPin = resolvePinOption(isOwner, postContext)
+    || Boolean(postContext === "detailPostPage" && canDelete)
 
   const saveAction = isSaved
     ? {
@@ -83,7 +85,7 @@ export default function PostMenu({ postId, postContext }) {
 
   const actions = [
     saveAction,
-    ...(resolvePinOption(isOwner, postContext) ? [pinAction] : []),
+    ...(canPin ? [pinAction] : []),
     ...(canEdit ? [editAction] : []),
     ...(canDelete ? [deleteAction] : [])
   ]
@@ -103,7 +105,15 @@ export default function PostMenu({ postId, postContext }) {
         bgcolor: "transparent",
         boxShadow: "none",
         borderRadius: 999,
-        width: "1rem",
+        minWidth: "unset",
+        width: "2.4rem",
+        height: "2.4rem",
+        p: 0,
+        zIndex: 1,
+        "&:hover": {
+          bgcolor: (t) => (t.palette.mode === "dark" ? "#2E3136" : "#EEF2F6"),
+          boxShadow: "none",
+        },
       }}
       buttonDisabled={isSaveLoading || isPinnedLoading || isDeleteLoading || isEditLoading}
       actions={actions}

@@ -29,7 +29,7 @@ export default function SharedPostPreviewCard({
             hideMenu={!actionPostId}
           />
           <PostText sx={sx} text={safePost.text} />
-          <PostMedia items={media} />
+          <PostMedia items={media} postId={safePost.id} />
           {showActions && actionPostId != null ? (
             <PostActions sx={sx} postId={actionPostId} />
           ) : null}

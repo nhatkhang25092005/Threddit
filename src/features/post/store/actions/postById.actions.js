@@ -26,6 +26,14 @@ export const postByIdActions ={
     )
   ),
 
+  increaseCommentNumber: (id, delta = 1) => (
+    createAction(
+      CLASS_TYPE.POST_BY_ID,
+      POST_BY_ID.INCREASE_POST_COMMENT_NUMBER,
+      { id, delta }
+    )
+  ),
+
   setSaved: (id, isSaved, saveNumber) => (
     createAction(
       CLASS_TYPE.POST_BY_ID,

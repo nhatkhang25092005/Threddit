@@ -9,10 +9,15 @@ export const storageService = {
     handleRequest(() => storageApi.updateMediaUpload(contentId, { mediaFileNumber })),
 
   handlePresign: async (url, payload) => {
+    const contentType = payload?.contentType
+      || payload?.file?.type
+      || (typeof payload?.type === "string" && payload.type.includes("/") ? payload.type : null)
+      || "application/octet-stream"
+
     try {
       await storageApi.s3_aws(url, {
         ...payload,
-        type: payload?.type || payload?.contentType || payload?.file?.type
+        type: contentType
       })
 
       return {

@@ -10,4 +10,13 @@ export const reactionService = {
 
   unreact: async (id, signal) =>
     handleRequest(() => reactionApi.unreact(id, signal)),
+
+  reactComment: async (commentId, payload, signal) =>
+    handleRequest(() => reactionApi.reactComment(commentId, payload, signal)),
+
+  updateReactComment: async (commentId, payload, signal) =>
+    handleRequest(() => reactionApi.updateReactComment(commentId, payload, signal)),
+
+  unReactComment: async (commentId, signal) =>
+    handleRequest(() => reactionApi.unReactComment(commentId, signal)),
 }

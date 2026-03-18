@@ -1,5 +1,5 @@
 export const OVERLAY_BASE_STYLE = {
-  position: "absolute",
+  position: "fixed",
   zIndex: 1500,
   background: "rgba(20,20,20,0.98)",
   borderRadius: 12,

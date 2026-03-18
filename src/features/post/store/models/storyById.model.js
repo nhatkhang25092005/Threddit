@@ -10,43 +10,46 @@ function mapAuthor(author) {
   };
 }
 
-export const storyByIdModel = (story = {}) => ({
-  id: story?.contentId ?? story?.id ?? null,
-  context: null,
-  time: {
-    createdAt: story?.createdAt || story?.contentCreatedAt || null,
-    updatedAt: story?.updatedAt || story?.contentUpdatedAt || null,
-    sharedAt: story?.sharedAt || null,
-  },
+export const storyByIdModel = (story = {}) => {
+  const mediaFiles = Array.isArray(story?.mediaFiles)
+    ? story.mediaFiles
+    : (Array.isArray(story?.media) ? story.media : [])
 
-  isPinned: Boolean(story?.isPinned),
-  text: story?.text || "",
-  type: story?.type || "story",
+  return {
+    id: story?.contentId ?? story?.id ?? null,
+    context: null,
+    time: {
+      createdAt: story?.createdAt || story?.contentCreatedAt || null,
+      updatedAt: story?.updatedAt || story?.contentUpdatedAt || null,
+      sharedAt: story?.sharedAt || null,
+    },
 
-  author: mapAuthor(story?.author),
-  sharer: null,
+    isPinned: Boolean(story?.isPinned),
+    text: story?.text || "",
+    type: story?.type || "story",
 
-  isOwner: Boolean(story?.isOwner),
-  mentionedUsers: Array.isArray(story?.mentionedUsers) ? story.mentionedUsers : [],
+    author: mapAuthor(story?.author),
+    sharer: null,
 
-  mediaFiles: Array.isArray(story?.mediaFiles)
-    ? story.mediaFiles.map((item) => mediaModel(item))
-    : [],
+    isOwner: Boolean(story?.isOwner),
+    mentionedUsers: Array.isArray(story?.mentionedUsers) ? story.mentionedUsers : [],
 
-  stats: {
-    commentNumber: story?.commentNumber ?? 0,
-    saveNumber: story?.saveNumber ?? 0,
-    shareNumber: story?.shareNumber ?? 0,
-    reactionNumber: story?.reactionNumber ?? 0,
-  },
+    mediaFiles: mediaFiles.map((item) => mediaModel(item)),
 
-  viewer: {
-    isSaved: Boolean(story?.isSaved),
-    reaction: story?.reaction || null,
-    isShared: Boolean(story?.isShared),
-    shareMessage: story?.shareMessage || null,
-  },
+    stats: {
+      commentNumber: story?.commentNumber ?? 0,
+      saveNumber: story?.saveNumber ?? 0,
+      shareNumber: story?.shareNumber ?? 0,
+      reactionNumber: story?.reactionNumber ?? 0,
+    },
 
-  shareId: story?.shareId || null,
-});
+    viewer: {
+      isSaved: Boolean(story?.isSaved),
+      reaction: story?.reaction || null,
+      isShared: Boolean(story?.isShared),
+      shareMessage: story?.shareMessage || null,
+    },
 
+    shareId: story?.shareId || null,
+  }
+};

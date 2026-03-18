@@ -19,45 +19,49 @@ function mapSharer(sharer){
   : null
 }
 
-export const postByIdModel = (data) => ({
-  id: data.contentId || data.id,
-  context : null,
-  time:{
-    createdAt:data.createdAt || data.contentCreatedAt || null,
-    updatedAt:data.updatedAt || data.contentUpdatedAt || null,
-    sharedAt:data.sharedAt || null
-  },
+export const postByIdModel = (data = {}) => {
+  const mediaFiles = Array.isArray(data?.mediaFiles)
+    ? data.mediaFiles
+    : (Array.isArray(data?.media) ? data.media : [])
 
-  isPinned:data.isPinned || false,
-  text: data.text || "",
+  return {
+    id: data.contentId || data.id,
+    context : null,
+    time:{
+      createdAt:data.createdAt || data.contentCreatedAt || null,
+      updatedAt:data.updatedAt || data.contentUpdatedAt || null,
+      sharedAt:data.sharedAt || null
+    },
 
-  type:data.type || 'post',
+    isPinned:data.isPinned || false,
+    text: data.text || "",
 
-  author: mapAuthor(data.author),
-  sharer:mapSharer(data.sharer) ,
+    type:data.type || 'post',
 
-  isOwner:data.isOwner,
-  mentionedUsers: data.mentionedUsers || [],
+    author: mapAuthor(data.author),
+    sharer:mapSharer(data.sharer) ,
+
+    isOwner:data.isOwner,
+    mentionedUsers: data.mentionedUsers || [],
 
 
-  mediaFiles: Array.isArray(data?.mediaFiles)
-    ? data.mediaFiles.map((item) => mediaModel(item))
-    : [],
+    mediaFiles: mediaFiles.map((item) => mediaModel(item)),
 
-  stats: {
-    commentNumber: data.commentNumber ?? 0,
-    saveNumber: data.saveNumber ?? 0,
-    shareNumber: data.shareNumber ?? 0,
-    reactionNumber: data.reactionNumber ?? 0,
-  },
+    stats: {
+      commentNumber: data.commentNumber ?? 0,
+      saveNumber: data.saveNumber ?? 0,
+      shareNumber: data.shareNumber ?? 0,
+      reactionNumber: data.reactionNumber ?? 0,
+    },
 
-  viewer: {
-    isSaved: data.isSaved || false,
-    reaction: data.reaction || null,
-    isShare: Boolean(data.isShare ?? data.isShared),
-    isShared: Boolean(data.isShared ?? data.isShare),
-    shareMessage:data.shareMessage || null
-  },
+    viewer: {
+      isSaved: data.isSaved || false,
+      reaction: data.reaction || null,
+      isShare: Boolean(data.isShare ?? data.isShared),
+      isShared: Boolean(data.isShared ?? data.isShare),
+      shareMessage:data.shareMessage || null
+    },
 
-  shareId:data.shareId || null
-})
+    shareId:data.shareId || null
+  }
+}

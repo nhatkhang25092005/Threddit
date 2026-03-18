@@ -9,4 +9,12 @@ export const reactionActions = {
       { id, reaction }
     )
   ),
+
+  setCommentReaction: (id, reaction) => (
+    createAction(
+      CLASS_TYPE.REACTION,
+      REACTION.SET_COMMENT_REACTION,
+      { id, reaction }
+    )
+  ),
 }

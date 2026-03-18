@@ -113,6 +113,32 @@ export const postByIdHandlers = (state, action) => {
       }
     }
 
+    case POST_BY_ID.INCREASE_POST_COMMENT_NUMBER: {
+      const { id, delta } = action.payload || {}
+      if (id == null) return state
+
+      const currentPost = state.postById?.[id]
+      if (!currentPost) return state
+
+      const currentCommentNumber = currentPost.stats?.commentNumber ?? 0
+      const nextCommentNumber = Math.max(0, currentCommentNumber + (Number(delta) || 0))
+      if (nextCommentNumber === currentCommentNumber) return state
+
+      return {
+        ...state,
+        postById: {
+          ...state.postById,
+          [id]: {
+            ...currentPost,
+            stats: {
+              ...currentPost.stats,
+              commentNumber: nextCommentNumber
+            }
+          }
+        }
+      }
+    }
+
     case POST_BY_ID.SET_POST_SAVED: {
       const { id, isSaved, saveNumber } = action.payload || {}
       if (id == null) return state
