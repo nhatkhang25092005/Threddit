@@ -17,10 +17,10 @@ export const commentText = {
   errorDescription:
     "Danh sách bình luận hiện chưa sẵn sàng. Bạn vẫn có thể tiếp tục dựng UI và thao tác cục bộ ở đây.",
   ownerBadge: "Bạn",
-  editedLabel: "Đã chỉnh sửa",
   actionReply: "Trả lời",
-  actionDelete: "Xóa",
   actionEdit: "Sửa",
+  actionDelete: "Xóa",
+  actionDeleting: "Đang xóa...",
   actionLike: "Thích",
   mediaImageLabel: "Ảnh",
   mediaVideoLabel: "Video",

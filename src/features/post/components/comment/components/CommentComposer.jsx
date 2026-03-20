@@ -11,10 +11,8 @@ import CommentMediaPreviewList from "./CommentMediaPreviewList";
 
 const sx = style.list;
 
-const mergeMediaDraft = (currentMedia = [], nextMedia = []) => [
-  ...currentMedia,
-  ...normalizeComposerMediaList(nextMedia),
-];
+const replaceMediaDraft = (nextMedia) =>
+  normalizeComposerMediaList(Array.isArray(nextMedia) ? nextMedia : [nextMedia]).slice(0, 1);
 
 export default function CommentComposer({
   autoFocus = false,
@@ -47,23 +45,23 @@ export default function CommentComposer({
   );
 
   const appendImage = (event) => {
-    const nextMedia = upload.image(event, true);
+    const nextMedia = upload.image(event);
     if (!nextMedia) return;
-    setMedia((current) => mergeMediaDraft(current, nextMedia));
+    setMedia(replaceMediaDraft(nextMedia));
     setErrorMessage("");
   };
 
   const appendVideo = (event) => {
-    const nextMedia = upload.video(event, true);
+    const nextMedia = upload.video(event);
     if (!nextMedia) return;
-    setMedia((current) => mergeMediaDraft(current, nextMedia));
+    setMedia(replaceMediaDraft(nextMedia));
     setErrorMessage("");
   };
 
   const appendAudio = (event) => {
-    const nextMedia = upload.sound(event, true);
+    const nextMedia = upload.sound(event);
     if (!nextMedia) return;
-    setMedia((current) => mergeMediaDraft(current, nextMedia));
+    setMedia(replaceMediaDraft(nextMedia));
     setErrorMessage("");
   };
 

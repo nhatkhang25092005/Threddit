@@ -116,11 +116,6 @@ export const style = {
         backgroundColor: "transparent",
       },
     },
-    editedLabel: {
-      fontSize: "0.76rem",
-      fontWeight: 600,
-      color: (theme) => (theme.palette.mode === "dark" ? "#95A0AD" : "#7A8797"),
-    },
     repliesWrap: {
       position: "relative",
       display: "flex",

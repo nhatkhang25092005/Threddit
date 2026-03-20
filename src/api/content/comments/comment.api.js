@@ -16,5 +16,15 @@ export const commentApi = {
   getChildComment(parentCommentId, cursor, signal){
     const url = `${CONTENT_BASE}${COMMENT_BASE}/${parentCommentId}${CHILD_COMMENT}`
     return axios.get(url,{params:{cursor},signal})
+  },
+
+  updateComment(commentId, payload){
+    const url = `${CONTENT_BASE}${COMMENT_BASE}/${commentId}`
+    return axios.patch(url, payload)
+  },
+
+  deleteComment(commentId){
+    const url = `${CONTENT_BASE}${COMMENT_BASE}/${commentId}`
+    return axios.delete(url)
   }
 }

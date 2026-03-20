@@ -1,16 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useAuth from "../../../../../core/auth/useAuth";
+import { extractUsernames } from "../../../../../utils/extractUsernames";
 import { usePostContext } from "../../../hooks";
 import {
   addCommentToTree,
   buildLocalComment,
+  countCommentBranch,
   countTotalComments,
-  deleteCommentInTree,
   editCommentInTree,
   findCommentByIdInTree,
   mergeCommentPage,
   normalizeCommentItem,
   normalizeFlatCommentTree,
+  removeCommentFromTree,
   resolveReplyParentId,
   updateCommentReactionInTree,
 } from "../utils/comment.utils";
@@ -23,6 +25,8 @@ export function useCommentThread(postId, initialCount = 0) {
   const { actions } = usePostContext();
   const getCommentList = actions?.getCommentList;
   const createCommentAction = actions?.createComment;
+  const updateCommentAction = actions?.updateComment;
+  const deleteCommentAction = actions?.deleteComment;
   const reactionCommentAction = actions?.reactionComment;
   const commentsRef = useRef([]);
   const initialCountRef = useRef(Number(initialCount) || 0);
@@ -158,28 +162,64 @@ export function useCommentThread(postId, initialCount = 0) {
   );
 
   const editComment = useCallback(async (commentId, changes = {}) => {
-    const nextComments = editCommentInTree(commentsRef.current, commentId, changes);
-    commentsRef.current = nextComments;
-    setComments(nextComments);
-    return {
-      success: true,
-    };
-  }, []);
-
-  const deleteComment = useCallback(async (commentId) => {
-    const result = deleteCommentInTree(commentsRef.current, commentId);
-    commentsRef.current = result.comments;
-    setComments(result.comments);
-
-    if (result.removedCount > 0) {
-      setCountDelta((current) => current - result.removedCount);
+    const currentComment = findCommentByIdInTree(commentsRef.current, commentId);
+    if (!currentComment) {
+      return { success: false };
     }
 
+    if (typeof updateCommentAction !== "function") {
+      const nextComments = editCommentInTree(commentsRef.current, commentId, changes);
+      commentsRef.current = nextComments;
+      setComments(nextComments);
+      return {
+        success: true,
+      };
+    }
+
+    const hasTextField = Object.prototype.hasOwnProperty.call(changes || {}, "text");
+    const mentionedUsers = Array.isArray(changes?.mentionedUsers)
+      ? changes.mentionedUsers
+      : (hasTextField ? extractUsernames(String(changes?.text ?? "")) : undefined);
+
+    const response = await updateCommentAction(commentId, {
+      ...changes,
+      ...(Array.isArray(mentionedUsers) ? { mentionedUsers } : {}),
+      currentMedia: currentComment.media,
+    });
+
+    if (!response?.success) {
+      return response || { success: false };
+    }
+
+    const updatedComment = normalizeCommentItem(
+      {
+        id: commentId,
+        parentCommentId: currentComment.parentId,
+        ...(response?.data?.updatedComment || {}),
+      },
+      {
+        level: currentComment.level,
+        parentAuthor: currentComment.replyTo,
+        parentId: currentComment.parentId,
+        viewerUsername: user?.username || null,
+      }
+    );
+
+    const nextComments = editCommentInTree(commentsRef.current, commentId, {
+      text: updatedComment?.text ?? changes?.text,
+      media: Array.isArray(updatedComment?.media) ? updatedComment.media : changes?.media,
+    });
+    commentsRef.current = nextComments;
+    setComments(nextComments);
+
     return {
-      success: true,
-      removedCount: result.removedCount,
+      ...response,
+      data: {
+        ...(response?.data || {}),
+        ...(updatedComment ? { updatedComment } : {}),
+      },
     };
-  }, []);
+  }, [updateCommentAction, user?.username]);
 
   const reactComment = useCallback(async (commentId, nextReaction, previousReactionOverride) => {
     const targetComment = findCommentByIdInTree(commentsRef.current, commentId);
@@ -224,6 +264,50 @@ export function useCommentThread(postId, initialCount = 0) {
 
     return response || { success: false };
   }, [reactionCommentAction]);
+
+  const deleteComment = useCallback(async (comment, options = {}) => {
+    const commentId = comment?.id ?? comment;
+    if (commentId == null) {
+      return { success: false };
+    }
+
+    const removalResult = removeCommentFromTree(commentsRef.current, commentId);
+    const removedCountHint = Math.max(
+      1,
+      Number(options?.removedCountHint) || removalResult.removedCount || countCommentBranch(comment) || 1
+    );
+
+    if (typeof deleteCommentAction !== "function") {
+      if (removalResult.removedCount > 0) {
+        commentsRef.current = removalResult.comments;
+        setComments(removalResult.comments);
+      }
+      setCountDelta((current) => current - removedCountHint);
+      return {
+        success: true,
+        data: {
+          removedCount: removedCountHint,
+        },
+      };
+    }
+
+    const response = await deleteCommentAction(postId, commentId, {
+      removedCount: removedCountHint,
+    });
+
+    if (!response?.success) {
+      return response || { success: false };
+    }
+
+    if (removalResult.removedCount > 0) {
+      commentsRef.current = removalResult.comments;
+      setComments(removalResult.comments);
+    }
+
+    setCountDelta((current) => current - (response?.data?.removedCount ?? removedCountHint));
+
+    return response;
+  }, [deleteCommentAction, postId]);
 
   const loadMore = useCallback(async () => {
     if (!hasMore || !cursor || status === "loading-more") {

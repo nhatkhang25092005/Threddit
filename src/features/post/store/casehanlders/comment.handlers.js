@@ -2,10 +2,45 @@ import { itemModel } from "../models/item.model";
 import { COMMENT } from "../type";
 
 const unique = (list = []) => [...new Set(Array.isArray(list) ? list : [])];
+const normalizeId = (id) => String(id);
 
 const mergeCommentLists = (current = [], incoming = []) => (
   unique([...(Array.isArray(current) ? current : []), ...(Array.isArray(incoming) ? incoming : [])])
 );
+
+const filterRemovedIds = (list = [], removedIdKeys = new Set()) => (
+  (Array.isArray(list) ? list : []).filter((itemId) => !removedIdKeys.has(normalizeId(itemId)))
+);
+
+const filterRecordLists = (record = {}, removedIdKeys = new Set()) => (
+  Object.fromEntries(
+    Object.entries(record || {}).map(([key, list]) => [key, filterRemovedIds(list, removedIdKeys)])
+  )
+);
+
+const removeSubCommentEntries = (record = {}, removedIdKeys = new Set()) => (
+  Object.fromEntries(
+    Object.entries(record || {})
+      .filter(([key]) => !removedIdKeys.has(normalizeId(key)))
+      .map(([key, list]) => [key, filterRemovedIds(list, removedIdKeys)])
+  )
+);
+
+const collectCommentBranchIds = (state, commentId, collectedIds = new Set()) => {
+  if (commentId == null) return collectedIds;
+
+  const key = normalizeId(commentId);
+  if (collectedIds.has(key)) return collectedIds;
+
+  collectedIds.add(key);
+
+  const childCommentIds = state.subCommentList?.[key] || [];
+  childCommentIds.forEach((childCommentId) => {
+    collectCommentBranchIds(state, childCommentId, collectedIds);
+  });
+
+  return collectedIds;
+};
 
 export const commentHandlers = (state, action) => {
   switch (action.type) {
@@ -74,6 +109,35 @@ export const commentHandlers = (state, action) => {
               },
             } : {}),
           },
+        },
+      };
+    }
+
+    case COMMENT.REMOVE_COMMENT_BY_ID: {
+      const { id } = action.payload || {};
+      if (id == null) return state;
+
+      const removedIdKeys = collectCommentBranchIds(state, id);
+      if (removedIdKeys.size === 0) {
+        removedIdKeys.add(normalizeId(id));
+      }
+
+      const nextCommentById = { ...(state.commentById || {}) };
+      const nextLoadingItem = { ...(state.loading?.item || {}) };
+
+      removedIdKeys.forEach((key) => {
+        delete nextCommentById[key];
+        delete nextLoadingItem[key];
+      });
+
+      return {
+        ...state,
+        commentById: nextCommentById,
+        commentList: filterRecordLists(state.commentList, removedIdKeys),
+        subCommentList: removeSubCommentEntries(state.subCommentList, removedIdKeys),
+        loading: {
+          ...state.loading,
+          item: nextLoadingItem,
         },
       };
     }

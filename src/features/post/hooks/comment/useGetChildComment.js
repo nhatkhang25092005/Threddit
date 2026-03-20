@@ -5,44 +5,13 @@ import { useSafeRequest } from "../../../../hooks/useSafeRequest"
 import { commentService } from "../../services"
 import { commentActions, loadingAction } from "../../store/actions"
 import { commentModel } from "../../store/models/comment.model"
-
-function resolveCommentItems(data) {
-  if (Array.isArray(data)) return data
-  if (Array.isArray(data?.commentList)) return data.commentList
-  if (Array.isArray(data?.comments)) return data.comments
-  if (Array.isArray(data?.items)) return data.items
-  if (Array.isArray(data?.results)) return data.results
-  return []
-}
-
-function resolveHasMore(data, cursor, items) {
-  if (typeof data?.hasMore === "boolean") return data.hasMore
-  if (typeof data?.nextPage === "boolean") return data.nextPage
-  if (typeof data?.pagination?.hasMore === "boolean") return data.pagination.hasMore
-  return Boolean(cursor && items.length > 0)
-}
-
-function buildSubCommentsMap(comments = [], parentCommentId) {
-  const key = String(parentCommentId)
-  const mappedComments = (Array.isArray(comments) ? comments : []).reduce((result, comment) => {
-    const currentParentCommentId = comment?.parentCommentId
-    if (currentParentCommentId == null || comment?.id == null) return result
-
-    const parentKey = String(currentParentCommentId)
-    if (!Array.isArray(result[parentKey])) {
-      result[parentKey] = []
-    }
-
-    result[parentKey].push(comment.id)
-    return result
-  }, {})
-
-  if (!Object.prototype.hasOwnProperty.call(mappedComments, key)) {
-    mappedComments[key] = []
-  }
-
-  return mappedComments
-}
+import {
+  buildEmptyCommentPage,
+  buildSubCommentsMap,
+  resolveCommentCursor,
+  resolveCommentHasMore,
+  resolveCommentItems,
+} from "../../utils/commentCollection.utils"
 
 export function useGetChildComment(dispatch) {
   const notify = useNotify()
@@ -63,14 +32,7 @@ export function useGetChildComment(dispatch) {
     }
 
     if (!ignoreHasMore && hasMoreRef.current[key] === false) {
-      return {
-        success: true,
-        data: {
-          commentList: [],
-          cursor: cursorRef.current[key] ?? null,
-          hasMore: false,
-        },
-      }
+      return buildEmptyCommentPage(cursorRef.current[key] ?? null)
     }
 
     const response = await runRequest((signal) =>
@@ -89,8 +51,8 @@ export function useGetChildComment(dispatch) {
 
     const data = response.data || {}
     const comments = resolveCommentItems(data).map(commentModel)
-    const nextCursor = data?.cursor ?? data?.nextCursor ?? data?.pagination?.cursor ?? null
-    const hasMore = resolveHasMore(data, nextCursor, comments)
+    const nextCursor = resolveCommentCursor(data)
+    const hasMore = resolveCommentHasMore(data, nextCursor, comments)
     const subCommentsMap = buildSubCommentsMap(comments, key)
 
     cursorRef.current[key] = nextCursor

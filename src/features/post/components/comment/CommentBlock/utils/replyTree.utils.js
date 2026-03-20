@@ -3,6 +3,7 @@ import {
   findCommentByIdInTree,
   normalizeFlatCommentTree,
 } from "../../utils/comment.utils";
+import { resolveCommentItems } from "../../../../utils/commentCollection.utils";
 
 const isSameCommentId = (leftId, rightId) =>
   leftId != null &&
@@ -10,12 +11,7 @@ const isSameCommentId = (leftId, rightId) =>
   String(leftId) === String(rightId);
 
 export function resolveFetchedReplyItems(data) {
-  if (Array.isArray(data?.comments)) return data.comments;
-  if (Array.isArray(data?.commentList)) return data.commentList;
-  if (Array.isArray(data?.items)) return data.items;
-  if (Array.isArray(data?.results)) return data.results;
-  if (Array.isArray(data)) return data;
-  return [];
+  return resolveCommentItems(data);
 }
 
 export function normalizeFetchedReplies(

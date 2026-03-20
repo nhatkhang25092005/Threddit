@@ -5,22 +5,13 @@ import { useSafeRequest } from "../../../../hooks/useSafeRequest"
 import { commentService } from "../../services"
 import { commentActions, loadingAction } from "../../store/actions"
 import { commentModel } from "../../store/models/comment.model"
-
-function resolveCommentItems(data) {
-  if (Array.isArray(data)) return data
-  if (Array.isArray(data?.commentList)) return data.commentList
-  if (Array.isArray(data?.comments)) return data.comments
-  if (Array.isArray(data?.items)) return data.items
-  if (Array.isArray(data?.results)) return data.results
-  return []
-}
-
-function resolveHasMore(data, cursor, items) {
-  if (typeof data?.hasMore === "boolean") return data.hasMore
-  if (typeof data?.nextPage === "boolean") return data.nextPage
-  if (typeof data?.pagination?.hasMore === "boolean") return data.pagination.hasMore
-  return Boolean(cursor && items.length > 0)
-}
+import {
+  buildEmptyCommentPage,
+  buildSubCommentsMap,
+  resolveCommentCursor,
+  resolveCommentHasMore,
+  resolveCommentItems,
+} from "../../utils/commentCollection.utils"
 
 export function useGetCommentList(dispatch) {
   const notify = useNotify()
@@ -41,14 +32,7 @@ export function useGetCommentList(dispatch) {
     }
 
     if (!ignoreHasMore && hasMoreRef.current[key] === false) {
-      return {
-        success: true,
-        data: {
-          commentList: [],
-          cursor: cursorRef.current[key] ?? null,
-          hasMore: false,
-        },
-      }
+      return buildEmptyCommentPage(cursorRef.current[key] ?? null)
     }
 
     const response = await runRequest((signal) =>
@@ -67,8 +51,8 @@ export function useGetCommentList(dispatch) {
 
     const data = response.data || {}
     const comments = resolveCommentItems(data).map(commentModel)
-    const nextCursor = data?.cursor ?? data?.nextCursor ?? data?.pagination?.cursor ?? null
-    const hasMore = resolveHasMore(data, nextCursor, comments)
+    const nextCursor = resolveCommentCursor(data)
+    const hasMore = resolveCommentHasMore(data, nextCursor, comments)
     const topLevelCommentIds = comments
       .filter((comment) => comment?.id != null && !comment?.parentCommentId)
       .map((comment) => comment.id)
@@ -84,17 +68,7 @@ export function useGetCommentList(dispatch) {
       dispatch(commentActions.addPostCommentIndex(key, topLevelCommentIds))
     }
 
-    const subCommentsMap = comments.reduce((result, comment) => {
-      const parentCommentId = comment?.parentCommentId
-      if (!parentCommentId || comment?.id == null) return result
-
-      if (!Array.isArray(result[parentCommentId])) {
-        result[parentCommentId] = []
-      }
-
-      result[parentCommentId].push(comment.id)
-      return result
-    }, {})
+    const subCommentsMap = buildSubCommentsMap(comments)
 
     Object.entries(subCommentsMap).forEach(([parentCommentId, commentIds]) => {
       if (refresh) {

@@ -25,7 +25,6 @@ const buildCreatePayload = (data = {}, uploadSessionId = null) => {
   if (uploadSessionId) payload.uploadSessionId = uploadSessionId
   if (data?.parentCommentId != null) payload.parentCommentId = data.parentCommentId
 
-  console.log(payload)
   return payload
 }
 

@@ -1,9 +1,11 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useInfiniteScroll from "../../../../../../hooks/useInfiniteScroll";
 import { usePostContext } from "../../../../hooks";
 import {
+  countCommentBranch,
   findCommentByIdInTree,
   mergeCommentPage,
+  removeCommentFromTree,
   updateCommentReactionInTree,
 } from "../../utils/comment.utils";
 import {
@@ -19,6 +21,7 @@ const LOAD_MORE_ROOT_MARGIN = "120px";
 export function useCommentReplies({
   comment,
   currentUser,
+  onDelete,
   onReact,
   onReply,
 }) {
@@ -52,6 +55,14 @@ export function useCommentReplies({
 
     return replyItems.slice(0, DEFAULT_VISIBLE_REPLY_COUNT);
   }, [replyItems, showAllReplies]);
+
+  useEffect(() => {
+    if (!hasViewedReplies) {
+      return;
+    }
+
+    setShowRepliesEmptyState(replyItems.length === 0);
+  }, [hasViewedReplies, replyItems.length]);
 
   const syncCreatedReply = useCallback(
     (createdComment, targetParentId) => {
@@ -251,6 +262,49 @@ export function useCommentReplies({
     [loadedReplies, onReact]
   );
 
+  const handleDelete = useCallback(async (targetComment, options = {}) => {
+    const commentId = targetComment?.id ?? null;
+    if (commentId == null) {
+      return { success: false };
+    }
+
+    const loadedRepliesResult = Array.isArray(loadedReplies)
+      ? removeCommentFromTree(loadedReplies, commentId)
+      : { comments: loadedReplies, removedCount: 0 };
+
+    const removedCountHint = Math.max(
+      1,
+      Number(options?.removedCountHint) || loadedRepliesResult.removedCount || countCommentBranch(targetComment) || 1
+    );
+
+    if (typeof onDelete !== "function") {
+      if (loadedRepliesResult.removedCount > 0) {
+        setLoadedReplies(loadedRepliesResult.comments);
+      }
+
+      return {
+        success: true,
+        data: {
+          removedCount: removedCountHint,
+        },
+      };
+    }
+
+    const response = await onDelete(targetComment, {
+      removedCountHint,
+    });
+
+    if (response?.success === false) {
+      return response;
+    }
+
+    if (loadedRepliesResult.removedCount > 0) {
+      setLoadedReplies(loadedRepliesResult.comments);
+    }
+
+    return response;
+  }, [loadedReplies, onDelete]);
+
   const repliesLoadMoreRef = useInfiniteScroll({
     hasMore:
       hasViewedReplies &&
@@ -281,6 +335,7 @@ export function useCommentReplies({
 
   return {
     handleReact,
+    handleDelete,
     handleReply,
     handleViewReplies,
     hasMoreReplies,

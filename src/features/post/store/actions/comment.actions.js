@@ -26,6 +26,14 @@ export const commentActions = {
     )
   ),
 
+  removeComment: (id) => (
+    createAction(
+      CLASS_TYPE.COMMENT,
+      COMMENT.REMOVE_COMMENT_BY_ID,
+      { id }
+    )
+  ),
+
   setPostCommentIndex: (postId, commentIds = []) => (
     createAction(
       CLASS_TYPE.COMMENT,

@@ -12,6 +12,7 @@ const sx = style.block;
 export default function CommentBlockBubble({
   comment,
   currentUser,
+  isDeleting = false,
   isEditing = false,
   onCancelEdit,
   onDelete,
@@ -24,6 +25,7 @@ export default function CommentBlockBubble({
         author={comment.author}
         canManage={comment.meta?.isOwner}
         createdLabel={comment.meta?.createdLabel}
+        deleteLoading={isDeleting}
         onDelete={onDelete}
         onEdit={onEdit}
       />

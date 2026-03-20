@@ -1,12 +1,16 @@
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { CircularProgress, IconButton, Menu, MenuItem } from "@mui/material";
 import { useState } from "react";
 import { commentText } from "../../../../../../constant/text/vi/post/comment.text";
 import { style } from "../style";
 
 const sx = style.block;
 
-export default function CommentBlockMenu({ onDelete, onEdit }) {
+export default function CommentBlockMenu({
+  deleteLoading = false,
+  onDelete,
+  onEdit,
+}) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -20,6 +24,7 @@ export default function CommentBlockMenu({ onDelete, onEdit }) {
         aria-controls={open ? "comment-block-menu" : undefined}
         aria-expanded={open ? "true" : undefined}
         aria-haspopup="true"
+        disabled={deleteLoading}
         onClick={(event) => setAnchorEl(event.currentTarget)}
         sx={sx.menuButton}
       >
@@ -53,6 +58,7 @@ export default function CommentBlockMenu({ onDelete, onEdit }) {
         }}
       >
         <MenuItem
+          disabled={deleteLoading}
           onClick={() => {
             onEdit?.();
             handleClose();
@@ -60,14 +66,19 @@ export default function CommentBlockMenu({ onDelete, onEdit }) {
         >
           {commentText.actionEdit}
         </MenuItem>
-        <MenuItem
-          onClick={() => {
-            onDelete?.();
-            handleClose();
-          }}
-        >
-          {commentText.actionDelete}
-        </MenuItem>
+
+        {typeof onDelete === "function" ? (
+          <MenuItem
+            disabled={deleteLoading}
+            onClick={async () => {
+              await onDelete?.();
+              handleClose();
+            }}
+          >
+            {deleteLoading ? <CircularProgress color="inherit" size={14} sx={{ mr: 1 }} /> : null}
+            {deleteLoading ? commentText.actionDeleting : commentText.actionDelete}
+          </MenuItem>
+        ) : null}
       </Menu>
     </>
   );

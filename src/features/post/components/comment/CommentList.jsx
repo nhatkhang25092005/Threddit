@@ -85,7 +85,7 @@ export default function CommentList({
       {!thread.isLoading && thread.isEmpty ? <CommentEmptyState /> : null}
 
       {!thread.isLoading && thread.comments.length > 0 ? (
-        <Box sx={sx.threadScroll}>
+        <Box data-comment-thread-scroll="true" sx={sx.threadScroll}>
           <Box sx={sx.threadList}>
             {thread.comments.map((comment) => (
               <CommentBlock

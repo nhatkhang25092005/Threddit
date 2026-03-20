@@ -81,7 +81,7 @@ export function useShareActionsPost(dispatch, postById = {}) {
       dispatch(loadingAction.setPostShareLoading(id, false))
       pendingRef.current.delete(id)
     }
-  }, [dispatch, notify])
+  }, [dispatch, notify, profileUsername])
 
   const sharePost = useCallback(
     (id, payload = {}) => toggleSharePost(id, false, payload),

@@ -10,4 +10,10 @@ export const commentService = {
 
   createComment: async (postId, payload) =>
     handleRequest(() => commentApi.createComment(postId, payload)),
+
+  updateComment: async (commentId, payload) =>
+    handleRequest(() => commentApi.updateComment(commentId, payload)),
+
+  deleteComment: async (commentId) =>
+    handleRequest(() => commentApi.deleteComment(commentId)),
 };

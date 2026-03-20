@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { usePostContext } from "../../../../hooks";
-import { buildDetailPostModalData } from "../utils/detailPostModal.utils";
 
 export function useDetailPostModalData(postId) {
   const {

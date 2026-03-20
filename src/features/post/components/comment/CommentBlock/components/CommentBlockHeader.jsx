@@ -9,6 +9,7 @@ export default function CommentBlockHeader({
   author,
   canManage,
   createdLabel,
+  deleteLoading,
   onDelete,
   onEdit,
 }) {
@@ -24,7 +25,13 @@ export default function CommentBlockHeader({
         <Typography sx={sx.time}>{createdLabel}</Typography>
       </Box>
 
-      {canManage ? <CommentBlockMenu onDelete={onDelete} onEdit={onEdit} /> : null}
+      {canManage ? (
+        <CommentBlockMenu
+          deleteLoading={deleteLoading}
+          onDelete={onDelete}
+          onEdit={onEdit}
+        />
+      ) : null}
     </Box>
   );
 }

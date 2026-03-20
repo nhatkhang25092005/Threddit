@@ -85,7 +85,6 @@ export const storageService = {
     }
 
     const requestResponse = await storageService.updateMediaUpload(contentId, mediaList.length)
-
     if (!requestResponse?.success) return requestResponse
 
     const uploadSessionId = requestResponse?.data?.uploadSessionId || null

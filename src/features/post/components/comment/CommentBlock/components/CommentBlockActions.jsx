@@ -50,11 +50,6 @@ export default function CommentBlockActions({
         </ButtonBase>
       ) : null}
 
-      {comment.meta?.isEdited ? (
-        <Typography component="span" sx={sx.editedLabel}>
-          {commentText.editedLabel}
-        </Typography>
-      ) : null}
     </Box>
   );
 }

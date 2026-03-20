@@ -40,7 +40,7 @@ export function usePostPinActions(dispatch) {
     finally{
       pendingRef.current.delete(id)
     }
-  }, [dispatch, notify])
+  }, [dispatch, notify, profileUsername])
 
   const pinPost = useCallback((id) => handlePinAction(id, true), [handlePinAction])
   const unpinPost = useCallback((id) => handlePinAction(id, false), [handlePinAction])
