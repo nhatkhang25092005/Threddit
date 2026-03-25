@@ -7,6 +7,7 @@ import EditPinnedStoryButton from './EditPinnedStoryButton'
 import { useHorizontalScroll } from './hooks/useHorizontalScroll'
 import { style } from './style'
 import { usePostContext } from '../../hooks'
+import { story } from '../../../../constant/text/vi/story'
 import useAuth from '../../../../core/auth/useAuth'
 import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -30,11 +31,11 @@ export default function PinnedStoryContainer() {
   const { scrollRef, canScrollLeft, canScrollRight, scrollStories } = useHorizontalScroll(99.2, 10.4)
   return (
     <Surface sx={sx.surface} >
-      <Typography variant="title" sx={sx.title}>Tin nổi bật</Typography>
+      <Typography variant="title" sx={sx.title}>{story.pinnedSection.title}</Typography>
 
       <Box sx={sx.wrapper}>
         <IconButton
-          aria-label="Previous stories"
+          aria-label={story.pinnedSection.previousAriaLabel}
           onClick={() => scrollStories('left')}
           disabled={!canScrollLeft}
           sx={sx.iconButton('left')}
@@ -43,7 +44,7 @@ export default function PinnedStoryContainer() {
         </IconButton>
 
         <IconButton
-          aria-label="Next stories"
+          aria-label={story.pinnedSection.nextAriaLabel}
           onClick={() => scrollStories('right')}
           disabled={!canScrollRight}
           sx={sx.iconButton('right')}

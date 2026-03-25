@@ -91,9 +91,9 @@ export const style = {
       transform:'translateY(-50%)',
       width:'2.25rem',
       height:'2.25rem',
-      backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#3A3B3C' : '#E4E6EB',
+      backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#182334' : '#E4E6EB',
       '&:hover':{
-        backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#4E4F50' : '#D8DADF'
+        backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#475569' : '#D8DADF'
       }
     },
     closeIcon:{
@@ -101,7 +101,7 @@ export const style = {
       color:(theme)=>theme.palette.mode === 'dark' ? '#E4E6EB' : '#1C1E21'
     },
     divider:{
-      borderColor:(theme)=>theme.palette.mode === 'dark' ? '#3E4042' : '#DADDE1'
+      borderColor:(theme)=>theme.palette.mode === 'dark' ? '#243041' : '#DADDE1'
     },
     body:{
       padding:'1rem',
@@ -146,16 +146,16 @@ export const style = {
       minWidth:'unset',
       borderRadius:'0.45rem',
       padding:'0.15rem 0.45rem',
-      color:(theme)=>theme.palette.mode === 'dark' ? '#E4E6EB' : '#050505',
-      backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#3A3B3C' : '#E4E6EB',
+      color:(theme)=>theme.palette.mode === 'dark' ? '#E4E6EB' : '#071120',
+      backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#182334' : '#E4E6EB',
       border:'1px solid',
-      borderColor:(theme)=>theme.palette.mode === 'dark' ? '#4E4F50' : '#DADDE1',
+      borderColor:(theme)=>theme.palette.mode === 'dark' ? '#475569' : '#DADDE1',
       fontWeight:600,
       fontSize:'0.75rem',
       lineHeight:1.2,
       textTransform:'none',
       '&:hover':{
-        backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#4E4F50' : '#D8DADF'
+        backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#475569' : '#D8DADF'
       },
       '& .MuiButton-startIcon, & .MuiButton-endIcon':{
         margin:0
@@ -188,7 +188,7 @@ export const style = {
       fontSize: isHaveImage ? '1.0rem' : '1.5rem',
       lineHeight:1.35,
       '&::placeholder':{
-        color:(theme)=>theme.palette.mode === 'dark' ? '#B0B3B8' : '#65676B',
+        color:(theme)=>theme.palette.mode === 'dark' ? '#94A3B8' : '#64748B',
         opacity:1
       },
       '&::-webkit-scrollbar':{
@@ -196,7 +196,7 @@ export const style = {
       },
       '&::-webkit-scrollbar-thumb':{
         borderRadius:'999rem',
-        backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#4E4F50' : '#CED0D4'
+        backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#475569' : '#CED0D4'
       }
     }),
     addToPostContainer:{
@@ -206,7 +206,7 @@ export const style = {
       gap:'0.75rem',
       padding:'0.4rem 0.65rem',
       border:'1px solid',
-      borderColor:(theme)=>theme.palette.mode === 'dark' ? '#3E4042' : '#DADDE1',
+      borderColor:(theme)=>theme.palette.mode === 'dark' ? '#243041' : '#DADDE1',
       borderRadius:'0.65rem',
       boxShadow:(theme)=>theme.palette.mode === 'dark'
         ? '0 1px 2px rgba(255,255,255,0.05)'
@@ -234,11 +234,11 @@ export const style = {
       borderRadius:'0.8rem',
       zIndex:1400,
       border:'1px solid',
-      borderColor:(theme)=>theme.palette.mode === 'dark' ? '#3E4042' : '#DADDE1',
+      borderColor:(theme)=>theme.palette.mode === 'dark' ? '#243041' : '#DADDE1',
       boxShadow:(theme)=>theme.palette.mode === 'dark'
         ? '0 10px 28px rgba(0,0,0,0.45)'
         : '0 10px 28px rgba(0,0,0,0.14)',
-      backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#242526' : '#ffffff',
+      backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#131F31' : '#ffffff',
       overflow:'visible'
     },
     emojiPicker:{
@@ -263,7 +263,7 @@ export const style = {
       height:'2rem',
       borderRadius:'0.45rem',
       '&:hover':{
-        backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#3A3B3C' : '#F2F3F5'
+        backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#182334' : '#F2F3F5'
       }
     },
     emojiChar:{
@@ -275,19 +275,19 @@ export const style = {
       fontSize:'1.35rem'
     },
     tagIcon:{
-      color:'#1877F2',
+      color:'#3B82F6',
       fontSize:'1.35rem'
     },
     locationIcon:{
-      color:'#F5533D',
+      color:'#22C55E',
       fontSize:'1.35rem'
     },
     gifIcon:{
-      color:'#8E44FF',
+      color:'#00F2FF',
       fontSize:'1.35rem'
     },
     moreIcon:{
-      color:(theme)=>theme.palette.mode === 'dark' ? '#B0B3B8' : '#65676B',
+      color:(theme)=>theme.palette.mode === 'dark' ? '#94A3B8' : '#64748B',
       fontSize:'1.35rem'
     },
     submitButton:{
@@ -310,7 +310,7 @@ export const style = {
       mt: "0.75rem",
       border: "1px solid",
       borderColor: (theme) =>
-        theme.palette.mode === "dark" ? "#3E4042" : "#DADDE1",
+        theme.palette.mode === "dark" ? "#243041" : "#DADDE1",
     }
   },
   post: {
@@ -360,7 +360,7 @@ export const style = {
       display: "flex",
       alignItems: "center",
       gap: "0.35rem",
-      color: (theme) => (theme.palette.mode === "dark" ? "#B0B3B8" : "#65676B"),
+      color: (theme) => (theme.palette.mode === "dark" ? "#94A3B8" : "#64748B"),
       fontSize: "0.78rem",
       lineHeight: 1.1,
     },
@@ -377,9 +377,9 @@ export const style = {
       mb: "1rem",
 
       border: "1px solid",
-      borderColor: (theme) => (theme.palette.mode === "dark" ? "#3E4042" : "#DADDE1"),
+      borderColor: (theme) => (theme.palette.mode === "dark" ? "#243041" : "#DADDE1"),
       borderRadius: "0.75rem",
-      backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#18191A" : "#FFFFFF"),
+      backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#0B121E" : "#FFFFFF"),
     },
     sharedCardBody: {
       pb: "0.3rem",
@@ -387,13 +387,16 @@ export const style = {
     sharedUnavailable: {
       py: "0.9rem",
       fontSize: "0.86rem",
-      color: (theme) => (theme.palette.mode === "dark" ? "#B0B3B8" : "#65676B"),
+      color: (theme) => (theme.palette.mode === "dark" ? "#94A3B8" : "#64748B"),
     },
     media:{
       mediaBlock: {
         width: "100%",
         my: "0.2rem",
         overflow: "hidden",
+      },
+      singleVideoBlock: {
+        backgroundColor: "#000000",
       },
       mediaGrid: (count) => ({
         width: "100%",
@@ -409,6 +412,12 @@ export const style = {
               md: "12rem",
             },
       }),
+      singleVideoGrid: {
+        width: "100%",
+        display: "grid",
+        justifyItems: "center",
+        backgroundColor: "#000000",
+      },
       videoPlayOverlay:{
         position:'absolute',
         top:'50%',
@@ -444,6 +453,17 @@ export const style = {
             }
           : {}),
       }),
+      singleVideoTile: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        minHeight: {
+          xs: "15rem",
+          sm: "18rem",
+        },
+        backgroundColor: "#000000",
+      },
       mediaElement: {
         display: "block",
         width: "100%",
@@ -451,6 +471,16 @@ export const style = {
         objectFit: "cover",
         position:'relative',
         backgroundColor: "#000000",
+      },
+      singleVideoElement: {
+        width: "100%",
+        height: "auto",
+        maxHeight: {
+          xs: "65vh",
+          sm: "32rem",
+          md: "36rem",
+        },
+        objectFit: "contain",
       },
       mediaMoreOverlay: {
         position: "absolute",
@@ -495,7 +525,7 @@ export const style = {
       display: "flex",
       alignItems: "center",
       justifyContent: "space-between",
-      color: (theme) => (theme.palette.mode === "dark" ? "#B0B3B8" : "#65676B"),
+      color: (theme) => (theme.palette.mode === "dark" ? "#94A3B8" : "#64748B"),
       fontSize: "0.86rem",
     },
     reactWrap: {
@@ -505,7 +535,7 @@ export const style = {
     },
     reactIcon: {
       fontSize: "1rem",
-      color: "#1877F2",
+      color: "#3B82F6",
     },
     statsRight: {
       display: "flex",
@@ -534,7 +564,7 @@ export const style = {
       borderRadius:'0.95rem',
       overflow:'hidden',
       border:'1px solid',
-      borderColor:(theme)=>theme.palette.mode === 'dark' ? '#3E4042' : '#DADDE1',
+      borderColor:(theme)=>theme.palette.mode === 'dark' ? '#243041' : '#DADDE1',
       background:(theme)=>theme.palette.mode === 'dark'
         ? 'linear-gradient(140deg, #1C1D21 0%, #25272B 100%)'
         : 'linear-gradient(140deg, #FFFFFF 0%, #F7F9FC 100%)',
@@ -688,7 +718,7 @@ export const style = {
     actionRow:{
       mt:'0.75rem',
       borderTop:'1px solid',
-      borderColor:(theme)=>theme.palette.mode === 'dark' ? '#3A3F46' : '#E3E7EE',
+      borderColor:(theme)=>theme.palette.mode === 'dark' ? '#243041' : '#E3E7EE',
       pt:'0.65rem',
       display:'grid',
       gridTemplateColumns:'repeat(3, minmax(0, 1fr))',
@@ -729,7 +759,7 @@ export const style = {
       overflow:'hidden',
       borderRadius:'0.4rem',
       border:'1px solid',
-      borderColor:(theme)=>theme.palette.mode === 'dark' ? '#3A3F46' : '#D7DEE8',
+      borderColor:(theme)=>theme.palette.mode === 'dark' ? '#243041' : '#D7DEE8',
       background:(theme)=>theme.palette.mode === 'dark'
         ? 'linear-gradient(140deg, #1B1E22 0%, #23272D 100%)'
         : 'linear-gradient(140deg, #FFFFFF 0%, #F4F8FD 100%)',
@@ -842,7 +872,7 @@ export const style = {
         sm:'0.95rem'
       },
       lineHeight:1.5,
-      color:(theme)=>theme.palette.mode === 'dark' ? '#AEB9C8' : '#5A6B80'
+      color:(theme)=>theme.palette.mode === 'dark' ? '#AEB9C8' : '#64748B'
     }
   }
 }

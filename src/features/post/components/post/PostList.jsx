@@ -1,6 +1,7 @@
 import { Box, Button } from "@mui/material";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigationType } from "react-router-dom";
+import { post } from "../../../../constant/text/vi/post/post";
 import useAuth from "../../../../core/auth/useAuth";
 import useInfiniteScroll from "../../../../hooks/useInfiniteScroll";
 import { usePostContext } from "../../hooks/usePostContext";
@@ -15,14 +16,14 @@ const VARIANT_CONFIG = {
     fetch: (actions, username) => actions.getPostList(username),
     hasMore: (selector, username) => selector.post.getUserPostListHasMore(username),
     loading: (selector) => selector.loading.getUserPostFetchingLoading(),
-    emptyMessage: "Người dùng này chưa có bài viết nào",
+    emptyMessage: post.list.userEmpty,
   },
   savedPost: {
     selectPost: (selector) => selector.post.getSavedPostList(),
     fetch: (actions) => actions.getSavedPostList(),
     hasMore: (selector) => selector.post.getSavedPostListHasMore(),
     loading: (selector) => selector.loading.getSavedPostFetchingLoading(),
-    emptyMessage: "Bạn chưa lưu bài viết nào",
+    emptyMessage: post.list.savedEmpty,
   },
 };
 
@@ -112,7 +113,7 @@ export default function PostList({ variant = "userPost" }) {
             onClick={() => config.fetch(actions, profileUsername)}
             variant="secondary"
           >
-            Tải thêm
+            {post.list.loadMore}
           </Button>
         </Box>
       )}

@@ -2,6 +2,42 @@ import { itemModel } from '../models/item.model'
 import {LOADING} from '../type'
 export const loadingHandlers = (state, action) => {
   switch (action.type){
+    case LOADING.GET_FEED_LIST:
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          global: {
+            ...state.loading.global,
+            getFeeds: Boolean(action.payload)
+          }
+        }
+      }
+
+    case LOADING.GET_REEL_LIST:
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          global: {
+            ...state.loading.global,
+            getReels: Boolean(action.payload)
+          }
+        }
+      }
+
+    case LOADING.GET_SEARCH_LIST:
+      return {
+        ...state,
+        loading: {
+          ...state.loading,
+          global: {
+            ...state.loading.global,
+            getSearch: Boolean(action.payload)
+          }
+        }
+      }
+
     case LOADING.GET_POST_LIST:
       return{
         ...state,

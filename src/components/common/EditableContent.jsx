@@ -3,6 +3,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { CircularProgress } from "@mui/material";
 import { useRef, useState, useEffect } from "react";
+import { common } from "../../constant/text/vi/common.text";
 import Mention from "./Mention";
 import useInfiniteScroll from "../../hooks/useInfiniteScroll";
 import { handleGetFollowersListRequest } from "../../services/request/followRequest";
@@ -207,7 +208,7 @@ export default function EditableContent({
                 sx={{display:"block",margin:"0 auto"}}
                 onClick={() => {setIsExpanded(!isExpanded)}}
             >
-                {isExpanded ? 'Thu gọn ▲' : 'Xem thêm ▼'}
+                {isExpanded ? common.expandableContent.collapse : common.expandableContent.expand}
             </Button>}
         </Box>
     );

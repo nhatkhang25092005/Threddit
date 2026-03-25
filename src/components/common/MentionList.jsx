@@ -11,7 +11,7 @@ export default function MentionList({ items, onSelect }) {
         left: 0,
         width: "100%",
         background: "#1a1a1a",
-        border: "1px solid #333",
+        border: "1px solid #243041",
         borderRadius: "6px",
         zIndex: 1200,
         maxHeight: "200px",
@@ -27,7 +27,7 @@ export default function MentionList({ items, onSelect }) {
             py: 1,
             cursor: "pointer",
             color: "#fff",
-            "&:hover": { backgroundColor: "#333" }
+            "&:hover": { backgroundColor: "#243041" }
           }}
         >
           {u.username}

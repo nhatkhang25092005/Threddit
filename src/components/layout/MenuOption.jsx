@@ -59,7 +59,7 @@ export default function PostMenu({ options = [], iconColor = "#fff" }) {
               justifyContent: "space-between",
               borderBottom:
                 index !== options.length - 1
-                  ? "1px solid #333"
+                  ? "1px solid #243041"
                   : "none",
             }}
           >

@@ -7,11 +7,12 @@ import {
   USERNAME_STYLE
 } from './style'
 import {Box, Avatar} from '@mui/material'
+import { createPortal } from 'react-dom'
 
 export default function MentionOverlay({ open, anchor, users, activeIndex, onPick }) {
-  if (!open || users.length === 0) return null;
+  if (!open || users.length === 0 || typeof document === "undefined") return null;
 
-  return (
+  return createPortal((
     <div style={{ ...OVERLAY_BASE_STYLE, top: anchor.top, left: anchor.left }}>
       {users.map((user, index) => {
         const isActive = index === activeIndex;
@@ -49,5 +50,5 @@ export default function MentionOverlay({ open, anchor, users, activeIndex, onPic
         );
       })}
     </div>
-  );
+  ), document.body);
 }

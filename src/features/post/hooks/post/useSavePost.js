@@ -1,6 +1,7 @@
 import { useCallback, useRef } from "react";
 import { useNotify } from "../../../../hooks/useNotify";
 import { modal } from "../../../../constant/text/vi/modal";
+import { post } from "../../../../constant/text/vi/post/post";
 import { postService } from "../../services/post.service";
 import { loadingAction, postByIdActions, savedPostActions } from "../../store/actions";
 
@@ -19,7 +20,7 @@ export function useSavePost(dispatch){
     try {
       const res = await notify.withLoading(
         () => postService.savePost(id),
-        (bool) => notify.snackbarLoading('Đang lưu bài viết...', bool)
+        (bool) => notify.snackbarLoading(post.loading.save, bool)
       )
       if (!res?.success) {
         notify.popup(modal.title.error, res?.message)
@@ -51,7 +52,7 @@ export function useSavePost(dispatch){
     try {
       const res = await notify.withLoading(
         () => postService.unsavePost(id),
-        (bool) => notify.snackbarLoading('Đang bỏ lưu bài viết...', bool)
+        (bool) => notify.snackbarLoading(post.loading.unsave, bool)
       )
       if (!res?.success) {
         notify.popup(modal.title.error, res?.message)

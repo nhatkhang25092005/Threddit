@@ -1,6 +1,7 @@
 import { useGetBlockStatus } from "./useGetBlockStatus";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { block } from "../../../constant/text/vi/block.text";
 import { useNotify } from "../../../hooks/useNotify";
 import { modal } from "../../../constant/text/vi/modal";
 import useAuth from '../../auth/useAuth'
@@ -14,7 +15,7 @@ export function useCanNavigateToUser(){
     if(isOwnerByUsername(username)) return navigate(`${baseUrl}/${username}`)
     const isBlocked = await getBlockStatus(username)
     if(isBlocked){
-      notify.popup(modal.title.notification, 'Bạn đã chặn người dùng này. Vui lòng gỡ chặn để truy cập')
+      notify.popup(modal.title.notification, block.navigatePopup)
       return
     }
     else navigate(`${baseUrl}/${username}`)

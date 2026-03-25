@@ -1,262 +1,304 @@
-const BASE = {
-  black:'#0A0B0B',
-  white: '#ffffff',
-  gray: {
-    100: '#f5f5f5',
-    300: '#9c9c9c',
-    500: '#6b6b6b'
-  }
-}
+export const APP_PALETTE = {
+  page: "#071120",
+  screen: "#0F1723",
+  screenAlt: "#0B121E",
+  header: "rgba(10, 18, 30, 0.82)",
+  panel: "#131F31",
+  panelAlt: "#182334",
+  border: "#243041",
+  borderSoft: "rgba(51, 65, 85, 0.55)",
+  text: "#FFFFFF",
+  muted: "#94A3B8",
+  subtle: "#64748B",
+  faint: "#475569",
+  primary: "#3B82F6",
+  primarySoft: "rgba(59, 130, 246, 0.16)",
+  cyan: "#00F2FF",
+  success: "#22C55E",
+  white: "#FFFFFF",
+  black: "#000000",
+};
+
+const SHARED_SHADOW = {
+  soft: "rgba(0, 0, 0, 0.24)",
+  medium: "rgba(0, 0, 0, 0.34)",
+  strong: "rgba(0, 0, 0, 0.46)",
+};
+
+const SHARED_MODE = {
+  screen: APP_PALETTE.screen,
+  paper: APP_PALETTE.panel,
+  elevated: APP_PALETTE.panelAlt,
+  text: APP_PALETTE.text,
+  muted: APP_PALETTE.muted,
+  subtle: APP_PALETTE.subtle,
+  border: APP_PALETTE.border,
+  borderSoft: APP_PALETTE.borderSoft,
+  primary: APP_PALETTE.primary,
+  primarySoft: APP_PALETTE.primarySoft,
+  cyan: APP_PALETTE.cyan,
+  success: APP_PALETTE.success,
+};
 
 export const COLOR = {
-  background:{
-    surface:{
-      default:{
-        dark:{
-          bg:'rgba(255,255,255,0.2)',
-          shadow:'rgba(255, 255, 255, 0.4)'
-        },
-        light:{
-          bg:'rgba(0, 0, 0, 0.1)',
-          shadow:'rgba(58, 58, 58, 0.4)',
-        }
-      },
-      auth:{
-        dark:'rgba(255,255,255,0.2)',
-        light:'rgba(156, 156, 156, 0.4)'
-      },
-      menu:{
-        default:{
-          dark:BASE.black,
-          light:BASE.light
-        }
-      },
-      navigate:{
-        dark:'rgba(255,255,255,0.2)',
-        light:'#dfdfdfff'
-      },
-      modal:{
-        dark:'#4a4e4e',
-        light:'#FAFAFA'
-      },
+  app: APP_PALETTE,
+  background: {
+    main: {
+      dark: APP_PALETTE.page,
+      light: APP_PALETTE.page,
     },
-    main:{
-      dark:BASE.black,
-      light:BASE.white,
-    }
-  },
-  text:{
-    primary:{
-      dark:BASE.black,
-      light:BASE.white,
-    },
-    secondary:{
-      dark:BASE.black,
-      light:BASE.white,
-    },
-    placeholder:{
-      dark:'',
-      light:'',
-    }
-  },
-  button:{
-    primary:{
-      default:{
-        bg:{
-          dark:BASE.white,
-          light:BASE.black,
+    surface: {
+      default: {
+        dark: {
+          bg: SHARED_MODE.screen,
+          shadow: SHARED_SHADOW.soft,
         },
-        text:{
-          dark:BASE.black,
-          light:BASE.white,
-        },
-        shadow:{
-          dark:'rgba(0,0,0,0.25)',
-          light:'rgba(0, 0, 0, 0.18)'
+        light: {
+          bg: SHARED_MODE.screen,
+          shadow: SHARED_SHADOW.soft,
         },
       },
-      disable:{
-        bg:{
-          dark:'#9a9a9aff',
-          light:'#464646ff'
+      auth: {
+        dark: SHARED_MODE.screen,
+        light: SHARED_MODE.screen,
+      },
+      menu: {
+        default: {
+          dark: SHARED_MODE.paper,
+          light: SHARED_MODE.paper,
         },
-        text:{
-          dark:'#121212ff',
-          light:'#c6c6c6ff'
+      },
+      navigate: {
+        dark: APP_PALETTE.header,
+        light: APP_PALETTE.header,
+      },
+      modal: {
+        dark: SHARED_MODE.paper,
+        light: SHARED_MODE.paper,
+      },
+    },
+  },
+  text: {
+    primary: {
+      dark: SHARED_MODE.text,
+      light: SHARED_MODE.text,
+    },
+    secondary: {
+      dark: SHARED_MODE.muted,
+      light: SHARED_MODE.muted,
+    },
+    placeholder: {
+      dark: SHARED_MODE.subtle,
+      light: SHARED_MODE.subtle,
+    },
+  },
+  button: {
+    primary: {
+      default: {
+        bg: {
+          dark: SHARED_MODE.primary,
+          light: SHARED_MODE.primary,
         },
-        shadow:{
-          dark:'rgba(0,0,0,0.25)',
-          light:'rgba(0, 0, 0, 0.18)'
-        }
-      },
-    },
-    secondary:{
-      bg:{
-        dark:'#686868',
-        light:'#969696'
-      },
-      text:{
-        dark:'#ffffff',
-        light:'#000000'
-      },
-      shadow:{
-        dark:'rgba(0,0,0,0.25)',
-        light:'rgba(0, 0, 0, 0.18)'
-      },
-      hover:{
-        bg:{
-          dark:'#949494',
-          light:'#d6d6d6'
-        }
-      }
-    },
-    google:{
-      bg:BASE.white,
-      shadow:{
-        dark:BASE.black,
-        light:'#757575ff'
-      },
-      border:{
-        dark:'#676767ff',
-        light:'#c2c2c2ff'
-      },
-      hover:'#cacacaff'
-    },
-    warning:{
-      dark:{
-        bg:'#FF7A7A',
-        shadow:'#000000',
-        text:'#383838ff'
-      },
-      light:{
-        bg:'#ff6c6cff',
-        shadow:'#787878ff',
-        text:'#ffffffff'
-      }
-    },
-    dialog:{
-        bg:{
-          dark:'rgba(0,0,0,0.2)',
-          light:'rgba(0, 0, 0, 0.05)'
-        }
-    },
-    outline:{
-      bg:{
-        dark:'#222222',
-        light:'#eae9e9'
-      },
-      border:{
-        dark:'#fff',
-        light:'#767676'
-      }
-    }
-  },
-  textfield:{
-    border:{
-      default:{
-        dark:'#C5C5C5',
-        light:'#676767ff'
-      },
-      after:{
-        dark:BASE.white,
-        light:BASE.black
-      },
-      focus:{
-        dark:BASE.white,
-        light:BASE.black
-      },
-      error:{},
-      hover:{},
-      disable:{}
-    },
-    background:{
-      default:{},
-      focus:{}
-    },
-    text:{
-      value:{dark:{},light:{}},
-      placeholder:{
-        dark:BASE.WHITE,
-        light:BASE.BLACK
-      },
-      label:{
-        default:{
-          dark:'#C5C5C5',
-          light:'#676767ff'
+        text: {
+          dark: SHARED_MODE.text,
+          light: SHARED_MODE.text,
         },
-        focus:{
-          dark:BASE.white,
-          light:BASE.black
-        }
-      }
-    }
-  },
-  link:{
-    primary:{
-      default:{
-        dark:BASE.white,
-        light:BASE.black
+        shadow: {
+          dark: SHARED_SHADOW.soft,
+          light: SHARED_SHADOW.soft,
+        },
       },
-      hover:{
-        dark:'#7deeffff',
-        light:'#7738ffff'
-      }
-    },
-    secondary:{
-      default:{
-        dark:'#62e2ffff',
-        light:'#00b7e0ff'
+      disable: {
+        bg: {
+          dark: SHARED_MODE.border,
+          light: SHARED_MODE.border,
+        },
+        text: {
+          dark: SHARED_MODE.subtle,
+          light: SHARED_MODE.subtle,
+        },
+        shadow: {
+          dark: SHARED_SHADOW.soft,
+          light: SHARED_SHADOW.soft,
+        },
       },
-      hover:{
-        dark:'#00D0FF',
-        light:'#0499bbff'
-      }
-    }
-  },
-  divider:{
-    dark:BASE.white,
-    light:BASE.black
-  },
-  form_label:{
-    dark:BASE.white,
-    light:BASE.black
-  },
-  radio:{
-    dark:BASE.white,
-    light:BASE.black
-  },
-  shadow:{
-    menu:{
-      default:{
-        dark:BASE.black,
-        light:'#8e8e8eff'
-      }
     },
-    modal:{
-      dark:'rgba(0, 0, 0, 0.6)',
-      light:'rgba(0, 0, 0, 0.15)'
+    secondary: {
+      bg: {
+        dark: SHARED_MODE.elevated,
+        light: SHARED_MODE.elevated,
+      },
+      text: {
+        dark: SHARED_MODE.text,
+        light: SHARED_MODE.text,
+      },
+      shadow: {
+        dark: SHARED_SHADOW.soft,
+        light: SHARED_SHADOW.soft,
+      },
+      hover: {
+        bg: {
+          dark: SHARED_MODE.border,
+          light: SHARED_MODE.border,
+        },
+      },
     },
-    card:{
-      dark:BASE.black,
-      light:'#858585'
-    }
-  },
-  tabs:{
-    indicator:{
-      dark:BASE.white,
-      light:BASE.black
+    google: {
+      bg: SHARED_MODE.paper,
+      shadow: {
+        dark: SHARED_SHADOW.soft,
+        light: SHARED_SHADOW.soft,
+      },
+      border: {
+        dark: SHARED_MODE.border,
+        light: SHARED_MODE.border,
+      },
+      hover: SHARED_MODE.elevated,
     },
-    text:{
-      dark:BASE.white,
-      light:BASE.black
-    }
+    warning: {
+      dark: {
+        bg: SHARED_MODE.primary,
+        shadow: SHARED_SHADOW.soft,
+        text: SHARED_MODE.text,
+      },
+      light: {
+        bg: SHARED_MODE.primary,
+        shadow: SHARED_SHADOW.soft,
+        text: SHARED_MODE.text,
+      },
+    },
+    dialog: {
+      bg: {
+        dark: APP_PALETTE.header,
+        light: APP_PALETTE.header,
+      },
+    },
+    outline: {
+      bg: {
+        dark: "transparent",
+        light: "transparent",
+      },
+      border: {
+        dark: SHARED_MODE.border,
+        light: SHARED_MODE.border,
+      },
+    },
   },
-  border:{
-    surface:{
-      card:{
-        light:"#fff",
-        dark:'#727272'
-      }
-    }
-  }
-}
+  textfield: {
+    border: {
+      default: {
+        dark: SHARED_MODE.borderSoft,
+        light: SHARED_MODE.borderSoft,
+      },
+      after: {
+        dark: SHARED_MODE.primary,
+        light: SHARED_MODE.primary,
+      },
+      focus: {
+        dark: SHARED_MODE.primary,
+        light: SHARED_MODE.primary,
+      },
+      error: {},
+      hover: {},
+      disable: {},
+    },
+    background: {
+      default: {
+        dark: SHARED_MODE.screen,
+        light: SHARED_MODE.screen,
+      },
+      focus: {
+        dark: SHARED_MODE.paper,
+        light: SHARED_MODE.paper,
+      },
+    },
+    text: {
+      value: {
+        dark: SHARED_MODE.text,
+        light: SHARED_MODE.text,
+      },
+      placeholder: {
+        dark: SHARED_MODE.muted,
+        light: SHARED_MODE.muted,
+      },
+      label: {
+        default: {
+          dark: SHARED_MODE.muted,
+          light: SHARED_MODE.muted,
+        },
+        focus: {
+          dark: SHARED_MODE.primary,
+          light: SHARED_MODE.primary,
+        },
+      },
+    },
+  },
+  link: {
+    primary: {
+      default: {
+        dark: SHARED_MODE.text,
+        light: SHARED_MODE.text,
+      },
+      hover: {
+        dark: SHARED_MODE.primary,
+        light: SHARED_MODE.primary,
+      },
+    },
+    secondary: {
+      default: {
+        dark: SHARED_MODE.cyan,
+        light: SHARED_MODE.cyan,
+      },
+      hover: {
+        dark: SHARED_MODE.primary,
+        light: SHARED_MODE.primary,
+      },
+    },
+  },
+  divider: {
+    dark: SHARED_MODE.border,
+    light: SHARED_MODE.border,
+  },
+  form_label: {
+    dark: SHARED_MODE.text,
+    light: SHARED_MODE.text,
+  },
+  radio: {
+    dark: SHARED_MODE.primary,
+    light: SHARED_MODE.primary,
+  },
+  shadow: {
+    menu: {
+      default: {
+        dark: SHARED_SHADOW.medium,
+        light: SHARED_SHADOW.medium,
+      },
+    },
+    modal: {
+      dark: SHARED_SHADOW.strong,
+      light: SHARED_SHADOW.strong,
+    },
+    card: {
+      dark: SHARED_SHADOW.soft,
+      light: SHARED_SHADOW.soft,
+    },
+  },
+  tabs: {
+    indicator: {
+      dark: SHARED_MODE.primary,
+      light: SHARED_MODE.primary,
+    },
+    text: {
+      dark: SHARED_MODE.text,
+      light: SHARED_MODE.text,
+    },
+  },
+  border: {
+    surface: {
+      card: {
+        light: SHARED_MODE.border,
+        dark: SHARED_MODE.border,
+      },
+    },
+  },
+};

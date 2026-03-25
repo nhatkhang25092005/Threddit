@@ -24,5 +24,29 @@ export const hasMoreActions = {
       HAS_MORE.SET_SAVED_HAS_MORE,
       hasMore
     )
+  ),
+
+  setFeedHasMore:(hasMore) => (
+    createAction(
+      CLASS_TYPE.HAS_MORE,
+      HAS_MORE.SET_FEED_HAS_MORE,
+      hasMore
+    )
+  ),
+
+  setReelHasMore:(hasMore) => (
+    createAction(
+      CLASS_TYPE.HAS_MORE,
+      HAS_MORE.SET_REEL_HAS_MORE,
+      hasMore
+    )
+  ),
+
+  setSearchHasMore:(hasMore) => (
+    createAction(
+      CLASS_TYPE.HAS_MORE,
+      HAS_MORE.SET_SEARCH_HAS_MORE,
+      hasMore
+    )
   )
 }

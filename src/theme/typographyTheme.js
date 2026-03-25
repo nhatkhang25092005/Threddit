@@ -17,7 +17,7 @@ export const typographyTheme = {
     lineHeight: 1.25,
   },
   sub:{
-    color:"#BCBDBF",
+    color:"#94A3B8",
     fontFamily: APP_FONT_FAMILY,
   },
   normal:{

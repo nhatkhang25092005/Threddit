@@ -1,7 +1,7 @@
 import { alpha } from "@mui/material/styles";
 
-const DARK_BG = "#0A0B0B";
-const LIGHT_BG = "#F4F4F4";
+const DARK_BG = "#071120";
+const LIGHT_BG = "#0B121E";
 
 export const style = {
   shell: (theme) => ({
@@ -9,7 +9,7 @@ export const style = {
     minHeight: "100dvh",
     display: "flex",
     backgroundColor: theme.palette.mode === "dark" ? DARK_BG : LIGHT_BG,
-    color: theme.palette.mode === "dark" ? "#FFFFFF" : "#111111",
+    color: theme.palette.app.text,
     position: "relative",
     overflow: "hidden",
   }),
@@ -23,14 +23,11 @@ export const style = {
     bottom: "1rem",
     p: "0.9rem",
     borderRadius: "1rem",
-    border: `1px solid ${alpha(
-      theme.palette.mode === "dark" ? "#FFFFFF" : "#111111",
-      theme.palette.mode === "dark" ? 0.08 : 0.1
-    )}`,
+    border: `1px solid ${theme.palette.app.border}`,
     backgroundColor:
       theme.palette.mode === "dark"
-        ? "rgba(255,255,255,0.14)"
-        : "rgba(255,255,255,0.88)",
+        ? theme.palette.app.header
+        : theme.palette.app.header,
     backdropFilter: "blur(18px)",
     boxShadow:
       theme.palette.mode === "dark"
@@ -56,23 +53,6 @@ export const style = {
     p: expand ? "0.55rem 0.35rem" : "0.45rem 0.2rem",
   }),
 
-  brandLogoWrap: (theme) => ({
-    width: "3rem",
-    height: "3rem",
-    borderRadius: "1rem",
-    display: "grid",
-    placeItems: "center",
-    flexShrink: 0,
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? "rgba(255,255,255,0.9)"
-        : "rgba(17,17,17,0.92)",
-    boxShadow:
-      theme.palette.mode === "dark"
-        ? "0 10px 25px rgba(0,0,0,0.18)"
-        : "0 10px 25px rgba(0,0,0,0.12)",
-  }),
-
   logo: {
     marginTop: 0,
     width: "2rem",
@@ -92,8 +72,8 @@ export const style = {
     fontWeight: 600,
     color:
       theme.palette.mode === "dark"
-        ? "rgba(255,255,255,0.65)"
-        : "rgba(17,17,17,0.55)",
+        ? theme.palette.app.muted
+        : theme.palette.app.muted,
   }),
 
   navSection: {
@@ -119,11 +99,11 @@ export const style = {
     color:
       theme.palette.mode === "dark"
         ? active || emphasize
-          ? "#FFFFFF"
-          : "rgba(255,255,255,0.72)"
+          ? theme.palette.app.text
+          : theme.palette.app.muted
         : active || emphasize
-          ? "#111111"
-          : "rgba(17,17,17,0.7)",
+          ? theme.palette.app.text
+          : theme.palette.app.muted,
     opacity: active || emphasize ? 1 : 0.8,
     transition:
       "transform 0.18s ease, color 0.18s ease, opacity 0.18s ease",
@@ -145,10 +125,7 @@ export const style = {
       opacity: 1,
     },
     "&:focus-visible": {
-      outline: `2px solid ${alpha(
-        theme.palette.mode === "dark" ? "#FFFFFF" : "#111111",
-        0.55
-      )}`,
+      outline: `2px solid ${alpha(theme.palette.app.primary, 0.55)}`,
       outlineOffset: "2px",
     },
   }),
@@ -180,32 +157,13 @@ export const style = {
     gap: "0.6rem",
   },
 
-  utilityRow: (expand, active = false) => (theme) => ({
-    minHeight: "3.4rem",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: expand ? "flex-start" : "center",
-    gap: expand ? "0.75rem" : 0,
-    padding: expand ? "0.35rem 0.2rem" : "0.2rem 0",
-    borderRadius: "1.1rem",
-    backgroundColor: "transparent",
-    color:
-      theme.palette.mode === "dark"
-        ? active
-          ? "#FFFFFF"
-          : "rgba(255,255,255,0.8)"
-        : active
-          ? "#111111"
-          : "rgba(17,17,17,0.8)",
-  }),
-
   utilityLabel: (theme) => ({
     fontSize: "0.86rem",
     fontWeight: 700,
     color:
       theme.palette.mode === "dark"
-        ? "rgba(255,255,255,0.78)"
-        : "rgba(17,17,17,0.72)",
+        ? theme.palette.app.muted
+        : theme.palette.app.muted,
   }),
 
   utilityIconButton: (theme) => ({
@@ -216,7 +174,7 @@ export const style = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    color: theme.palette.mode === "dark" ? "#FFFFFF" : "#111111",
+    color: theme.palette.app.text,
     backgroundColor: "transparent !important",
     border: "none",
     boxShadow: "none !important",
@@ -228,13 +186,66 @@ export const style = {
     },
   }),
 
+  utilityActionButton: (active = false) => (theme) => ({
+    width: "100%",
+    minHeight: "3.4rem",
+    border: 0,
+    cursor: "pointer",
+    appearance: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    gap: "0.75rem",
+    padding: "0.35rem 0.2rem",
+    borderRadius: "1.1rem",
+    backgroundColor: "transparent",
+    color:
+      theme.palette.mode === "dark"
+        ? active
+          ? theme.palette.app.text
+          : theme.palette.app.muted
+        : active
+          ? theme.palette.app.text
+          : theme.palette.app.muted,
+    font: "inherit",
+    textAlign: "left",
+    opacity: active ? 1 : 0.82,
+    transition: "transform 0.18s ease, opacity 0.18s ease",
+    "&:hover": {
+      transform: "translateY(-1px)",
+      opacity: 1,
+    },
+    "&:focus-visible": {
+      outline: `2px solid ${alpha(theme.palette.app.primary, 0.55)}`,
+      outlineOffset: "2px",
+    },
+  }),
+
+  utilityActionIconWrap: {
+    width: "2.85rem",
+    minWidth: "2.85rem",
+    height: "2.85rem",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+    lineHeight: 0,
+    "& svg": {
+      width: "1.35rem",
+      height: "1.35rem",
+      color: "currentColor",
+      fill: "currentColor",
+      stroke: "currentColor",
+    },
+  },
+
   notificationButton: (theme) => ({
     width: "2.85rem",
     height: "2.85rem",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    color: theme.palette.mode === "dark" ? "#FFFFFF" : "#111111",
+    color: theme.palette.app.text,
     backgroundColor: "transparent",
     transition: "opacity 0.18s ease, transform 0.18s ease",
     opacity: 0.82,
@@ -249,9 +260,16 @@ export const style = {
   }),
 
   notificationBadge: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "2.85rem",
+    minWidth: "2.85rem",
+    height: "2.85rem",
+    flexShrink: 0,
     "& .MuiBadge-badge": {
-      right: 4,
-      top: 7,
+      right: 5,
+      top: 8,
     },
   },
 
@@ -270,8 +288,8 @@ export const style = {
       inset: 0,
       background:
         theme.palette.mode === "dark"
-          ? "radial-gradient(circle at top left, rgba(255,255,255,0.09), transparent 26%)"
-          : "radial-gradient(circle at top left, rgba(17,17,17,0.07), transparent 24%)",
+          ? `radial-gradient(circle at top left, ${alpha(theme.palette.app.primary, 0.18)}, transparent 26%)`
+          : `radial-gradient(circle at top left, ${alpha(theme.palette.app.primary, 0.18)}, transparent 24%)`,
       pointerEvents: "none",
     },
   }),
@@ -309,14 +327,11 @@ export const style = {
     maxWidth: "28rem",
     p: "0.45rem",
     borderRadius: "1.5rem",
-    border: `1px solid ${alpha(
-      theme.palette.mode === "dark" ? "#FFFFFF" : "#111111",
-      0.08
-    )}`,
+    border: `1px solid ${theme.palette.app.border}`,
     backgroundColor:
       theme.palette.mode === "dark"
-        ? "rgba(15,16,16,0.88)"
-        : "rgba(255,255,255,0.92)",
+        ? theme.palette.app.header
+        : theme.palette.app.header,
     backdropFilter: "blur(18px)",
     boxShadow:
       theme.palette.mode === "dark"
@@ -346,11 +361,11 @@ export const style = {
     color:
       theme.palette.mode === "dark"
         ? active || emphasize
-          ? "#FFFFFF"
-          : "rgba(255,255,255,0.74)"
+          ? theme.palette.app.text
+          : theme.palette.app.muted
         : active || emphasize
-          ? "#111111"
-          : "rgba(17,17,17,0.72)",
+          ? theme.palette.app.text
+          : theme.palette.app.muted,
     opacity: active || emphasize ? 1 : 0.82,
     transition: "transform 0.18s ease, opacity 0.18s ease",
     "&::after": {

@@ -20,8 +20,8 @@ export const apiService = {
   rejectRequest: async (friendshipId) =>
     handleRequest(() => friendApi.rejectRequest(friendshipId)),
 
-  cancelRequest: async (friendshipId) =>
-    handleRequest(() => friendApi.cancelRequest(friendshipId)),
+  cancelRequest: async (username) =>
+    handleRequest(() => friendApi.cancelRequest(username)),
 
   deleteFriend: async (username) =>
     handleRequest(() => friendApi.deleteFriend(username)),

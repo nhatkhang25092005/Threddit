@@ -1,4 +1,5 @@
 import { useCallback } from "react"
+import { follow } from "../../../constant/text/vi/follow.text"
 import { loading, following, follower} from "../actions"
 import { useNotify } from "../../../hooks/useNotify"
 import { services } from "../services"
@@ -17,7 +18,7 @@ export function useFollow(dispatch){
         dispatch(canFollow ? following.add({createdAt:new Date().toISOString(), followee:target}) : following.remove(target))
         notify.snackbar(res.message, 3000)
       }
-      else notify.snackbar(res?.message || (canFollow ?'Theo dõi thất bại' : 'Bỏ theo dõi thất bại' ))
+      else notify.snackbar(res?.message || (canFollow ? follow.error.followFailed : follow.error.unfollowFailed ))
     },
     [notify, dispatch]
   )

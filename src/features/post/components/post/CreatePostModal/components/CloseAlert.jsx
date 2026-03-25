@@ -1,5 +1,6 @@
 import { Box, Button, Portal, Typography } from "@mui/material";
 import Surface from "../../../../../../components/common/Surface";
+import { composerText } from "../../../../../../constant/text/vi/post/composer.text";
 
 const sx = {
   overlay: {
@@ -51,10 +52,10 @@ const sx = {
 export default function CloseAlert({
   onConfirm,
   onCancel,
-  title = "Đóng bài viết?",
-  message = "Nếu đóng bây giờ, mọi trạng thái bài viết đang tạo sẽ bị hủy",
-  cancelLabel = "Quay lại",
-  confirmLabel = "Đóng",
+  title = composerText.post.closeAlert.create.title,
+  message = composerText.post.closeAlert.create.message,
+  cancelLabel = composerText.post.closeAlert.cancelLabel,
+  confirmLabel = composerText.post.closeAlert.confirmLabel,
 }) {
   return (
     <Portal>

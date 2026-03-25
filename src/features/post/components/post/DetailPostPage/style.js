@@ -68,7 +68,7 @@ export const style = {
         sm: "1rem",
       },
       boxShadow: "0 18px 55px rgba(0, 0, 0, 0.28)",
-      backgroundColor: "#050505",
+      backgroundColor: "#071120",
     },
     viewerTopBar: {
       position: "absolute",
@@ -166,7 +166,7 @@ export const style = {
         lg: 0,
       },
       borderColor: (theme) =>
-        theme.palette.mode === "dark" ? "#2C3138" : "#DADDE1",
+        theme.palette.mode === "dark" ? "#243041" : "#DADDE1",
       boxShadow: (theme) =>
         theme.palette.mode === "dark"
           ? "-10px 0 30px rgba(0,0,0,0.22)"
@@ -184,7 +184,7 @@ export const style = {
       "&::-webkit-scrollbar-thumb": {
         borderRadius: "999rem",
         backgroundColor: (theme) =>
-          theme.palette.mode === "dark" ? "#5C626B" : "#CDD3DB",
+          theme.palette.mode === "dark" ? "#64748B" : "#CDD3DB",
       },
     },
     commentPlaceholder: {
@@ -230,7 +230,7 @@ export const style = {
       fontSize: "0.88rem",
       lineHeight: 1.55,
       color: (theme) =>
-        theme.palette.mode === "dark" ? "#AAB3BE" : "#667384",
+        theme.palette.mode === "dark" ? "#94A3B8" : "#64748B",
     },
     stateRoot: {
       minHeight: "100dvh",
@@ -257,7 +257,7 @@ export const style = {
       textAlign: "center",
       border: "1px solid",
       borderColor: (theme) =>
-        theme.palette.mode === "dark" ? "#31363D" : "#D9E0E9",
+        theme.palette.mode === "dark" ? "#243041" : "#D9E0E9",
       background: (theme) =>
         theme.palette.mode === "dark"
           ? "linear-gradient(145deg, #13171C 0%, #1B2027 100%)"
@@ -268,7 +268,7 @@ export const style = {
           : "0 18px 42px rgba(30,45,66,0.12)",
     },
     stateSpinner: {
-      color: "#1877F2",
+      color: "#3B82F6",
       mb: "0.9rem",
     },
     stateTitle: {
@@ -281,7 +281,7 @@ export const style = {
       fontSize: "0.9rem",
       lineHeight: 1.6,
       color: (theme) =>
-        theme.palette.mode === "dark" ? "#ABB4BF" : "#677587",
+        theme.palette.mode === "dark" ? "#94A3B8" : "#64748B",
     },
     stateButton: {
       mt: "1rem",
@@ -321,7 +321,7 @@ export const style = {
       borderTop: "1px solid",
       borderBottom: "1px solid",
       borderColor: (theme) =>
-        theme.palette.mode === "dark" ? "#2C3138" : "#DADDE1",
+        theme.palette.mode === "dark" ? "#243041" : "#DADDE1",
     },
     actionsRow: {
       ...basePost.actionsRow,

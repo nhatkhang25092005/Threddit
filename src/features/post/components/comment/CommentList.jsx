@@ -19,9 +19,10 @@ export default function CommentList({
   initialCount = 0,
   onCountChange,
   postId,
+  usePrefetchedThread = false,
   variant = "modal",
 }) {
-  const thread = useCommentThread(postId, initialCount);
+  const thread = useCommentThread(postId, initialCount, { usePrefetchedThread });
   const [hasUserScrolled, setHasUserScrolled] = useState(false);
   const enableInfiniteScroll =
     hasUserScrolled && thread.hasMore && thread.comments.length > 0;

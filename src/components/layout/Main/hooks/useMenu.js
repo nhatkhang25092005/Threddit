@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import { routes } from "../../../../constant"
+import { sidebar } from "../../../../constant/text/vi/sidebar.text"
 import { useLogout } from "../../../../features/account/logout/useLogout"
 
 export function useMenu() {
@@ -12,15 +13,15 @@ export function useMenu() {
 
   const items = {
   account: {
-    label: 'Thông tin tài khoản',
+    label: sidebar.menu.accountInfo,
     callback: () => goTo(routes.account),
   },
   change_password: {
-    label: 'Đổi mật khẩu',
+    label: sidebar.menu.changePassword,
     callback: () => goTo(routes.update_password),
   },
   log_out:{
-    label: 'Đăng xuất',
+    label: sidebar.menu.logout,
     callback: () => logout(routes.auth),
   }
 }

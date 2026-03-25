@@ -24,7 +24,7 @@ export function useNotification(dispatch, hasMore){
       () => services.getNotification(cursor.current, abortRef.current.signal),
       (bool) => dispatch(notificationActions.getAllNotificationLoading(bool))
     )
-    
+    console.log(response)
     if(response.code === 'ERR_CANCELED') return
 
     if(response.success){

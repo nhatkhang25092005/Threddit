@@ -1,4 +1,5 @@
 import { useCallback, useRef } from "react"
+import { errorText } from "../../../../constant/text/vi/error.text"
 import useAuth from "../../../../core/auth/useAuth"
 import { modal } from "../../../../constant/text/vi/modal"
 import { useNotify } from "../../../../hooks/useNotify"
@@ -84,7 +85,7 @@ export function useCreateComment(dispatch) {
         const uploadResult = await storageService.uploadMediaAndGetSessionId(mediaList)
 
         if (!uploadResult?.success) {
-          notify.popup(modal.title.error, uploadResult?.message || "Không thể upload file")
+          notify.popup(modal.title.error, uploadResult?.message || errorText.upload.file)
           return uploadResult
         }
 
@@ -93,7 +94,7 @@ export function useCreateComment(dispatch) {
 
       const payload = buildCreatePayload(data, uploadSessionId)
       if (Object.keys(payload).length === 0) {
-        notify.popup(modal.title.error, "Nội dung comment không hợp lệ")
+        notify.popup(modal.title.error, errorText.validation.invalidComment)
         return null
       }
 

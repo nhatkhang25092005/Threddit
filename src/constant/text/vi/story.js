@@ -1,4 +1,66 @@
 export const story = {
+  shared: {
+    closeButton: "Đóng",
+    justNow: "Vừa xong",
+  },
+  pinnedSection: {
+    title: "Tin nổi bật",
+    editButton: "Chỉnh sửa tin nổi bật",
+    previousAriaLabel: "Tin nổi bật trước",
+    nextAriaLabel: "Tin nổi bật tiếp theo",
+  },
+  storyList: {
+    loadingTitle: "Đang tải story...",
+    emptyTitle: "Không tìm thấy",
+    loadingText: "Đang đồng bộ danh sách tin.",
+    emptyText: "Người dùng này hiện không có tin nào.",
+    yourStories: "Tin của bạn",
+    friendStories: "Tin của bạn bè",
+    fetchingList: "Đang lấy danh sách tin",
+  },
+  viewer: {
+    fallbackAuthorName: "Người dùng",
+    pin: "Ghim tin",
+    unpin: "Gỡ ghim tin",
+    edit: "Chỉnh sửa tin",
+    delete: "Xóa tin",
+    close: "Đóng tin",
+  },
+  mediaKind: {
+    image: "Ảnh",
+    video: "Video",
+    sound: "Âm thanh",
+    text: "Văn bản",
+  },
+  editStoryModal: {
+    title: "Chỉnh sửa tin",
+    subtitle: "Bạn có thể cập nhật nội dung hoặc thay media cho tin này",
+    closeAriaLabel: "Đóng modal chỉnh sửa tin",
+    submitLabel: "Xác nhận chỉnh sửa",
+  },
+  editPinnedStoryModal: {
+    title: "Chỉnh sửa tin nổi bật",
+    subtitle: "Xem nhanh và gỡ các story đang ghim trên trang cá nhân của bạn.",
+    helperText:
+      "Danh sách được hiển thị theo dạng lưới 2 hàng. Dùng nút điều hướng để xem thêm từng story.",
+    gridEyebrow: "Tin đang ghim",
+    gridCaption: "Nhấn dấu X trên từng story để bỏ ghim khỏi hồ sơ.",
+    closeAriaLabel: "Đóng chỉnh sửa tin nổi bật",
+    previousAriaLabel: "Xem story ghim trước đó",
+    nextAriaLabel: "Xem story ghim tiếp theo",
+    removeAriaLabel: "Bỏ ghim tin",
+    loadingTitle: "Đang tải tin nổi bật",
+    loadingText: "Danh sách tin ghim của bạn đang được tải lên để chỉnh sửa.",
+    emptyTitle: "Chưa có tin nổi bật nào",
+    emptyText:
+      "Khi bạn ghim story lên hồ sơ, chúng sẽ xuất hiện tại đây để bạn quản lý dễ hơn.",
+    countLabel: (count) => (count > 0 ? `${count} tin đang ghim` : "Chưa ghim tin nào"),
+  },
+  loading: {
+    pin: "Đang ghim tin...",
+    unpin: "Đang gỡ ghim tin...",
+    delete: "Đang xóa tin...",
+  },
   createStoryModal: {
     loadingDuration: "Đang đọc...",
     modeLabel: {

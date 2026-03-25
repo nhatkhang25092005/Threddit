@@ -19,10 +19,12 @@ export const profile = {
   },
   background:{
     preview_background:"Xem trước ảnh nền",
+    preview_alt:"Ảnh xem trước",
     confirm:"Xác nhận",
     update_success:'Cập nhật ảnh nền thành công!',
     bg_updating:"Đang cập nhật ảnh nền...",
-    another_image:"Chọn ảnh khác"
+    another_image:"Chọn ảnh khác",
+    edit_button:"Chỉnh sửa ảnh bìa",
   },
   avatar:{
     preview_avatar:'Xem trước ảnh đại diện',

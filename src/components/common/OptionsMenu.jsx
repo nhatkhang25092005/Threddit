@@ -90,8 +90,8 @@ export default function OptionsMenu({sx,symbol ,functionList, anchorOrigin, tran
         sx={{
           "& .MuiPaper-elevation":{
             marginLeft:"40px",
-            bgcolor:"#0A0B0B",
-            border:"solid #BCBDBF 1px"
+            bgcolor:"#071120",
+            border:"solid #94A3B8 1px"
           },
           "& .MuiMenu-list":{
             padding:"0px"

@@ -11,7 +11,9 @@ import {
   savedPostHandlers,
   followersPostHandlers,
   usersPostHandlers,
-  pinHandlers
+  pinHandlers,
+  reelHandlers,
+  searchHandlers,
 } from "../casehanlders"
 
 export const reducer = (state, action) => {
@@ -34,6 +36,12 @@ export const reducer = (state, action) => {
 
     case CLASS_TYPE.FEEDS:
       return feedsHandlers(state, action)
+
+    case CLASS_TYPE.REEL:
+      return reelHandlers(state, action)
+
+    case CLASS_TYPE.SEARCH:
+      return searchHandlers(state, action)
 
     case CLASS_TYPE.FOLLOWERS_POST:
       return followersPostHandlers(state, action)

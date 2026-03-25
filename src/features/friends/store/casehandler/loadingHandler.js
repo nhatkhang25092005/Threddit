@@ -145,15 +145,15 @@ export const loadingHandler = (state, action) => {
      * Updates per-request loading state when cancelling a sent friend request.
      */
     case CANCEL_REQUEST:{
-      const {loading, friendshipId} = action.payload
+      const {loading, username} = action.payload
       return {
         ...state,
         loading: {
           ...state.loading,
           perRequest:{
             ...state.loading.perRequest,
-            [friendshipId]:{
-              ...state.loading.perRequest[friendshipId],
+            [username]:{
+              ...state.loading.perRequest[username],
               cancel_request:loading
             }
           }

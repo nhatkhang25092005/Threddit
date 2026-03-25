@@ -35,9 +35,10 @@ export const initState = {
     },
 
     perRequest:{
-      // [friendshipId]:{
+      // [requestKey]:{
       //   accept_request: false,
       //   reject_request: false,
+      //   cancel_request: false,
       // }
     }
   }

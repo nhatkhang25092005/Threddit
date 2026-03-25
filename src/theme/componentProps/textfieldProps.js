@@ -15,10 +15,34 @@ export const textfieldProps = {
     styleOverrides:{
       input:({theme})=>({
         ...theme.typography.normal,
-        color:COLOR.textfield.text.placeholder.dark,
+        color:COLOR.textfield.text.value[theme.palette.mode],
         width:"100%"
       })
     }
+  },
+  MuiOutlinedInput: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        borderRadius: "0.9rem",
+        backgroundColor: COLOR.textfield.background.default[theme.palette.mode],
+        '& .MuiOutlinedInput-notchedOutline': {
+          borderColor: COLOR.textfield.border.default[theme.palette.mode],
+        },
+        '&:hover .MuiOutlinedInput-notchedOutline': {
+          borderColor: COLOR.textfield.border.focus[theme.palette.mode],
+        },
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+          borderColor: COLOR.textfield.border.focus[theme.palette.mode],
+        },
+      }),
+      input: ({ theme }) => ({
+        color: COLOR.textfield.text.value[theme.palette.mode],
+        '&::placeholder': {
+          color: COLOR.textfield.text.placeholder[theme.palette.mode],
+          opacity: 1,
+        },
+      }),
+    },
   },
   MuiInputLabel:{
     styleOverrides:{
@@ -33,7 +57,7 @@ export const textfieldProps = {
   MuiInput:{
     styleOverrides:{
       root:({theme})=>({
-        '&:before':{borderBottomColor:COLOR.textfield.border.default},
+        '&:before':{borderBottomColor:COLOR.textfield.border.default[theme.palette.mode]},
         '&:after':{borderBottomColor:COLOR.textfield.border.after[theme.palette.mode]}
       })
     },
@@ -41,7 +65,7 @@ export const textfieldProps = {
       {
         props:{variant:'loading'},
         style:({theme})=>({
-          '&:before':{borderBottomColor:COLOR.textfield.border.default},
+          '&:before':{borderBottomColor:COLOR.textfield.border.default[theme.palette.mode]},
           '&:after':{borderBottomColor:COLOR.textfield.border.after[theme.palette.mode]}
         })
       }

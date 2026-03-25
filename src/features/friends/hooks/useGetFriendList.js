@@ -8,7 +8,7 @@ import { shouldRetry } from "../../../utils/shouldRetry"
 
 export function useGetFriendList(dispatch){
   const notify = useNotify()
-  const { profileUsername: username, isOwner } = useAuth()
+  const { profileUsername: username } = useAuth()
 
   const cursor = useRef(null)
   const abortRef = useRef(null)

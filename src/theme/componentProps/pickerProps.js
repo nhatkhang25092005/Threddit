@@ -1,3 +1,4 @@
+import { COLOR } from "../color"
 import { getTheme } from "../helper/getTheme"
 
 export const pickerProps = (mode) => {
@@ -8,15 +9,15 @@ export const pickerProps = (mode) => {
       styleOverrides: {
         root: {
           '& .MuiPickersOutlinedInput-notchedOutline': {
-            borderColor: 'red',
+            borderColor: COLOR.textfield.border.default[theme],
           },
           '&.Mui-focused .MuiPickersOutlinedInput-notchedOutline': {
-            border: 'solid red 1px',
+            border: `solid ${COLOR.textfield.border.focus[theme]} 1px`,
           },
         },
         input:{
           '&.Mui-focused':{
-            borderColor:'white'
+            borderColor:COLOR.textfield.border.focus[theme]
           }
         }
       },

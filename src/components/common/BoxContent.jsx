@@ -4,7 +4,7 @@ import {Box} from "@mui/material"
  */
 export default function BoxContent({children, customStyle, debug =false}) {
     const style = {
-        border:"solid #A6A6A6 1px",
+        border:"solid #243041 1px",
         borderRadius:"8px",
         px:"1rem",
         py:'2rem',

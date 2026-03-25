@@ -35,13 +35,17 @@ export default function PopoverButton({
     <>
       <Box
         id={`popover`}
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: label ? '0.45rem' : 0,
-          cursor: disable ? 'default' : 'pointer',
-          ...buttonSx
-        }}
+        sx={[
+          {
+            display: 'flex',
+            alignItems: 'center',
+            gap: label ? '0.45rem' : 0,
+          },
+          buttonSx,
+          {
+            cursor: disable ? 'default' : 'pointer',
+          }
+        ]}
         onClick={handleClick}
       >
         {Icon ? <Icon /> : undefined}

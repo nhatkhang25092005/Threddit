@@ -1,9 +1,11 @@
-export const SHARE_MODAL_TITLE = "Chia sẻ bài viết";
-export const SHARE_SUBMIT_LABEL = "Chia sẻ";
-export const SHARE_ACTION_BAR_LABEL = "Thêm vào chia sẻ của bạn";
-export const SHARE_EDITOR_PLACEHOLDER = "Hãy nói gì đó về bài viết này";
+import { composerText } from "../../../../../../constant/text/vi/post/composer.text";
+
+export const SHARE_MODAL_TITLE = composerText.share.title;
+export const SHARE_SUBMIT_LABEL = composerText.share.submitLabel;
+export const SHARE_ACTION_BAR_LABEL = composerText.share.actionBarLabel;
+export const SHARE_EDITOR_PLACEHOLDER = composerText.share.placeholder;
 
 export const SHARE_CLOSE_ALERT = Object.freeze({
-  title: "Mất dữ liệu chỉnh sửa",
-  message: "Nếu đóng bây giờ, nội dung chia sẻ bạn đang soạn sẽ bị hủy.",
+  title: composerText.share.closeAlert.title,
+  message: composerText.share.closeAlert.message,
 });

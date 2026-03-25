@@ -12,12 +12,12 @@ export default function PostCard({ author, time, content, menuOptions = [],onCli
         color: "white",
         borderRadius: "0 0 12px 12px",
         p: 2,
-        borderTop: "1px solid #333",
+        borderTop: "1px solid #243041",
         boxShadow: "0 0 10px rgba(0,0,0,0.4)",
         width: "100%",
         mx: "auto",
         "&:last-child": {
-          borderBottom: "1px solid #333",
+          borderBottom: "1px solid #243041",
           borderRadius: "0 0 12px 12px",
         },
         "&:hover": {

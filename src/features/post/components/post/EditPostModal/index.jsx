@@ -1,4 +1,5 @@
 import CreatePostModal from "../CreatePostModal";
+import { composerText } from "../../../../../constant/text/vi/post/composer.text";
 import { usePostContext } from "../../../hooks";
 
 export default function EditPostModal({ onClose, postId }) {
@@ -21,10 +22,10 @@ export default function EditPostModal({ onClose, postId }) {
       contentId={post.id}
       initialText={post.text || ""}
       initialMedia={post.mediaFiles || []}
-      title="Chỉnh sửa bài viết"
-      submitLabel="Xác nhận chỉnh sửa"
-      closeAlertTitle="Đóng chỉnh sửa?"
-      closeAlertMessage="Nếu đóng bây giờ, những thay đổi của bài viết sẽ không được lưu."
+      title={composerText.post.editTitle}
+      submitLabel={composerText.post.editSubmitLabel}
+      closeAlertTitle={composerText.post.closeAlert.edit.title}
+      closeAlertMessage={composerText.post.closeAlert.edit.message}
     />
   );
 }

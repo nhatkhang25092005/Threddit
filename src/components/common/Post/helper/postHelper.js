@@ -9,9 +9,9 @@ export function normalizeItem(item){
 export function getPostStyles(index, createdPostsLength, onComment) {
   return {
     px: '1rem',
-    bgcolor: '#0A0B0B',
+    bgcolor: '#071120',
     ...(index === createdPostsLength - 1 || onComment
       ? { borderBottom: 'none' }
-      : { borderBottom: 'solid #BCBDBF 1px' }),
+      : { borderBottom: 'solid #94A3B8 1px' }),
   };
 }

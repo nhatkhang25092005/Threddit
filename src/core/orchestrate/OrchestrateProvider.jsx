@@ -47,6 +47,11 @@ export default function OrchestrateProvider({children}){
       requestFriendSuccess: () => {
         dispatch('profile', 'setFriendStatus', 'pending_sent')
       },
+      cancelRequestSuccess: ({ onProfile = false } = {}) => {
+        if (onProfile) {
+          dispatch('profile', 'setFriendStatus', null)
+        }
+      },
       deleteFriendSuccess: ({ onProfile = false } = {}) => {
         dispatch('profile', 'decreaseFriendNumber')
         if (onProfile) {

@@ -13,6 +13,7 @@ import TagItem from "./TagItem";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
 import Surface from "../../../../../components/common/Surface";
+import { composerText } from "../../../../../constant/text/vi/post/composer.text";
 import { useFriendshipContext as useFriendContext } from "../../../../friends/hooks/useFriendshipContext";
 import { useCallback, useMemo, useRef } from "react";
 import { style } from "../style";
@@ -48,9 +49,9 @@ export default function MentionListModal({ onClose, mention }) {
           onClick={(event) => event.stopPropagation()}
         >
           <Box sx={sx.header}>
-            <Typography sx={sx.title}>Tag ban be</Typography>
+            <Typography sx={sx.title}>{composerText.mention.title}</Typography>
             <IconButton
-              aria-label="Dong danh sach tag"
+              aria-label={composerText.mention.closeAriaLabel}
               onClick={onClose}
               sx={sx.closeButton}
             >
@@ -64,7 +65,7 @@ export default function MentionListModal({ onClose, mention }) {
             <TextField
               size="small"
               fullWidth
-              placeholder="Tìm bạn bè..."
+              placeholder={composerText.mention.placeholder}
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               sx={sx.search}
@@ -83,7 +84,7 @@ export default function MentionListModal({ onClose, mention }) {
               sx={sx.chosenFriends}
             >
               <Box component="span" sx={{ mr: 1 }}>
-                Đã tag:
+                {composerText.mention.taggedLabel}
               </Box>
               {chosenFriends.map((username) => (
                 <TagItem key={username} username={username} />
@@ -92,7 +93,7 @@ export default function MentionListModal({ onClose, mention }) {
 
             <Box sx={sx.list}>
               {filteredFriends.length === 0 ? (
-                <Typography sx={sx.empty}>Khong tim thay ban be phu hop.</Typography>
+                <Typography sx={sx.empty}>{composerText.mention.empty}</Typography>
               ) : (
                 filteredFriends.map((username) => (
                   <Box
@@ -122,7 +123,7 @@ export default function MentionListModal({ onClose, mention }) {
 
             <Box sx={sx.footer}>
               <Button variant="primary" sx={sx.doneButton} onClick={handleDone}>
-                Xong
+                {composerText.mention.done}
               </Button>
             </Box>
           </Box>

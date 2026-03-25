@@ -47,6 +47,9 @@ export default function PostMedia({ items = [], postId = null }) {
   const location = useLocation();
   const { visualMedia, audioMedia } = splitMedia(items);
   const visualPreviewList = visualMedia.slice(0, 4);
+  const isSingleVideoPreview =
+    visualPreviewList.length === 1 &&
+    isVideoType(visualPreviewList[0]?.type);
   const hiddenVisualCount = visualMedia.length - visualPreviewList.length;
   const canOpenDetailPage = postId != null && visualMedia.length > 0;
 
@@ -66,8 +69,8 @@ export default function PostMedia({ items = [], postId = null }) {
   return (
     <>
       {visualPreviewList.length > 0 ? (
-        <Box sx={sx.mediaBlock}>
-          <Box sx={sx.mediaGrid(visualPreviewList.length)}>
+        <Box sx={[sx.mediaBlock, isSingleVideoPreview ? sx.singleVideoBlock : null]}>
+          <Box sx={isSingleVideoPreview ? sx.singleVideoGrid : sx.mediaGrid(visualPreviewList.length)}>
             {visualPreviewList.map((item, index) => {
               const mediaType = normalizeType(item.type);
               const key = `${item.id || item.url}-${index}`;
@@ -78,6 +81,7 @@ export default function PostMedia({ items = [], postId = null }) {
                   onClick={() => handleOpenDetailPage(index)}
                   sx={{
                     ...sx.mediaTile(visualPreviewList.length, index),
+                    ...(isSingleVideoPreview ? sx.singleVideoTile : {}),
                     ...(canOpenDetailPage ? { cursor: "pointer" } : {}),
                   }}
                 >
@@ -98,7 +102,7 @@ export default function PostMedia({ items = [], postId = null }) {
                         controls={canOpenDetailPage ? false : visualPreviewList.length === 1}
                         preload="metadata"
                         src={item.url}
-                        sx={sx.mediaElement}
+                        sx={[sx.mediaElement, isSingleVideoPreview ? sx.singleVideoElement : null]}
                       />
 
                       {visualPreviewList.length > 1 || canOpenDetailPage ? (

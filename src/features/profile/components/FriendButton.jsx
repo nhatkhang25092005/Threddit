@@ -18,7 +18,12 @@ function UI({ status, hidden, loading, onClick }) {
         onClick={()=>onClick.request()}
       />
     ),
-    pending_sent:()=><CancelRequestButton/>,
+    pending_sent:() => (
+      <CancelRequestButton
+        loading={loading.cancel_request}
+        onClick={() => onClick.cancel_request()}
+      />
+    ),
     accepted:()=>(
       <UnfriendButton
         loading={loading.unfriend}
@@ -38,8 +43,14 @@ export default function FriendButton() {
   } = useProfileContext()
 
   const {
-    state: {loading:{global:loading}},
+    state: {
+      loading: {
+        global: globalLoading,
+        perRequest,
+      }
+    },
     actions:{
+      cancelRequest,
       requestFriend,
       deleteFriend
     }
@@ -48,10 +59,14 @@ export default function FriendButton() {
   return (
     <UI
       status={friendshipStatus}
-      username = {username}
       hidden={isOwner}
-      loading={loading}
+      loading={{
+        request_friend: globalLoading.request_friend,
+        unfriend: globalLoading.unfriend,
+        cancel_request: perRequest?.[username]?.cancel_request ?? false,
+      }}
       onClick={{
+        cancel_request:()=>cancelRequest(username, true),
         request:()=>requestFriend(username),
         unfriend:()=>deleteFriend(username, true)
       }}

@@ -28,13 +28,15 @@ export const surfaceProps = {
         style: ({theme}) => ({
           ...baseAuthProps,
           backgroundColor: COLOR.background.surface.auth[theme.palette.mode],
+          border: `1px solid ${COLOR.app.border}`,
         })
       },
       {
         props:{variant:'default'},
         style:({theme})=>({
           backgroundColor:COLOR.background.surface.default[theme.palette.mode].bg,
-          boxShadow: `1px 1px 0px 2px ${COLOR.background.surface.default[theme.palette.mode].shadow}`,
+          boxShadow: `0 16px 40px ${COLOR.background.surface.default[theme.palette.mode].shadow}`,
+          border: `1px solid ${COLOR.app.border}`,
           ...baseDefaultProps
         })
       },
@@ -51,6 +53,7 @@ export const surfaceProps = {
           top: 0,
           position:'fixed',
           zIndex:"20",
+          borderRight: `1px solid ${COLOR.app.border}`,
         })
       },
       {
@@ -59,16 +62,17 @@ export const surfaceProps = {
           backgroundColor:COLOR.background.surface.modal[theme.palette.mode],
           padding: '1rem 2rem',
           width:'fit-content',
-          boxShadow:`0px 8px 24px ${COLOR.shadow.modal[theme.palette.mode]}`
+          border:`1px solid ${COLOR.app.border}`,
+          boxShadow:`0px 20px 48px ${COLOR.shadow.modal[theme.palette.mode]}`
         })
       },
       {
         props:{variant:'card'},
         style:({theme})=>({
-          backgroundColor:'transparent',
-          boxShadow:`2px 2px 2px ${COLOR.shadow.card[theme.palette.mode]}`,
+          backgroundColor:COLOR.app.screenAlt,
+          boxShadow:`0 12px 28px ${COLOR.shadow.card[theme.palette.mode]}`,
           padding:'1rem 2rem',
-          border:`solid ${COLOR.border.surface.card[theme.palette.mode]} 2px`
+          border:`solid ${COLOR.border.surface.card[theme.palette.mode]} 1px`
         })
       }
     ],

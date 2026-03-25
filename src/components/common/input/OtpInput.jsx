@@ -1,9 +1,9 @@
 import { MuiOtpInput } from "mui-one-time-password-input"
-import { useThemeContext } from "../../../theme/ThemeContext"
+import { useTheme } from "@mui/material/styles"
 export default function OtpInput({otp, onChange, onKeyDown}){
-  const {mode} = useThemeContext()
-  const color = mode === 'light' ? '#000' : '#fff'
-  const focus = mode === 'light' ? "green" : "#fff837ff"
+  const theme = useTheme()
+  const color = theme.palette.mode === 'light' ? '#000' : '#fff'
+  const focus = theme.palette.mode === 'light' ? "#22C55E" : "#00F2FF"
   return(
     <MuiOtpInput
       validateChar={(char)=>/^[0-9]$/.test(char)}
@@ -27,7 +27,7 @@ export default function OtpInput({otp, onChange, onKeyDown}){
             "& fieldset": { borderColor: color },
             width:'100%',
             height:'100%',
-            "&:hover fieldset": { borderColor: "#7a7a7aff" },
+            "&:hover fieldset": { borderColor: "#64748B" },
             "&.Mui-focused fieldset": { borderColor: focus },
           },
           input: {

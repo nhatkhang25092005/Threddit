@@ -6,7 +6,7 @@ export const formLabelProps = (mode) => {
     MuiFormLabel: {
       styleOverrides:{
         root:{
-          color:{color:COLOR.form_label[theme]},
+          color:COLOR.form_label[theme],
           '&.Mui-focused':{color: COLOR.form_label[theme]}
         }
       }

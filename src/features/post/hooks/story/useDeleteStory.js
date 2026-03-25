@@ -1,5 +1,6 @@
 import { useCallback, useRef } from "react"
 import { modal } from "../../../../constant/text/vi/modal"
+import { story } from "../../../../constant/text/vi/story"
 import { useNotify } from "../../../../hooks/useNotify"
 import { storyService } from "../../services"
 import { loadingAction, storyByIdActions } from "../../store/actions"
@@ -19,7 +20,7 @@ export function useDeleteStory(dispatch){
     try {
       const response = await notify.withLoading(
         () => storyService.deleteStory(id),
-        (isLoading) => notify.snackbarLoading('Đang xóa tin...', isLoading)
+        (isLoading) => notify.snackbarLoading(story.loading.delete, isLoading)
       )
 
       if (!response?.success) {

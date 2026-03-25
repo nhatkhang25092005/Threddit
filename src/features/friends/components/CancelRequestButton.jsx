@@ -1,6 +1,6 @@
 import { Button, Tooltip, Box, CircularProgress } from "@mui/material"
 import { friend } from "../../../constant/text/vi/friend.text"
-import { useNotify } from "../../../hooks/useNotify"
+
 const btnContainerSx = {
   my: "auto",
   height: "fit-content",
@@ -19,21 +19,38 @@ const btnContainerSx = {
   },
 }
 
+function ButtonContent({ loading }) {
+  if (!loading) {
+    return friend.text_on_profile.status.pending
+  }
+
+  return (
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+      <CircularProgress size={14} color="inherit" />
+      {friend.text_on_sent_list?.button?.cancel_request || friend.text_on_profile.status.pending}
+    </Box>
+  )
+}
+
 export default function CancelRequestButton({
   sx,
+  loading = false,
+  disabled = false,
+  onClick,
 }) {
-  const notify = useNotify()
   return (
-    <Tooltip title={friend.text_on_profile.tool_tip.cancel_request_friend} placement="top">
+    <Tooltip
+      title={friend.text_on_sent_list?.button?.cancel_request || friend.text_on_profile.tool_tip.cancel_request_friend}
+      placement="top"
+    >
       <Button
-        onClick={()=>{notify.snackbar(friend.text_on_profile.notification.cancel_request_instruction, 4000, 'info')}}
+        onClick={onClick}
         variant="secondary"
+        disabled={disabled || loading}
         sx={{ ...btnContainerSx, ...sx }}
       >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          {friend.text_on_profile.status.pending}
-        </Box>
+        <ButtonContent loading={loading} />
       </Button>
     </Tooltip>
   )
-}1 
+}

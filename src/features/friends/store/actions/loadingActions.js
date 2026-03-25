@@ -89,11 +89,11 @@ export const loadingActions = {
     )
   ),
 
-  cancelRequest: (loading, friendshipId) => (
+  cancelRequest: (loading, username) => (
     createAction(
       ACTION_CLASS.LOADING,
       CANCEL_REQUEST,
-      {loading, friendshipId}
+      {loading, username}
     )
   ),
 

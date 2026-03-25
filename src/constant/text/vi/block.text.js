@@ -19,4 +19,9 @@ export const block = {
     loadingLabel: "Đang gỡ chặn...",
     tooltip: "Gỡ bỏ khỏi danh sách chặn",
   },
+  blockButton: {
+    loadingLabel: "Đang chặn...",
+    tooltip: "Thêm vào danh sách chặn",
+  },
+  navigatePopup: "Bạn đã chặn người dùng này. Vui lòng gỡ chặn để truy cập",
 }

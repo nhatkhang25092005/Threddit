@@ -24,7 +24,7 @@ export function useDeleteFriend(dispatch) {
 
     if (response.success) {
       dispatch(friendListActions.removeFriend(username))
-      isOwner && friendListActions.deleteMyFriend(username)
+      isOwner && dispatch(friendListActions.deleteMyFriend(username))
       if (onProfile) {
         dispatch(friendListActions.removeFriend(user.username))
       }

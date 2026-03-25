@@ -49,16 +49,16 @@ export const style = {
       width: "2rem",
       height: "2rem",
       backgroundColor: (theme) =>
-        theme.palette.mode === "dark" ? "#3A3B3C" : "#E4E6EB",
+        theme.palette.mode === "dark" ? "#182334" : "#E4E6EB",
       "&:hover": {
         backgroundColor: (theme) =>
-          theme.palette.mode === "dark" ? "#4E4F50" : "#D8DADF",
+          theme.palette.mode === "dark" ? "#475569" : "#D8DADF",
       },
     },
     divider: {
       height: "1px",
       backgroundColor: (theme) =>
-        theme.palette.mode === "dark" ? "#3E4042" : "#DADDE1",
+        theme.palette.mode === "dark" ? "#243041" : "#DADDE1",
       flexShrink: 0,
     },
     body: {
@@ -73,14 +73,14 @@ export const style = {
       "& .MuiInputBase-root": {
         borderRadius: "999rem",
         backgroundColor: (theme) =>
-          theme.palette.mode === "dark" ? "#3A3B3C" : "#F0F2F5",
+          theme.palette.mode === "dark" ? "#182334" : "#F0F2F5",
       },
       "& .MuiOutlinedInput-notchedOutline": {
         border: "none",
       },
     },
     searchIcon: {
-      color: (theme) => (theme.palette.mode === "dark" ? "#B0B3B8" : "#65676B"),
+      color: (theme) => (theme.palette.mode === "dark" ? "#94A3B8" : "#64748B"),
       fontSize: "1.15rem",
     },
     list: {
@@ -98,7 +98,7 @@ export const style = {
       "&::-webkit-scrollbar-thumb": {
         borderRadius: "999rem",
         backgroundColor: (theme) =>
-          theme.palette.mode === "dark" ? "#4E4F50" : "#CED0D4",
+          theme.palette.mode === "dark" ? "#475569" : "#CED0D4",
       },
     },
     empty: {
@@ -106,7 +106,7 @@ export const style = {
       lineHeight: 1.35,
       textAlign: "center",
       py: "1rem",
-      color: (theme) => (theme.palette.mode === "dark" ? "#B0B3B8" : "#65676B"),
+      color: (theme) => (theme.palette.mode === "dark" ? "#94A3B8" : "#64748B"),
     },
     row: {
       display: "flex",
@@ -119,7 +119,7 @@ export const style = {
       outline: "none",
       "&:hover": {
         backgroundColor: (theme) =>
-          theme.palette.mode === "dark" ? "#2F3031" : "#F2F3F5",
+          theme.palette.mode === "dark" ? "#182334" : "#F2F3F5",
       },
       "&:focus-visible": {
         boxShadow: "0 0 0 2px rgba(24,119,242,0.35)",
@@ -148,7 +148,7 @@ export const style = {
     username: {
       fontSize: "0.78rem",
       lineHeight: 1.2,
-      color: (theme) => (theme.palette.mode === "dark" ? "#B0B3B8" : "#65676B"),
+      color: (theme) => (theme.palette.mode === "dark" ? "#94A3B8" : "#64748B"),
       whiteSpace: "nowrap",
       overflow: "hidden",
       textOverflow: "ellipsis",
@@ -156,7 +156,7 @@ export const style = {
     helper: {
       fontSize: "0.78rem",
       lineHeight: 1.2,
-      color: (theme) => (theme.palette.mode === "dark" ? "#B0B3B8" : "#65676B"),
+      color: (theme) => (theme.palette.mode === "dark" ? "#94A3B8" : "#64748B"),
       px: "0.15rem",
     },
     footer: {

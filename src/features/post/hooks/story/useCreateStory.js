@@ -1,4 +1,5 @@
 import { useCallback, useRef } from "react"
+import { errorText } from "../../../../constant/text/vi/error.text"
 import useAuth from "../../../../core/auth/useAuth"
 import { useNotify } from "../../../../hooks/useNotify"
 import { useSafeRequest } from "../../../../hooks/useSafeRequest"
@@ -40,7 +41,7 @@ export function useCreateStory(dispatch) {
         const uploadResult = await storageService.uploadMediaAndGetSessionId(mediaList)
 
         if (!uploadResult?.success){
-          notify.popup(modal.title.error, uploadResult?.message || "Không thể upload media")
+          notify.popup(modal.title.error, uploadResult?.message || errorText.upload.media)
         }
         uploadSessionId = uploadResult.uploadSessionId
       }

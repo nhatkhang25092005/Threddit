@@ -35,7 +35,7 @@ export const sentListHandler = (state, action) => {
       return {
         ...state,
         sentList: state.sentList.filter(
-          (item) => item.friendshipId !== action.payload
+          (item) => item.recipient?.username !== action.payload
         ),
       }
     

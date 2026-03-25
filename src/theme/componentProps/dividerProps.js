@@ -5,7 +5,7 @@ export const dividerProps = {
       styleOverrides:{
         root:{
           backgroundColor:COLOR.divider.dark,
-          height:'2px',
+          height:'1px',
           width:'100%',
           border:'none'
         }

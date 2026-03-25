@@ -2,7 +2,6 @@ import { useCallback } from "react"
 import { useNotify } from "../../../hooks/useNotify"
 import { apiService } from "../services/api.service"
 import { modal } from "../../../constant/text/vi/modal"
-import { createFriend } from "../store/model/friend.model"
 import { loadingActions, requestListActions, friendListActions } from "../store/actions"
 import { useOrchestrate } from "../../../core/orchestrate/useOrchestrate"
 import useAuth from '../../../core/auth/useAuth'
@@ -21,8 +20,8 @@ export function useAcceptRequest(dispatch) {
     if (response.success) {
       dispatch(requestListActions.removeRequest(friendshipId))
       dispatch(requestListActions.decreaseRequestCount())
-      dispatch(friendListActions.addFriend(createFriend(requester)))
-      isOwner && dispatch(friendListActions.addMyFriend(createFriend(requester)))
+      dispatch(friendListActions.addFriend(requester))
+      isOwner && dispatch(friendListActions.addMyFriend(requester))
       sync.profile.acceptRequestSuccess()
       notify.snackbar(response.message, 3000)
       return

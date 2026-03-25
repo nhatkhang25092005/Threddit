@@ -44,7 +44,7 @@ export const style = {
       "&::-webkit-scrollbar-thumb": {
         borderRadius: "999rem",
         backgroundColor: (theme) =>
-          theme.palette.mode === "dark" ? "#6A6D73" : "#C8CDD4",
+          theme.palette.mode === "dark" ? "#64748B" : "#C8CDD4",
       },
     },
     commentPlaceholder: {
@@ -60,7 +60,7 @@ export const style = {
       gap: "0.55rem",
       border: "1px dashed",
       borderColor: (theme) =>
-        theme.palette.mode === "dark" ? "#4B4F57" : "#D0D6DE",
+        theme.palette.mode === "dark" ? "#475569" : "#D0D6DE",
       background: (theme) =>
         theme.palette.mode === "dark"
           ? "linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)"
@@ -73,7 +73,7 @@ export const style = {
       display: "grid",
       placeItems: "center",
       backgroundColor: (theme) =>
-        theme.palette.mode === "dark" ? "#2E3238" : "#E9EEF6",
+        theme.palette.mode === "dark" ? "#131F31" : "#E9EEF6",
     },
     commentIcon: {
       fontSize: "1.4rem",
@@ -90,7 +90,7 @@ export const style = {
       fontSize: "0.88rem",
       lineHeight: 1.55,
       color: (theme) =>
-        theme.palette.mode === "dark" ? "#AEB4BC" : "#657182",
+        theme.palette.mode === "dark" ? "#94A3B8" : "#64748B",
     },
     sharedUnavailableBox: {
       mx: "1rem",
@@ -100,15 +100,15 @@ export const style = {
       borderRadius: "0.8rem",
       border: "1px solid",
       borderColor: (theme) =>
-        theme.palette.mode === "dark" ? "#3B3F45" : "#DADDE1",
+        theme.palette.mode === "dark" ? "#243041" : "#DADDE1",
       backgroundColor: (theme) =>
-        theme.palette.mode === "dark" ? "#18191A" : "#FFFFFF",
+        theme.palette.mode === "dark" ? "#0B121E" : "#FFFFFF",
     },
     sharedUnavailableText: {
       fontSize: "0.88rem",
       lineHeight: 1.5,
       color: (theme) =>
-        theme.palette.mode === "dark" ? "#B0B3B8" : "#65676B",
+        theme.palette.mode === "dark" ? "#94A3B8" : "#64748B",
     },
   },
   postDetail: {
@@ -145,7 +145,7 @@ export const style = {
       borderTop: "1px solid",
       borderBottom: "1px solid",
       borderColor: (theme) =>
-        theme.palette.mode === "dark" ? "#303236" : "#DADDE1",
+        theme.palette.mode === "dark" ? "#243041" : "#DADDE1",
     },
     actionsRow: {
       ...basePost.actionsRow,

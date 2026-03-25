@@ -3,6 +3,7 @@ import { useState } from "react";
 import MoodIcon from "@mui/icons-material/Mood";
 import {EMOJI} from '../../../../constant/emoji'
 import Surface from "../../../../components/common/Surface";
+import { composerText } from "../../../../constant/text/vi/post/composer.text";
 import { style } from "./style";
 
 const sx = style.emoji;
@@ -67,10 +68,10 @@ export default function Emoji({mention}) {
         sx={sx.popover}
       >
         <Surface sx={sx.emojiPicker}>
-          <Typography sx={sx.emojiPickerTitle}>Chọn biểu cảm</Typography>
+          <Typography sx={sx.emojiPickerTitle}>{composerText.emoji.title}</Typography>
           <Box sx={sx.emojiTypeFlex}>
             {Object.entries(EMOJI).map(([type, emojis]) => (
-              <Box sx={sx.emojiTypeItem}>
+              <Box key={type} sx={sx.emojiTypeItem}>
                 <Typography>{type}</Typography>
                 <Box sx={sx.emojiGrid}>
                   {emojis.map(emoji => (

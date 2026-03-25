@@ -43,7 +43,7 @@ export default function CommentBlockBubble({
           submitLabel={commentText.saveEdit}
         />
       ) : (
-        <>
+        <Box sx={sx.bubbleContent}>
           {comment.replyTo?.username ? (
             <Typography sx={sx.replyTo}>
               {commentText.replyToPrefix} @{comment.replyTo.username}
@@ -53,7 +53,7 @@ export default function CommentBlockBubble({
           {comment.text ? <Typography sx={sx.text}>{comment.text}</Typography> : null}
 
           <CommentMediaList items={comment.media} />
-        </>
+        </Box>
       )}
     </Box>
   );

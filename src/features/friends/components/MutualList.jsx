@@ -12,7 +12,7 @@ function MutualListUI({ mutualList, navigateChecker }) {
 
   return (
     <Grid container spacing={2} width="100%">
-      {mutualList.map(({ friend: mutualFriend }) => (
+      {mutualList.map((mutualFriend) => (
         <Grid
           xs={6}
           key={mutualFriend.username}

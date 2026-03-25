@@ -1,6 +1,7 @@
 import {CircularProgress, CardMedia, Box, Button, Typography} from '@mui/material'
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { forwardRef, memo } from 'react';
+import { profile } from '../../constant/text/vi/profile.text';
 import ImageInput from '../common/input/ImageInput';
 
 /**
@@ -106,7 +107,7 @@ const BackgroundImg = memo(forwardRef(function BackgroundImg({
                       variant="normal"
                       sx={{ textTransform: 'none', fontWeight: 'bold' }}
                     >
-                      Chỉnh sửa ảnh bìa
+                      {profile.background.edit_button}
                     </Typography>
                   </>
                 )}

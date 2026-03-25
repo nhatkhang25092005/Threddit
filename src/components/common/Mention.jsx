@@ -188,7 +188,7 @@ export default function Mention({
           width: '250px',
           overflowY: 'auto',
           zIndex: 1300,
-          bgcolor: '#323232',
+          bgcolor: '#182334',
           border: '1px solid #444',
         }}
       >

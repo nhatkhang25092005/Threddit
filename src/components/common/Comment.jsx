@@ -47,9 +47,9 @@ function CommentMenu({editComment, deleteComment}){
       }}
       sx={{
         "& .MuiPaper-elevation":{
-          bgcolor:"#0A0B0B",
+          bgcolor:"#071120",
           marginLeft:"80px",
-          border:"solid #BCBDBF 1px"
+          border:"solid #94A3B8 1px"
         }
       }}
     >

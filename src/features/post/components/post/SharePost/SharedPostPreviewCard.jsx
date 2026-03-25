@@ -1,4 +1,5 @@
 import { Box, Typography } from "@mui/material";
+import { detailPost } from "../../../../../constant/text/vi/post/detailpost.text";
 import { PostActions, PostHeader, PostMedia, PostText } from "../Post/components";
 import { style } from "../style";
 import { formatDateTime, resolveMedia } from "./sharedPost.utils";
@@ -37,7 +38,7 @@ export default function SharedPostPreviewCard({
       ) : (
         <Box sx={sx.section}>
           <Typography sx={sx.sharedUnavailable}>
-            Bài viết được chia sẻ hiện không còn tồn tại
+            {detailPost.sharedPostUnavailable}
           </Typography>
         </Box>
       )}

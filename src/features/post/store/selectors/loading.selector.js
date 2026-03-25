@@ -1,4 +1,13 @@
 export const createLoadingSelector = (state) => {
+  const getFeedFetchingLoading = () => (
+    state.loading.global.getFeeds
+  )
+  const getReelFetchingLoading = () => (
+    state.loading.global.getReels
+  )
+  const getSearchFetchingLoading = () => (
+    state.loading.global.getSearch
+  )
   const getCreatePostLoading = () =>(
     state.loading.global.createPost
   )
@@ -18,6 +27,9 @@ export const createLoadingSelector = (state) => {
     state.loading.global.getSavedPost
   )
   return {
+    getFeedFetchingLoading,
+    getReelFetchingLoading,
+    getSearchFetchingLoading,
     getCreatePostLoading,
     getCreateStoryLoading,
     getEditPostLoading,

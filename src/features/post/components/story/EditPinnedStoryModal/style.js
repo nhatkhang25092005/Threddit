@@ -18,16 +18,16 @@ export const style = {
       flexDirection: 'column',
       borderRadius: '0.8rem',
       border: '1px solid',
-      borderColor: (theme) => (theme.palette.mode === 'dark' ? '#30343A' : '#D9E1E8'),
+      borderColor: (theme) => (theme.palette.mode === 'dark' ? '#243041' : '#D9E1E8'),
       background: (theme) => (theme.palette.mode === 'dark'
-        ? 'linear-gradient(180deg, #171A1E 0%, #111316 100%)'
+        ? 'linear-gradient(180deg, #0B121E 0%, #0B121E 100%)'
         : 'linear-gradient(180deg, #FFFFFF 0%, #F7F9FC 100%)'),
       boxShadow: (theme) => (theme.palette.mode === 'dark'
         ? '0 24px 64px rgba(0,0,0,0.44)'
         : '0 24px 64px rgba(15,23,42,0.18)'),
     },
     divider: {
-      borderColor: (theme) => (theme.palette.mode === 'dark' ? '#2B3035' : '#E5EAF0'),
+      borderColor: (theme) => (theme.palette.mode === 'dark' ? '#243041' : '#E5EAF0'),
     },
     header: {
       container: {
@@ -58,7 +58,7 @@ export const style = {
       subtitle: {
         fontSize: '0.83rem',
         lineHeight: 1.45,
-        color: (theme) => (theme.palette.mode === 'dark' ? '#A7B0BC' : '#627181'),
+        color: (theme) => (theme.palette.mode === 'dark' ? '#94A3B8' : '#64748B'),
       },
       counter: {
         mt: '0.12rem',
@@ -73,7 +73,7 @@ export const style = {
         backgroundColor: (theme) => (theme.palette.mode === 'dark'
           ? 'rgba(94,139,255,0.14)'
           : 'rgba(94,139,255,0.08)'),
-        color: '#5E8BFF',
+        color: '#3B82F6',
         fontSize: '0.74rem',
         fontWeight: 800,
         lineHeight: 1.1,
@@ -83,10 +83,10 @@ export const style = {
         height: '2.3rem',
         flexShrink: 0,
         border: '1px solid',
-        borderColor: (theme) => (theme.palette.mode === 'dark' ? '#363A40' : '#DBE1E8'),
-        backgroundColor: (theme) => (theme.palette.mode === 'dark' ? '#23262B' : '#F3F5F7'),
+        borderColor: (theme) => (theme.palette.mode === 'dark' ? '#243041' : '#DBE1E8'),
+        backgroundColor: (theme) => (theme.palette.mode === 'dark' ? '#131F31' : '#F3F5F7'),
         '&:hover': {
-          backgroundColor: (theme) => (theme.palette.mode === 'dark' ? '#2D3138' : '#E9EDF2'),
+          backgroundColor: (theme) => (theme.palette.mode === 'dark' ? '#182334' : '#E9EDF2'),
         },
       },
       closeIcon: {
@@ -107,7 +107,7 @@ export const style = {
       helperText: {
         fontSize: '0.84rem',
         lineHeight: 1.5,
-        color: (theme) => (theme.palette.mode === 'dark' ? '#AAB3BE' : '#627181'),
+        color: (theme) => (theme.palette.mode === 'dark' ? '#94A3B8' : '#64748B'),
       },
     },
     grid: {
@@ -173,11 +173,11 @@ export const style = {
         width: '2rem',
         height: '2rem',
         border: '1px solid',
-        borderColor: (theme) => (theme.palette.mode === 'dark' ? '#3A3F46' : '#D4DCE4'),
+        borderColor: (theme) => (theme.palette.mode === 'dark' ? '#243041' : '#D4DCE4'),
         bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#20242A' : '#FFFFFF'),
         boxShadow: '0 10px 24px rgba(15,23,42,0.18)',
         '&:hover': {
-          bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#2B3037' : '#F7F9FB'),
+          bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#243041' : '#F7F9FB'),
         },
         '&.Mui-disabled': {
           opacity: 0,
@@ -251,7 +251,7 @@ export const style = {
         backgroundColor: (theme) => (theme.palette.mode === 'dark'
           ? 'rgba(94,139,255,0.14)'
           : 'rgba(94,139,255,0.1)'),
-        color: '#5E8BFF',
+        color: '#3B82F6',
       },
       title: {
         fontSize: '1rem',
@@ -262,10 +262,10 @@ export const style = {
         maxWidth: '19rem',
         fontSize: '0.88rem',
         lineHeight: 1.55,
-        color: (theme) => (theme.palette.mode === 'dark' ? '#B3BCC8' : '#617184'),
+        color: (theme) => (theme.palette.mode === 'dark' ? '#B3BCC8' : '#64748B'),
       },
       loader: {
-        color: '#5E8BFF',
+        color: '#3B82F6',
       },
     },
   },

@@ -27,5 +27,17 @@ export const notification = {
   notification:{
     delete: 'Xóa thông báo',
     mark_as_read:'Đánh dấu là đã đọc'
-  }
+  },
+  popup: {
+    closeButton: "Đóng",
+  },
+  loading: {
+    title: "Vui lòng chờ",
+    defaultMessage: "Đang xử lý, vui lòng chờ trong giây lát...",
+  },
+  defaults: {
+    noContent: "Không có nội dung",
+    noTitle: "Thông báo",
+    noButtonLabel: "Ok",
+  },
 }

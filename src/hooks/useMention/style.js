@@ -1,10 +1,13 @@
 export const OVERLAY_BASE_STYLE = {
   position: "fixed",
-  zIndex: 1500,
+  zIndex: 2200,
   background: "rgba(20,20,20,0.98)",
+  border: "1px solid rgba(255,255,255,0.12)",
   borderRadius: 12,
   padding: 6,
   minWidth: 220,
+  maxHeight: 280,
+  overflowY: "auto",
   boxShadow: "0 12px 30px rgba(0,0,0,0.35)",
 };
 

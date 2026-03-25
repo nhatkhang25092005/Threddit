@@ -18,7 +18,7 @@ export const friendListHandler = (state, action) => {
       const newFriends = action.payload
       const newPerFriendLoadingMap = {}
       newFriends.forEach(f => {
-        newPerFriendLoadingMap[f.friend.username] = createPerFriendLoading(f.isFriend)
+        newPerFriendLoadingMap[f.username] = createPerFriendLoading(true)
       })
       return{
         ...state,
@@ -41,7 +41,7 @@ export const friendListHandler = (state, action) => {
           ...state.loading,
           perFriend:{
             ...state.loading.perFriend,
-            [action.payload.friend.username]: createPerFriendLoading()
+            [action.payload.username]: createPerFriendLoading(true)
           }
         }
       }
@@ -50,7 +50,7 @@ export const friendListHandler = (state, action) => {
       return {
         ...state,
         friendList: state.friendList.filter(
-          (item) => item.friend.username !== action.payload
+          (item) => item.username !== action.payload
         ),
       }
 
@@ -85,7 +85,7 @@ export const friendListHandler = (state, action) => {
       return{
         ...state,
         myFriendList:state.myFriendList.filter(
-          (item)=>item.friend.username !== action.payload
+          (item)=>item.username !== action.payload
         )
       }
     default: return state

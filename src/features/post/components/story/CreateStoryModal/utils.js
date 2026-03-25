@@ -43,7 +43,7 @@ export const STORY_MEDIA_ACTIONS = Object.freeze([
     label: MEDIA_ACTION_TEXT.video.label,
     removeLabel: MEDIA_ACTION_TEXT.video.removeLabel,
     caption: MEDIA_ACTION_TEXT.video.caption,
-    accent: "#5E8BFF",
+    accent: "#3B82F6",
     Icon: VideocamIcon,
   },
   {

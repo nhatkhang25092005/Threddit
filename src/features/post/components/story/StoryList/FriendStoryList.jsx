@@ -2,6 +2,7 @@ import { Avatar, Box, ButtonBase, CircularProgress, Divider, Typography } from '
 import RadioButtonCheckedRoundedIcon from '@mui/icons-material/RadioButtonCheckedRounded'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { story } from '../../../../../constant/text/vi/story'
 import useAuth from '../../../../../core/auth/useAuth'
 import { usePostContext } from '../../../hooks'
 import { buildStoryRoute } from '../storyRoute'
@@ -10,10 +11,10 @@ import { style } from '../style'
 const sx = style.storyList
 
 const formatStoryTime = (createdAt) => {
-  if (!createdAt) return 'Vừa xong'
+  if (!createdAt) return story.shared.justNow
 
   const date = new Date(createdAt)
-  if (Number.isNaN(date.getTime())) return 'Vừa xong'
+  if (Number.isNaN(date.getTime())) return story.shared.justNow
 
   return date.toLocaleString('vi-VN', {
     hour: '2-digit',
@@ -172,7 +173,7 @@ export default function FriendStoryList() {
       <Box sx={sx.friendSidebarCard}>
         {myStoryEntry ? (
           <>
-            <Typography sx={sx.friendSidebarEyebrow}>Tin của bạn</Typography>
+            <Typography sx={sx.friendSidebarEyebrow}>{story.storyList.yourStories}</Typography>
 
             <Box sx={sx.friendSidebarListSection}>
               <StorySidebarItem
@@ -191,14 +192,14 @@ export default function FriendStoryList() {
 
         {friendStoryEntries.length > 0 || isFetchingFriendStories ? (
           <>
-            <Typography sx={sx.friendSidebarEyebrow}>Tin của bạn bè</Typography>
+            <Typography sx={sx.friendSidebarEyebrow}>{story.storyList.friendStories}</Typography>
 
             <Box sx={sx.friendSidebarList}>
               {isFetchingFriendStories && friendStoryEntries.length === 0 ? (
                 <Box sx={sx.friendSidebarLoading}>
                   <CircularProgress size={20} thickness={5} sx={{ color: '#F8FAFC' }} />
                   <Typography sx={sx.friendSidebarLoadingText}>
-                    Đang lấy danh sách tin
+                    {story.storyList.fetchingList}
                   </Typography>
                 </Box>
               ) : null}

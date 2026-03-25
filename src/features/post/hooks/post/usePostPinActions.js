@@ -1,6 +1,7 @@
 import { useCallback, useRef } from "react";
 import { useNotify } from "../../../../hooks/useNotify";
 import { modal } from "../../../../constant/text/vi/modal";
+import { post } from "../../../../constant/text/vi/post/post";
 import { postService } from "../../services";
 import { postByIdActions } from "../../store/actions";
 import { resolvePinnedStatus } from "../../utils/resolvePinnedStatus";
@@ -20,7 +21,7 @@ export function usePostPinActions(dispatch) {
         () => (shouldPin ? postService.pinContent(id) : postService.unPinContent(id)),
         (isLoading) =>
           notify.snackbarLoading(
-            shouldPin ? 'Đang ghim bài viết...' : 'Đang gỡ ghim bài viết...',
+            shouldPin ? post.loading.pin : post.loading.unpin,
             isLoading
           )
       )

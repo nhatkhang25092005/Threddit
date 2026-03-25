@@ -33,7 +33,7 @@ export const style = {
       height: '100%',
       objectFit: 'cover',
       display: 'block',
-      backgroundColor: '#111316',
+      backgroundColor: '#0B121E',
     },
     audioPreview:{
       width: '100%',
@@ -160,8 +160,8 @@ export const style = {
       width: '2rem',
       height: '2rem',
       border: '1px solid',
-      borderColor: (theme) => (theme.palette.mode === 'dark' ? '#3A3B3C' : '#D0D7DE'),
-      bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#242526' : '#ffffff'),
+      borderColor: (theme) => (theme.palette.mode === 'dark' ? '#182334' : '#D0D7DE'),
+      bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#131F31' : '#ffffff'),
       boxShadow: '0 2px 10px rgba(0,0,0,0.22)',
       '&:hover': {
         bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#303233' : '#F7F9FB'),
@@ -397,7 +397,7 @@ export const style = {
       py:'0.16rem',
       borderRadius:'999rem',
       backgroundColor:isActive ? 'rgba(126,231,200,0.18)' : 'rgba(255,255,255,0.08)',
-      color:isActive ? '#7EE7C8' : '#F8FAFC',
+      color:isActive ? '#00F2FF' : '#F8FAFC',
       fontSize:'0.68rem',
       fontWeight:800,
       lineHeight:1,
@@ -405,7 +405,7 @@ export const style = {
     }),
     friendSidebarDot:(isActive = false)=>({
       fontSize:'0.78rem',
-      color:isActive ? '#7EE7C8' : 'rgba(255,255,255,0.28)',
+      color:isActive ? '#00F2FF' : 'rgba(255,255,255,0.28)',
     }),
     header:{
       display:'flex',
@@ -621,7 +621,7 @@ export const style = {
       subtitle:{
         fontSize:'0.82rem',
         lineHeight:1.35,
-        color:(theme)=>theme.palette.mode === 'dark' ? '#A7B0BC' : '#657284'
+        color:(theme)=>theme.palette.mode === 'dark' ? '#94A3B8' : '#657284'
       },
       closeButton:{
         width:'2.3rem',
@@ -629,9 +629,9 @@ export const style = {
         flexShrink:0,
         border:'1px solid',
         borderColor:(theme)=>theme.palette.mode === 'dark' ? '#36393E' : '#DBE1E8',
-        backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#23262B' : '#F3F5F7',
+        backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#131F31' : '#F3F5F7',
         '&:hover':{
-          backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#2D3138' : '#E9EDF2'
+          backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#182334' : '#E9EDF2'
         }
       },
       closeIcon:{
@@ -716,7 +716,7 @@ export const style = {
         aspectRatio:'9 / 16',
         overflow:'hidden',
         borderRadius:'1.3rem',
-        backgroundColor:'#0A0B0B',
+        backgroundColor:'#071120',
         border:'1px solid rgba(255,255,255,0.08)'
       },
       playbackControls:{
@@ -727,7 +727,7 @@ export const style = {
         px:'2rem',
         borderRadius:'2rem',
         border:'1px solid',
-        borderColor:(theme)=>theme.palette.mode === 'dark' ? '#2E3238' : '#DCE3EB',
+        borderColor:(theme)=>theme.palette.mode === 'dark' ? '#131F31' : '#DCE3EB',
         backgroundColor:(theme)=>theme.palette.mode === 'dark' ? 'rgba(18,20,24,0.92)' : 'rgba(255,255,255,0.94)',
         boxShadow:(theme)=>theme.palette.mode === 'dark'
           ? '0 8px 18px rgba(0,0,0,0.2)'
@@ -793,7 +793,7 @@ export const style = {
         gap:'0.8rem',
         px:'1.2rem',
         textAlign:'center',
-        background:'radial-gradient(circle at top, rgba(120,134,153,0.16), transparent 46%), #0A0B0B'
+        background:'radial-gradient(circle at top, rgba(120,134,153,0.16), transparent 46%), #071120'
       },
       placeholderIcon:{
         width:'3.25rem',
@@ -841,7 +841,7 @@ export const style = {
         px:'1.25rem',
         color:'#FFFFFF',
         textAlign:'center',
-        background:'radial-gradient(circle at top, rgba(63,109,100,0.34), transparent 44%), #0A0B0B'
+        background:'radial-gradient(circle at top, rgba(63,109,100,0.34), transparent 44%), #071120'
       },
       audioIconWrap:{
         width:'4rem',
@@ -873,7 +873,7 @@ export const style = {
         p:'0.85rem 0.9rem',
         borderRadius:'0.9rem',
         border:'1px solid',
-        borderColor:(theme)=>theme.palette.mode === 'dark' ? '#2E3238' : '#DCE3EB',
+        borderColor:(theme)=>theme.palette.mode === 'dark' ? '#131F31' : '#DCE3EB',
         backgroundColor:(theme)=>theme.palette.mode === 'dark' ? 'rgba(26,29,33,0.92)' : 'rgba(255,255,255,0.94)'
       },
       belowTextLabel:{
@@ -999,14 +999,14 @@ export const style = {
           height:'2.45rem',
           borderRadius:'0.8rem',
           border:'1px solid',
-          borderColor:(theme)=>theme.palette.mode === 'dark' ? '#343942' : '#D6DEE8',
+          borderColor:(theme)=>theme.palette.mode === 'dark' ? '#243041' : '#D6DEE8',
           backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#181B20' : '#F8FAFC',
           '&:hover':{
-            backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#232831' : '#EFF3F8'
+            backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#131F31' : '#EFF3F8'
           }
         },
         tagIcon:{
-          color:'#5E8BFF',
+          color:'#3B82F6',
           fontSize:'1.25rem'
         },
         emojiAction:{
@@ -1017,11 +1017,11 @@ export const style = {
           justifyContent:'center',
           borderRadius:'0.8rem',
           border:'1px solid',
-          borderColor:(theme)=>theme.palette.mode === 'dark' ? '#343942' : '#D6DEE8',
+          borderColor:(theme)=>theme.palette.mode === 'dark' ? '#243041' : '#D6DEE8',
           backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#181B20' : '#F8FAFC',
           cursor:'pointer',
           '&:hover':{
-            backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#232831' : '#EFF3F8'
+            backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#131F31' : '#EFF3F8'
           },
         },
         editorWrap:{
@@ -1029,11 +1029,11 @@ export const style = {
           overflow:'visible',
           borderRadius:'0.95rem',
           border:'1px solid',
-          borderColor:(theme)=>theme.palette.mode === 'dark' ? '#333840' : '#D7E0EA',
-          backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#111316' : '#F7F9FC',
+          borderColor:(theme)=>theme.palette.mode === 'dark' ? '#243041840' : '#D7E0EA',
+          backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#0B121E' : '#F7F9FC',
           transition:'border-color 0.2s ease, box-shadow 0.2s ease',
           '&:focus-within':{
-            borderColor:'#5E8BFF',
+            borderColor:'#3B82F6',
             boxShadow:'0 0 0 3px rgba(94,139,255,0.12)'
           }
         },
@@ -1060,7 +1060,7 @@ export const style = {
         helperText:{
           fontSize:'0.83rem',
           lineHeight:1.45,
-          color:(theme)=>theme.palette.mode === 'dark' ? '#A7B0BC' : '#617184'
+          color:(theme)=>theme.palette.mode === 'dark' ? '#94A3B8' : '#64748B'
         },
         helperRow:{
           display:'flex',
@@ -1172,7 +1172,7 @@ export const style = {
         color:(theme)=>theme.palette.mode === 'dark' ? '#EEF2F7' : '#18212C',
         backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#1A1E23' : '#F8FAFC',
         '&:hover':{
-          backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#232831' : '#EFF3F8'
+          backgroundColor:(theme)=>theme.palette.mode === 'dark' ? '#131F31' : '#EFF3F8'
         }
       },
       primaryButton:{
@@ -1204,13 +1204,13 @@ export const style = {
         border:'1px solid',
         borderColor: state.isRemove
           ? 'rgba(220, 83, 72, 0.44)'
-          : (state.isActive ? accent : ((theme)=>theme.palette.mode === 'dark' ? '#31363D' : '#D8E0EA')),
+          : (state.isActive ? accent : ((theme)=>theme.palette.mode === 'dark' ? '#243041' : '#D8E0EA')),
         background: state.isRemove
           ? 'linear-gradient(180deg, rgba(78,22,22,0.45) 0%, rgba(38,14,14,0.56) 100%)'
           : (state.isActive
             ? `linear-gradient(180deg, ${accent}20 0%, ${accent}10 100%)`
             : ((theme)=>theme.palette.mode === 'dark'
-              ? 'linear-gradient(180deg, #171A1E 0%, #121417 100%)'
+              ? 'linear-gradient(180deg, #0B121E 0%, #121417 100%)'
               : 'linear-gradient(180deg, #FFFFFF 0%, #F6F8FB 100%)')),
         opacity: state.isDisabled ? 0.48 : 1,
         cursor: state.isDisabled ? 'not-allowed' : 'pointer',

@@ -1,5 +1,6 @@
 import { Box, Button, Typography } from '@mui/material'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
+import { story } from '../../../../../constant/text/vi/story'
 import { style } from '../style'
 
 const sx = style.storyList
@@ -20,7 +21,7 @@ export default function StoryListHeader({ onClose, pageMeta, username }) {
         startIcon={<CloseRoundedIcon />}
         sx={sx.closeButton}
       >
-        Đóng
+        {story.shared.closeButton}
       </Button>
     </Box>
   )

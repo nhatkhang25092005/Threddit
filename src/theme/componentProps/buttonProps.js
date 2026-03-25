@@ -8,7 +8,13 @@ export const buttonProps = {
           backgroundColor:COLOR.button.primary.default.bg[theme.palette.mode],
           color:COLOR.button.primary.default.text[theme.palette.mode],
           fontWeight:'bold',
-          boxShadow:`4px 4px 4px ${COLOR.button.primary.default.shadow[theme.palette.mode]}`,
+          borderRadius:'0.9rem',
+          boxShadow:`0 12px 24px ${COLOR.button.primary.default.shadow[theme.palette.mode]}`,
+          textTransform:'none',
+          '&:hover':{
+            backgroundColor:COLOR.app.cyan,
+            color:COLOR.app.black
+          },
         
           '&.Mui-disabled':{
             backgroundColor:COLOR.button.primary.disable.bg[theme.palette.mode],
@@ -22,7 +28,9 @@ export const buttonProps = {
           textTransform:'none',
           backgroundColor:COLOR.button.secondary.bg[theme.palette.mode],
           color:COLOR.button.secondary.text[theme.palette.mode],
-          boxShadow:`4px 4px 4px ${COLOR.button.secondary.shadow[theme.palette.mode]}`,
+          borderRadius:'0.9rem',
+          border:`1px solid ${COLOR.app.border}`,
+          boxShadow:`0 10px 20px ${COLOR.button.secondary.shadow[theme.palette.mode]}`,
           '&:hover':{
             backgroundColor:COLOR.button.secondary.hover.bg[theme.palette.mode],
           }
@@ -56,13 +64,16 @@ export const buttonProps = {
         style:({theme})=>({
           color:COLOR.button.warning[theme.palette.mode].text,
           backgroundColor:COLOR.button.warning[theme.palette.mode].bg,
-          boxShadow:`4px 4px 4px ${COLOR.button.warning[theme.palette.mode].shadow}`,
+          borderRadius:'0.9rem',
+          boxShadow:`0 12px 24px ${COLOR.button.warning[theme.palette.mode].shadow}`,
         })
       },
       {
         props:{variant:'dialog'},
         style:({theme})=>({
           backgroundColor:COLOR.button.dialog.bg[theme.palette.mode],
+          color:COLOR.app.text,
+          border:`1px solid ${COLOR.app.border}`,
           transition:'transform 0.1s ease-in-out',
           '&:hover':{
             transform:'scale(1.02)'
@@ -74,6 +85,7 @@ export const buttonProps = {
         style:({theme})=>({
           backgroundColor:COLOR.button.outline.bg[theme.palette.mode],
           border:`solid ${COLOR.button.outline.border[theme.palette.mode]} 1px`,
+          color:COLOR.app.text,
           transition:'transform 0.1s ease-in-out',
           '&:hover':{
             transform:'scale(1.02)'

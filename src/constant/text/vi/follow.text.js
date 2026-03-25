@@ -27,6 +27,10 @@ export const follow = {
     following:'Đang theo dõi',
     not_following:'Theo dõi'
   },
+  legacyCard: {
+    following: "Đã theo dõi",
+    notFollowing: "Theo dõi",
+  },
 
   loading:{
     get_follower:'Đang lấy danh sách người theo dõi...',
@@ -36,5 +40,9 @@ export const follow = {
   empty:{
     follower:'Bạn chưa được ai theo dõi',
     following:'Bạn chưa theo dõi ai'
+  },
+  error: {
+    followFailed: "Theo dõi thất bại",
+    unfollowFailed: "Bỏ theo dõi thất bại",
   }
 }

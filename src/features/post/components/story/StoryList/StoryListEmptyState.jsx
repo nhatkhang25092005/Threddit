@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material'
+import { story } from '../../../../../constant/text/vi/story'
 import { style } from '../style'
 
 const sx = style.storyList
@@ -7,12 +8,12 @@ export default function StoryListEmptyState({ isFetching }) {
   return (
     <Box sx={sx.emptyState}>
       <Typography sx={sx.emptyTitle}>
-        {isFetching ? 'Đang tải story...' : 'Không tìm thấy'}
+        {isFetching ? story.storyList.loadingTitle : story.storyList.emptyTitle}
       </Typography>
       <Typography sx={sx.emptyText}>
         {isFetching
-          ? 'Đang đồng bộ danh sách tin.'
-          : 'Người dùng này hiện không có tin nào.'}
+          ? story.storyList.loadingText
+          : story.storyList.emptyText}
       </Typography>
     </Box>
   )

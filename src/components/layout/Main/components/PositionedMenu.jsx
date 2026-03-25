@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
 import Icon from './Icon'
 
 /**
@@ -49,7 +51,16 @@ import Icon from './Icon'
  * - MenuItem click handlers do NOT auto-close the menu
  *   unless handled inside `func` or via `onClose`.
  */
-export default function PositionedMenu({sx, tasks, onClose, icon = null, buttonSx = null}) {
+export default function PositionedMenu({
+  sx,
+  tasks,
+  onClose,
+  icon = null,
+  buttonSx = null,
+  label = null,
+  labelSx = null,
+  iconWrapSx = null
+}) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -62,16 +73,34 @@ export default function PositionedMenu({sx, tasks, onClose, icon = null, buttonS
 
   return (
     <div style={{...sx}}>
-      <IconButton
-        id="demo-positioned-button"
-        aria-controls={open ? 'demo-positioned-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
-        sx={buttonSx}
-      >
-        <Icon Icon={icon}/>
-      </IconButton>
+      {label ? (
+        <Box
+          component="button"
+          type="button"
+          id="demo-positioned-button"
+          aria-controls={open ? 'demo-positioned-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          onClick={handleClick}
+          sx={buttonSx}
+        >
+          <Box sx={iconWrapSx}>
+            <Icon Icon={icon}/>
+          </Box>
+          <Typography sx={labelSx}>{label}</Typography>
+        </Box>
+      ) : (
+        <IconButton
+          id="demo-positioned-button"
+          aria-controls={open ? 'demo-positioned-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          onClick={handleClick}
+          sx={buttonSx}
+        >
+          <Icon Icon={icon}/>
+        </IconButton>
+      )}
       
       <Menu
         id="demo-positioned-menu"

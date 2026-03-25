@@ -34,7 +34,6 @@ export function useInitMyFriendList(dispatch) {
         dispatch(friendListActions.addMyFriends(normalizeList));
       }
 
-      // dừng khi không còn cursor (hoặc BE trả null/undefined)
       if (!nextCursor) break;
     }
 

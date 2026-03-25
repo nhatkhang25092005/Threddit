@@ -39,7 +39,7 @@ export default function PopoverNotification({
     hasMore:state.unreadHasMore
   }
 
-  return(
+  const NotificationTriggerIcon = () => (
     <Badge
       color='error'
       badgeContent={state.unreadCount}
@@ -48,28 +48,32 @@ export default function PopoverNotification({
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       sx={badgeSx}
     >
-      <PopoverButton
-        closeReason={closeReason}
-        onClose={onClose}
-        disable={disable}
-        Icon={NotificationsIcon}
-        label={label}
-        buttonSx={buttonSx}
-        labelSx={labelSx}
-        surfaceVariant='modal'
-        surfaceSx={{p:2}}
-      >
-        <Box sx={sx.container}>
-          <Box sx={sx.header}>
-            <Typography variant='title'>{text.title}</Typography>
-            {state.unreadNotifications.length > 0  && <ReadAllBtn/>}
-          </Box>
-          <TabsController sx={sx.tabs_controller}>
-            <NotificationList label={text.tabs.all} {...allNotificationProps}/>
-            <NotificationList label={text.tabs.unread} {...unreadNotificationProps}/>
-          </TabsController>
-        </Box>
-      </PopoverButton>
+      <NotificationsIcon/>
     </Badge>
+  )
+
+  return(
+    <PopoverButton
+      closeReason={closeReason}
+      onClose={onClose}
+      disable={disable}
+      Icon={NotificationTriggerIcon}
+      label={label}
+      buttonSx={buttonSx}
+      labelSx={labelSx}
+      surfaceVariant='modal'
+      surfaceSx={{p:2}}
+    >
+      <Box sx={sx.container}>
+        <Box sx={sx.header}>
+          <Typography variant='title'>{text.title}</Typography>
+          {state.unreadNotifications.length > 0  && <ReadAllBtn/>}
+        </Box>
+        <TabsController sx={sx.tabs_controller}>
+          <NotificationList label={text.tabs.all} {...allNotificationProps}/>
+          <NotificationList label={text.tabs.unread} {...unreadNotificationProps}/>
+        </TabsController>
+      </Box>
+    </PopoverButton>
   )
 }

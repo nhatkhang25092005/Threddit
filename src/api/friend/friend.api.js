@@ -44,8 +44,8 @@ export const friendApi = {
     return axios.post(`${BASE}${REQUEST}/${friendshipId}${REJECT}`)
   },
 
-  cancelRequest: (friendshipId) => {
-    return axios.post(`${BASE}${REQUEST}/${friendshipId}${CANCEL}`)
+  cancelRequest: (username) => {
+    return axios.post(`${BASE}${REQUEST}/${username}${CANCEL}`)
   },
 
   getFriendList: (username = null, cursor, signal) => {

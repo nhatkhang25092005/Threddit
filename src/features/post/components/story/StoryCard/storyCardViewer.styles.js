@@ -31,7 +31,7 @@ export const storyCardViewerSx = {
     width: `${progress}%`,
     height: '100%',
     borderRadius: 'inherit',
-    background: 'linear-gradient(90deg, #7EE7C8 0%, #F0F6A2 100%)',
+    background: 'linear-gradient(90deg, #00F2FF 0%, #F0F6A2 100%)',
     transition: 'width 0.12s linear',
   }),
   header: {
@@ -112,7 +112,7 @@ export const storyCardViewerSx = {
     height: { xs: '2.1rem', md: '2.3rem' },
     border: '1px solid rgba(255,255,255,0.18)',
     backgroundColor: isPinned ? 'rgba(126,231,200,0.16)' : 'rgba(255,255,255,0.06)',
-    color: isPinned ? '#7EE7C8' : '#F8FAFC',
+    color: isPinned ? '#00F2FF' : '#F8FAFC',
     '&:hover': {
       backgroundColor: isPinned ? 'rgba(126,231,200,0.24)' : 'rgba(255,255,255,0.12)',
     },

@@ -38,21 +38,21 @@ export const style = {
       fontSize: "0.78rem",
       fontWeight: 700,
       color: (theme) => (theme.palette.mode === "dark" ? "#E7EAEE" : "#2A3340"),
-      backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#2A2E35" : "#EEF3F8"),
+      backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#182334" : "#EEF3F8"),
       border: "1px solid",
-      borderColor: (theme) => (theme.palette.mode === "dark" ? "#3A3F46" : "#DCE4EE"),
+      borderColor: (theme) => (theme.palette.mode === "dark" ? "#243041" : "#DCE4EE"),
     },
     hint: {
       fontSize: "0.82rem",
       lineHeight: 1.5,
-      color: (theme) => (theme.palette.mode === "dark" ? "#A8B0BA" : "#677688"),
+      color: (theme) => (theme.palette.mode === "dark" ? "#94A3B8" : "#64748B"),
     },
     composerWrap: {
       border: "1px solid",
-      borderColor: (theme) => (theme.palette.mode === "dark" ? "#2E343C" : "#E2E8F0"),
-      borderRadius: "1rem",
-      px: "0.75rem",
-      py: "0.68rem",
+      borderColor: (theme) => (theme.palette.mode === "dark" ? "#243041" : "#E2E8F0"),
+      borderRadius: "1.05rem",
+      px: "0.8rem",
+      py: "0.74rem",
       background: (theme) =>
         theme.palette.mode === "dark"
           ? "linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.015) 100%)"
@@ -77,7 +77,7 @@ export const style = {
       pb: "0.35rem",
       scrollbarWidth: "thin",
       scrollbarColor: (theme) =>
-        theme.palette.mode === "dark" ? "#6A6D73 transparent" : "#C8CDD4 transparent",
+        theme.palette.mode === "dark" ? "#64748B transparent" : "#C8CDD4 transparent",
       "&::-webkit-scrollbar": {
         height: "0.4rem",
       },
@@ -87,7 +87,7 @@ export const style = {
       "&::-webkit-scrollbar-thumb": {
         borderRadius: "999rem",
         backgroundColor: (theme) =>
-          theme.palette.mode === "dark" ? "#6A6D73" : "#C8CDD4",
+          theme.palette.mode === "dark" ? "#64748B" : "#C8CDD4",
       },
     },
     loadMoreWrap: {
@@ -117,7 +117,7 @@ export const style = {
     },
     emptyIcon: {
       fontSize: "1.45rem",
-      color: (theme) => (theme.palette.mode === "dark" ? "#C2CAD4" : "#506072"),
+      color: (theme) => (theme.palette.mode === "dark" ? "#94A3B8" : "#64748B"),
     },
     emptyTitle: {
       fontSize: "0.95rem",
@@ -128,7 +128,7 @@ export const style = {
       maxWidth: "28rem",
       fontSize: "0.86rem",
       lineHeight: 1.55,
-      color: (theme) => (theme.palette.mode === "dark" ? "#A8B0BA" : "#667587"),
+      color: (theme) => (theme.palette.mode === "dark" ? "#94A3B8" : "#64748B"),
     },
     skeletonList: {
       display: "flex",
@@ -170,123 +170,155 @@ export const style = {
     },
     composerCard: (compact) => ({
       display: "flex",
+      flexDirection: compact ? "row" : "column",
       alignItems: "flex-start",
-      gap: compact ? "0.5rem" : "0.6rem",
-      ...(compact && {
-        gap: "0.5rem",
-      }),
+      gap: compact ? "0.42rem" : "0.72rem",
+      width: "100%",
+      maxWidth: compact ? "20.5rem" : "none",
     }),
+    composerMainRow: {
+      display: "flex",
+      alignItems: "flex-start",
+      gap: "0.72rem",
+      width: "100%",
+    },
     composerAvatar: (compact) => ({
-      width: compact ? "2rem" : "2.35rem",
-      height: compact ? "2rem" : "2.35rem",
+      width: compact ? "1.9rem" : "2.35rem",
+      height: compact ? "1.9rem" : "2.35rem",
       flexShrink: 0,
     }),
-    composerBody: {
+    composerBody: (compact) => ({
       minWidth: 0,
       flex: 1,
       display: "flex",
       flexDirection: "column",
-      gap: "0.5rem",
-    },
-    composerTextarea: {
+      gap: compact ? "0.38rem" : "0.44rem",
+      width: "100%",
+    }),
+    composerTextarea: (compact) => ({
       "& .MuiOutlinedInput-root": {
         alignItems: "flex-start",
-        borderRadius: "0.95rem",
+        borderRadius: compact ? "0.82rem" : "0.9rem",
         backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#20242B" : "#F0F3F7"),
+        minHeight: compact ? "auto" : "2.45rem",
       },
       "& .MuiOutlinedInput-notchedOutline": {
-        borderColor: (theme) => (theme.palette.mode === "dark" ? "#313741" : "#D9E1EB"),
+        borderColor: (theme) => (theme.palette.mode === "dark" ? "#243041" : "#D9E1EB"),
       },
       "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
         borderColor: (theme) => (theme.palette.mode === "dark" ? "#46505D" : "#C7D4E2"),
       },
       "& .MuiInputBase-inputMultiline": {
-        fontSize: "0.95rem",
-        lineHeight: 1.45,
-        padding: "0.58rem 0.78rem",
+        fontSize: compact ? "0.9rem" : "0.95rem",
+        lineHeight: compact ? 1.35 : 1.3,
+        padding: compact ? "0.42rem 0.68rem" : "0.28rem 0.78rem",
       },
-    },
-    composerReplyTag: {
+    }),
+    composerReplyTag: (compact) => ({
       alignSelf: "flex-start",
-      px: "0.55rem",
-      py: "0.2rem",
+      px: compact ? "0.48rem" : "0.55rem",
+      py: compact ? "0.14rem" : "0.2rem",
       borderRadius: "999rem",
-      fontSize: "0.74rem",
+      fontSize: compact ? "0.7rem" : "0.74rem",
       fontWeight: 700,
-      color: (theme) => (theme.palette.mode === "dark" ? "#D8E1EB" : "#3F5368"),
+      color: (theme) => (theme.palette.mode === "dark" ? "#D8E1EB" : "#64748B"),
       backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#27303A" : "#EDF3F8"),
-    },
-    composerFooter: {
+    }),
+    composerFooter: (compact) => ({
+      display: "flex",
+      flexDirection: compact ? "row" : "column",
+      alignItems: compact ? "center" : "flex-end",
+      justifyContent: compact ? "space-between" : "flex-start",
+      gap: compact ? "0.42rem" : "0.55rem",
+      flexWrap: "wrap",
+      width: "100%",
+      ...(compact
+        ? {}
+        : {
+            borderTop: "1px solid",
+            borderColor: (theme) => (theme.palette.mode === "dark" ? "#243041" : "#E5EBF2"),
+            paddingTop: "0.65rem",
+          }),
+    }),
+    composerTools: (compact) => ({
       display: "flex",
       alignItems: "center",
-      justifyContent: "space-between",
-      gap: "0.55rem",
+      gap: compact ? "0.28rem" : "0.35rem",
       flexWrap: "wrap",
-    },
-    composerTools: {
+      justifyContent: compact ? "flex-start" : "flex-end",
+      width: compact ? "auto" : "100%",
+    }),
+    composerMediaTools: (compact) => ({
       display: "flex",
       alignItems: "center",
-      gap: "0.35rem",
+      gap: compact ? "0.28rem" : "0.35rem",
       flexWrap: "wrap",
-    },
-    composerEmojiWrap: {
-      minHeight: "1.9rem",
-      minWidth: "1.9rem",
-      px: "0.55rem",
+      justifyContent: "flex-start",
+      width: "auto",
+      minWidth: 0,
+    }),
+    composerEmojiWrap: (compact) => ({
+      minHeight: compact ? "1.72rem" : "1.9rem",
+      minWidth: compact ? "1.72rem" : "1.9rem",
+      px: compact ? "0.45rem" : "0.55rem",
       borderRadius: "999rem",
       display: "inline-flex",
       alignItems: "center",
       justifyContent: "center",
       color: (theme) => (theme.palette.mode === "dark" ? "#D7DEE7" : "#45576B"),
-      backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#232831" : "#EDF2F7"),
+      backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#131F31" : "#EDF2F7"),
       border: "1px solid",
-      borderColor: (theme) => (theme.palette.mode === "dark" ? "#313844" : "#DCE5EF"),
-    },
-    composerToolButton: {
-      minHeight: "1.9rem",
-      minWidth: "1.9rem",
-      px: "0.62rem",
+      borderColor: (theme) => (theme.palette.mode === "dark" ? "#243041" : "#DCE5EF"),
+    }),
+    composerToolButton: (compact) => ({
+      minHeight: compact ? "1.72rem" : "1.9rem",
+      minWidth: compact ? "1.72rem" : "1.9rem",
+      px: compact ? "0.5rem" : "0.62rem",
       borderRadius: "999rem",
       display: "inline-flex",
       alignItems: "center",
       justifyContent: "center",
-      gap: "0.35rem",
+      gap: compact ? "0.28rem" : "0.35rem",
       color: (theme) => (theme.palette.mode === "dark" ? "#D7DEE7" : "#45576B"),
-      backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#232831" : "#EDF2F7"),
+      backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#131F31" : "#EDF2F7"),
       border: "1px solid",
-      borderColor: (theme) => (theme.palette.mode === "dark" ? "#313844" : "#DCE5EF"),
+      borderColor: (theme) => (theme.palette.mode === "dark" ? "#243041" : "#DCE5EF"),
       cursor: "pointer",
       transition: "all 150ms ease",
       "&:hover": {
         backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#2E3641" : "#E7EEF6"),
       },
-    },
-    composerToolLabel: {
-      fontSize: "0.75rem",
+    }),
+    composerToolLabel: (compact) => ({
+      fontSize: compact ? "0.7rem" : "0.75rem",
       fontWeight: 700,
       lineHeight: 1,
-    },
-    composerActions: {
+    }),
+    composerActions: (compact) => ({
       display: "flex",
       alignItems: "center",
-      gap: "0.5rem",
+      gap: compact ? "0.38rem" : "0.5rem",
       marginLeft: "auto",
-    },
-    composerCancelButton: {
-      minHeight: "2rem",
-      px: "0.85rem",
+      justifyContent: "flex-end",
+      flexShrink: 0,
+    }),
+    composerCancelButton: (compact) => ({
+      minHeight: compact ? "1.8rem" : "2rem",
+      px: compact ? "0.7rem" : "0.85rem",
       borderRadius: "999rem",
       textTransform: "none",
       fontWeight: 700,
-    },
-    composerSubmitButton: {
-      minHeight: "2rem",
-      px: "0.95rem",
+      fontSize: compact ? "0.78rem" : "0.875rem",
+    }),
+    composerSubmitButton: (compact) => ({
+      minHeight: compact ? "1.8rem" : "2rem",
+      px: compact ? "0.8rem" : "0.95rem",
       borderRadius: "999rem",
       textTransform: "none",
       fontWeight: 700,
+      fontSize: compact ? "0.78rem" : "0.875rem",
       boxShadow: "none",
-    },
+    }),
     mediaPreviewList: {
       display: "grid",
       gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
@@ -352,7 +384,7 @@ export const style = {
       overflow: "hidden",
       borderRadius: "0.85rem",
       border: "1px solid",
-      borderColor: (theme) => (theme.palette.mode === "dark" ? "#313844" : "#DCE3EC"),
+      borderColor: (theme) => (theme.palette.mode === "dark" ? "#243041" : "#DCE3EC"),
       backgroundColor: "#000000",
     },
     mediaVisual: {
@@ -366,7 +398,7 @@ export const style = {
     mediaAudioItem: {
       borderRadius: "0.85rem",
       border: "1px solid",
-      borderColor: (theme) => (theme.palette.mode === "dark" ? "#313844" : "#DCE3EC"),
+      borderColor: (theme) => (theme.palette.mode === "dark" ? "#243041" : "#DCE3EC"),
       backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#171A1F" : "#F8FAFD"),
       p: "0.65rem",
     },

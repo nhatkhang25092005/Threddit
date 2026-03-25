@@ -3,6 +3,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded'
 import EditRoundedIcon from '@mui/icons-material/EditRounded'
 import PushPinRoundedIcon from '@mui/icons-material/PushPinRounded'
+import { story as storyText } from '../../../../../constant/text/vi/story'
 import { storyCardViewerSx as sx } from './storyCardViewer.styles'
 import { formatStoryCardTime } from './utils/storyCard.utils'
 import {usePostContext} from '../../../hooks/usePostContext'
@@ -66,13 +67,13 @@ export default function StoryCardViewerHeader({
       <Box sx={sx.authorWrap}>
         <Avatar
           src={story?.author?.avatarUrl || undefined}
-          alt={story?.author?.displayName || story?.author?.username || 'Story author'}
+          alt={story?.author?.displayName || story?.author?.username || storyText.viewer.fallbackAuthorName}
           sx={sx.authorAvatar}
         />
 
         <Box sx={sx.authorMeta}>
           <Typography sx={sx.authorName}>
-            {story?.author?.displayName || story?.author?.username || 'NgÆ°á»i dÃ¹ng'}
+            {story?.author?.displayName || story?.author?.username || storyText.viewer.fallbackAuthorName}
           </Typography>
           <Typography sx={sx.authorSubline}>
             @{story?.author?.username || 'story'} | {formatStoryCardTime(story?.time?.createdAt)}
@@ -86,13 +87,13 @@ export default function StoryCardViewerHeader({
 
         {canTogglePin ? (
           <IconButton
-            aria-label={story?.isPinned ? 'Unpin story' : 'Pin story'}
+            aria-label={story?.isPinned ? storyText.viewer.unpin : storyText.viewer.pin}
             disabled={isDeleteLoading || isEditLoading}
             id={story?.id != null ? `story-pin-trigger-${story.id}` : undefined}
             data-story-id={story?.id != null ? String(story.id) : undefined}
             data-story-pinned={story?.isPinned ? 'true' : 'false'}
             onClick={handlePinToggle}
-            title={story?.isPinned ? 'Unpin story' : 'Pin story'}
+            title={story?.isPinned ? storyText.viewer.unpin : storyText.viewer.pin}
             sx={sx.pinButton(Boolean(story?.isPinned))}
           >
             <PushPinRoundedIcon sx={sx.pinIcon} />
@@ -101,10 +102,10 @@ export default function StoryCardViewerHeader({
 
         {canEdit ? (
           <IconButton
-            aria-label="Chỉnh sửa tin"
+            aria-label={storyText.viewer.edit}
             disabled={isDeleteLoading || isEditLoading}
             onClick={handleOpenEdit}
-            title="Chỉnh sửa tin"
+            title={storyText.viewer.edit}
             sx={{
               ...sx.closeButton,
               border: '1px solid rgba(148, 195, 255, 0.3)',
@@ -123,10 +124,10 @@ export default function StoryCardViewerHeader({
 
         {canDelete ? (
           <IconButton
-            aria-label="XÃ³a tin"
+            aria-label={storyText.viewer.delete}
             disabled={isDeleteLoading || isEditLoading}
             onClick={handleDelete}
-            title="XÃ³a tin"
+            title={storyText.viewer.delete}
             sx={{
               ...sx.closeButton,
               border: '1px solid rgba(255, 133, 133, 0.32)',
@@ -143,7 +144,7 @@ export default function StoryCardViewerHeader({
           </IconButton>
         ) : null}
 
-        <IconButton onClick={onClose} aria-label="Close story" sx={sx.closeButton}>
+        <IconButton onClick={onClose} aria-label={storyText.viewer.close} sx={sx.closeButton}>
           <CloseRoundedIcon />
         </IconButton>
       </Box>

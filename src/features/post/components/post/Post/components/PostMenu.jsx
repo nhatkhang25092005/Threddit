@@ -61,24 +61,24 @@ export default function PostMenu({ postId, postContext }) {
 
   const pinAction = isPinned
     ? {
-        label: isPinnedLoading ? <CircularProgress size={20} color="inherit" /> : 'Hủy ghim bài viết',
+        label: isPinnedLoading ? <CircularProgress size={20} color="inherit" /> : post.menu.unpin,
         callback: () => unpinPost(postId),
         disabled: isPinnedLoading || isDeleteLoading || isEditLoading
       }
     : {
-        label: isPinnedLoading ? <CircularProgress size={20} color="inherit" /> : 'Ghim bài viết',
+        label: isPinnedLoading ? <CircularProgress size={20} color="inherit" /> : post.menu.pin,
         callback: () => pinPost(postId),
         disabled: isPinnedLoading || isDeleteLoading || isEditLoading
       }
 
   const editAction = {
-    label: isEditLoading ? <CircularProgress size={20} color="inherit" /> : "Chỉnh sửa bài viết",
+    label: isEditLoading ? <CircularProgress size={20} color="inherit" /> : post.menu.edit,
     callback: () => openModal("edit_post_modal", { postId }),
     disabled: isDeleteLoading || isPinnedLoading || isSaveLoading || isEditLoading
   }
 
   const deleteAction = {
-    label: isDeleteLoading ? <CircularProgress size={20} color="inherit" /> : 'Xóa bài viết',
+    label: isDeleteLoading ? <CircularProgress size={20} color="inherit" /> : post.menu.delete,
     callback: () => deletePost(postId),
     disabled: isDeleteLoading || isPinnedLoading || isSaveLoading || isEditLoading
   }
@@ -111,7 +111,7 @@ export default function PostMenu({ postId, postContext }) {
         p: 0,
         zIndex: 1,
         "&:hover": {
-          bgcolor: (t) => (t.palette.mode === "dark" ? "#2E3136" : "#EEF2F6"),
+          bgcolor: (t) => (t.palette.mode === "dark" ? "#131F31" : "#EEF2F6"),
           boxShadow: "none",
         },
       }}

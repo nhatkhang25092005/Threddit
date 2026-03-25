@@ -1,5 +1,6 @@
 import nullChecker from "./nullChecker";
 import { ERRORS } from "../constant";
+import { errorText } from "../constant/text/vi/error.text";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
@@ -123,7 +124,7 @@ export function validRegister(data) {
   }
 
   nullCheck.forEach((field)=>{
-    errorFields[field] = `Trường không được phép rỗng`
+    errorFields[field] = errorText.validation.required
   })
 
   return errorFields

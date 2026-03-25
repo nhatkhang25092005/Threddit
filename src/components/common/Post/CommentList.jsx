@@ -1,6 +1,6 @@
 import { Box, Fade, Typography } from "@mui/material";
 import Comment from "../Comment";
-import { TEXT } from "../../../constant";
+import { commentText } from "../../../constant/text/vi/post/comment.text";
 import CircularProgress from "@mui/material/CircularProgress";
 import { memo } from "react";
 import useInfiniteScroll from "../../../hooks/useInfiniteScroll";
@@ -30,7 +30,7 @@ const CommentList = memo(({
       <Box>
         <Box sx={{ flex: 1, my: '5rem' }}>
           <Typography textAlign="center" color="text.secondary">
-            {TEXT.NO_COMMENTS}
+            {commentText.emptyInline}
           </Typography>
         </Box>
       </Box>
@@ -79,7 +79,7 @@ const CommentList = memo(({
             variant="subtitle2"
             color="white"
           >
-            {TEXT.NO_MORE_COMMENTS || "Không còn bình luận nào"}
+            {commentText.noMoreComments}
           </Typography>
         </Box>
       )}

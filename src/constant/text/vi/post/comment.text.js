@@ -29,4 +29,7 @@ export const commentText = {
   replyToPrefix: "Trả lời",
   validationRequired: "Hãy nhập nội dung hoặc chọn media trước khi gửi.",
   justNow: "Vừa xong",
+  emptyInline: "Hãy là người đầu tiên bình luận cho bài viết này!",
+  noMoreComments: "Không còn bình luận nào",
+  emptyReplies: "Hiện chưa có phản hồi.",
 };

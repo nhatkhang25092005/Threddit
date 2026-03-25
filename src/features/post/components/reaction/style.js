@@ -11,7 +11,7 @@ export const style = {
       },
     },
     icon: {
-      color: '#F7B928',
+      color: '#00F2FF',
       fontSize: '1.2rem'
     },
     popover: {
@@ -22,11 +22,11 @@ export const style = {
       zIndex: 1400,
       maxHeight: '20rem',
       border: '1px solid',
-      borderColor: (theme) => theme.palette.mode === 'dark' ? '#3E4042' : '#DADDE1',
+      borderColor: (theme) => theme.palette.mode === 'dark' ? '#243041' : '#DADDE1',
       boxShadow: (theme) => theme.palette.mode === 'dark'
         ? '0 10px 28px rgba(0,0,0,0.45)'
         : '0 10px 28px rgba(0,0,0,0.14)',
-      backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#242526' : '#ffffff',
+      backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#131F31' : '#ffffff',
       overflow: 'hidden'
     },
     emojiPicker: {
@@ -58,7 +58,7 @@ export const style = {
       },
       '&::-webkit-scrollbar-thumb': {
         borderRadius: '999rem',
-        backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#5E6165' : '#BCC0C4'
+        backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#64748B' : '#BCC0C4'
       },
       '&::-webkit-scrollbar-track': {
         backgroundColor: 'transparent'
@@ -82,7 +82,7 @@ export const style = {
       borderColor: (theme) => theme.palette.mode === 'dark' ? 'transparent' : '#E6E9EE',
       opacity: 1,
       '&:hover': {
-        backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#3A3B3C' : '#F2F3F5'
+        backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#182334' : '#F2F3F5'
       }
     },
     emojiChar: {
@@ -101,7 +101,7 @@ export const style = {
     actionBtn: {
       minHeight: "2.3rem",
       borderRadius: "0.45rem",
-      color: (theme) => (theme.palette.mode === "dark" ? "#B0B3B8" : "#65676B"),
+      color: (theme) => (theme.palette.mode === "dark" ? "#94A3B8" : "#64748B"),
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -109,7 +109,7 @@ export const style = {
       fontSize: "0.88rem",
       fontWeight: 600,
       "&:hover": {
-        backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#3A3B3C" : "#F2F3F5"),
+        backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#182334" : "#F2F3F5"),
       },
     },
     selectedReactionEmoji: {
@@ -137,8 +137,8 @@ export const style = {
     py: "0.25rem",
     borderRadius: "999rem",
     border: "1px solid",
-    borderColor: (theme) => (theme.palette.mode === "dark" ? "#3E4042" : "#CED0D4"),
-    bgcolor: (theme) => (theme.palette.mode === "dark" ? "#242526" : "#ffffff"),
+    borderColor: (theme) => (theme.palette.mode === "dark" ? "#243041" : "#CED0D4"),
+    bgcolor: (theme) => (theme.palette.mode === "dark" ? "#131F31" : "#ffffff"),
     boxShadow: (theme) =>
       theme.palette.mode === "dark"
         ? "0 8px 20px rgba(0,0,0,0.45)"

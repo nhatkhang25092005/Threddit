@@ -1,4 +1,5 @@
 import { Button } from '@mui/material'
+import { story } from '../../../../constant/text/vi/story'
 import { usePostModal } from '../../provider/usePostModal'
 
 export default function EditPinnedStoryButton() {
@@ -10,7 +11,7 @@ export default function EditPinnedStoryButton() {
       variant="secondary"
       sx={{ display: 'flex', mx: 'auto', mt: '1rem' }}
     >
-      Chỉnh sửa tin nổi bật
+      {story.pinnedSection.editButton}
     </Button>
   )
 }

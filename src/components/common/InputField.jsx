@@ -7,9 +7,9 @@ const textFieldSlotProps = {
   },
   inputLabel: {
     sx: {
-      color: "#BCBDBF",
+      color: "#94A3B8",
       "&.Mui-focused": {
-        color: "#BCBDBF",
+        color: "#94A3B8",
       },
     },
   },
@@ -18,10 +18,10 @@ const textFieldSlotProps = {
       backgroundColor: "inherit",
       "& .MuiOutlinedInput-root": {
         "&.Mui-focused fieldset": {
-          borderColor: "#A6A6A6",
+          borderColor: "#243041",
         },
         "& fieldset": {
-          borderColor: "#A6A6A6",
+          borderColor: "#243041",
         },
       },
     },

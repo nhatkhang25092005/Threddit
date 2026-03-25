@@ -14,7 +14,7 @@ export default function CommentBlockHeader({
   onEdit,
 }) {
   return (
-    <Box sx={sx.bubbleHeader}>
+    <Box sx={[sx.bubbleHeader, canManage ? sx.bubbleHeaderWithMenu : null]}>
       <Box sx={sx.bubbleMeta}>
         <Typography sx={sx.authorName}>
           {author?.displayName || author?.username || "User"}
@@ -26,11 +26,13 @@ export default function CommentBlockHeader({
       </Box>
 
       {canManage ? (
-        <CommentBlockMenu
-          deleteLoading={deleteLoading}
-          onDelete={onDelete}
-          onEdit={onEdit}
-        />
+        <Box sx={sx.menuButtonWrap}>
+          <CommentBlockMenu
+            deleteLoading={deleteLoading}
+            onDelete={onDelete}
+            onEdit={onEdit}
+          />
+        </Box>
       ) : null}
     </Box>
   );

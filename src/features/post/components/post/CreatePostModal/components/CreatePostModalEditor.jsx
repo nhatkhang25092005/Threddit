@@ -1,5 +1,6 @@
 import { Box, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { composerText } from "../../../../../../constant/text/vi/post/composer.text";
 
 const editorWrapSx = {
   position: "relative",
@@ -12,7 +13,7 @@ const mediaSx = {
   marginTop: "0.35rem",
   border: "1px solid",
   borderColor: (theme) =>
-    theme.palette.mode === "dark" ? "#3E4042" : "#DADDE1",
+    theme.palette.mode === "dark" ? "#243041" : "#DADDE1",
 };
 
 const videoSx = {
@@ -38,7 +39,7 @@ const audioItemWrapSx = {
   pt: "2rem",
   borderRadius: "0.6rem",
   backgroundColor: (theme) =>
-    theme.palette.mode === "dark" ? "#2A2B2D" : "#F0F2F5",
+    theme.palette.mode === "dark" ? "#131F31" : "#F0F2F5",
 };
 
 const removeMediaButtonSx = {
@@ -51,7 +52,7 @@ const removeMediaButtonSx = {
   backgroundColor: (theme) =>
     theme.palette.mode === "dark" ? "rgba(36,37,38,0.92)" : "rgba(255,255,255,0.92)",
   border: "1px solid",
-  borderColor: (theme) => (theme.palette.mode === "dark" ? "#3E4042" : "#DADDE1"),
+  borderColor: (theme) => (theme.palette.mode === "dark" ? "#243041" : "#DADDE1"),
   "&:hover": {
     backgroundColor: (theme) =>
       theme.palette.mode === "dark" ? "rgba(58,59,60,0.96)" : "rgba(245,245,245,0.96)",
@@ -81,7 +82,7 @@ export default function CreatePostModalEditor({
     <Box sx={editorWrapSx}>
       <Box
         component="textarea"
-        placeholder={placeholder || `${displayName} ơi, hôm nay bạn thế nào`}
+        placeholder={placeholder || composerText.post.editor.placeholder(displayName)}
         sx={{
           ...sx.editor(hasMedia),
           ...(editorSx || {})
@@ -94,13 +95,13 @@ export default function CreatePostModalEditor({
         image?.url ? (
           <Box key={`${image.url}-${index}`} sx={mediaItemWrapSx}>
             <IconButton
-              aria-label="Bo anh"
+              aria-label={composerText.post.editor.removeImage}
               sx={removeMediaButtonSx}
               onClick={() => onRemoveImage(index)}
             >
               <CloseIcon sx={removeMediaIconSx} />
             </IconButton>
-            <Box component="img" src={image.url} alt="Post preview" sx={{ ...sx.img, mt: 0 }} />
+            <Box component="img" src={image.url} alt={composerText.post.editor.previewAlt} sx={{ ...sx.img, mt: 0 }} />
           </Box>
         ) : null
       )}
@@ -108,7 +109,7 @@ export default function CreatePostModalEditor({
         video?.url ? (
           <Box key={`${video.url}-${index}`} sx={mediaItemWrapSx}>
             <IconButton
-              aria-label="Bo video"
+              aria-label={composerText.post.editor.removeVideo}
               sx={removeMediaButtonSx}
               onClick={() => onRemoveVideo(index)}
             >
@@ -128,7 +129,7 @@ export default function CreatePostModalEditor({
         sound?.url ? (
           <Box key={`${sound.url}-${index}`} sx={audioItemWrapSx}>
             <IconButton
-              aria-label="Bo am thanh"
+              aria-label={composerText.post.editor.removeSound}
               sx={removeMediaButtonSx}
               onClick={() => onRemoveSound(index)}
             >

@@ -2,12 +2,13 @@ import GraphicEqRoundedIcon from '@mui/icons-material/GraphicEqRounded'
 import NotesRoundedIcon from '@mui/icons-material/NotesRounded'
 import VideocamIcon from '@mui/icons-material/Videocam'
 import { STORY_MEDIA_KIND } from '../../CreateStoryModal/storyComposer'
+import { story } from '../../../../../../constant/text/vi/story'
 
 export const STORY_CARD_MEDIA_META = {
-  [STORY_MEDIA_KIND.IMAGE]: { label: 'Ảnh', Icon: VideocamIcon },
-  [STORY_MEDIA_KIND.VIDEO]: { label: 'Video', Icon: VideocamIcon },
-  [STORY_MEDIA_KIND.SOUND]: { label: 'Âm thanh', Icon: GraphicEqRoundedIcon },
-  text: { label: 'Văn bản', Icon: NotesRoundedIcon },
+  [STORY_MEDIA_KIND.IMAGE]: { label: story.mediaKind.image, Icon: VideocamIcon },
+  [STORY_MEDIA_KIND.VIDEO]: { label: story.mediaKind.video, Icon: VideocamIcon },
+  [STORY_MEDIA_KIND.SOUND]: { label: story.mediaKind.sound, Icon: GraphicEqRoundedIcon },
+  text: { label: story.mediaKind.text, Icon: NotesRoundedIcon },
 }
 
 export function detectStoryCardMediaKind(type = '', src = '') {
@@ -59,7 +60,7 @@ export function formatStoryCardTime(value) {
   const date = value ? new Date(value) : null
 
   if (!date || Number.isNaN(date.getTime())) {
-    return 'Vua xong'
+    return story.shared.justNow
   }
 
   return new Intl.DateTimeFormat('vi-VN', {

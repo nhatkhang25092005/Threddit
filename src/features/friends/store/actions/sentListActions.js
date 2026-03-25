@@ -33,11 +33,11 @@ export const sentListActions = {
       RESET_SENT_LIST
     ),
 
-  removeSentRequest: (friendshipId) =>
+  removeSentRequest: (username) =>
     createAction(
       ACTION_CLASS.SENT_LIST,
       REMOVE_SENT_REQUEST,
-      friendshipId
+      username
     ),
   
   setHasMore:(anyMore)=>

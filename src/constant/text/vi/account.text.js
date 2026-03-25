@@ -2,6 +2,7 @@ export const account = {
   title:'Thông tin tài khoản',
   label:{
     username:'Username:',
+    login_username:'Tên đăng nhập',
     email:'Email:',
     method:'Phương thức đăng nhập:'
   },

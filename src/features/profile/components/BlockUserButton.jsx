@@ -1,5 +1,6 @@
 import { Button, Tooltip, Box, CircularProgress } from "@mui/material"
 import BlockIcon from '@mui/icons-material/Block';
+import { block } from "../../../constant/text/vi/block.text";
 import { useProfileModal } from "../provider/useProfileModal";
 const btnSx = {
   my: "auto",
@@ -28,7 +29,7 @@ function ButtonContent({ loading }) {
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
       <CircularProgress size={14} color="inherit" />
-      Đang chặn...
+      {block.blockButton.loadingLabel}
     </Box>
   )
 }
@@ -40,7 +41,7 @@ export default function BlockUserButton({
 }){
   const {openModal} = useProfileModal()
   return (
-    <Tooltip title="Thêm vào danh sách chặn" placement="top">
+    <Tooltip title={block.blockButton.tooltip} placement="top">
       <Button
         variant="outlined"
         color="error"

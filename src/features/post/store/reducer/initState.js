@@ -7,7 +7,6 @@ export const initState = {
   storyById:{},
   storyList:{},
   commentById:{},
-
   contentList:{
     home:{
       feeds:[],
@@ -18,7 +17,9 @@ export const initState = {
     currentStory:{},
     friendStories:{
       //[username]:[1, 2, 3] (storyById)
-    }
+    },
+    reel:[],
+    searchList:[]
   },
 
   commentList:{
@@ -30,6 +31,10 @@ export const initState = {
   },
   
   mySavedHasMore:undefined,
+  feedHasMore:undefined,
+  reelHasMore:undefined,
+  searchHasMore:undefined,
+  searchKeyword:"",
   userPostHasMore:{
     //[username]:boolean
   },
@@ -41,11 +46,13 @@ export const initState = {
       editStory:false,
       presign:false,
       getFeeds:false,
+      getReels:false,
       getFollowPost:false,
       share:false,
       getSavedPost:false,
       getCommentList:false,
-      getUserPost:false
+      getUserPost:false,
+      getSearch:false
     },
     item:{
       //[id] : itemModel()

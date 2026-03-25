@@ -1,11 +1,11 @@
-import {useThemeContext} from '../../../theme/ThemeContext'
 import { FileEdit } from 'lucide-react'
+import { useTheme } from '@mui/material/styles'
 export default function Edit({onClick}){
-  const {mode} = useThemeContext()
+  const theme = useTheme()
   return (
     <FileEdit
       onClick={onClick}
-      color={mode === 'dark' ? '#fff' : '#000'}
+      color={theme.palette.mode === 'dark' ? '#fff' : '#000'}
       style={{
         cursor:'pointer',
         transition:'0.2s'

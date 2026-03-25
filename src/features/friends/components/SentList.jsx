@@ -17,16 +17,16 @@ function SentListUI({
   loadingCancel,
   navigateChecker
 }) {
-  const sentTasks = (friendshipId) => ([
+  const sentTasks = (username) => ([
     {component:
-      loadingCancel[friendshipId]?.cancel_request ? (
-        <CircularProgress color="white" key={`cancel-loading-${friendshipId}`} size={20} />
+      loadingCancel[username]?.cancel_request ? (
+        <CircularProgress color="white" key={`cancel-loading-${username}`} size={20} />
       ) : (
         <IconButton
-          key={`cancel-${friendshipId}`}
+          key={`cancel-${username}`}
           icon={CancelIcon}
           title={friend.text_on_sent_list?.button?.cancel_request || "Cancel request"}
-          onClick={() => cancelRequest(friendshipId)}
+          onClick={() => cancelRequest(username)}
         />
       )
     }
@@ -34,7 +34,7 @@ function SentListUI({
 
   return (
     <Grid container spacing={2} width="100%">
-      {sentList.map(({recipient, friendshipId}) => (
+      {sentList.map(({recipient}) => (
         <Grid
           key={recipient.username}
           xs={6}
@@ -47,7 +47,7 @@ function SentListUI({
             avatar={recipient.avatarUrl}
             username={recipient.displayName}
             relationStatus="sent"
-            tasks={sentTasks(friendshipId)}
+            tasks={sentTasks(recipient.username)}
           />
         </Grid>
       ))}

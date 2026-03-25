@@ -2,6 +2,7 @@ import { Box, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../constant";
 import {CircularProgress} from "@mui/material";
+import { follow } from "../../constant/text/vi/follow.text";
 export default function UserFollowCard({
   name,
   buttonText,
@@ -10,7 +11,7 @@ export default function UserFollowCard({
   hideButton,
   loading
 }) {
-  const isFollowing = buttonText === "Đã theo dõi";
+  const isFollowing = buttonText === follow.legacyCard.following;
   const navigate = useNavigate()
   return (
     <Box
@@ -20,7 +21,7 @@ export default function UserFollowCard({
         justifyContent: "space-between",
         alignItems: "center",
         backgroundColor: "#1a1a1a",
-        borderTop: "1px solid #333",
+        borderTop: "1px solid #243041",
         px: 3,
         py: 1.5,
         width: "100%",
@@ -28,7 +29,7 @@ export default function UserFollowCard({
         cursor:"pointer",
         transition: "0.2s",
         "&:last-child": {
-          borderBottom: "1px solid #333",
+          borderBottom: "1px solid #243041",
           borderRadius: "0 0 12px 12px",
         },
         "&:hover": { backgroundColor: "#222" },
@@ -58,7 +59,7 @@ export default function UserFollowCard({
             transition: "all 0.25s ease",
           }}
         >
-          {isFollowing ? "Đã theo dõi" : "Theo dõi"}
+          {isFollowing ? follow.legacyCard.following : follow.legacyCard.notFollowing}
         </Button>
       )}
     </Box>

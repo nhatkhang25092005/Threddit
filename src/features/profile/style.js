@@ -68,7 +68,7 @@ export const style = {
       bg_avatar:(mode)=>({
         width:'10rem',
         height:'10rem',
-        backgroundColor:mode === 'dark' ? '#0A0B0B' : 'white'
+        backgroundColor:mode === 'dark' ? '#071120' : 'white'
       }),
 
       create_feed_button:{
@@ -321,7 +321,7 @@ export const style = {
         animation: `${fadeSlideIn} 0.25s cubic-bezier(.22,.68,0,1.2) both`,
         background:
           t.palette.mode === "dark"
-            ? "#0A0B0B"
+            ? "#071120"
             : "linear-gradient(160deg,#ffffff 0%,#f5f5f8 100%)",
         border: `1px solid ${
           t.palette.mode === "dark"

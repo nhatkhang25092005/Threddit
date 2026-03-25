@@ -1,6 +1,7 @@
 import { useState } from "react"
 import {Typography, TextField, CircularProgress, Box} from '@mui/material'
 import { Edit, Ok } from "../../../../components/common/button"
+import { account } from "../../../../constant/text/vi/account.text"
 import useUpdateName from '../hooks/useUpdateName'
 import { useInput } from "../../../../hooks/useInput"
 
@@ -33,7 +34,7 @@ export default function Username({value, sx}){
 
   return(
     <>
-      <Typography sx={sx}>Tên đăng nhập</Typography>
+      <Typography sx={sx}>{account.label.login_username}</Typography>
       {
         open
           ? <TextField

@@ -1,11 +1,10 @@
 import { friendListActions } from '../store/actions'
-import { createFriend } from '../store/model/friend.model'
 
 export const domain = {
 	createFriendListSync: (dispatch) => {
 		return {
 			appendFriend(requester) {
-				dispatch(friendListActions.addFriend(createFriend(requester)))
+				dispatch(friendListActions.addFriend(requester))
 			},
 
 			deleteFriend(username) {
@@ -14,4 +13,3 @@ export const domain = {
 		}
 	}
 }
-

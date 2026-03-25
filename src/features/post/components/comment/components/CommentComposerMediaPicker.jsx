@@ -10,39 +10,40 @@ import { style } from "../style";
 
 const sx = style.list;
 
-function ToolButton({ children }) {
-  return <Box sx={sx.composerToolButton}>{children}</Box>;
+function ToolButton({ children, compact = false }) {
+  return <Box sx={sx.composerToolButton(compact)}>{children}</Box>;
 }
 
 export default function CommentComposerMediaPicker({
+  compact = false,
   onPickAudio,
   onPickImage,
   onPickVideo,
 }) {
   return (
-    <Box sx={sx.composerTools}>
+    <Box sx={sx.composerMediaTools(compact)}>
       <ImageInput onClick={onPickImage}>
-        <ToolButton>
-          <InsertPhotoOutlinedIcon sx={{ color: "#45BD62", fontSize: "1.1rem" }} />
-          <Typography component="span" sx={sx.composerToolLabel}>
+        <ToolButton compact={compact}>
+          <InsertPhotoOutlinedIcon sx={{ color: "#45BD62", fontSize: compact ? "0.98rem" : "1.1rem" }} />
+          <Typography component="span" sx={sx.composerToolLabel(compact)}>
             {commentText.mediaImageLabel}
           </Typography>
         </ToolButton>
       </ImageInput>
 
       <VideoInput onClick={onPickVideo}>
-        <ToolButton>
-          <VideocamOutlinedIcon sx={{ color: "#1877F2", fontSize: "1.1rem" }} />
-          <Typography component="span" sx={sx.composerToolLabel}>
+        <ToolButton compact={compact}>
+          <VideocamOutlinedIcon sx={{ color: "#3B82F6", fontSize: compact ? "0.98rem" : "1.1rem" }} />
+          <Typography component="span" sx={sx.composerToolLabel(compact)}>
             {commentText.mediaVideoLabel}
           </Typography>
         </ToolButton>
       </VideoInput>
 
       <SoundInput onClick={onPickAudio}>
-        <ToolButton>
-          <GraphicEqRoundedIcon sx={{ color: "#F5533D", fontSize: "1.1rem" }} />
-          <Typography component="span" sx={sx.composerToolLabel}>
+        <ToolButton compact={compact}>
+          <GraphicEqRoundedIcon sx={{ color: "#22C55E", fontSize: compact ? "0.98rem" : "1.1rem" }} />
+          <Typography component="span" sx={sx.composerToolLabel(compact)}>
             {commentText.mediaAudioLabel}
           </Typography>
         </ToolButton>

@@ -9,7 +9,7 @@ import { usePostModal } from "../../../../provider/usePostModal";
 const actionButtonSx = {
   minHeight: "2.3rem",
   borderRadius: "0.45rem",
-  color: (theme) => (theme.palette.mode === "dark" ? "#B0B3B8" : "#65676B"),
+  color: (theme) => (theme.palette.mode === "dark" ? "#94A3B8" : "#64748B"),
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -18,7 +18,7 @@ const actionButtonSx = {
   fontWeight: 600,
   width: "100%",
   "&:hover": {
-    backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#3A3B3C" : "#F2F3F5"),
+    backgroundColor: (theme) => (theme.palette.mode === "dark" ? "#182334" : "#F2F3F5"),
   },
 };
 
@@ -26,7 +26,7 @@ const actionIconSx = {
   fontSize: "1.35rem",
 };
 
-const activeShareColor = "#1877F2";
+const activeShareColor = "#3B82F6";
 
 export default function PostActions({ sx, postId, onCommentClick }) {
   const {

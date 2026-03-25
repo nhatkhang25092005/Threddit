@@ -10,11 +10,11 @@ export default function ReplyCard({
   return (
     <Box
       sx={{
-        backgroundColor: "#0f0f0f",
+        backgroundColor: "#0B121E",
         color: "white",
         px: 2,
         py: 1.5,
-        borderBottom: "1px solid #333",
+        borderBottom: "1px solid #243041",
         width: "100%",
       }}
     >

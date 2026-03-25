@@ -1,3 +1,5 @@
+import { common } from "../constant/text/vi/common.text"
+
 export const formatDate = (dateString) => {
   if (!dateString) return ''
   
@@ -102,13 +104,13 @@ export function convertTime(timeString) {
     const diffInHours = Math.floor(diffInMinutes / 60);
     const diffInDays = Math.floor(diffInHours / 24);
 
-    if(diffInSeconds < 60) return "Vừa xong";
-    if (diffInMinutes < 60) return `${diffInMinutes} phút trước`;
-    if (diffInHours < 24) return `${diffInHours} giờ trước`;
-    if (diffInDays < 7) return `${diffInDays} ngày trước`;
-    if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} tuần trước`;
-    if (diffInDays < 365) return `${Math.floor(diffInDays / 30)} tháng trước`;
-    return `${Math.floor(diffInDays / 365)} năm trước`;
+    if(diffInSeconds < 60) return common.time.justNow;
+    if (diffInMinutes < 60) return common.time.minutesAgo(diffInMinutes);
+    if (diffInHours < 24) return common.time.hoursAgo(diffInHours);
+    if (diffInDays < 7) return common.time.daysAgo(diffInDays);
+    if (diffInDays < 30) return common.time.weeksAgo(Math.floor(diffInDays / 7));
+    if (diffInDays < 365) return common.time.monthsAgo(Math.floor(diffInDays / 30));
+    return common.time.yearsAgo(Math.floor(diffInDays / 365));
 }
 
 // Usage examples:

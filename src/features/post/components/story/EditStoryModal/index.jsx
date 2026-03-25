@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import CreateStoryModal from "../CreateStoryModal/CreateStoryModal";
+import { story as storyText } from "../../../../../constant/text/vi/story";
 import { usePostContext } from "../../../hooks";
 
 const resolveStoryComposerMedia = (story) => {
@@ -42,10 +43,10 @@ export default function EditStoryModal({ onClose, storyId }) {
   return (
     <CreateStoryModal
       onClose={onClose}
-      headerTitle="Chỉnh sửa tin"
-      headerSubtitle="Bạn có thể cập nhật nội dung hoặc thay media cho tin này"
-      closeAriaLabel="Đóng modal chỉnh sửa tin"
-      submitLabel="Xác nhận chỉnh sửa"
+      headerTitle={storyText.editStoryModal.title}
+      headerSubtitle={storyText.editStoryModal.subtitle}
+      closeAriaLabel={storyText.editStoryModal.closeAriaLabel}
+      submitLabel={storyText.editStoryModal.submitLabel}
       composerOptions={{
         mode: "edit",
         contentId: story.id,

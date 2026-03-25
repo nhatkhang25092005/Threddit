@@ -1,6 +1,7 @@
 import { Box, Button, CircularProgress, Divider } from "@mui/material";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Surface from "../../../../../components/common/Surface";
+import { composerText } from "../../../../../constant/text/vi/post/composer.text";
 import useAuth from "../../../../../core/auth/useAuth";
 import { useMention } from "../../../../../hooks/useMention";
 import { upload } from "../../../../../utils/upload";
@@ -41,8 +42,8 @@ export default function CreatePostModal({
   initialText = "",
   contentId = null,
   mode = POST_MODAL_MODE.CREATE,
-  title = "Tạo bài viết",
-  submitLabel = "Đăng",
+  title = composerText.post.createTitle,
+  submitLabel = composerText.post.submitLabel,
   closeAlertTitle = null,
   closeAlertMessage = null,
 }) {
@@ -96,7 +97,7 @@ export default function CreatePostModal({
     };
   }, []);
 
-  const displayName = user?.displayName || user?.username || "Ban";
+  const displayName = user?.displayName || user?.username || composerText.post.fallbackDisplayName;
   const images = useMemo(() => getComposerImages(mediaItems), [mediaItems]);
   const videos = useMemo(() => getComposerVideos(mediaItems), [mediaItems]);
   const sounds = useMemo(() => getComposerSounds(mediaItems), [mediaItems]);

@@ -1,6 +1,11 @@
 import { ZERO_WIDTH_MARKER } from "../const";
-import { parseLineHeight } from "./parseLineHeight";
 import {copyMirrorStyles} from './copyMirrorStyles'
+
+const OVERLAY_WIDTH = 236;
+const OVERLAY_SAFE_GAP = 8;
+const OVERLAY_VERTICAL_GAP = 6;
+const OVERLAY_ESTIMATED_HEIGHT = 280;
+
 export function measureCaretAnchor(textarea) {
   if (!textarea) return { top: 0, left: 0 };
 
@@ -33,13 +38,26 @@ export function measureCaretAnchor(textarea) {
 
   try {
     const markerRect = marker.getBoundingClientRect();
-    const lineHeight = parseLineHeight(computedStyle);
-    const top = markerRect.top + lineHeight - (textarea.scrollTop || 0) + 6;
-    const left = markerRect.left - (textarea.scrollLeft || 0);
+    const caretLeft = markerRect.left - (textarea.scrollLeft || 0);
+    const preferredTop = textareaRect.bottom + OVERLAY_VERTICAL_GAP;
+    const shouldOpenUpward =
+      preferredTop + OVERLAY_ESTIMATED_HEIGHT > window.innerHeight - OVERLAY_SAFE_GAP;
+    const top = shouldOpenUpward
+      ? textareaRect.top - OVERLAY_VERTICAL_GAP
+      : preferredTop;
+    const left = Math.max(
+      textareaRect.left + OVERLAY_SAFE_GAP,
+      caretLeft
+    );
 
     return {
-      top: Math.max(8, Math.min(window.innerHeight - 8, top)),
-      left: Math.max(8, Math.min(window.innerWidth - 236, left)),
+      top: shouldOpenUpward
+        ? Math.max(OVERLAY_SAFE_GAP, top - OVERLAY_ESTIMATED_HEIGHT)
+        : Math.max(OVERLAY_SAFE_GAP, Math.min(window.innerHeight - OVERLAY_SAFE_GAP, top)),
+      left: Math.max(
+        OVERLAY_SAFE_GAP,
+        Math.min(window.innerWidth - OVERLAY_WIDTH - OVERLAY_SAFE_GAP, left)
+      ),
     };
   } finally {
     document.body.removeChild(mirror);

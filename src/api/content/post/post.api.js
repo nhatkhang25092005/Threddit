@@ -7,6 +7,8 @@ const SAVE = import.meta.env.VITE_API_SAVE_SAVE
 const UNSAVE = import.meta.env.VITE_API_SAVE_UNSAVE
 const PIN = import.meta.env.VITE_API_CONTENT_PIN
 const SHARE = import.meta.env.VITE_API_SHARE
+const FEED = import.meta.env.VITE_API_CONTENT_FEED
+const REEL = import.meta.env.VITE_API_CONTENT_REEL
 
 const buildSaveUrl = (contentId) => `${BASE}/${contentId}${SAVE}`
 const buildUnsaveUrl = (contentId) => `${BASE}/${contentId}${UNSAVE}`
@@ -69,5 +71,20 @@ export const postApi = {
   getPostDetail(postId){
     const url = `${BASE}/${postId}`
     return axios.get(url)
+  },
+
+  getFeed(signal){
+    const url = `${BASE}${FEED}`
+    return axios.get(url,{signal})
+  },
+
+  getReel(signal){
+    const url = `${BASE}${REEL}`
+    return axios.get(url,{signal})
+  },
+
+  searchContent(key, signal, cursor){
+    const url = `${BASE}`
+    return axios.get(url,{signal, params:{cursor, key}},)
   }
 }

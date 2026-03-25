@@ -3,7 +3,7 @@ import {Box} from '@mui/material'
 const PostFooter = memo(({children, isLastPost, hasComments})=>{
   const borderStyle = (isLastPost || hasComments)
     ? { borderBottom: "none" }
-    : { borderBottom: "solid #BCBDBF 1px" };
+    : { borderBottom: "solid #94A3B8 1px" };
   
   return(
     <Box

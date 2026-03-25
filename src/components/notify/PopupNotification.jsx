@@ -1,4 +1,5 @@
 import { Modal, Box, Typography, Button, Backdrop, Fade } from "@mui/material";
+import { notification } from "../../constant/text/vi/notification.text";
 export default function PopupNotification({ open = false, onClose, title, content, btnTitle = null, onConfirm = null }) {
 
   const handleClick = () => {
@@ -24,14 +25,14 @@ export default function PopupNotification({ open = false, onClose, title, conten
         <Box
           sx={{
             py: "1rem",
-            bgcolor: "#0A0B0B",
+            bgcolor: "#071120",
             width: "fit-content",
             minWidth:'25rem',
             height: "fit-content",
             position: "absolute",
             left: "50%",
             top: "25%",
-            border: "solid #A6A6A6 2px",
+            border: "solid #243041 2px",
             borderRadius: "7px",
             transform: "translateX(-50%)",
             px:"1rem",
@@ -60,7 +61,7 @@ export default function PopupNotification({ open = false, onClose, title, conten
               mt: "2rem",
             }}
           >
-            {btnTitle || "Đóng"}
+            {btnTitle || notification.popup.closeButton}
           </Button>
         </Box>
       </Fade>

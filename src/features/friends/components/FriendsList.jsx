@@ -31,7 +31,7 @@ function FriendListUI({ friendList, deleteFriend, actorName, loading, isOwner, n
   
   return (
     <Grid container spacing={2} width="100%">
-      {friendList.map(({friend}) => (
+      {friendList.map((friend) => (
         <Grid
           xs={6}
           key={friend.username}

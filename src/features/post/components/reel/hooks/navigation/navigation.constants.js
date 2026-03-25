@@ -1,0 +1,6 @@
+export const MAX_SCROLL_DURATION_MS = 1100
+export const MIN_SCROLL_DURATION_MS = 650
+export const SCROLL_DURATION_FACTOR = 0.6
+export const WHEEL_COOLDOWN_MS = 180
+export const WHEEL_RESET_DELAY_MS = 160
+export const WHEEL_TRIGGER_THRESHOLD = 32

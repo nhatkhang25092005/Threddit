@@ -1,6 +1,7 @@
 import {Button} from "@mui/material"
 import { Result } from "../../class"
 import { DISPLAY, TITLE } from "../../constant"
+import { common } from "../../constant/text/vi/common.text"
 
 
 
@@ -11,7 +12,7 @@ export default function ShareButton({onNotification, postId}) {
     console.log(url)
       try{
         await navigator.clipboard.writeText(url)
-        if(onNotification) onNotification(new Result(DISPLAY.SNACKBAR, null, 'Đã sao chép đường dẫn!',null))
+        if(onNotification) onNotification(new Result(DISPLAY.SNACKBAR, null, common.share.copiedLink,null))
       }
       catch (error) {
         console.error(error)

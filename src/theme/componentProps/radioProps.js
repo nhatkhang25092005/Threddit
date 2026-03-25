@@ -12,7 +12,7 @@ export const radioProps = (mode) => {
           },
 
           "&.Mui-focusVisible": {
-            outline: "2px solid white",
+            outline: `2px solid ${COLOR.app.cyan}`,
             outlineOffset: "2px",
           },
         }

@@ -16,36 +16,47 @@ import {
 export function useGetCommentList(dispatch) {
   const notify = useNotify()
   const runRequest = useSafeRequest()
+  const runBackgroundRequest = useSafeRequest()
   const cursorRef = useRef({})
   const hasMoreRef = useRef({})
+  const backgroundCursorRef = useRef({})
+  const backgroundHasMoreRef = useRef({})
 
   const getCommentList = useCallback(async (postId, options = {}) => {
     const key = postId
     const refresh = options?.refresh === true
     const ignoreHasMore = options?.ignoreHasMore === true
+    const silent = options?.silent === true
+    const activeCursorRef = silent ? backgroundCursorRef : cursorRef
+    const activeHasMoreRef = silent ? backgroundHasMoreRef : hasMoreRef
+    const executeRequest = silent ? runBackgroundRequest : runRequest
 
     if (!key) return null
 
     if (refresh) {
-      cursorRef.current[key] = undefined
-      hasMoreRef.current[key] = true
+      activeCursorRef.current[key] = undefined
+      activeHasMoreRef.current[key] = true
     }
 
-    if (!ignoreHasMore && hasMoreRef.current[key] === false) {
-      return buildEmptyCommentPage(cursorRef.current[key] ?? null)
+    if (!ignoreHasMore && activeHasMoreRef.current[key] === false) {
+      return buildEmptyCommentPage(activeCursorRef.current[key] ?? null)
     }
 
-    const response = await runRequest((signal) =>
-      notify.withLoading(
-        () => commentService.getCommentList(key, cursorRef.current[key], signal),
-        (isLoading) => dispatch(loadingAction.getCommentListLoading(isLoading))
-      )
-    )
+    const response = await executeRequest((signal) => (
+      silent
+        ? commentService.getCommentList(key, activeCursorRef.current[key], signal)
+        : notify.withLoading(
+          () => commentService.getCommentList(key, activeCursorRef.current[key], signal),
+          (isLoading) => dispatch(loadingAction.getCommentListLoading(isLoading))
+        )
+    ))
 
     if (!response) return null
 
     if (!response.success) {
-      notify.popup(modal.title.error, response.message)
+      if (!silent) {
+        notify.popup(modal.title.error, response.message)
+      }
       return response
     }
 
@@ -57,8 +68,8 @@ export function useGetCommentList(dispatch) {
       .filter((comment) => comment?.id != null && !comment?.parentCommentId)
       .map((comment) => comment.id)
 
-    cursorRef.current[key] = nextCursor
-    hasMoreRef.current[key] = hasMore
+    activeCursorRef.current[key] = nextCursor
+    activeHasMoreRef.current[key] = hasMore
 
     dispatch(commentActions.addComments(comments))
     if (refresh) {
@@ -88,15 +99,38 @@ export function useGetCommentList(dispatch) {
         hasMore,
       },
     }
-  }, [dispatch, notify, runRequest])
+  }, [dispatch, notify, runBackgroundRequest, runRequest])
 
   const refreshCommentList = useCallback(
     (postId) => getCommentList(postId, { refresh: true, ignoreHasMore: true }),
     [getCommentList]
   )
 
+  const prefetchCommentThread = useCallback(async (postId) => {
+    if (!postId) return null
+
+    let response = await getCommentList(postId, {
+      refresh: true,
+      ignoreHasMore: true,
+      silent: true,
+    })
+
+    if (!response?.success) return response
+
+    while (response?.data?.hasMore) {
+      response = await getCommentList(postId, { silent: true })
+
+      if (!response?.success) {
+        return response
+      }
+    }
+
+    return response
+  }, [getCommentList])
+
   return {
     getCommentList,
+    prefetchCommentThread,
     refreshCommentList,
   }
 }

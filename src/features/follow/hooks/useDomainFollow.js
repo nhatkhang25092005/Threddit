@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { follow } from '../../../constant/text/vi/follow.text'
 import { useNotify } from '../../../hooks/useNotify'
 import { services } from '../services'
 import { orchestrate } from '../../../utils/orchestrate'
@@ -27,7 +28,11 @@ export function useDomainFollow() {
           (res) => notify.snackbar(res.message, 3000)
         ],
 
-        onError: [(res) => notify.snackbar(res?.message || (isFollowing ? 'Bỏ theo dõi thất bại' : 'Theo dõi thất bại'))]
+        onError: [
+          (res) => notify.snackbar(
+            res?.message || (isFollowing ? follow.error.unfollowFailed : follow.error.followFailed)
+          )
+        ]
       })
     },
     [notify, profileSync, followSync]

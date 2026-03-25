@@ -34,6 +34,24 @@ export const hasMoreHandlers = (state, action) => {
         ...state,
         mySavedHasMore:action.payload
       }
+
+    case HAS_MORE.SET_FEED_HAS_MORE:
+      return{
+        ...state,
+        feedHasMore:action.payload
+      }
+
+    case HAS_MORE.SET_REEL_HAS_MORE:
+      return{
+        ...state,
+        reelHasMore:action.payload
+      }
+
+    case HAS_MORE.SET_SEARCH_HAS_MORE:
+      return{
+        ...state,
+        searchHasMore:action.payload
+      }
     
     default: return state
   }

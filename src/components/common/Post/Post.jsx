@@ -69,7 +69,7 @@ const Post = memo(({
         customStyle={{
           ...sx,
           px: "1rem",
-          bgcolor: "#0A0B0B",
+          bgcolor: "#071120",
           ...(isLastPost && { borderBottom: "none" })
         }}
 

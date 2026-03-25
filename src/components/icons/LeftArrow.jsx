@@ -1,8 +1,8 @@
-import { useThemeContext } from "../../theme/ThemeContext";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import {Box} from "@mui/material"
+import { useTheme } from "@mui/material/styles";
 export default function LeftArrow({sx, onClick}){
-  const {mode} = useThemeContext()
+  const theme = useTheme()
   return(
     <Box
       onClick = {onClick}
@@ -16,7 +16,7 @@ export default function LeftArrow({sx, onClick}){
       }}
     >
       <KeyboardBackspaceIcon 
-      sx={{color:mode === 'dark' ? 'white' : 'black'}}/>
+      sx={{color:theme.palette.mode === 'dark' ? 'white' : 'black'}}/>
     </Box>
   )
 }

@@ -292,8 +292,8 @@ export const EMOJI = {
 export const REACTION_META = {
   LIKE: { label: "Thích", emoji: "👍", color: "#7cb2fe" },
   LOVE: { label: "Yêu thích", emoji: "❤️", color: "#F33E58" },
-  HAHA: { label: "Haha", emoji: "😂", color: "#F7B125" },
-  WOW: { label: "Wow", emoji: "😮", color: "#F7B125" },
-  SAD: { label: "Buồn", emoji: "😢", color: "#F7B125" },
+  HAHA: { label: "Haha", emoji: "😂", color: "#00F2FF" },
+  WOW: { label: "Wow", emoji: "😮", color: "#00F2FF" },
+  SAD: { label: "Buồn", emoji: "😢", color: "#00F2FF" },
   ANGRY: { label: "Phẫn nộ", emoji: "😡", color: "#E9710F" },
 };

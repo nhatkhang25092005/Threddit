@@ -1,5 +1,5 @@
-import { useThemeContext } from "../../../../theme/ThemeContext"
 import MoreVertIcon from "@mui/icons-material/MoreVert"
+import { useTheme } from "@mui/material/styles"
 
 /**
  * Icon
@@ -28,9 +28,9 @@ import MoreVertIcon from "@mui/icons-material/MoreVert"
  * - When no Icon is provided, `MoreVertIcon` is used as fallback.
  */
 export default function Icon({ Icon = null }) {
-  const { mode } = useThemeContext()
+  const theme = useTheme()
 
-  const iconColor = mode === "dark" ? "#fff" : "#000"
+  const iconColor = theme.palette.mode === "dark" ? "#fff" : "#000"
 
   return Icon ? (
     <Icon />

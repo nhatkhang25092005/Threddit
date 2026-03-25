@@ -4,6 +4,9 @@ import { getPostList } from "../../utils/getPostList"
 import { postByIdActions } from "./postById.actions"
 import { savedPostActions } from "./savedPost.actions"
 import { userPostActions } from "./usersPost.actions"
+import { feedsActions } from "./feeds.actions"
+import { reelActions } from "./reel.actions"
+import { searchActions } from "./search.actions"
 export const combineActions = {
   getPostListSuccess : (dispatch, username, data) => {
     const timelineItems = Array.isArray(data) ? data : []
@@ -27,5 +30,36 @@ export const combineActions = {
 
     dispatch(postByIdActions.addPosts(postByIdList))
     dispatch(savedPostActions.addTimelineIndex(getPostList(postByIdList)))
+  },
+
+  getFeedSuccess: (dispatch, data) => {
+    const feedItems = Array.isArray(data) ? data : []
+    const postByIdList = feedItems.map((item) => postByIdModel(item))
+
+    dispatch(postByIdActions.addPosts(postByIdList))
+    dispatch(feedsActions.addTimelineIndex(getPostList(postByIdList)))
+  },
+
+  getReelSuccess: (dispatch, data) => {
+    const reelItems = Array.isArray(data) ? data : []
+    const postByIdList = reelItems.map((item) => postByIdModel(item))
+
+    dispatch(postByIdActions.addPosts(postByIdList))
+    dispatch(reelActions.addTimelineIndex(getPostList(postByIdList)))
+  },
+
+  getSearchSuccess: (dispatch, data, mode = "append") => {
+    const searchItems = Array.isArray(data) ? data : []
+    const postByIdList = searchItems.map((item) => postByIdModel(item))
+    const timelineIndexList = getPostList(postByIdList)
+
+    dispatch(postByIdActions.addPosts(postByIdList))
+
+    if (mode === "set") {
+      dispatch(searchActions.setSearchList(timelineIndexList))
+      return
+    }
+
+    dispatch(searchActions.appendSearchList(timelineIndexList))
   }
 }

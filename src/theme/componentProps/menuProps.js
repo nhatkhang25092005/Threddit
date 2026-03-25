@@ -7,9 +7,10 @@ export const menuProps = {
         style:({theme})=>({
           '& .MuiPaper-root':{
             minWidth: '180px',
-            borderRadius: '6px',
+            borderRadius: '14px',
             backgroundColor:COLOR.background.surface.menu.default[theme.palette.mode],
-            boxShadow:`4px 4px 4px ${COLOR.shadow.menu.default[theme.palette.mode]}`,
+            border:`1px solid ${COLOR.app.border}`,
+            boxShadow:`0 16px 32px ${COLOR.shadow.menu.default[theme.palette.mode]}`,
           }
         })
       }

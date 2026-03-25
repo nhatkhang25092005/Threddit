@@ -1,5 +1,6 @@
 import { useCallback, useRef } from "react"
 import { modal } from "../../../../constant/text/vi/modal"
+import { post } from "../../../../constant/text/vi/post/post"
 import { useNotify } from "../../../../hooks/useNotify"
 import { postService } from "../../services"
 import { loadingAction, postByIdActions, userPostActions } from "../../store/actions"
@@ -36,8 +37,8 @@ export function useShareActionsPost(dispatch, postById = {}) {
         ),
         (loading) => notify.snackbarLoading(
           shouldUnshare
-            ? "Đang hủy chia sẻ bài viết..."
-            : "Đang chia sẻ bài viết...",
+            ? post.loading.unshare
+            : post.loading.share,
           loading
         )
       )

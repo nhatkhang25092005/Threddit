@@ -36,6 +36,14 @@ export const postService = {
     handleRequest(() => postApi.deleteContent(id)),
 
   getPostDetail: async (id) =>
-    handleRequest(() => postApi.getPostDetail(id))
-}
+    handleRequest(() => postApi.getPostDetail(id)),
 
+  getFeed: async (signal) =>
+    handleRequest(()=> postApi.getFeed(signal)),
+
+  getReel: async (signal) =>
+    handleRequest(() => postApi.getReel(signal)),
+
+  searchContent: async (key, signal, cursor) =>
+    handleRequest(() => postApi.searchContent(key, signal, cursor))
+}

@@ -5,6 +5,7 @@ import Slide from '@mui/material/Slide'
 import Snackbar from '@mui/material/Snackbar'
 import Typography from '@mui/material/Typography'
 import { keyframes } from '@mui/system'
+import { notification } from '../../constant/text/vi/notification.text'
 
 const progressSweep = keyframes`
   0% {
@@ -115,7 +116,7 @@ export default function SnackBarLoading({
                     : 'rgba(17,17,17,0.56)',
               })}
             >
-              Vui lòng chờ
+              {notification.loading.title}
             </Typography>
 
             <Typography
@@ -128,7 +129,7 @@ export default function SnackBarLoading({
                 whiteSpace: 'pre-line',
               })}
             >
-              {message || 'Processing, please wait a moment...'}
+              {message || notification.loading.defaultMessage}
             </Typography>
           </Box>
         </Box>

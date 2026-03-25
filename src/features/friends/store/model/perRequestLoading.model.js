@@ -1,5 +1,5 @@
 export const createPerRequestLoading = () => ({
-  // These actions are identified by friendshipId in API calls → separate per-request loading state
+  // Keys may be friendshipId or username depending on the request action.
   accept_request: false,
   reject_request: false,
   cancel_request: false,

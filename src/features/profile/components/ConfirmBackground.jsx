@@ -29,7 +29,7 @@ export default function ConfirmBackground ({src, confirm, onClose}) {
       <Close onClick={onClose} sx={sx.close_icon}/>
       <Typography variant='title'>{profile.background.preview_background}</Typography>
       <Box sx={sx.card_media_container}>
-        <CardMedia component="img" src={temp} alt="Ảnh xem trước" sx={sx.card_media}/>
+        <CardMedia component="img" src={temp} alt={profile.background.preview_alt} sx={sx.card_media}/>
       </Box>
       <Box sx={sx.button_container}>
         <Button onClick={handleUpdate} variant='primary' sx={sx.update_button}>

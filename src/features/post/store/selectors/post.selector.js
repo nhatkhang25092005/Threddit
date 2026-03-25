@@ -45,6 +45,31 @@ export const createPostSelector = (state) => {
   const getUsersPostIds = (username) =>
     state.contentList.usersPost?.[username] ?? []
 
+  const getFeedIds = () =>
+    state.contentList.home?.feeds ?? []
+
+  const getReelIds = () =>
+    state.contentList.reel ?? []
+
+  const getSearchIds = () =>
+    state.contentList.searchList ?? []
+
+  const getFeedListHasMore = () => {
+    return state.feedHasMore
+  }
+
+  const getReelListHasMore = () => {
+    return state.reelHasMore
+  }
+
+  const getSearchListHasMore = () => {
+    return state.searchHasMore
+  }
+
+  const getSearchKeyword = () => {
+    return state.searchKeyword ?? ""
+  }
+
   const getSavedPostIds = () =>
     state.contentList.savedPost ?? []
 
@@ -76,6 +101,21 @@ export const createPostSelector = (state) => {
     return getSavedPostIds().map((id) => ({...byId[id], context:'savedPost'})).filter(Boolean)
   }
 
+  const getFeedList = () => {
+    const byId = state.postById ?? {}
+    return getFeedIds().map((id) => ({ ...byId[id], context: 'feed' })).filter(Boolean)
+  }
+
+  const getReelList = () => {
+    const byId = state.postById ?? {}
+    return getReelIds().map((id) => ({ ...byId[id], context: 'reel' })).filter(Boolean)
+  }
+
+  const getSearchList = () => {
+    const byId = state.postById ?? {}
+    return getSearchIds().map((id) => ({ ...byId[id], context: 'search' })).filter(Boolean)
+  }
+
   const getUserPostListHasMore = (username) => {
     return state.userPostHasMore[username]
   }
@@ -94,6 +134,13 @@ export const createPostSelector = (state) => {
 
   return{
     getPostById,
+    getFeedIds,
+    getReelIds,
+    getSearchIds,
+    getFeedListHasMore,
+    getReelListHasMore,
+    getSearchListHasMore,
+    getSearchKeyword,
     getUsersPostIds,
     getSavedPostIds,
     getPinnedPostIds,
@@ -105,6 +152,9 @@ export const createPostSelector = (state) => {
     getPinLoadingByPostIdOf,
     getDeleteLoadingByPostIdOf,
     getUserPostList,
+    getFeedList,
+    getReelList,
+    getSearchList,
     getSavedPostList,
     getUserPostListHasMore,
     getSavedPostListHasMore,

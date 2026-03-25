@@ -4,7 +4,7 @@ import { commentText } from "../../../../../../constant/text/vi/post/comment.tex
 import { style } from "../style";
 
 const sx = style.block;
-const EMPTY_REPLIES_MESSAGE = "Hiện chưa có phản hồi.";
+const EMPTY_REPLIES_MESSAGE = commentText.emptyReplies;
 
 export default function CommentBlockReplies({
   hasMoreReplies = false,

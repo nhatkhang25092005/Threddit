@@ -12,7 +12,9 @@ import OrchestrateProvider from "../core/orchestrate/OrchestrateProvider.jsx";
 import FriendshipProvider from "../features/friends/FriendshipProvider.jsx";
 import StoryList from "../features/post/components/story/StoryList";
 import DetailPostPage from "../features/post/components/post/DetailPostPage";
-
+import Feed from "../features/post/components/feed";
+import Reel from "../features/post/components/reel/index.jsx";
+import { SearchResultsPage } from "../features/post/components/search";
 function AppProviders({ children }) {
   return (
     <OrchestrateProvider>
@@ -55,7 +57,9 @@ export default function AppRoute() {
               <Route path="notification" element={<PageNotification/>} />
               {/* <Route path="client/:clientName/:postId?" element={<Profile/>}/> */}
               <Route path="profile/:username?" element={<Profile/>}/>
-              {/* <Route path="home/:postId?" element={<Home />} /> */}
+              <Route path="home/:postId?" element={<Feed/>} />
+              <Route path="search" element={<SearchResultsPage/>} />
+              <Route path="reel" element={<Reel/>}/>
             </Route>
           </Route>
           <Route

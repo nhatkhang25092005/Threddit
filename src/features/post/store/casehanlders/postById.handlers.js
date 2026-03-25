@@ -304,6 +304,7 @@ export const postByIdHandlers = (state, action) => {
 
       const nextUsersPost = removeIdFromRecordLists(state.contentList?.usersPost, id)
       const nextSavedPost = removeIdFromList(state.contentList?.savedPost, id)
+      const nextSearchList = removeIdFromList(state.contentList?.searchList, id)
       const nextPinnedPost = removeIdFromList(state.pinnedContents?.post, id)
       const nextFeeds = removeIdFromList(state.contentList?.home?.feeds, id)
       const nextFollowersPost = removeIdFromList(state.contentList?.home?.followersPost, id)
@@ -328,7 +329,8 @@ export const postByIdHandlers = (state, action) => {
             followersPost: nextFollowersPost
           },
           usersPost: nextUsersPost,
-          savedPost: nextSavedPost
+          savedPost: nextSavedPost,
+          searchList: nextSearchList
         },
         postById: nextPostById,
         loading: {

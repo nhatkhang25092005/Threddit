@@ -1,5 +1,6 @@
 import { useCallback, useRef } from "react"
 import { modal } from "../../../../constant/text/vi/modal"
+import { post } from "../../../../constant/text/vi/post/post"
 import { useNotify } from "../../../../hooks/useNotify"
 import { postService } from "../../services"
 import { loadingAction, postByIdActions } from "../../store/actions"
@@ -19,7 +20,7 @@ export function useDeletePost(dispatch){
     try {
       const response = await notify.withLoading(
         () => postService.deletePost(id),
-        (isLoading) => notify.snackbarLoading('Đang xóa bài viết...', isLoading)
+        (isLoading) => notify.snackbarLoading(post.loading.delete, isLoading)
       )
 
       if (!response?.success) {

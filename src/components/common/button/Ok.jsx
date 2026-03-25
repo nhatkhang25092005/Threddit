@@ -6,10 +6,9 @@ import {
 } from 'lucide-react'
 
 import {Box} from '@mui/material'
-
-import { useThemeContext } from '../../../theme/ThemeContext'
+import { useTheme } from '@mui/material/styles'
 export default function Ok({type = 1, sx, onClick}){
-  const {mode} = useThemeContext()
+  const theme = useTheme()
   const t = {
     1 : CheckCircle,
     2 : CheckCircle2,
@@ -23,7 +22,7 @@ export default function Ok({type = 1, sx, onClick}){
       onMouseDown={onClick}
       sx={{
         cursor: 'pointer',
-        color: mode === 'dark' ? 'white' : 'black',
+        color: theme.palette.mode === 'dark' ? 'white' : 'black',
         transition: 'transform 0.1s ease-in-out',
         '&:hover': {
           transform: 'scale(1.2)',

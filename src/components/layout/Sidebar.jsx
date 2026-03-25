@@ -23,7 +23,7 @@ export default function ColumnNavigation({ customStyle }) {
     alignItems: "center",
     height: "100%",
     width: "5%",
-    backgroundColor: "#0f0f0f",
+    backgroundColor: "#0B121E",
     borderRight: "1px solid #222",
     position: "fixed",
     left: 0,

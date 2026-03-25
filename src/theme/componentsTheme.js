@@ -11,6 +11,7 @@ import {
   menuProps,
   tabsProps
 } from './componentProps';
+
 export const componentsTheme = {
   dark:{
     ...textfieldProps,
