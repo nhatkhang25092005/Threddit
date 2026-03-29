@@ -64,10 +64,6 @@ export function useCreatePost(dispatch) {
       }
 
       onCloseModal?.()
-
-      if (response.message) {
-        notify.snackbar(response.message, 3000)
-      }
     }
     catch(e){
       dispatch(loadingAction.setCreatePostLoading(false))
