@@ -1,6 +1,8 @@
 import { Box, Button, CircularProgress, Divider } from "@mui/material";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Surface from "../../../../../components/common/Surface";
+import { routes } from "../../../../../constant";
 import { composerText } from "../../../../../constant/text/vi/post/composer.text";
 import useAuth from "../../../../../core/auth/useAuth";
 import { useMention } from "../../../../../hooks/useMention";
@@ -46,8 +48,10 @@ export default function CreatePostModal({
   submitLabel = composerText.post.submitLabel,
   closeAlertTitle = null,
   closeAlertMessage = null,
+  redirectAfterCreate = null,
 }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const {
     actions: { createPost, editPost },
     selector: {
@@ -163,6 +167,14 @@ export default function CreatePostModal({
     onClose?.();
   }, [onClose]);
 
+  const handleCreateSuccess = useCallback(() => {
+    onClose?.();
+
+    if (redirectAfterCreate === "profile" && user?.username) {
+      navigate(`${routes.profile}/${user.username}`);
+    }
+  }, [navigate, onClose, redirectAfterCreate, user?.username]);
+
   const handleSubmit = useCallback(async () => {
     const payload = {
       text: mention.value || "",
@@ -179,8 +191,8 @@ export default function CreatePostModal({
       return;
     }
 
-    await createPost(payload, onClose);
-  }, [createPost, editPost, mediaItems, mention.value, onClose]);
+    await createPost(payload, handleCreateSuccess);
+  }, [createPost, editPost, handleCreateSuccess, mediaItems, mention.value, onClose]);
 
   const alertTitle = closeAlertTitle || (
     modeRef.current === POST_MODAL_MODE.EDIT

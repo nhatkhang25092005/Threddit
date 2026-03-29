@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { post } from "../../../../constant/text/vi/post/post";
 import useInfiniteScroll from "../../../../hooks/useInfiniteScroll";
 import { usePostContext } from "../../hooks";
+import CreatePost from "../post/CreatePost";
 import LoadingGetPost from "../post/LoadingGetPost";
 import NoPost from "../post/NoPost";
 import Post from "../post/Post/Post";
@@ -11,7 +12,7 @@ import useSaveScroll from "./hooks/useSaveScroll";
 import { useOpenDetail } from "../../hooks/feed/useOpenDetail";
 import { style } from "./style";
 
-const feedContentSx = style.feed.page;
+const sx = style.feed;
 
 export default function Feed() {
   const {
@@ -48,7 +49,11 @@ export default function Feed() {
   useOpenDetail()
 
   return (
-    <Box sx={feedContentSx}>
+    <Box sx={sx.page}>
+      <Box sx={sx.createPostWrap}>
+        <CreatePost redirectAfterCreate="profile" />
+      </Box>
+
       <FeedStoryPreviewRail />
 
       {((isLoading || isInitializing) && posts.length === 0) ? (

@@ -10,6 +10,11 @@ export const style = {
       width: "100%",
     },
 
+    createPostWrap: {
+      width: "100%",
+      maxWidth: "42rem",
+    },
+
     storyRailWrap: {
       width: "100%",
       maxWidth: "42rem",

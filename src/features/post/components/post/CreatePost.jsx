@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import Surface from '../../../../components/common/Surface'
 import {TextField, Avatar, Box, IconButton} from '@mui/material'
 import useAuth from '../../../../core/auth/useAuth'
@@ -19,13 +19,18 @@ const uploadByType = {
   sound: upload.sound,
 }
 
-export default function CreatePost(){
+export default function CreatePost({ redirectAfterCreate = null }){
   const {user} = useAuth()
   const {openModal} = usePostModal()
+  const modalProps = useMemo(() => (
+    redirectAfterCreate
+      ? { redirectAfterCreate }
+      : {}
+  ), [redirectAfterCreate])
 
   const handleOpenCreatePostModal = useCallback(() => {
-    openModal('create_post_modal')
-  }, [openModal])
+    openModal('create_post_modal', modalProps)
+  }, [modalProps, openModal])
 
   const handleUpload = useCallback((type, event) => {
     const uploadHandler = uploadByType[type]
@@ -34,11 +39,12 @@ export default function CreatePost(){
     if (!media?.length) return
 
     openModal('create_post_modal', {
+      ...modalProps,
       initialImages: type === 'image' ? media : [],
       initialVideos: type === 'video' ? media : [],
       initialSounds: type === 'sound' ? media : [],
     })
-  }, [openModal])
+  }, [modalProps, openModal])
 
   return(
     <Surface sx={sx.surface}>

@@ -42,6 +42,7 @@ export function useCreatePost(dispatch) {
 
         if (!uploadResult?.success){
           notify.popup(modal.title.error, uploadResult?.message || errorText.upload.media)
+          return null
         }
         uploadSessionId = uploadResult.uploadSessionId
       }
@@ -52,6 +53,7 @@ export function useCreatePost(dispatch) {
 
       if (!response.success) {
         notify.popup(modal.title.error, response.message)
+        return null
       }
 
       const createdRaw = resolveCreatedPostRaw(response.data, payload, user)
@@ -62,6 +64,8 @@ export function useCreatePost(dispatch) {
           dispatch(userPostActions.prependTimelineIndex(username, createdPost.id))
         }
       }
+      console.log(response)
+      notify.snackbar(response.message, 3000)
 
       onCloseModal?.()
     }
