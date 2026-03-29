@@ -49,10 +49,14 @@ export default function CommentBlock({
   onEdit,
   onReact,
   onReply,
+  targetCommentId = null,
 }) {
   const { state } = usePostContext();
   const isDeleting = Boolean(state?.loading?.item?.[comment?.id]?.deleteContent);
+  const commentRootRef = useRef(null);
   const replyComposerRef = useRef(null);
+  const isTargetComment =
+    targetCommentId != null && String(comment?.id) === String(targetCommentId);
 
   const replies = useCommentReplies({
     comment,
@@ -60,6 +64,7 @@ export default function CommentBlock({
     onDelete,
     onReact,
     onReply,
+    targetCommentId,
   });
   const composer = useCommentComposer({
     comment,
@@ -81,8 +86,35 @@ export default function CommentBlock({
     };
   }, [composer.isReplying, isDeleting]);
 
+  useEffect(() => {
+    if (!isTargetComment) {
+      return undefined;
+    }
+
+    const frameId = window.requestAnimationFrame(() => {
+      commentRootRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "nearest",
+      });
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
+  }, [isTargetComment]);
+
   return (
-    <Box sx={sx.root}>
+    <Box
+      data-comment-id={comment?.id ?? undefined}
+      ref={commentRootRef}
+      sx={[
+        sx.root,
+        isTargetComment && {
+          scrollMarginTop: "6rem",
+        }
+      ]}
+    >
       <Box sx={sx.row}>
         <Avatar
           src={comment.author?.avatarUrl || ""}
@@ -95,6 +127,7 @@ export default function CommentBlock({
             currentUser={currentUser}
             isDeleting={isDeleting}
             isEditing={composer.isEditing}
+            isTargetComment={isTargetComment}
             onCancelEdit={composer.closeEdit}
             onDelete={() => onDelete?.(comment)}
             onEdit={composer.openEdit}
@@ -133,6 +166,7 @@ export default function CommentBlock({
                 onEdit={onEdit}
                 onReact={replies.handleReact}
                 onReply={replies.handleReply}
+                targetCommentId={targetCommentId}
               />
             )}
             showCollapseReplies={replies.showCollapseReplies}

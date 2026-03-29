@@ -13,6 +13,21 @@ import {
   resolveCommentItems,
 } from "../../utils/commentCollection.utils"
 
+const hasCommentInPage = (comments = [], targetCommentId = null) => {
+  if (targetCommentId == null) return false
+
+  const normalizedTargetId = String(targetCommentId)
+  return (Array.isArray(comments) ? comments : []).some(
+    (comment) => String(comment?.id) === normalizedTargetId
+  )
+}
+
+const collectReplySearchParentIds = (comments = []) => (
+  (Array.isArray(comments) ? comments : [])
+    .filter((comment) => comment?.id != null && !comment?.parentCommentId && comment?.hasChildComment)
+    .map((comment) => comment.id)
+)
+
 export function useGetCommentList(dispatch) {
   const notify = useNotify()
   const runRequest = useSafeRequest()
@@ -106,8 +121,20 @@ export function useGetCommentList(dispatch) {
     [getCommentList]
   )
 
-  const prefetchCommentThread = useCallback(async (postId) => {
+  const prefetchCommentThread = useCallback(async (postId, options = {}) => {
     if (!postId) return null
+
+    const targetCommentId = options?.targetCommentId ?? null
+    const replySearchParentIds = new Set()
+    const syncPrefetchedPaginationToForeground = () => {
+      cursorRef.current[postId] = backgroundCursorRef.current[postId]
+      hasMoreRef.current[postId] = backgroundHasMoreRef.current[postId]
+    }
+    const collectParentIds = (comments = []) => {
+      collectReplySearchParentIds(comments).forEach((commentId) => {
+        replySearchParentIds.add(commentId)
+      })
+    }
 
     let response = await getCommentList(postId, {
       refresh: true,
@@ -117,15 +144,51 @@ export function useGetCommentList(dispatch) {
 
     if (!response?.success) return response
 
+    collectParentIds(response?.data?.commentList)
+
+    if (hasCommentInPage(response?.data?.commentList, targetCommentId)) {
+      syncPrefetchedPaginationToForeground()
+      return {
+        ...response,
+        data: {
+          ...(response.data || {}),
+          replySearchParentIds: Array.from(replySearchParentIds),
+          targetCommentFound: true,
+        },
+      }
+    }
+
     while (response?.data?.hasMore) {
       response = await getCommentList(postId, { silent: true })
 
       if (!response?.success) {
         return response
       }
+
+      collectParentIds(response?.data?.commentList)
+
+      if (hasCommentInPage(response?.data?.commentList, targetCommentId)) {
+        syncPrefetchedPaginationToForeground()
+        return {
+          ...response,
+          data: {
+            ...(response.data || {}),
+            replySearchParentIds: Array.from(replySearchParentIds),
+            targetCommentFound: true,
+          },
+        }
+      }
     }
 
-    return response
+    syncPrefetchedPaginationToForeground()
+    return {
+      ...response,
+      data: {
+        ...(response?.data || {}),
+        replySearchParentIds: Array.from(replySearchParentIds),
+        targetCommentFound: false,
+      },
+    }
   }, [getCommentList])
 
   return {

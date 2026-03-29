@@ -213,6 +213,28 @@ export const style = {
       opacity:0.18,
       pointerEvents:'none',
     }),
+    backgroundCloseButton:{
+      position:'absolute',
+      top:{
+        xs:'0.7rem',
+        md:'1rem'
+      },
+      right:{
+        xs:'0.7rem',
+        md:'1rem'
+      },
+      zIndex:3,
+      width:'2.6rem',
+      height:'2.6rem',
+      border:'1px solid rgba(255,255,255,0.16)',
+      color:'#F8FAFC',
+      backgroundColor:'rgba(12,16,24,0.72)',
+      backdropFilter:'blur(16px)',
+      boxShadow:'0 18px 40px rgba(0,0,0,0.22)',
+      '&:hover':{
+        backgroundColor:'rgba(255,255,255,0.12)',
+      },
+    },
     shell:{
       position:'relative',
       zIndex:1,

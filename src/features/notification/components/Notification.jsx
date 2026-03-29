@@ -4,11 +4,14 @@ import { style } from '../style'
 import {notification} from '../../../constant/text/vi/notification.text'
 import HorizonMenu from '../../../components/common/button/HorizonMenu'
 import { useNotificationContext } from '../hooks/useNotificationContext';
+import { useNavigateNotification } from '../hooks/useNavigateNotification';
 const sx = style.notification
 
-export default function Notification({data}){
+export default function Notification({data, onNavigate}){
   const {actions, state} = useNotificationContext()
   const theme = useTheme()
+  const goTo = useNavigateNotification(onNavigate)
+
   const isRead = data.isRead
   const isReading = state.loading.reading.id === data.id && state.loading.reading.active === true
   const isDeleting = state.loading.delete.id === data.id && state.loading.delete.active === true
@@ -30,7 +33,10 @@ export default function Notification({data}){
   ]
 
   return(
-    <Box sx={sx.container(theme.palette.mode)}>
+    <Box sx={sx.container(theme.palette.mode)} onClick={async () => {
+        !data.isRead ? await actions.readNotification(data.id) : undefined
+        goTo(data.target)
+      }}>
       <Avatar sx={sx.avatar} src={data.target.actorAvatarUrl}/>
       <Box sx={sx.content.container}>
         <Box><Typography sx={sx.content.message(isRead, theme.palette.mode)}>{data.message}</Typography></Box>

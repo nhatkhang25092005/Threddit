@@ -13,6 +13,14 @@ import {
   clampMediaIndex,
 } from "../utils/detailPostPage.utils";
 
+const resolveDetailContent = (data) => {
+  if (data?.content && typeof data.content === "object") {
+    return data.content;
+  }
+
+  return data ?? null;
+};
+
 export function useDetailPostPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,14 +48,16 @@ export function useDetailPostPage() {
       setIsLoading(true);
       setErrorMessage("");
 
-      const response = await runRequest(() => postService.getPostDetail(postId));
+      const response = await runRequest((signal) => postService.getPostDetail(postId, signal));
 
       if (!mounted || !response) {
         return;
       }
 
-      if (response.success && response.data) {
-        setFetchedPost(postByIdModel(response.data));
+      const content = resolveDetailContent(response.data);
+
+      if (response.success && content) {
+        setFetchedPost(postByIdModel(content));
         setIsLoading(false);
         return;
       }

@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback, useRef} from "react"
 import {useNotify} from '../../../hooks/useNotify'
 import { services } from "../services"
-import { convertTime } from "../../../utils/formatDate"
 import {modal} from '../../../constant/text/vi/modal'
 import { notificationActions } from "../actions"
 import { shouldRetry } from "../../../utils/shouldRetry"
+import { resolveNotificationList } from "../notification.utils"
 
 export function useNotification(dispatch, hasMore){
   const notify = useNotify()
@@ -24,7 +24,6 @@ export function useNotification(dispatch, hasMore){
       () => services.getNotification(cursor.current, abortRef.current.signal),
       (bool) => dispatch(notificationActions.getAllNotificationLoading(bool))
     )
-    console.log(response)
     if(response.code === 'ERR_CANCELED') return
 
     if(response.success){
@@ -33,14 +32,8 @@ export function useNotification(dispatch, hasMore){
         dispatch(notificationActions.setHasMoreNotification(false))
         return
       }
-
-      // Convert format
-      const convertedTimeArray = response.data.notifications.map(item=>({
-        ...item,
-        createdAt:convertTime(item.createdAt)
-      }))
-
-      dispatch(notificationActions.appendAllNotification(convertedTimeArray))
+      const convertedData = resolveNotificationList(response.data.notifications)
+      dispatch(notificationActions.appendAllNotification(convertedData))
 
       // updates cursor for next fetching turn
       cursor.current = response.data.cursor

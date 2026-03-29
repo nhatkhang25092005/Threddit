@@ -25,4 +25,20 @@ export const searchActions = {
       { timelineIndexList }
     )
   ),
+
+  setSearchUsers: (users = []) => (
+    createAction(
+      CLASS_TYPE.SEARCH,
+      SEARCH.SET_SEARCH_USERS,
+      { users }
+    )
+  ),
+
+  appendSearchUsers: (users = []) => (
+    createAction(
+      CLASS_TYPE.SEARCH,
+      SEARCH.APPEND_SEARCH_USERS,
+      { users }
+    )
+  ),
 }

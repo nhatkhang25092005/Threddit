@@ -19,7 +19,8 @@ export const initState = {
       //[username]:[1, 2, 3] (storyById)
     },
     reel:[],
-    searchList:[]
+    searchList:[],
+    searchUsers:[]
   },
 
   commentList:{
@@ -34,6 +35,7 @@ export const initState = {
   feedHasMore:undefined,
   reelHasMore:undefined,
   searchHasMore:undefined,
+  searchUsersHasMore:undefined,
   searchKeyword:"",
   userPostHasMore:{
     //[username]:boolean
@@ -45,6 +47,7 @@ export const initState = {
       editPost:false,
       editStory:false,
       presign:false,
+      getDetailPost:false,
       getFeeds:false,
       getReels:false,
       getFollowPost:false,

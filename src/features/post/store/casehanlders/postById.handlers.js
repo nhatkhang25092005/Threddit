@@ -93,6 +93,13 @@ export const postByIdHandlers = (state, action) => {
         postById: {
           ...state.postById,
           [post.id]: post
+        },
+        loading: {
+          ...state.loading,
+          item: {
+            ...state.loading.item,
+            [post.id]: state.loading.item?.[post.id] || itemModel()
+          }
         }
       }
     }

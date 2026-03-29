@@ -109,6 +109,9 @@ export function useCommentThread(postId, initialCount = 0, options = {}) {
   const deleteCommentAction = actions?.deleteComment;
   const reactionCommentAction = actions?.reactionComment;
   const usePrefetchedThread = options?.usePrefetchedThread === true;
+  const prefetchedCursor = options?.prefetchedCursor ?? null;
+  const prefetchedHasMore = options?.prefetchedHasMore === true;
+  const prefetchedReady = options?.prefetchedReady === true;
   const commentsRef = useRef([]);
   const initialCountRef = useRef(Number(initialCount) || 0);
   const hydratedPostIdRef = useRef(null);
@@ -197,21 +200,26 @@ export function useCommentThread(postId, initialCount = 0, options = {}) {
 
   useEffect(() => {
     if (usePrefetchedThread && postId) {
+      if (!prefetchedReady) {
+        hydratedPostIdRef.current = null;
+        return;
+      }
+
       if (hydratedPostIdRef.current === postId) {
         return;
       }
 
       commentsRef.current = cachedComments;
       setComments(cachedComments);
-      setCursor(null);
-      setHasMore(false);
+      setCursor(prefetchedCursor);
+      setHasMore(prefetchedHasMore);
       setStatus("ready");
       hydratedPostIdRef.current = postId;
       return;
     }
 
     hydratedPostIdRef.current = null;
-  }, [cachedComments, postId, usePrefetchedThread]);
+  }, [cachedComments, postId, prefetchedCursor, prefetchedHasMore, prefetchedReady, usePrefetchedThread]);
 
   useEffect(() => {
     if (usePrefetchedThread && postId) {

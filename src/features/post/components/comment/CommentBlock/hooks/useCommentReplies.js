@@ -24,6 +24,7 @@ export function useCommentReplies({
   onDelete,
   onReact,
   onReply,
+  targetCommentId = null,
 }) {
   const { actions } = usePostContext();
   const getChildComment = actions?.getChildComment;
@@ -63,6 +64,16 @@ export function useCommentReplies({
 
     setShowRepliesEmptyState(replyItems.length === 0);
   }, [hasViewedReplies, replyItems.length]);
+
+  useEffect(() => {
+    if (!targetCommentId || !findCommentByIdInTree(replyItems, targetCommentId)) {
+      return;
+    }
+
+    setHasViewedReplies(true);
+    setShowAllReplies(true);
+    setShowRepliesEmptyState(false);
+  }, [replyItems, targetCommentId]);
 
   const syncCreatedReply = useCallback(
     (createdComment, targetParentId) => {

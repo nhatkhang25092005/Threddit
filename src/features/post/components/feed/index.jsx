@@ -5,15 +5,13 @@ import { usePostContext } from "../../hooks";
 import LoadingGetPost from "../post/LoadingGetPost";
 import NoPost from "../post/NoPost";
 import Post from "../post/Post/Post";
+import FeedStoryPreviewRail from "./components/FeedStoryPreviewRail";
 import useFetchData from "./hooks/useFetchData";
 import useSaveScroll from "./hooks/useSaveScroll";
+import { useOpenDetail } from "../../hooks/feed/useOpenDetail";
+import { style } from "./style";
 
-const feedContentSx = {
-  alignItems: "center",
-  display: "flex",
-  flexDirection: "column",
-  width: "100%",
-};
+const feedContentSx = style.feed.page;
 
 export default function Feed() {
   const {
@@ -47,9 +45,12 @@ export default function Feed() {
   });
 
   useSaveScroll(canRestoreScroll);
+  useOpenDetail()
 
   return (
     <Box sx={feedContentSx}>
+      <FeedStoryPreviewRail />
+
       {((isLoading || isInitializing) && posts.length === 0) ? (
         <LoadingGetPost count={2} sx={{ list: { alignItems: "center" } }} />
       ) : showEmpty ? (

@@ -68,9 +68,9 @@ export const postApi = {
     return axios.patch(url, payload)
   },
 
-  getPostDetail(postId){
+  getPostDetail(postId, signal){
     const url = `${BASE}/${postId}`
-    return axios.get(url)
+    return axios.get(url,{signal})
   },
 
   getFeed(signal){

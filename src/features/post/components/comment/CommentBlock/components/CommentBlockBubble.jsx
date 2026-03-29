@@ -14,13 +14,35 @@ export default function CommentBlockBubble({
   currentUser,
   isDeleting = false,
   isEditing = false,
+  isTargetComment = false,
   onCancelEdit,
   onDelete,
   onEdit,
   onSubmitEdit,
 }) {
   return (
-    <Box sx={sx.bubble}>
+    <Box
+      sx={[
+        sx.bubble,
+        isTargetComment && {
+          borderColor: (theme) => (
+            theme.palette.mode === "dark"
+              ? "rgba(96, 165, 250, 0.85)"
+              : "rgba(37, 99, 235, 0.7)"
+          ),
+          backgroundColor: (theme) => (
+            theme.palette.mode === "dark"
+              ? "rgba(28, 41, 61, 0.95)"
+              : "rgba(235, 244, 255, 0.95)"
+          ),
+          boxShadow: (theme) => (
+            theme.palette.mode === "dark"
+              ? "0 0 0 0.18rem rgba(59, 130, 246, 0.18)"
+              : "0 0 0 0.16rem rgba(59, 130, 246, 0.14)"
+          ),
+        }
+      ]}
+    >
       <CommentBlockHeader
         author={comment.author}
         canManage={comment.meta?.isOwner}

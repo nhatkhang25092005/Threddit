@@ -31,10 +31,12 @@ export const buildDetailPostModalData = (post) => {
   const resolvedMedia = resolveMedia(post?.mediaFiles);
 
   return {
+    ...post,
     author: resolveDetailAuthor(post, isSharePost),
     createdAt: resolveDetailCreatedAt(post, isSharePost),
     inlineMedia: resolvedMedia,
     isSharePost,
+    mediaFiles: resolvedMedia,
     post,
     sharedPost,
   };

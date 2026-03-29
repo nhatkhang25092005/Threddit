@@ -27,5 +27,8 @@ export const profileApi = {
       headers:{'Content-Type': payload.type},
       withCredentials:false
     })
+  },
+  search_profile(key, cursor, signal){
+    return axios.get(import.meta.env.VITE_API_PROFILE_SEARCH,{params:{key, cursor}, signal})
   }
 }

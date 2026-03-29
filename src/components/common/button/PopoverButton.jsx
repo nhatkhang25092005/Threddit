@@ -95,7 +95,9 @@ export default function PopoverButton({
           }
         }}
       >
-        {children}
+        {typeof children === 'function'
+          ? children({ closePopover: handleClose, open })
+          : children}
       </Popover>
     </>
   )

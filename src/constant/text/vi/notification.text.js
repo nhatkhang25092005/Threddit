@@ -1,3 +1,12 @@
+const resolveNotificationContentType = (contentType) => {
+  const normalized = String(contentType || "").trim().toLowerCase()
+
+  if (normalized.includes("story")) return "tin"
+  if (normalized.includes("post")) return "bài viết"
+
+  return "bài viết"
+}
+
 export const notification = {
   popover:{
     title:'Thông báo',
@@ -40,4 +49,18 @@ export const notification = {
     noTitle: "Thông báo",
     noButtonLabel: "Ok",
   },
+
+  message:{
+    FOLLOW:"đã bắt đầu theo dõi bạn",
+    FOLLOWING_CONTENT_CREATION: ({ contentType }) => `vừa mới đăng tải ${resolveNotificationContentType(contentType)} mới`,
+    FRIEND_CONTENT_CREATION: ({ contentType }) => `vừa mới đăng tải ${resolveNotificationContentType(contentType)} mới`,
+    FRIEND_REQUEST:"đã gửi lời mời kết bạn",
+    FRIEND_ACCEPTED:"từ bây giờ đã là bạn bè",
+    COMMENT:"đã bình luận vào bài viết của bạn",
+    REPLY_COMMENT:"đã trả lời bình luận của bạn",
+    MENTION_IN_COMMENT:"đề cập bạn trong một bình luận",
+    MENTION_IN_CONTENT:"đề cập bạn trong một bài viết",
+    REACTION_CONTENT:"đã thả cảm xúc bài viết của bạn",
+    REACTION_COMMENT:"đã thả cảm xúc bình luận của bạn"
+  }
 }

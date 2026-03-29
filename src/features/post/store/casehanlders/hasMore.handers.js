@@ -52,6 +52,12 @@ export const hasMoreHandlers = (state, action) => {
         ...state,
         searchHasMore:action.payload
       }
+
+    case HAS_MORE.SET_SEARCH_USERS_HAS_MORE:
+      return{
+        ...state,
+        searchUsersHasMore:action.payload
+      }
     
     default: return state
   }

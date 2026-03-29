@@ -16,10 +16,14 @@ export default function StoryList() {
     isFetching,
     storyList,
   } = useStoryListPage()
+  const showEmptyCloseButton = !isFetching && storyList.length === 0
 
   return (
     <Box sx={sx.root}>
-      <StoryListBackground />
+      <StoryListBackground
+        onClose={handleClose}
+        showCloseButton={showEmptyCloseButton}
+      />
 
       <Box sx={sx.shell}>
         <StoryListViewer

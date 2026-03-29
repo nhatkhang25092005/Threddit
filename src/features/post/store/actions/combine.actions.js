@@ -49,17 +49,31 @@ export const combineActions = {
   },
 
   getSearchSuccess: (dispatch, data, mode = "append") => {
-    const searchItems = Array.isArray(data) ? data : []
+    const searchItems = Array.isArray(data)
+      ? data
+      : Array.isArray(data?.content)
+        ? data.content
+        : []
+    const searchUsers = Array.isArray(data?.users) ? data.users : []
     const postByIdList = searchItems.map((item) => postByIdModel(item))
     const timelineIndexList = getPostList(postByIdList)
 
-    dispatch(postByIdActions.addPosts(postByIdList))
+    if (postByIdList.length > 0) {
+      dispatch(postByIdActions.addPosts(postByIdList))
+    }
 
     if (mode === "set") {
       dispatch(searchActions.setSearchList(timelineIndexList))
+      dispatch(searchActions.setSearchUsers(searchUsers))
       return
     }
 
-    dispatch(searchActions.appendSearchList(timelineIndexList))
+    if (timelineIndexList.length > 0) {
+      dispatch(searchActions.appendSearchList(timelineIndexList))
+    }
+
+    if (searchUsers.length > 0) {
+      dispatch(searchActions.appendSearchUsers(searchUsers))
+    }
   }
 }

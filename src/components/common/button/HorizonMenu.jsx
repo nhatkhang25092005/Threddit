@@ -6,6 +6,7 @@ export default function HorizonMenu({sx, tasks, onClose, className, anchorOrigin
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   }
   const handleClose = () => {
@@ -45,7 +46,8 @@ export default function HorizonMenu({sx, tasks, onClose, className, anchorOrigin
         variant='default'
       >
         {tasks.map(task=>
-          <MenuItem key={task.label} onClick={async ()=>{
+          <MenuItem key={task.label} onClick={async (event)=>{
+            event.stopPropagation()
             await task.func()
             handleClose()
             }}>

@@ -273,5 +273,199 @@ export const style = {
       gap: "1rem",
       width: "100%",
     },
+
+    userSection: (theme) => ({
+      width: "100%",
+      boxSizing: "border-box",
+      p: { xs: "0.9rem", md: "0.95rem 1rem" },
+      borderRadius: "0.6rem",
+      display: "flex",
+      flexDirection: "column",
+      gap: "0.9rem",
+      background:
+        `linear-gradient(135deg, ${alpha(theme.palette.app.primary, 0.05)}, ${theme.palette.app.header})`,
+    }),
+
+    sectionHeader: {
+      width: "100%",
+      display: "flex",
+      alignItems: "flex-start",
+      justifyContent: "space-between",
+      gap: "0.8rem",
+      flexWrap: "wrap",
+    },
+
+    sectionHeading: {
+      minWidth: 0,
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      gap: "0.38rem",
+    },
+
+    sectionTitleRow: {
+      display: "flex",
+      alignItems: "center",
+      gap: "0.75rem",
+      minWidth: 0,
+    },
+
+    sectionTitleGroup: {
+      minWidth: 0,
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      gap: "0.16rem",
+    },
+
+    sectionIcon: (theme) => ({
+      width: "2.4rem",
+      minWidth: "2.4rem",
+      height: "2.4rem",
+      borderRadius: "0.7rem",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: theme.palette.app.cyan,
+      backgroundColor: alpha(theme.palette.app.primary, 0.12),
+      "& svg": {
+        width: "1.05rem",
+        height: "1.05rem",
+      },
+    }),
+
+    sectionEyebrow: (theme) => ({
+      fontSize: "0.66rem",
+      fontWeight: 800,
+      textTransform: "uppercase",
+      letterSpacing: "0.08em",
+      color: theme.palette.app.muted,
+    }),
+
+    sectionTitle: {
+      fontSize: { xs: "0.98rem", md: "1.04rem" },
+      fontWeight: 800,
+      lineHeight: 1.22,
+      color: "inherit",
+    },
+
+    sectionDescription: (theme) => ({
+      fontSize: "0.84rem",
+      lineHeight: 1.5,
+      color: theme.palette.app.muted,
+    }),
+
+    sectionAction: (theme) => ({
+      minHeight: "2.2rem",
+      px: "0.9rem",
+      borderRadius: "999px",
+      fontSize: "0.78rem",
+      fontWeight: 700,
+      textTransform: "none",
+      color: theme.palette.app.primary,
+      backgroundColor: alpha(theme.palette.app.primary, 0.1),
+      "&:hover": {
+        backgroundColor: alpha(theme.palette.app.primary, 0.16),
+      },
+    }),
+
+    userList: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "0.7rem",
+      width: "100%",
+    },
+
+    userCard: (theme) => ({
+      width: "100%",
+      border: `1px solid ${alpha(theme.palette.app.border, 0.9)}`,
+      borderRadius: "1rem",
+      padding: "0.75rem 0.8rem",
+      backgroundColor: theme.palette.app.header,
+      display: "flex",
+      alignItems: "center",
+      gap: "0.8rem",
+      cursor: "pointer",
+      appearance: "none",
+      textAlign: "left",
+      transition: "transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease",
+      "&:hover": {
+        transform: "translateY(-1px)",
+        borderColor: alpha(theme.palette.app.primary, 0.28),
+        backgroundColor: theme.palette.app.screenAlt,
+      },
+      "&:focus-visible": {
+        outline: `2px solid ${alpha(theme.palette.app.primary, 0.28)}`,
+        outlineOffset: "2px",
+      },
+    }),
+
+    userAvatar: {
+      width: 52,
+      height: 52,
+      flexShrink: 0,
+    },
+
+    userContent: {
+      minWidth: 0,
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      gap: "0.18rem",
+    },
+
+    userName: {
+      fontSize: "0.94rem",
+      fontWeight: 800,
+      lineHeight: 1.25,
+      color: "#fff",
+    },
+
+    userMeta: (theme) => ({
+      fontSize: "0.78rem",
+      lineHeight: 1.4,
+      color: theme.palette.app.muted,
+    }),
+
+    expandUsersButton: (theme) => ({
+      minHeight: "2.7rem",
+      borderRadius: "0.95rem",
+      border: `1px dashed ${alpha(theme.palette.app.primary, 0.34)}`,
+      fontSize: "0.84rem",
+      fontWeight: 800,
+      textTransform: "none",
+      color: theme.palette.app.primary,
+      backgroundColor: alpha(theme.palette.app.primary, 0.05),
+      "&:hover": {
+        borderColor: alpha(theme.palette.app.primary, 0.46),
+        backgroundColor: alpha(theme.palette.app.primary, 0.1),
+      },
+    }),
+
+    userSkeletonList: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "0.7rem",
+      width: "100%",
+    },
+
+    userSkeletonRow: (theme) => ({
+      width: "100%",
+      display: "flex",
+      alignItems: "center",
+      gap: "0.8rem",
+      padding: "0.72rem 0.8rem",
+      borderRadius: "1rem",
+      border: `1px solid ${alpha(theme.palette.app.border, 0.75)}`,
+      backgroundColor: theme.palette.app.header,
+    }),
+
+    userSkeletonBody: {
+      minWidth: 0,
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      gap: "0.12rem",
+    },
   },
 };

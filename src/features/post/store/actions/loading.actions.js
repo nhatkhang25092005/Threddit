@@ -2,6 +2,14 @@ import { CLASS_TYPE, LOADING } from '../type'
 import { createAction } from '../models/action.model'
 
 export const loadingAction = {
+  getDetailPostLoading : (isLoading) => (
+    createAction(
+      CLASS_TYPE.LOADING,
+      LOADING.GET_DETAIL_POST,
+      isLoading
+    )
+  ),
+
   getFeedListLoading : (isLoading) => (
     createAction(
       CLASS_TYPE.LOADING,

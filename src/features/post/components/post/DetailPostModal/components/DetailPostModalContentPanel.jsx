@@ -6,8 +6,10 @@ import { style } from "../style";
 const sx = style.modal;
 
 export default function DetailPostModalContentPanel({
+  commentId,
   commentSectionRef,
   detail,
+  isSubComment = false,
   onCommentClick,
 }) {
   return (
@@ -22,6 +24,8 @@ export default function DetailPostModalContentPanel({
           <CommentList
             initialCount={detail?.stats?.commentNumber ?? 0}
             postId={detail?.id}
+            targetCommentId={commentId}
+            targetIsSubComment={isSubComment}
             variant="modal"
           />
         </Box>

@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useRef } from "react";
-import { convertTime } from "../../../utils/formatDate";
 import { unreadCountActions, realtimeNotificationsActions } from "../actions";
+import { resolveNotificationItem } from "../notification.utils";
 
 export function useListener(dispatch) {
   const reconnectAttemptRef = useRef(0);
@@ -14,7 +14,7 @@ export function useListener(dispatch) {
     try {
       const data = JSON.parse(event.data);
 
-      const convertData = {...data, createdAt: convertTime(data.createdAt),};
+      const convertData = resolveNotificationItem(data);
 
       dispatch(realtimeNotificationsActions.addComeNotification(convertData));
       dispatch(unreadCountActions.incrementUnreadCount());

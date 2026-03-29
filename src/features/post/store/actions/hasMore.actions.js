@@ -48,5 +48,13 @@ export const hasMoreActions = {
       HAS_MORE.SET_SEARCH_HAS_MORE,
       hasMore
     )
+  ),
+
+  setSearchUsersHasMore:(hasMore) => (
+    createAction(
+      CLASS_TYPE.HAS_MORE,
+      HAS_MORE.SET_SEARCH_USERS_HAS_MORE,
+      hasMore
+    )
   )
 }

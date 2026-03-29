@@ -64,16 +64,18 @@ export default function PopoverNotification({
       surfaceVariant='modal'
       surfaceSx={{p:2}}
     >
-      <Box sx={sx.container}>
-        <Box sx={sx.header}>
-          <Typography variant='title'>{text.title}</Typography>
-          {state.unreadNotifications.length > 0  && <ReadAllBtn/>}
+      {({ closePopover }) => (
+        <Box sx={sx.container}>
+          <Box sx={sx.header}>
+            <Typography variant='title'>{text.title}</Typography>
+            {state.unreadNotifications.length > 0  && <ReadAllBtn/>}
+          </Box>
+          <TabsController sx={sx.tabs_controller}>
+            <NotificationList label={text.tabs.all} onNavigate={closePopover} {...allNotificationProps}/>
+            <NotificationList label={text.tabs.unread} onNavigate={closePopover} {...unreadNotificationProps}/>
+          </TabsController>
         </Box>
-        <TabsController sx={sx.tabs_controller}>
-          <NotificationList label={text.tabs.all} {...allNotificationProps}/>
-          <NotificationList label={text.tabs.unread} {...unreadNotificationProps}/>
-        </TabsController>
-      </Box>
+      )}
     </PopoverButton>
   )
 }

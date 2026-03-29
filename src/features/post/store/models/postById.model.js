@@ -19,10 +19,26 @@ function mapSharer(sharer){
   : null
 }
 
+function resolveSharedPostCandidate(data = {}) {
+  const candidate =
+    data?.sharedPost ??
+    data?.sharedContent ??
+    data?.originalPost ??
+    data?.originPost ??
+    data?.content
+
+  if (candidate && typeof candidate === "object" && candidate !== data) {
+    return candidate
+  }
+
+  return null
+}
+
 export const postByIdModel = (data = {}) => {
   const mediaFiles = Array.isArray(data?.mediaFiles)
     ? data.mediaFiles
     : (Array.isArray(data?.media) ? data.media : [])
+  const sharedPostCandidate = resolveSharedPostCandidate(data)
 
   return {
     id: data.contentId || data.id,
@@ -62,6 +78,7 @@ export const postByIdModel = (data = {}) => {
       shareMessage:data.shareMessage || null
     },
 
+    sharedPost: sharedPostCandidate ? postByIdModel(sharedPostCandidate) : null,
     shareId:data.shareId || null
   }
 }

@@ -30,7 +30,7 @@ export default function useLogin() {
     }
     else{
       setUser(res.data)
-      navigate(routes.account,{replace:true})
+      navigate(routes.home,{replace:true})
     }
   }
 

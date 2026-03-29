@@ -15,9 +15,15 @@ import {
   useAvatar,
   useEditProfile,
 } from "../hooks"
+import { useOpenDetail } from "../hooks/useOpenDetail"
 
 import ProfileModalProvider from "./ProfileModalProvider"
 import { useOrchestrate } from "../../../core/orchestrate/useOrchestrate"
+
+function ProfileUrlEffects() {
+  useOpenDetail()
+  return null
+}
 
 export default function ProfileProvider({ children, username = null }) {
   /* ---------------- state ---------------- */
@@ -106,6 +112,7 @@ export default function ProfileProvider({ children, username = null }) {
   return (
     <ProfileContext.Provider value={value}>
       <ProfileModalProvider modals={MODALS}>
+        <ProfileUrlEffects />
         {children}
       </ProfileModalProvider>
     </ProfileContext.Provider>

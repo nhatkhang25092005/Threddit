@@ -4,7 +4,7 @@ import { notification } from '../../../constant/text/vi/notification.text'
 import useInfiniteScroll from '../../../hooks/useInfiniteScroll'
 import { routes } from '../../../constant'
 import { useNavigate } from 'react-router-dom'
-export default function NotificationList({getAll,notifications = [], fetch, loading, setGetAll, hasMore, isPage = false}){
+export default function NotificationList({getAll,notifications = [], fetch, loading, setGetAll, hasMore, isPage = false, onNavigate}){
   const scrollRef = useInfiniteScroll({
     hasMore:hasMore,
     loading:loading,
@@ -15,14 +15,14 @@ export default function NotificationList({getAll,notifications = [], fetch, load
 
   return(
   <Box sx={{display:'flex', flexDirection:'column', alignItes:'flex-end',}}>
-    {!isPage && <Link onClick={()=>navigate(routes.notification,{replace:true})} variant='primary' sx={{textAlign:'right'}}>{notification.popover.button.see_all}</Link>}
+      {!isPage && <Link onClick={()=>navigate(routes.notification,{replace:true})} variant='primary' sx={{textAlign:'right'}}>{notification.popover.button.see_all}</Link>}
     <List sx={{display:'flex', flexDirection:'column', p:0}}>
     {notifications.length > 0
       ? <Box sx={{display:'flex', flexDirection:'column'}}>
         {notifications.map(
           item => (
             <ListItem sx={{p:0}} key={item.id}>
-              <Notification data={item}/>
+              <Notification data={item} onNavigate={onNavigate}/>
             </ListItem>
           )
         )}

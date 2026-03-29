@@ -19,7 +19,6 @@ export function useReadNotification(dispatch){
     if(r.success){
       dispatch(readNotificationActions.setNewReadState(id))
       dispatch(unreadCountActions.decrementUnreadCount())
-      notify.snackbar(r.message,2000)
       return
     }
 

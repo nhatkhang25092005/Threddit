@@ -28,7 +28,8 @@ import {
   useDeleteComment,
   useGetFeed,
   useGetReel,
-  useSearch
+  useSearch,
+  useGetPostDetail
 } from "../hooks"
 
 import {
@@ -46,7 +47,7 @@ export default function PostProvider({ children }) {
   const getFriendStory = useGetFriendStory(dispatch)
   const getPinnedStory = useGetPinnedStory(dispatch)
   const { getCommentList, prefetchCommentThread, refreshCommentList } = useGetCommentList(dispatch)
-  const { getChildComment, refreshChildComment } = useGetChildComment(dispatch)
+  const { getChildComment, prefetchChildComment, refreshChildComment } = useGetChildComment(dispatch)
   const createComment = useCreateComment(dispatch)
   const updateComment = useUpdateComment(dispatch)
   const deleteComment = useDeleteComment(dispatch)
@@ -56,6 +57,7 @@ export default function PostProvider({ children }) {
   const deleteStory = useDeleteStory(dispatch)
   const editPost = useEditPost(dispatch)
   const editStory = useEditStory(dispatch)
+  const getPostDetail = useGetPostDetail(dispatch)
   const reaction = useReaction(dispatch)
   const reactionComment = useReactionComment(dispatch)
   const { savePost, unsavePost } = useSavePost(dispatch)
@@ -64,13 +66,12 @@ export default function PostProvider({ children }) {
   const {pinStory, unpinStory} = useStoryPinActions(dispatch)
   const getFeed = useGetFeed(dispatch, state.feedHasMore, state.contentList.home?.feeds ?? [])
   const getReel = useGetReel(dispatch, state.reelHasMore, state.contentList.reel ?? [])
-  const { searchContent, getNextPage } = useSearch(
-    dispatch,
-    state.searchHasMore,
-    state.contentList.searchList ?? []
-  )
-
-  console.log(state)
+  const { searchContent, getNextPage } = useSearch(dispatch, {
+    contentHasMore: state.searchHasMore,
+    contentIds: state.contentList.searchList ?? [],
+    userHasMore: state.searchUsersHasMore,
+    users: state.contentList.searchUsers ?? [],
+  })
   
   const selector = useMemo(()=>({
     reaction: createReactionSelector(state),
@@ -89,8 +90,9 @@ export default function PostProvider({ children }) {
       getFriendStory: (options) => getFriendStory(options),
       getPinnedStory: (username, options) => getPinnedStory(username, options),
       getCommentList: (postId, options) => getCommentList(postId, options),
-      prefetchCommentThread: (postId) => prefetchCommentThread(postId),
+      prefetchCommentThread: (postId, options) => prefetchCommentThread(postId, options),
       getChildComment: (parentCommentId, options) => getChildComment(parentCommentId, options),
+      prefetchChildComment: (parentCommentId, options) => prefetchChildComment(parentCommentId, options),
       refreshCommentList: (postId) => refreshCommentList(postId),
       refreshChildComment: (parentCommentId) => refreshChildComment(parentCommentId),
       createComment: (postId, data) => createComment(postId, data),
@@ -102,6 +104,7 @@ export default function PostProvider({ children }) {
       deleteStory,
       editPost,
       editStory,
+      getPostDetail,
       reaction,
       reactionComment,
       savePost,
@@ -118,7 +121,7 @@ export default function PostProvider({ children }) {
       searchContent,
       getSearchNextPage: getNextPage
     }),
-    [getFeed, getReel, getNextPage, pinStory, searchContent, unpinStory, getPostList, refreshUserPostList, getSavedPostList, getCurrentStory, getFriendStory, getPinnedStory, getCommentList, prefetchCommentThread, getChildComment, refreshCommentList, refreshChildComment, createComment, updateComment, deleteComment, createPost, createStory, deletePost, deleteStory, editPost, editStory, reaction, reactionComment, savePost, unsavePost, sharePost, unsharePost, toggleSharePost, pinPost, unpinPost]
+    [getFeed, getReel, getNextPage, pinStory, searchContent, unpinStory, getPostList, refreshUserPostList, getSavedPostList, getCurrentStory, getFriendStory, getPinnedStory, getCommentList, prefetchCommentThread, getChildComment, prefetchChildComment, refreshCommentList, refreshChildComment, createComment, updateComment, deleteComment, createPost, createStory, deletePost, deleteStory, editPost, editStory, getPostDetail, reaction, reactionComment, savePost, unsavePost, sharePost, unsharePost, toggleSharePost, pinPost, unpinPost]
   )
 
   const value = useMemo(

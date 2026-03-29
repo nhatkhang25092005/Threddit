@@ -54,6 +54,9 @@ export const createPostSelector = (state) => {
   const getSearchIds = () =>
     state.contentList.searchList ?? []
 
+  const getSearchUsers = () =>
+    state.contentList.searchUsers ?? []
+
   const getFeedListHasMore = () => {
     return state.feedHasMore
   }
@@ -64,6 +67,10 @@ export const createPostSelector = (state) => {
 
   const getSearchListHasMore = () => {
     return state.searchHasMore
+  }
+
+  const getSearchUsersHasMore = () => {
+    return state.searchUsersHasMore
   }
 
   const getSearchKeyword = () => {
@@ -137,9 +144,11 @@ export const createPostSelector = (state) => {
     getFeedIds,
     getReelIds,
     getSearchIds,
+    getSearchUsers,
     getFeedListHasMore,
     getReelListHasMore,
     getSearchListHasMore,
+    getSearchUsersHasMore,
     getSearchKeyword,
     getUsersPostIds,
     getSavedPostIds,

@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { useNotify } from "../../../hooks/useNotify"
 import { services } from "../services"
-import { convertTime } from "../../../utils/formatDate"
 import { modal } from "../../../constant/text/vi/modal"
 import { unreadNotificationActions } from "../actions"
+import { resolveNotificationList } from "../notification.utils"
 
 export function useUnreadNotification(dispatch, hasMore) {
   const [getAll, setGetAll] = useState(false)
@@ -14,7 +14,7 @@ export function useUnreadNotification(dispatch, hasMore) {
   const getUnreadNotification = useCallback(async () => {
     if (!hasMore) return
 
-  abortRef.current?.abort()
+    abortRef.current?.abort()
     abortRef.current = new AbortController()
 
     const response = await notify.withLoading(
@@ -34,8 +34,8 @@ export function useUnreadNotification(dispatch, hasMore) {
         return
       }
 
-      // convert time
-      const converted = list.map(item => ({ ...item, createdAt: convertTime(item.createdAt) }))
+      // convert message and time
+      const converted = resolveNotificationList(list)
 
       // pagination
       dispatch(unreadNotificationActions.appendUnreadNotification(converted))

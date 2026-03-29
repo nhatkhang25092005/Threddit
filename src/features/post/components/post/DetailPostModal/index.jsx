@@ -9,7 +9,12 @@ import { style } from "./style";
 
 const sx = style.modal;
 
-export default function DetailPostModal({ onClose, postId }) {
+export default function DetailPostModal({
+  onClose,
+  postId,
+  commentId = null,
+  isSubComment = false,
+}) {
   const detail = useDetailPostModalData(postId)
   const commentSectionRef = useRef(null);
   const handleCommentClick = useCallback(() => {
@@ -35,8 +40,10 @@ export default function DetailPostModal({ onClose, postId }) {
 
       <Box sx={sx.layout}>
         <DetailPostModalContentPanel
+          commentId={commentId}
           commentSectionRef={commentSectionRef}
           detail={detail}
+          isSubComment={isSubComment}
           onCommentClick={handleCommentClick}
         />
       </Box>
