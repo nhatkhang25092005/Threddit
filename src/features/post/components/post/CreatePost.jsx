@@ -46,6 +46,8 @@ export default function CreatePost({ redirectAfterCreate = null }){
     })
   }, [modalProps, openModal])
 
+  if(!user) return null
+
   return(
     <Surface sx={sx.surface}>
       <Avatar src={user.avatarUrl} sx={sx.avatar}/>

@@ -10,6 +10,7 @@ export function useDeleteFriend(dispatch) {
   const notify = useNotify()
   const {user, isOwner} = useAuth()
   const { sync } = useOrchestrate()
+  const actorUsername = user?.username ?? null
 
   const getLoadingHandler = useCallback((onProfile, username) =>
   onProfile
@@ -25,8 +26,8 @@ export function useDeleteFriend(dispatch) {
     if (response.success) {
       dispatch(friendListActions.removeFriend(username))
       isOwner && dispatch(friendListActions.deleteMyFriend(username))
-      if (onProfile) {
-        dispatch(friendListActions.removeFriend(user.username))
+      if (onProfile && actorUsername) {
+        dispatch(friendListActions.removeFriend(actorUsername))
       }
       sync.profile.deleteFriendSuccess({ onProfile })
       notify.snackbar(response.message, 3000)
@@ -34,7 +35,7 @@ export function useDeleteFriend(dispatch) {
     }
 
     notify.popup(modal.title.error, response.message)
-  }, [dispatch, getLoadingHandler, notify, sync, user.username, isOwner])
+  }, [actorUsername, dispatch, getLoadingHandler, notify, sync, isOwner])
 
   return {
     deleteFriend

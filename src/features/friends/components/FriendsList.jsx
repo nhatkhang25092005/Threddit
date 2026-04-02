@@ -86,7 +86,7 @@ export default function FriendList() {
       isOwner={isOwner}
       friendList={friendList}
       deleteFriend={deleteFriend}
-      actorName={user.username}
+      actorName={user?.username ?? null}
       loading={loading.perFriend}
     />
   )
