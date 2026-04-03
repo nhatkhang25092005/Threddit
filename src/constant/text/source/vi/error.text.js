@@ -1,0 +1,35 @@
+export const errorText = {
+  api: {
+    ECONNABORTED:
+      "Máy chủ đang gặp trục trặc. Xin lỗi vì sự bất tiện này, chúng tôi đang cố gắng khắc phục.",
+    ERR_NETWORK: "Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng.",
+    ENETUNREACH: "Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng.",
+    ENOTFOUND: "Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng.",
+    ETIMEDOUT: "Kết nối bị timeout. Vui lòng thử lại.",
+    ECONNREFUSED: "Máy chủ từ chối kết nối. Vui lòng thử lại sau.",
+    ECONNRESET: "Kết nối bị ngắt đột ngột. Vui lòng thử lại.",
+    ERR_BAD_REQUEST: "Yêu cầu không hợp lệ. Vui lòng kiểm tra lại thông tin.",
+    ERR_BAD_RESPONSE: "Máy chủ trả về phản hồi không hợp lệ.",
+    ERR_CANCELED: "Yêu cầu đã bị hủy.",
+    ERR_INVALID_URL: "Đường dẫn không hợp lệ.",
+    400: "Dữ liệu không hợp lệ.",
+    401: "Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.",
+    403: "Bạn không có quyền truy cập.",
+    404: "Không tìm thấy dữ liệu yêu cầu.",
+    408: "Yêu cầu bị timeout. Vui lòng thử lại.",
+    429: "Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau.",
+    500: "Lỗi máy chủ. Vui lòng thử lại sau.",
+    502: "Máy chủ đang bảo trì. Vui lòng thử lại sau.",
+    503: "Máy chủ đang bảo trì. Vui lòng thử lại sau.",
+    504: "Máy chủ không phản hồi. Vui lòng thử lại sau.",
+  },
+  fallback: "Có lỗi xảy ra. Vui lòng thử lại.",
+  validation: {
+    required: "Trường không được phép rỗng",
+    invalidComment: "Nội dung bình luận không hợp lệ",
+  },
+  upload: {
+    media: "Không thể tải media lên",
+    file: "Không thể tải file lên",
+  },
+}

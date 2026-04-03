@@ -1,0 +1,35 @@
+export const errorText = {
+  api: {
+    ECONNABORTED:
+      "The server is experiencing issues. We are sorry for the inconvenience and are working to fix it.",
+    ERR_NETWORK: "Cannot connect to the server. Please check your network connection.",
+    ENETUNREACH: "Cannot connect to the server. Please check your network connection.",
+    ENOTFOUND: "Cannot connect to the server. Please check your network connection.",
+    ETIMEDOUT: "The connection timed out. Please try again.",
+    ECONNREFUSED: "The server refused the connection. Please try again later.",
+    ECONNRESET: "The connection was interrupted unexpectedly. Please try again.",
+    ERR_BAD_REQUEST: "The request is invalid. Please check your information again.",
+    ERR_BAD_RESPONSE: "The server returned an invalid response.",
+    ERR_CANCELED: "The request was canceled.",
+    ERR_INVALID_URL: "The URL is invalid.",
+    400: "The data is invalid.",
+    401: "Your session has expired. Please log in again.",
+    403: "You do not have permission to access this.",
+    404: "The requested data could not be found.",
+    408: "The request timed out. Please try again.",
+    429: "You have sent too many requests. Please try again later.",
+    500: "Server error. Please try again later.",
+    502: "The server is under maintenance. Please try again later.",
+    503: "The server is under maintenance. Please try again later.",
+    504: "The server is not responding. Please try again later.",
+  },
+  fallback: "Something went wrong. Please try again.",
+  validation: {
+    required: "This field cannot be empty",
+    invalidComment: "Comment content is invalid",
+  },
+  upload: {
+    media: "Could not upload media",
+    file: "Could not upload file",
+  },
+}

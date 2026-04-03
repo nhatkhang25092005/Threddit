@@ -73,13 +73,20 @@ export const style = {
 
       create_feed_button:{
         height:'fit-content',
-        width:'7rem',
+        width:'auto',
+        minWidth:'8.5rem',
+        maxWidth:'100%',
         my:'auto',
-        display:'flex',
+        display:'inline-flex',
         flexDirection:'row',
-        gap:'0.2rem',
-        p:'0rem',
-        pr:'1rem',
+        alignItems:'center',
+        justifyContent:'center',
+        gap:'0.4rem',
+        px:'1rem',
+        py:'0.18rem',
+        minHeight:'2rem',
+        whiteSpace:'nowrap',
+        flexShrink:0,
         textTransform:'none',
         '&:hover':{bgcolor:'#d8d8d8'}
       },
@@ -134,10 +141,20 @@ export const style = {
 
       edit_button:{
         height:'fit-content',
-        width:'7rem',
+        width:'auto',
+        minWidth:'8.5rem',
+        maxWidth:'100%',
         my:'auto',
-        p:0,
-        ml:2
+        display:'inline-flex',
+        alignItems:'center',
+        justifyContent:'center',
+        px:'1rem',
+        py:'0.18rem',
+        minHeight:'2rem',
+        whiteSpace:'nowrap',
+        flexShrink:0,
+        textTransform:'none',
+        ml:0
       }
     }
   },

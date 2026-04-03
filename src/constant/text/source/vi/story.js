@@ -1,0 +1,161 @@
+export const story = {
+  shared: {
+    closeButton: "Đóng",
+    justNow: "Vừa xong",
+  },
+  pinnedSection: {
+    title: "Tin nổi bật",
+    editButton: "Chỉnh sửa tin nổi bật",
+    previousAriaLabel: "Tin nổi bật trước",
+    nextAriaLabel: "Tin nổi bật tiếp theo",
+  },
+  pageMeta: {
+    pinned: {
+      eyebrow: "Tin đã ghim",
+      title: "Danh sách tin đã ghim",
+      subtitle: "Danh sách story đã ghim trên hồ sơ",
+    },
+    current: {
+      eyebrow: "Tin hiện tại",
+      title: "Danh sách tin",
+      subtitle: "Story hiện tại của người dùng",
+    },
+  },
+  storyList: {
+    loadingTitle: "Đang tải story...",
+    emptyTitle: "Không tìm thấy",
+    loadingText: "Đang đồng bộ danh sách tin.",
+    emptyText: "Người dùng này hiện không có tin nào.",
+    yourStories: "Tin của bạn",
+    friendStories: "Tin của bạn bè",
+    fetchingList: "Đang lấy danh sách tin",
+  },
+  viewer: {
+    fallbackAuthorName: "Người dùng",
+    pin: "Ghim tin",
+    unpin: "Gỡ ghim tin",
+    edit: "Chỉnh sửa tin",
+    delete: "Xóa tin",
+    close: "Đóng tin",
+    previousAriaLabel: "Story trước",
+    nextAriaLabel: "Story tiếp theo",
+    mediaAlt: "Media story",
+    emptyTitle: "Story trống",
+    textLabel: "Văn bản",
+  },
+  mediaKind: {
+    image: "Ảnh",
+    video: "Video",
+    sound: "Âm thanh",
+    text: "Văn bản",
+  },
+  editStoryModal: {
+    title: "Chỉnh sửa tin",
+    subtitle: "Bạn có thể cập nhật nội dung hoặc thay media cho tin này",
+    closeAriaLabel: "Đóng modal chỉnh sửa tin",
+    submitLabel: "Xác nhận chỉnh sửa",
+  },
+  editPinnedStoryModal: {
+    title: "Chỉnh sửa tin nổi bật",
+    subtitle: "Xem nhanh và gỡ các story đang ghim trên trang cá nhân của bạn.",
+    helperText:
+      "Danh sách được hiển thị theo dạng lưới 2 hàng. Dùng nút điều hướng để xem thêm từng story.",
+    gridEyebrow: "Tin đang ghim",
+    gridCaption: "Nhấn dấu X trên từng story để bỏ ghim khỏi hồ sơ.",
+    closeAriaLabel: "Đóng chỉnh sửa tin nổi bật",
+    previousAriaLabel: "Xem story ghim trước đó",
+    nextAriaLabel: "Xem story ghim tiếp theo",
+    removeAriaLabel: "Bỏ ghim tin",
+    loadingTitle: "Đang tải tin nổi bật",
+    loadingText: "Danh sách tin ghim của bạn đang được tải lên để chỉnh sửa.",
+    emptyTitle: "Chưa có tin nổi bật nào",
+    emptyText:
+      "Khi bạn ghim story lên hồ sơ, chúng sẽ xuất hiện tại đây để bạn quản lý dễ hơn.",
+    countLabel: (count) => (count > 0 ? `${count} tin đang ghim` : "Chưa ghim tin nào"),
+  },
+  loading: {
+    pin: "Đang ghim tin...",
+    unpin: "Đang gỡ ghim tin...",
+    delete: "Đang xóa tin...",
+  },
+  errors: {
+    maxMediaError: "Story chỉ hỗ trợ tối đa 1 tệp media",
+  },
+  createStoryModal: {
+    loadingDuration: "Đang đọc...",
+    modeLabel: {
+      empty: "Đang trống",
+      text: "Văn bản",
+      image: "Hình ảnh",
+      video: "Video",
+      sound: "Âm thanh",
+      image_text: "Hình ảnh + văn bản",
+      video_text: "Video + văn bản",
+      sound_text: "Văn bản + âm thanh",
+    },
+    header: {
+      title: "Tạo tin",
+      subtitle: "Có thể tải lên tối đa 1 file ảnh, video hoặc âm thanh",
+      closeAriaLabel: "Đóng modal tạo tin",
+    },
+    mediaButtons: {
+      status: {
+        active: "Đang chọn",
+        disabled: "Khóa",
+        add: "Thêm",
+      },
+      actions: {
+        image: {
+          label: "Thêm ảnh",
+          removeLabel: "Xóa ảnh",
+          caption: "Chọn 1 ảnh từ máy tính",
+        },
+        video: {
+          label: "Thêm video",
+          removeLabel: "Xóa video",
+          caption: "Chọn 1 video từ máy tính",
+        },
+        sound: {
+          label: "Thêm âm thanh",
+          removeLabel: "Xóa âm thanh",
+          caption: "Chọn 1 đoạn âm thanh từ máy tính",
+        },
+      },
+    },
+    preview: {
+      eyebrow: "Bản xem trước",
+      playbackPrefix: (durationLabel) => `Phát ${durationLabel}`,
+      playLabel: "Phát story",
+      pauseLabel: "Tạm dừng story",
+      progressLabel: "Thanh tiến trình story",
+      imageAlt: "Story image preview",
+      placeholder: "Bắt đầu bằng văn bản hoặc thêm 1 file để xem bố cục tin.",
+      soundCanvasTitle: "Story âm thanh",
+      descriptionLabel: "Văn bản",
+      defaultAudioTitle: "Audio story",
+      soundAutoplayCaption: (durationLabel) => `Tự phát nền ${durationLabel}.`,
+    },
+    formPanel: {
+      content: {
+        title: "Chỉnh sửa tin",
+        textareaPlaceholder: "Nhập văn bản, gõ @ để tag bạn bè...",
+        mentionButton: "Tag bạn bè",
+        emojiButton: "Chèn emoji",
+      },
+      media: {
+        eyebrow: "Media",
+      },
+      fileSummary: {
+        defaultTitle: "Local file",
+        unknownType: "Không rõ định dạng",
+        staticSourceDuration: (seconds) => `${seconds}s cố định`,
+        durationCaption: (durationLabel) => `Thời lượng ${durationLabel}`,
+        staticCaption: "Story sẽ phát 5s",
+      },
+      footer: {
+        closeButton: "Đóng",
+        submitButton: "Đăng tin",
+      },
+    },
+  },
+}

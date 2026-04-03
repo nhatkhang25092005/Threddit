@@ -11,6 +11,7 @@ import { upload } from '../../../../utils/upload'
 import ImageInput from '../../../../components/common/input/ImageInput'
 import VideoInput from '../../../../components/common/input/VideoInput'
 import SoundInput from '../../../../components/common/input/SoundInput'
+import { composerText } from '../../../../constant/text/vi/post/composer.text'
 const sx = style.createPostComponent
 
 const uploadByType = {
@@ -55,22 +56,31 @@ export default function CreatePost({ redirectAfterCreate = null }){
         <TextField
           sx={sx.textField}
           onClick={handleOpenCreatePostModal}
-          placeholder='Ban dang nghi gi '
+          placeholder={composerText.post.quickComposer.placeholder}
           slotProps={{htmlInput:{readOnly:true}}}
         />
         <Box sx={sx.container_2}>
           <SoundInput multiple onClick={(event) => handleUpload('sound', event)}>
-            <IconButton sx={sx.actionIconButton} aria-label='Them am thanh'>
+            <IconButton
+              sx={sx.actionIconButton}
+              aria-label={composerText.post.quickComposer.actionAria.addSound}
+            >
               <VolumeDownIcon />
             </IconButton>
           </SoundInput>
           <VideoInput multiple onClick={(event) => handleUpload('video', event)}>
-            <IconButton sx={sx.actionIconButton} aria-label='Them video'>
+            <IconButton
+              sx={sx.actionIconButton}
+              aria-label={composerText.post.quickComposer.actionAria.addVideo}
+            >
               <VideocamIcon />
             </IconButton>
           </VideoInput>
           <ImageInput multiple onClick={(event) => handleUpload('image', event)}>
-            <IconButton sx={sx.actionIconButton} aria-label='Them anh'>
+            <IconButton
+              sx={sx.actionIconButton}
+              aria-label={composerText.post.quickComposer.actionAria.addImage}
+            >
               <ImageIcon sx={{width:'2rem', height:'1.2rem'}}/>
             </IconButton>
           </ImageInput>

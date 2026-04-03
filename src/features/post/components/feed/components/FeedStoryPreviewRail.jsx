@@ -6,6 +6,7 @@ import { Avatar, Box, Typography } from "@mui/material";
 import { useEffect, useMemo, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Surface from "../../../../../components/common/Surface";
+import { feedText } from "../../../../../constant/text/vi/post/feed.text";
 import useAuth from "../../../../../core/auth/useAuth";
 import { usePostModal } from "../../../provider/usePostModal";
 import { usePostContext } from "../../../hooks";
@@ -72,10 +73,10 @@ function FeedStoryCreateCard({ avatarUrl, onClick }) {
         </Box>
 
         <Typography sx={sx.storyCreateTitle}>
-          {FEED_STORY_TEXT.createTitle}
+          {feedText.storyRail.createTitle}
         </Typography>
         <Typography sx={(theme) => sx.storyCreateCaption(theme)}>
-          {FEED_STORY_TEXT.createCaption}
+          {feedText.storyRail.createCaption}
         </Typography>
       </Box>
     </Box>
@@ -238,7 +239,7 @@ export default function FeedStoryPreviewRail() {
         <Box sx={sx.storyRailHeader}>
           <Box sx={sx.storyRailHeaderText}>
             <Typography sx={sx.storyRailTitle}>
-              {FEED_STORY_TEXT.title}
+              {feedText.storyRail.title}
             </Typography>
           </Box>
         </Box>

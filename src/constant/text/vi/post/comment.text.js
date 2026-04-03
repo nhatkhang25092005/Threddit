@@ -1,35 +1,3 @@
-export const commentText = {
-  sectionTitle: "Bình luận",
-  sectionHint: "Thread hỗ trợ tối đa 2 tầng phản hồi như Facebook",
-  composerPlaceholder: "Viết bình luận của bạn...",
-  replyPlaceholder: "Viết phản hồi...",
-  editPlaceholder: "Chỉnh sửa bình luận...",
-  submit: "Đăng",
-  saveEdit: "Lưu",
-  cancel: "Hủy",
-  loadMoreComments: "Xem thêm bình luận",
-  loadMoreReplies: "Xem phản hồi",
-  collapseReplies: "Thu gọn phản hồi",
-  emptyTitle: "Chưa có bình luận nào",
-  emptyDescription:
-    "Hãy mở đầu cuộc trò chuyện bằng một bình luận ngắn hoặc đính kèm media nếu bạn muốn.",
-  errorTitle: "Không tải được bình luận",
-  errorDescription:
-    "Danh sách bình luận hiện chưa sẵn sàng. Bạn vẫn có thể tiếp tục dựng UI và thao tác cục bộ ở đây.",
-  ownerBadge: "Bạn",
-  actionReply: "Trả lời",
-  actionEdit: "Sửa",
-  actionDelete: "Xóa",
-  actionDeleting: "Đang xóa...",
-  actionLike: "Thích",
-  mediaImageLabel: "Ảnh",
-  mediaVideoLabel: "Video",
-  mediaAudioLabel: "Âm thanh",
-  mediaAlt: "Media bình luận",
-  replyToPrefix: "Trả lời",
-  validationRequired: "Hãy nhập nội dung hoặc chọn media trước khi gửi.",
-  justNow: "Vừa xong",
-  emptyInline: "Hãy là người đầu tiên bình luận cho bài viết này!",
-  noMoreComments: "Không còn bình luận nào",
-  emptyReplies: "Hiện chưa có phản hồi.",
-};
+﻿import { createLocaleBinding } from "../../runtime/sourceRegistry"
+
+export const commentText = createLocaleBinding("post/comment.text.js", "commentText")

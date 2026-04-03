@@ -1,0 +1,161 @@
+export const story = {
+  shared: {
+    closeButton: "Close",
+    justNow: "Just now",
+  },
+  pinnedSection: {
+    title: "Pinned stories",
+    editButton: "Edit pinned stories",
+    previousAriaLabel: "Previous pinned story",
+    nextAriaLabel: "Next pinned story",
+  },
+  pageMeta: {
+    pinned: {
+      eyebrow: "Pinned stories",
+      title: "Pinned story list",
+      subtitle: "List of pinned stories on the profile",
+    },
+    current: {
+      eyebrow: "Current story",
+      title: "Story list",
+      subtitle: "Current story of this user",
+    },
+  },
+  storyList: {
+    loadingTitle: "Loading stories...",
+    emptyTitle: "Not found",
+    loadingText: "Syncing story list.",
+    emptyText: "This user currently has no stories.",
+    yourStories: "Your stories",
+    friendStories: "Your friends' stories",
+    fetchingList: "Fetching story list",
+  },
+  viewer: {
+    fallbackAuthorName: "User",
+    pin: "Pin story",
+    unpin: "Unpin story",
+    edit: "Edit story",
+    delete: "Delete story",
+    close: "Close story",
+    previousAriaLabel: "Previous story",
+    nextAriaLabel: "Next story",
+    mediaAlt: "Story media",
+    emptyTitle: "Empty story",
+    textLabel: "Text",
+  },
+  mediaKind: {
+    image: "Image",
+    video: "Video",
+    sound: "Audio",
+    text: "Text",
+  },
+  editStoryModal: {
+    title: "Edit story",
+    subtitle: "You can update the content or replace the media for this story",
+    closeAriaLabel: "Close edit story modal",
+    submitLabel: "Confirm edit",
+  },
+  editPinnedStoryModal: {
+    title: "Edit pinned stories",
+    subtitle: "Quickly view and remove stories pinned on your profile.",
+    helperText:
+      "The list is displayed in a 2-row grid. Use the navigation buttons to browse more stories.",
+    gridEyebrow: "Pinned stories",
+    gridCaption: "Click the X on each story to remove it from your profile.",
+    closeAriaLabel: "Close edit pinned stories",
+    previousAriaLabel: "View previous pinned story",
+    nextAriaLabel: "View next pinned story",
+    removeAriaLabel: "Remove pinned story",
+    loadingTitle: "Loading pinned stories",
+    loadingText: "Your pinned story list is being loaded for editing.",
+    emptyTitle: "No pinned stories yet",
+    emptyText:
+      "When you pin stories to your profile, they will appear here for easier management.",
+    countLabel: (count) => (count > 0 ? `${count} pinned stories` : "No pinned stories"),
+  },
+  loading: {
+    pin: "Pinning story...",
+    unpin: "Unpinning story...",
+    delete: "Deleting story...",
+  },
+  errors: {
+    maxMediaError: "Stories support at most one media file",
+  },
+  createStoryModal: {
+    loadingDuration: "Reading...",
+    modeLabel: {
+      empty: "Empty",
+      text: "Text",
+      image: "Image",
+      video: "Video",
+      sound: "Audio",
+      image_text: "Image + text",
+      video_text: "Video + text",
+      sound_text: "Text + audio",
+    },
+    header: {
+      title: "Create story",
+      subtitle: "You can upload up to 1 image, video, or audio file",
+      closeAriaLabel: "Close create story modal",
+    },
+    mediaButtons: {
+      status: {
+        active: "Selected",
+        disabled: "Locked",
+        add: "Add",
+      },
+      actions: {
+        image: {
+          label: "Add image",
+          removeLabel: "Remove image",
+          caption: "Choose 1 image from your computer",
+        },
+        video: {
+          label: "Add video",
+          removeLabel: "Remove video",
+          caption: "Choose 1 video from your computer",
+        },
+        sound: {
+          label: "Add audio",
+          removeLabel: "Remove audio",
+          caption: "Choose 1 audio clip from your computer",
+        },
+      },
+    },
+    preview: {
+      eyebrow: "Preview",
+      playbackPrefix: (durationLabel) => `Play ${durationLabel}`,
+      playLabel: "Play story",
+      pauseLabel: "Pause story",
+      progressLabel: "Story progress bar",
+      imageAlt: "Story image preview",
+      placeholder: "Start with text or add a file to preview the story layout.",
+      soundCanvasTitle: "Audio story",
+      descriptionLabel: "Text",
+      defaultAudioTitle: "Audio story",
+      soundAutoplayCaption: (durationLabel) => `Autoplay for ${durationLabel}.`,
+    },
+    formPanel: {
+      content: {
+        title: "Edit story",
+        textareaPlaceholder: "Enter text, type @ to tag friends...",
+        mentionButton: "Tag friends",
+        emojiButton: "Insert emoji",
+      },
+      media: {
+        eyebrow: "Media",
+      },
+      fileSummary: {
+        defaultTitle: "Local file",
+        unknownType: "Unknown format",
+        staticSourceDuration: (seconds) => `${seconds}s fixed`,
+        durationCaption: (durationLabel) => `Duration ${durationLabel}`,
+        staticCaption: "Story will play for 5s",
+      },
+      footer: {
+        closeButton: "Close",
+        submitButton: "Post story",
+      },
+    },
+  },
+}

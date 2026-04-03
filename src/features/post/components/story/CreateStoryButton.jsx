@@ -11,9 +11,9 @@ export default function CreateStoryButton(){
   return(
     <Box sx={{display:isOwner ? 'flex' : 'none'}}>
       <Button onClick={()=>openModal('create_story_modal')} sx={sx} variant='primary'>
-        <Plus/>
+        <Plus size={18} strokeWidth={2.25} />
         {profile.button.create_feed}
       </Button>
     </Box>
   )
-}7
+}

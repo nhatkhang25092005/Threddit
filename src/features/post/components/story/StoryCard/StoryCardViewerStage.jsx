@@ -8,6 +8,7 @@ import {
   STORY_MODE,
   isVisualStoryMedia,
 } from '../CreateStoryModal/storyComposer'
+import { story as storyText } from '../../../../../constant/text/vi/story'
 import { style } from '../style'
 import { storyCardViewerSx as sx } from './storyCardViewer.styles'
 import { resolveStoryCardGradient } from './utils/storyCard.utils'
@@ -39,7 +40,7 @@ export default function StoryCardViewerStage({
       <IconButton
         onClick={onPrev}
         disabled={!canGoPrev}
-        aria-label="Previous story"
+        aria-label={storyText.viewer.previousAriaLabel}
         sx={sx.navButton}
       >
         <ChevronLeftRoundedIcon />
@@ -62,7 +63,7 @@ export default function StoryCardViewerStage({
                   <Box
                     component="img"
                     src={media.src}
-                    alt="Story media"
+                    alt={storyText.viewer.mediaAlt}
                     sx={composerSx.media}
                   />
                 ) : (
@@ -85,7 +86,9 @@ export default function StoryCardViewerStage({
                   <Box sx={composerSx.placeholderIcon}>
                     <NotesRoundedIcon />
                   </Box>
-                  <Typography sx={composerSx.placeholderText}>Story trong</Typography>
+                  <Typography sx={composerSx.placeholderText}>
+                    {storyText.createStoryModal.preview.placeholder}
+                  </Typography>
                 </Box>
               ) : null}
 
@@ -103,7 +106,9 @@ export default function StoryCardViewerStage({
 
           {showBelowText ? (
             <Box sx={{ ...composerSx.belowText, ...sx.belowText }}>
-              <Typography sx={composerSx.belowTextLabel}>Van ban</Typography>
+              <Typography sx={composerSx.belowTextLabel}>
+                {storyText.createStoryModal.preview.descriptionLabel}
+              </Typography>
               <Typography sx={{ ...composerSx.belowTextValue, ...sx.belowTextValue }}>
                 {text}
               </Typography>
@@ -139,7 +144,7 @@ export default function StoryCardViewerStage({
       <IconButton
         onClick={onNext}
         disabled={!canGoNext}
-        aria-label="Next story"
+        aria-label={storyText.viewer.nextAriaLabel}
         sx={sx.navButton}
       >
         <ChevronRightRoundedIcon />
