@@ -31,6 +31,7 @@ export const style = {
       minHeight: 0,
       display: "flex",
       flexDirection: "column",
+      color: "#FFFFFF",
     },
     contentScroll: {
       flex: "1 1 auto",

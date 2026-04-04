@@ -131,10 +131,10 @@ export default function DesktopSidebar({ controller, customStyle }) {
             buttonSx={
               isSidebarExpanded
                 ? style.utilityActionButton(currentTab === tabs.notification.value)
-                : style.notificationButton
+                : style.notificationButton(currentTab === tabs.notification.value)
             }
             label={isSidebarExpanded ? sidebar.utility.notification : undefined}
-            labelSx={style.utilityLabel}
+            labelSx={style.utilityLabel(currentTab === tabs.notification.value)}
           />
 
           <Box
@@ -146,23 +146,23 @@ export default function DesktopSidebar({ controller, customStyle }) {
             sx={
               isSidebarExpanded
                 ? style.utilityActionButton()
-                : style.utilityIconButton
+                : style.utilityIconButton()
             }
           >
             <Box sx={style.utilityActionIconWrap}>
               <TranslateRoundedIcon />
             </Box>
             {isSidebarExpanded ? (
-              <Typography sx={style.utilityLabel}>
+              <Typography sx={style.utilityLabel()}>
                 {sidebar.utility.language}
               </Typography>
             ) : null}
           </Box>
 
           <ThemeToggleBtn
-            sx={isSidebarExpanded ? style.utilityActionButton() : style.utilityIconButton}
+            sx={isSidebarExpanded ? style.utilityActionButton() : style.utilityIconButton()}
             label={isSidebarExpanded ? sidebar.utility.theme : undefined}
-            labelSx={style.utilityLabel}
+            labelSx={style.utilityLabel()}
             iconWrapSx={style.utilityActionIconWrap}
           />
 
@@ -170,9 +170,9 @@ export default function DesktopSidebar({ controller, customStyle }) {
             tasks={menuTasks}
             onClose={collapseRail}
             icon={MoreHorizRoundedIcon}
-            buttonSx={isSidebarExpanded ? style.utilityActionButton() : style.utilityIconButton}
+            buttonSx={isSidebarExpanded ? style.utilityActionButton() : style.utilityIconButton()}
             label={isSidebarExpanded ? sidebar.utility.account : undefined}
-            labelSx={style.utilityLabel}
+            labelSx={style.utilityLabel()}
             iconWrapSx={style.utilityActionIconWrap}
           />
         </Box>

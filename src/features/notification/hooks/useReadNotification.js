@@ -8,23 +8,25 @@ export function useReadNotification(dispatch){
   const pendingRef = useRef(new Set())
 
   const readNotification = async (id) => {
-    
     if(pendingRef.current.has(id)) return
     pendingRef.current.add(id)
 
-    const r = await notify.withLoading(
-      () => services.readNotification(id),
-      (bool)=>dispatch(readNotificationActions.readNotificationLoading(bool, id))
-    )
-    if(r.success){
-      dispatch(readNotificationActions.setNewReadState(id))
-      dispatch(unreadCountActions.decrementUnreadCount())
-      return
-    }
+    try {
+      const r = await notify.withLoading(
+        () => services.readNotification(id),
+        (bool)=>dispatch(readNotificationActions.readNotificationLoading(bool, id))
+      )
 
-    else notify.popup(modal.title.error, r.message)
-    
-    pendingRef.current.delete(id)
+      if(r.success){
+        dispatch(readNotificationActions.setNewReadState(id))
+        dispatch(unreadCountActions.decrementUnreadCount())
+        return
+      }
+
+      notify.popup(modal.title.error, r.message)
+    } finally {
+      pendingRef.current.delete(id)
+    }
   }
   
   const readAllNotifications = async () => {

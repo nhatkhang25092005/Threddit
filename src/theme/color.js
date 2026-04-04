@@ -100,8 +100,8 @@ export const COLOR = {
           light: SHARED_MODE.primary,
         },
         text: {
-          dark: SHARED_MODE.text,
-          light: SHARED_MODE.text,
+          dark: APP_PALETTE.white,
+          light: APP_PALETTE.white,
         },
         shadow: {
           dark: SHARED_SHADOW.soft,
@@ -159,12 +159,12 @@ export const COLOR = {
       dark: {
         bg: SHARED_MODE.primary,
         shadow: SHARED_SHADOW.soft,
-        text: SHARED_MODE.text,
+        text: APP_PALETTE.white,
       },
       light: {
         bg: SHARED_MODE.primary,
         shadow: SHARED_SHADOW.soft,
-        text: SHARED_MODE.text,
+        text: APP_PALETTE.white,
       },
     },
     dialog: {

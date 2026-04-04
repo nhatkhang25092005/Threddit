@@ -319,6 +319,7 @@ export const style = {
       maxWidth: "42rem",
       padding: 0,
       mb: "1rem",
+      color: (theme) => theme.palette.app.white,
       pb:'0.4rem'
     },
     section: {
@@ -375,7 +376,7 @@ export const style = {
       mx: "1rem",
       mt: "0.2rem",
       mb: "1rem",
-
+      color: (theme) => theme.palette.app.white,
       border: "1px solid",
       borderColor: (theme) => (theme.palette.mode === "dark" ? "#243041" : "#DADDE1"),
       borderRadius: "0.75rem",

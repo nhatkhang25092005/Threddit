@@ -96,14 +96,7 @@ export const style = {
     padding: expand ? "0.6rem 0.75rem 0.6rem 0.95rem" : "0.6rem",
     borderRadius: "1.15rem",
     background: "transparent",
-    color:
-      theme.palette.mode === "dark"
-        ? active || emphasize
-          ? theme.palette.app.text
-          : theme.palette.app.muted
-        : active || emphasize
-          ? theme.palette.app.text
-          : theme.palette.app.muted,
+    color: theme.palette.app.text,
     opacity: active || emphasize ? 1 : 0.8,
     transition:
       "transform 0.18s ease, color 0.18s ease, opacity 0.18s ease",
@@ -116,7 +109,7 @@ export const style = {
       height: active ? "1.3rem" : "0.35rem",
       borderRadius: "999rem",
       transform: "translateY(-50%)",
-      backgroundColor: "currentColor",
+      backgroundColor: theme.palette.app.primary,
       opacity: active ? 0.9 : 0,
       transition: "width 0.18s ease, height 0.18s ease, opacity 0.18s ease",
     },
@@ -130,12 +123,13 @@ export const style = {
     },
   }),
 
-  navIconWrap: (_active, emphasize = false) => ({
+  navIconWrap: (active, emphasize = false) => (theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     flexShrink: 0,
     lineHeight: 0,
+    color: active || emphasize ? theme.palette.app.primary : theme.palette.app.muted,
     "& svg": {
       width: emphasize ? "1.6rem" : "1.38rem",
       height: emphasize ? "1.6rem" : "1.38rem",
@@ -143,12 +137,13 @@ export const style = {
     },
   }),
 
-  navLabel: {
+  navLabel: (active, emphasize = false) => (theme) => ({
     fontSize: "0.92rem",
     fontWeight: 700,
     lineHeight: 1.2,
     whiteSpace: "nowrap",
-  },
+    color: active || emphasize ? theme.palette.app.primary : theme.palette.app.muted,
+  }),
 
   sidebarFooter: {
     marginTop: "auto",
@@ -157,16 +152,13 @@ export const style = {
     gap: "0.6rem",
   },
 
-  utilityLabel: (theme) => ({
+  utilityLabel: (active = false) => (theme) => ({
     fontSize: "0.86rem",
     fontWeight: 700,
-    color:
-      theme.palette.mode === "dark"
-        ? theme.palette.app.muted
-        : theme.palette.app.muted,
+    color: active ? theme.palette.app.primary : theme.palette.app.muted,
   }),
 
-  utilityIconButton: (theme) => ({
+  utilityIconButton: (active = false) => (theme) => ({
     width: "2.85rem",
     height: "2.85rem",
     minWidth: "2.85rem",
@@ -174,12 +166,12 @@ export const style = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    color: theme.palette.app.text,
+    color: active ? theme.palette.app.primary : theme.palette.app.muted,
     backgroundColor: "transparent !important",
     border: "none",
     boxShadow: "none !important",
     padding: 0,
-    opacity: 0.82,
+    opacity: active ? 1 : 0.82,
     "&:hover": {
       backgroundColor: "transparent !important",
       opacity: 1,
@@ -199,14 +191,7 @@ export const style = {
     padding: "0.35rem 0.2rem",
     borderRadius: "1.1rem",
     backgroundColor: "transparent",
-    color:
-      theme.palette.mode === "dark"
-        ? active
-          ? theme.palette.app.text
-          : theme.palette.app.muted
-        : active
-          ? theme.palette.app.text
-          : theme.palette.app.muted,
+    color: active ? theme.palette.app.primary : theme.palette.app.muted,
     font: "inherit",
     textAlign: "left",
     opacity: active ? 1 : 0.82,
@@ -239,16 +224,16 @@ export const style = {
     },
   },
 
-  notificationButton: (theme) => ({
+  notificationButton: (active = false) => (theme) => ({
     width: "2.85rem",
     height: "2.85rem",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    color: theme.palette.app.text,
+    color: active ? theme.palette.app.primary : theme.palette.app.muted,
     backgroundColor: "transparent",
     transition: "opacity 0.18s ease, transform 0.18s ease",
-    opacity: 0.82,
+    opacity: active ? 1 : 0.82,
     "& svg": {
       fontSize: "1.35rem",
     },
@@ -358,14 +343,7 @@ export const style = {
     padding: 0,
     borderRadius: "1rem",
     background: "transparent",
-    color:
-      theme.palette.mode === "dark"
-        ? active || emphasize
-          ? theme.palette.app.text
-          : theme.palette.app.muted
-        : active || emphasize
-          ? theme.palette.app.text
-          : theme.palette.app.muted,
+    color: active || emphasize ? theme.palette.app.primary : theme.palette.app.muted,
     opacity: active || emphasize ? 1 : 0.82,
     transition: "transform 0.18s ease, opacity 0.18s ease",
     "&::after": {

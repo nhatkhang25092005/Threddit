@@ -14,7 +14,7 @@ export const style = {
     border: `1px solid ${theme.palette.app.border}`,
   }),
 
-  searchLeadingIcon: {
+  searchLeadingIcon: (theme) => ({
     width: "1.85rem",
     minWidth: "1.85rem",
     height: "1.85rem",
@@ -23,13 +23,14 @@ export const style = {
     justifyContent: "center",
     flexShrink: 0,
     lineHeight: 0,
+    color: theme.palette.app.primary,
     "& svg": {
       width: "1.02rem",
       height: "1.02rem",
       fill: "currentColor",
       color: "currentColor",
     },
-  },
+  }),
 
   searchInput: ({ mobile = false } = {}) => (theme) => ({
     flex: 1,
@@ -67,7 +68,7 @@ export const style = {
     height: "1.95rem",
     minWidth: "1.95rem",
     padding: "0.2rem",
-    color: theme.palette.app.text,
+    color: theme.palette.app.primary,
     opacity: 0.72,
     transition: "opacity 0.18s ease, background-color 0.18s ease",
     "&:hover": {
@@ -414,12 +415,12 @@ export const style = {
       gap: "0.18rem",
     },
 
-    userName: {
+    userName: (theme) => ({
       fontSize: "0.94rem",
       fontWeight: 800,
       lineHeight: 1.25,
-      color: "#fff",
-    },
+      color: theme.palette.app.primary,
+    }),
 
     userMeta: (theme) => ({
       fontSize: "0.78rem",

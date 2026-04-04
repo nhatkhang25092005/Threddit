@@ -4,6 +4,7 @@ export const style = {
       px: "1rem",
       pb: "1rem",
       pt: variant === "page" ? "0.9rem" : "0.75rem",
+      color: "#FFFFFF",
       display: "flex",
       flexDirection: "column",
       gap: "0.85rem",
@@ -207,6 +208,9 @@ export const style = {
       },
       "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
         borderColor: (theme) => (theme.palette.mode === "dark" ? "#46505D" : "#C7D4E2"),
+      },
+      "& .MuiInputBase-input, & .MuiInputBase-inputMultiline": {
+        color: "#FFFFFF",
       },
       "& .MuiInputBase-inputMultiline": {
         fontSize: compact ? "0.9rem" : "0.95rem",

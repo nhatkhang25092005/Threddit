@@ -156,6 +156,7 @@ export const style = {
       minHeight: 0,
       display: "flex",
       flexDirection: "column",
+      color: "#FFFFFF",
       backgroundColor: (theme) =>
         theme.palette.mode === "dark" ? "#111418" : "#FFFFFF",
       borderLeft: {

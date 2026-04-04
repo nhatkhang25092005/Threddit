@@ -47,7 +47,7 @@ export default function NavButton({
       </Box>
 
       {!mobile && expanded ? (
-        <Typography sx={style.navLabel}>{tab.label}</Typography>
+        <Typography sx={style.navLabel(active, isEmphasized)}>{tab.label}</Typography>
       ) : null}
     </Box>
   )

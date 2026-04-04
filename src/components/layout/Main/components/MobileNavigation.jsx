@@ -34,12 +34,12 @@ export default function MobileNavigation({ controller }) {
   return (
     <>
       <Box sx={style.mobileUtilityBar}>
-        <ThemeToggleBtn sx={(currentTheme) => style.utilityIconButton(currentTheme)} />
+        <ThemeToggleBtn sx={style.utilityIconButton()} />
         <PositionedMenu
           tasks={menuTasks}
           onClose={collapseRail}
           icon={MoreHorizRoundedIcon}
-          buttonSx={(currentTheme) => style.utilityIconButton(currentTheme)}
+          buttonSx={style.utilityIconButton()}
         />
       </Box>
 
@@ -54,7 +54,7 @@ export default function MobileNavigation({ controller }) {
                     disable={location.pathname === tabs.notification.path}
                     onClose={collapseRail}
                     badgeSx={style.notificationBadge}
-                    buttonSx={style.notificationButton}
+                    buttonSx={style.notificationButton(currentTab === tabs.notification.value)}
                   />
                 </Box>
               )

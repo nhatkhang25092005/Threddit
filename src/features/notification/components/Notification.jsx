@@ -33,8 +33,10 @@ export default function Notification({data, onNavigate}){
   ]
 
   return(
-    <Box sx={sx.container(theme.palette.mode)} onClick={async () => {
-        !data.isRead ? await actions.readNotification(data.id) : undefined
+    <Box sx={sx.container(theme.palette.mode)} onClick={() => {
+        if (!data.isRead) {
+          void actions.readNotification(data.id)
+        }
         goTo(data.target)
       }}>
       <Avatar sx={sx.avatar} src={data.target.actorAvatarUrl}/>
