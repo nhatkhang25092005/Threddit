@@ -341,4 +341,152 @@ export const style = {
       backgroundColor: theme.palette.app.header,
     }),
   },
+  friend_chat_list: {
+    container: {
+      display: { xs: "none", md: "block" },
+      p: "0.9rem",
+      width: "16.5rem",
+      position: "fixed",
+      top: "1rem",
+      right: "1rem",
+      bottom: "1rem",
+      borderRadius: "1rem",
+      border: (theme) => `1px solid ${theme.palette.app.border}`,
+      backgroundColor: (theme) => theme.palette.app.header,
+      backdropFilter: "blur(18px)",
+      boxShadow: (theme) =>
+        theme.palette.mode === "dark"
+          ? "0 24px 60px rgba(0,0,0,0.26)"
+          : "0 24px 60px rgba(0,0,0,0.14)",
+      zIndex: 10,
+      overflow: "hidden",
+    },
+
+    inner: {
+      height: "100%",
+      minHeight: 0,
+      display: "flex",
+      flexDirection: "column",
+      gap: "0.85rem",
+    },
+
+    header: {
+      px: "0.2rem",
+    },
+
+    headerRow: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: "0.75rem",
+    },
+
+    title: {
+      fontSize: "1rem",
+      fontWeight: 800,
+      lineHeight: 1.2,
+      color: "#FFFFFF",
+    },
+
+    list: {
+      minHeight: 0,
+      display: "flex",
+      flexDirection: "column",
+      gap: "0.45rem",
+      overflowY: "auto",
+      pr: "0.2rem",
+      "&::-webkit-scrollbar": {
+        width: "0.36rem",
+      },
+      "&::-webkit-scrollbar-thumb": {
+        borderRadius: "999rem",
+        backgroundColor: "rgba(148,163,184,0.32)",
+      },
+    },
+
+    item: (theme) => ({
+      width: "100%",
+      border: `1px solid ${theme.palette.app.border}`,
+      borderRadius: "0.95rem",
+      backgroundColor:
+        theme.palette.mode === "dark"
+          ? "rgba(255,255,255,0.02)"
+          : "rgba(255,255,255,0.04)",
+      display: "flex",
+      alignItems: "center",
+      gap: "0.75rem",
+      px: "0.75rem",
+      py: "0.72rem",
+      cursor: "default",
+      textAlign: "left",
+      color: "inherit",
+      transition:
+        "transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease",
+      "&:hover": {
+        transform: "translateY(-1px)",
+        borderColor: theme.palette.app.primary,
+        backgroundColor: "rgba(59,130,246,0.08)",
+      },
+    }),
+
+    avatar: {
+      width: "2.6rem",
+      height: "2.6rem",
+      flexShrink: 0,
+    },
+
+    textWrap: {
+      minWidth: 0,
+      flex: 1,
+    },
+
+    displayName: {
+      fontSize: "0.88rem",
+      fontWeight: 700,
+      lineHeight: 1.25,
+      color: "#FFFFFF",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+    },
+
+    username: (theme) => ({
+      mt: "0.12rem",
+      fontSize: "0.75rem",
+      lineHeight: 1.35,
+      color: theme.palette.app.muted,
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+    }),
+
+    count: (theme) => ({
+      minWidth: "1.9rem",
+      px: "0.48rem",
+      py: "0.2rem",
+      borderRadius: "999rem",
+      fontSize: "0.72rem",
+      fontWeight: 800,
+      lineHeight: 1,
+      textAlign: "center",
+      color: theme.palette.app.primary,
+      backgroundColor: "rgba(59,130,246,0.12)",
+      border: `1px solid ${theme.palette.app.border}`,
+    }),
+
+    status: {
+      flex: 1,
+      minHeight: 0,
+      display: "grid",
+      placeItems: "center",
+      textAlign: "center",
+      px: "0.6rem",
+    },
+
+    statusText: (theme) => ({
+      fontSize: "0.84rem",
+      lineHeight: 1.5,
+      color: theme.palette.app.muted,
+    }),
+  }
 };

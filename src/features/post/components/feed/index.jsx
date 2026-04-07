@@ -11,6 +11,7 @@ import useFetchData from "./hooks/useFetchData";
 import useSaveScroll from "./hooks/useSaveScroll";
 import { useOpenDetail } from "../../hooks/feed/useOpenDetail";
 import { style } from "./style";
+import FriendChatList from "./components/FriendChatList";
 
 const sx = style.feed;
 
@@ -55,6 +56,7 @@ export default function Feed() {
       </Box>
 
       <FeedStoryPreviewRail />
+      <FriendChatList/>
 
       {((isLoading || isInitializing) && posts.length === 0) ? (
         <LoadingGetPost count={2} sx={{ list: { alignItems: "center" } }} />
