@@ -1,28 +1,38 @@
-import { useTheme } from "@mui/material/styles"
-import logoDark from '../../assets/icons/logo_dark.png'
-import logoLight from '../../assets/icons/logo_light.png'
+import "@fontsource/satisfy";
+import { Typography } from "@mui/material";
 
-export default function Logo({sx, size = null}){
-  const theme = useTheme()
-  const setsize = {
-    small:{
-      height:'1rem',
-      width:'1rem'
-    },
-    normal:{
-      height:'2rem',
-      width:'2rem'
-    },
-    large:{
-      height:'5rem',
-      width:'5rem'
-    }
-  }
-  return(
-    <img
-      style={{height:'50%',width:'50%',marginTop:'5rem',...sx, ...(size !== null ? setsize?.[size] : null )}}
-      src={theme.palette.mode === 'dark' ? logoDark : logoLight}
-      alt="logo"
-    />
+const logoSizes = {
+  small: {
+    fontSize: "1.35rem",
+  },
+  normal: {
+    fontSize: "1.9rem",
+  },
+  large: {
+    fontSize: "3.75rem",
+  },
+}
+
+export default function Logo({ sx, size = "large" }) {
+  return (
+    <Typography
+      component="span"
+      aria-label="Threddit logo"
+      sx={[
+        {
+          display: "inline-block",
+          lineHeight: 1,
+          whiteSpace: "nowrap",
+          userSelect: "none",
+          fontFamily: '"Satisfy", cursive',
+          fontWeight: 400,
+          color: "#3B82F6",
+        },
+        logoSizes[size] ?? null,
+        sx,
+      ]}
+    >
+      Threddit
+    </Typography>
   )
 }

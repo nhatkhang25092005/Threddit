@@ -13,6 +13,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@fontsource/inter": "^5.2.8",
+    "@fontsource/satisfy": "^5.2.7",
     "@mui/icons-material": "^7.3.2",
     "@mui/x-date-pickers": "^8.23.0",
     "@react-oauth/google": "^0.12.2",

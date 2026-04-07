@@ -54,15 +54,7 @@ export default function DesktopSidebar({ controller, customStyle }) {
     >
       <Box sx={style.sidebarInner}>
         <Box sx={style.brandBlock(isSidebarExpanded)}>
-          <Logo size="normal" sx={style.logo} />
-          {isSidebarExpanded ? (
-            <Box>
-              <Typography sx={style.brandTitle}>{sidebar.brand.title}</Typography>
-              <Typography sx={(currentTheme) => style.brandSubtitle(currentTheme)}>
-                {sidebar.brand.subtitle}
-              </Typography>
-            </Box>
-          ) : null}
+          <Logo size={isSidebarExpanded ? "normal" : "small"} sx={style.logo} />
         </Box>
 
         <Box sx={style.navSection}>

@@ -49,14 +49,13 @@ export const style = {
     display: "flex",
     alignItems: "center",
     gap: expand ? "0.85rem" : 0,
-    justifyContent: expand ? "flex-start" : "center",
+    justifyContent: "center",
     p: expand ? "0.55rem 0.35rem" : "0.45rem 0.2rem",
   }),
 
   logo: {
     marginTop: 0,
-    width: "2rem",
-    height: "2rem",
+    display: "block",
   },
 
   brandTitle: {
