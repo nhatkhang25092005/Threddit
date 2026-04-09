@@ -4,7 +4,7 @@ import { followerHandler } from './handlers/follower'
 import { followingHandler } from './handlers/following'
 import { hasMoreHandler } from './handlers/hasmore'
 import { loadingHandler } from './handlers/loading'
-import { resetHandler } from './handlers/reset.js'
+import { resetHandler } from './handlers/reset'
 
 export const initState = {
   followerList: [],

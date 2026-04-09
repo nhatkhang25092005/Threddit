@@ -49,6 +49,27 @@ export const profile = {
     relationship: "Relationship status: ",
     button: "Edit",
   },
+    bio_value:{
+    gender: {
+      male: "Male",
+      female: "Female",
+      other: "Other",
+    },
+    education: {
+      high_school: "High school",
+      college: "College",
+      bachelor: "Bachelor's degree",
+      master: "Master's degree",
+      doctorate: "Doctorate",
+    },
+    relationship: {
+      single: "Single",
+      dating: "Dating",
+      in_relationship: "In a relationship",
+      engage: "Engaged",
+      married: "Married",
+    },
+  },
 
   modal: {
     edit_bio: {

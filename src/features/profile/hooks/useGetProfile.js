@@ -14,6 +14,7 @@ export function useGetProfile(dispatch, username){
       () => services.getProfileInfo(username),
       (bool) => dispatch(getProfileLoading(bool))
     )
+    console.log(res)
     if(res.success){
       dispatch(setProfile(res.data))
       return

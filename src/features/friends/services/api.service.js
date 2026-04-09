@@ -14,11 +14,11 @@ export const apiService = {
   getSentRequestList: async (cursor, signal) =>
     handleRequest(() => friendApi.getSentRequests(cursor, signal)),
 
-  acceptRequest: async (friendshipId) =>
-    handleRequest(() => friendApi.acceptRequest(friendshipId)),
+  acceptRequest: async (username) =>
+    handleRequest(() => friendApi.acceptRequest(username)),
 
-  rejectRequest: async (friendshipId) =>
-    handleRequest(() => friendApi.rejectRequest(friendshipId)),
+  rejectRequest: async (username) =>
+    handleRequest(() => friendApi.rejectRequest(username)),
 
   cancelRequest: async (username) =>
     handleRequest(() => friendApi.cancelRequest(username)),

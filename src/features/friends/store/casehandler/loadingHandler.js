@@ -110,14 +110,15 @@ export const loadingHandler = (state, action) => {
      * Updates per-request loading state when accepting a friend request.
      */
     case ACCEPT_REQUEST:{
-      const {loading, friendshipId} = action.payload
+      const {loading, username} = action.payload
       return {
         ...state,
         loading: {
           ...state.loading,
           perRequest:{
             ...state.loading.perRequest,
-            [friendshipId]:{
+            [username]:{
+              ...state.loading.perRequest[username],
               accept_request: loading
             }
           }
@@ -126,14 +127,15 @@ export const loadingHandler = (state, action) => {
     }
       
     case REJECT_REQUEST:{
-      const {loading, friendshipId} = action.payload
+      const {loading, username} = action.payload
       return {
         ...state,
         loading: {
           ...state.loading,
           perRequest:{
             ...state.loading.perRequest,
-            [friendshipId]:{
+            [username]:{
+              ...state.loading.perRequest[username],
               reject_request: loading
             }
           }

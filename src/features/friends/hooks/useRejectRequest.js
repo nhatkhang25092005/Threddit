@@ -7,16 +7,17 @@ import { loadingActions, requestListActions } from "../store/actions"
 export function useRejectRequest(dispatch) {
   const notify = useNotify()
 
-  const rejectRequest = useCallback(async (friendshipId) => {
+  const rejectRequest = useCallback(async (username) => {
+    if (!username) return
 
     const response = await notify.withLoading(
-      () => apiService.rejectRequest(friendshipId),
-      (bool) => dispatch(loadingActions.rejectRequest(friendshipId, bool))
+      () => apiService.rejectRequest(username),
+      (bool) => dispatch(loadingActions.rejectRequest(bool, username))
     )
 
     if (response.success) {
       notify.snackbar(response.message, 3000)
-      dispatch(requestListActions.removeRequest(friendshipId))
+      dispatch(requestListActions.removeRequest(username))
       dispatch(requestListActions.decreaseRequestCount())
       return
     }

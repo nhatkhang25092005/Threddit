@@ -22,8 +22,8 @@ function RequestListUI({
 }) {
 
   const requestTasks = useCallback(
-    (requester, friendshipId) => {
-      const loading = perRequestLoading?.[friendshipId]
+    (requester, requestKey) => {
+      const loading = perRequestLoading?.[requestKey]
 
       return [
         {
@@ -33,7 +33,7 @@ function RequestListUI({
             <IconButton
               icon={PersonAddIcon}
               title={friend.text_on_request_list.button.accept_request}
-              onClick={() => acceptRequest(requester, friendshipId)}
+              onClick={() => acceptRequest(requester)}
             />
           ),
         },
@@ -44,7 +44,7 @@ function RequestListUI({
             <IconButton
               icon={RemoveCircleOutlineIcon}
               title={friend.text_on_request_list.button.reject_request}
-              onClick={() => rejectRequest(friendshipId)}
+              onClick={() => rejectRequest(requester?.username)}
             />
           ),
         },
@@ -55,25 +55,26 @@ function RequestListUI({
 
   return (
       <Grid container spacing={2} width="100%">
-        {requestList.map(({ requester, friendshipId }) => (
-          <Grid
-            key={friendshipId}
-            item
-            xs={6}
-            sx={{ display: "flex", width: "49%" }}
-          >
-            <UserCard
-              onClick={() =>navigateChecker(routes.profile,requester.username)}
-              avatar={requester.avatarUrl}
-              username={requester.displayName}
-              relationStatus="request"
-              tasks={requestTasks(
-                requester,
-                friendshipId
-              )}
-            />
-          </Grid>
-        ))}
+        {requestList.map(({ requester, friendshipId }) => {
+          const requestKey = requester?.username ?? friendshipId
+
+          return (
+            <Grid
+              key={requestKey}
+              item
+              xs={6}
+              sx={{ display: "flex", width: "49%" }}
+            >
+              <UserCard
+                onClick={() =>navigateChecker(routes.profile, requester.username)}
+                avatar={requester.avatarUrl}
+                username={requester.displayName}
+                relationStatus="request"
+                tasks={requestTasks(requester, requestKey)}
+              />
+            </Grid>
+          )
+        })}
       </Grid>
   )
 }

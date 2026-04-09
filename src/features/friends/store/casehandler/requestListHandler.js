@@ -28,7 +28,7 @@ export const requestListHandler = (state, action) => {
       return {
         ...state,
         requestList: state.requestList.filter(
-          (item) => item.friendshipId !== action.payload
+          (item) => (item.requester?.username ?? item.username) !== action.payload
         ),
       }
     

@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import AppRoute from "./AppRoute.jsx";
-import Notfound from "../components/common/Notfound.jsx";
-import Auth from '../features/auth/Auth.jsx'
-import Test from "../test/Test.jsx";
-import { NotifyProvider } from "@/provider/notify/NotifyProvider.jsx";
-import { AuthProvider } from "../core/auth/AuthProvider.jsx";
+import AppRoute from "./AppRoute";
+import Notfound from "../components/common/Notfound";
+import Auth from '../features/auth/Auth'
+import Test from "../test/Test";
+import { NotifyProvider } from "@/provider/notify/NotifyProvider";
+import { AuthProvider } from "../core/auth/AuthProvider";
 export default function AppRouter() {
   return (
     <BrowserRouter>

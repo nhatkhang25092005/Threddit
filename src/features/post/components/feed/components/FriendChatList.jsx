@@ -1,24 +1,36 @@
-import { Avatar, Box, CircularProgress, Typography } from "@mui/material";
+import { Avatar, Box, ButtonBase, CircularProgress, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { scrollMainToTop } from "../../../../../components/layout/Main/mainScroll.utils";
 import { friend } from "../../../../../constant/text/vi/friend.text";
 import { useFriendshipContext } from "../../../../friends/hooks/useFriendshipContext";
+import { buildProfileRoute } from "../../story/storyRoute";
 import { style } from "../style";
 
 const sx = style.friend_chat_list;
 
 function FriendRow({ item }) {
+  const navigate = useNavigate()
   const username = item?.username || null;
   const displayName = item?.displayName || username || "User";
 
   if (!username) return null;
 
+  const handleClick = (event) => {
+    navigate(buildProfileRoute(username))
+
+    window.requestAnimationFrame(() => {
+      scrollMainToTop(event.currentTarget?.ownerDocument)
+    })
+  }
+
   return (
-    <Box sx={sx.item}>
+    <ButtonBase onClick={handleClick} sx={sx.item}>
       <Avatar src={item?.avatarUrl || undefined} sx={sx.avatar} />
       <Box sx={sx.textWrap}>
         <Typography sx={sx.displayName}>{displayName}</Typography>
         <Typography sx={sx.username}>@{username}</Typography>
       </Box>
-    </Box>
+    </ButtonBase>
   );
 }
 

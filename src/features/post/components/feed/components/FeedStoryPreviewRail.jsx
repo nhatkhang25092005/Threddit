@@ -1,9 +1,11 @@
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import AutoStoriesRoundedIcon from "@mui/icons-material/AutoStoriesRounded";
+import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import GraphicEqRoundedIcon from "@mui/icons-material/GraphicEqRounded";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
-import { Avatar, Box, Typography } from "@mui/material";
-import { useEffect, useMemo, useRef } from "react";
+import { Avatar, Box, IconButton, Typography } from "@mui/material";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Surface from "../../../../../components/common/Surface";
 import { feedText } from "../../../../../constant/text/vi/post/feed.text";
@@ -21,6 +23,7 @@ import {
 import { style } from "../style";
 
 const sx = style.feed;
+const STORY_SCROLL_EPSILON = 4;
 
 const FEED_STORY_TEXT = {
   title: "Bảng tin",
@@ -63,6 +66,7 @@ function FeedStoryCreateCard({ avatarUrl, onClick }) {
       component="button"
       type="button"
       onClick={onClick}
+      data-feed-story-card="true"
       sx={(theme) => sx.storyCreateCard(theme)}
     >
       <Box sx={sx.storyCreateCover(avatarUrl)} />
@@ -94,6 +98,7 @@ function FeedStoryCard({ entry, onClick }) {
       component="button"
       type="button"
       onClick={onClick}
+      data-feed-story-card="true"
       sx={sx.storyPreviewCard}
     >
       <Box sx={sx.storyPreviewBackdrop(background)} />
@@ -185,6 +190,11 @@ export default function FeedStoryPreviewRail() {
   } = usePostContext();
   const hasRequestedCurrentStoryRef = useRef(false);
   const hasRequestedFriendStoriesRef = useRef(false);
+  const railRef = useRef(null);
+  const [storyRailNavState, setStoryRailNavState] = useState({
+    canScrollPrev: false,
+    canScrollNext: false,
+  });
   const myStories = getCurrentStoryListOf(user?.username);
   const myStoryEntry = useMemo(() => (
     buildStoryEntry({
@@ -194,6 +204,7 @@ export default function FeedStoryPreviewRail() {
   ), [myStories, user?.username]);
 
   const friendStoryMap = getFriendStoryIdsMap();
+  const hasFriendStories = Object.keys(friendStoryMap).length > 0;
   const storyNavigationState = useMemo(() => ({
     ...(location.state && typeof location.state === "object" ? location.state : {}),
     backgroundLocation: location,
@@ -209,6 +220,65 @@ export default function FeedStoryPreviewRail() {
         new Date(right.latestStoryTime || 0) - new Date(left.latestStoryTime || 0)
       ));
   }, [friendStoryMap, getFriendStoryListOf]);
+  const totalStoryCards = 1 + (myStoryEntry ? 1 : 0) + friendEntries.length;
+
+  const syncStoryRailNavState = useCallback(() => {
+    const railNode = railRef.current;
+
+    if (!railNode) {
+      setStoryRailNavState({
+        canScrollPrev: false,
+        canScrollNext: false,
+      });
+      return;
+    }
+
+    const maxScrollLeft = Math.max(railNode.scrollWidth - railNode.clientWidth, 0);
+    const nextState = {
+      canScrollPrev: railNode.scrollLeft > STORY_SCROLL_EPSILON,
+      canScrollNext: railNode.scrollLeft < maxScrollLeft - STORY_SCROLL_EPSILON,
+    };
+
+    setStoryRailNavState((prevState) => (
+      prevState.canScrollPrev === nextState.canScrollPrev
+      && prevState.canScrollNext === nextState.canScrollNext
+        ? prevState
+        : nextState
+    ));
+  }, []);
+
+  const resolveStoryScrollStep = useCallback(() => {
+    const railNode = railRef.current;
+    if (!railNode) return 0;
+
+    const firstStoryCard = railNode.querySelector('[data-feed-story-card="true"]');
+    const computedStyle = window.getComputedStyle(railNode);
+    const gap = Number.parseFloat(computedStyle.columnGap || computedStyle.gap || "0");
+
+    if (firstStoryCard instanceof HTMLElement) {
+      return firstStoryCard.getBoundingClientRect().width + gap;
+    }
+
+    return railNode.clientWidth * 0.72;
+  }, []);
+
+  const scrollStoryRail = useCallback((direction) => {
+    const railNode = railRef.current;
+    if (!railNode) return;
+
+    const step = resolveStoryScrollStep();
+    if (!step) return;
+
+    railNode.scrollBy({
+      left: direction === "next" ? step : -step,
+      behavior: "smooth",
+    });
+  }, [resolveStoryScrollStep]);
+
+  useEffect(() => {
+    hasRequestedCurrentStoryRef.current = false;
+    hasRequestedFriendStoriesRef.current = false;
+  }, [user?.username]);
 
   useEffect(() => {
     if (!user?.username) return;
@@ -216,20 +286,65 @@ export default function FeedStoryPreviewRail() {
     if (myStoryEntry) return;
 
     hasRequestedCurrentStoryRef.current = true;
-    getCurrentStory(user.username);
+    getCurrentStory(user.username).then((response) => {
+      if (!response?.success) {
+        hasRequestedCurrentStoryRef.current = false;
+      }
+    });
   }, [getCurrentStory, myStoryEntry, user?.username]);
 
   useEffect(() => {
+    if (!user?.username) return;
     if (hasRequestedFriendStoriesRef.current) return;
-    if (friendEntries.length > 0) return;
+    if (hasFriendStories) return;
 
     hasRequestedFriendStoriesRef.current = true;
-    getFriendStory();
+    getFriendStory().then((response) => {
+      if (!response?.success) {
+        hasRequestedFriendStoriesRef.current = false;
+      }
+    });
 
     return () => {
       return undefined;
     };
-  }, [friendEntries.length, getFriendStory]);
+  }, [getFriendStory, hasFriendStories, user?.username]);
+
+  useEffect(() => {
+    const railNode = railRef.current;
+    if (!railNode) return undefined;
+
+    const handleScroll = () => {
+      syncStoryRailNavState();
+    };
+    const handleResize = () => {
+      syncStoryRailNavState();
+    };
+    const rafId = window.requestAnimationFrame(syncStoryRailNavState);
+
+    railNode.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize);
+
+    let resizeObserver = null;
+    if (typeof ResizeObserver !== "undefined") {
+      resizeObserver = new ResizeObserver(() => {
+        syncStoryRailNavState();
+      });
+      resizeObserver.observe(railNode);
+      Array.from(railNode.children).forEach((child) => {
+        if (child instanceof HTMLElement) {
+          resizeObserver.observe(child);
+        }
+      });
+    }
+
+    return () => {
+      window.cancelAnimationFrame(rafId);
+      railNode.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+      resizeObserver?.disconnect();
+    };
+  }, [syncStoryRailNavState, totalStoryCards]);
 
   if (!user) return null;
 
@@ -242,9 +357,31 @@ export default function FeedStoryPreviewRail() {
               {feedText.storyRail.title}
             </Typography>
           </Box>
+
+          {storyRailNavState.canScrollPrev || storyRailNavState.canScrollNext ? (
+            <Box sx={sx.storyRailActions}>
+              <IconButton
+                aria-label={feedText.storyRail.previousAriaLabel}
+                onClick={() => scrollStoryRail("prev")}
+                disabled={!storyRailNavState.canScrollPrev}
+                sx={(theme) => sx.storyRailNavButton(theme)}
+              >
+                <ChevronLeftRoundedIcon />
+              </IconButton>
+
+              <IconButton
+                aria-label={feedText.storyRail.nextAriaLabel}
+                onClick={() => scrollStoryRail("next")}
+                disabled={!storyRailNavState.canScrollNext}
+                sx={(theme) => sx.storyRailNavButton(theme)}
+              >
+                <ChevronRightRoundedIcon />
+              </IconButton>
+            </Box>
+          ) : null}
         </Box>
 
-        <Box sx={sx.storyRailList}>
+        <Box ref={railRef} sx={sx.storyRailList}>
           <FeedStoryCreateCard
             avatarUrl={user?.avatarUrl || undefined}
             onClick={() => openModal("create_story_modal")}

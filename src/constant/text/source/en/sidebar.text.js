@@ -6,7 +6,8 @@ export const sidebar = {
   tabs: {
     home: "Home",
     search: "Search",
-    stories: "Stories",
+    stories: "Reels",
+    chat: "Messages",
     notification: "Notifications",
     profile: "Profile",
   },

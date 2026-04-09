@@ -4,7 +4,7 @@ import {useNotify} from '../../../../hooks/useNotify'
 import {modal} from '../../../../constant/text/vi/modal'
 import { useCallback } from "react";
 import { getInfoLoading, setAccountData } from "../actions";
-import useAccountContext from "./useAccountContext.js";
+import useAccountContext from "./useAccountContext";
 export default function useAccount() {
 
   const notify = useNotify()

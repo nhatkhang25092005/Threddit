@@ -52,6 +52,13 @@ export const style = {
       gap: "0.18rem",
     },
 
+    storyRailActions: {
+      display: "flex",
+      alignItems: "center",
+      gap: "0.4rem",
+      flexShrink: 0,
+    },
+
     storyRailEyebrow: (theme) => ({
       fontSize: "0.66rem",
       fontWeight: 800,
@@ -81,6 +88,7 @@ export const style = {
       overflowX: "auto",
       overflowY: "hidden",
       pb: "0.2rem",
+      scrollBehavior: "smooth",
       scrollSnapType: "x proximity",
       "&::-webkit-scrollbar": {
         height: "0.36rem",
@@ -90,6 +98,31 @@ export const style = {
         backgroundColor: "rgba(148,163,184,0.32)",
       },
     },
+
+    storyRailNavButton: (theme) => ({
+      width: "2rem",
+      height: "2rem",
+      borderRadius: "999rem",
+      border: `1px solid ${alpha(theme.palette.app.border, 0.92)}`,
+      color: theme.palette.app.text,
+      backgroundColor:
+        theme.palette.mode === "dark"
+          ? alpha(theme.palette.app.header, 0.92)
+          : alpha(theme.palette.app.header, 0.98),
+      backdropFilter: "blur(12px)",
+      transition:
+        "transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease, opacity 0.18s ease",
+      "&:hover": {
+        transform: "translateY(-1px)",
+        backgroundColor: alpha(theme.palette.app.primary, 0.14),
+        borderColor: alpha(theme.palette.app.primary, 0.42),
+      },
+      "&.Mui-disabled": {
+        opacity: 0.42,
+        color: theme.palette.app.muted,
+        borderColor: alpha(theme.palette.app.border, 0.6),
+      },
+    }),
 
     storyCreateCard: (theme) => ({
       width: "6.85rem",
@@ -417,7 +450,7 @@ export const style = {
       gap: "0.75rem",
       px: "0.75rem",
       py: "0.72rem",
-      cursor: "default",
+      cursor: "pointer",
       textAlign: "left",
       color: "inherit",
       transition:

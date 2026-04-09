@@ -1,11 +1,11 @@
-import Surface from '../../../components/common/Surface.jsx'
+import Surface from '../../../components/common/Surface'
 import {Typography, Box,Button, Skeleton} from '@mui/material'
-import {account} from '../../../constant/text/vi/account.text.js'
+import {account} from '../../../constant/text/vi/account.text'
 import { style } from './style'
-import useAccount from './hooks/useAccount.js'
-import {Username, Method, Email} from './components/index.js'
-import Provider  from './provider/Provider.jsx'
-import useAccountContext from './hooks/useAccountContext.js'
+import useAccount from './hooks/useAccount'
+import {Username, Method, Email} from './components/index'
+import Provider  from './provider/Provider'
+import useAccountContext from './hooks/useAccountContext'
 const fields = {
   username:Username,
   email:Email,

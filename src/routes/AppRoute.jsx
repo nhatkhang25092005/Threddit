@@ -1,30 +1,34 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import AppLayout from "../components/layout/Main/AppLayout";
-import Account from "../features/account/info/Account.jsx";
+import Account from "../features/account/info/Account";
 import Notfound from "../components/common/Notfound";
-import NotificationProvider from "../features/notification/provider/NotificationProvider.jsx";
-import PostProvider from "../features/post/provider/PostProvider.jsx";
-import UpdatePassword from '../features/account/updatepassword/UpdatePassword.jsx'
-import Profile from "../features/profile/Profile.jsx";
-import PageNotification from "../features/notification/PageNotification.jsx";
-import  BlockProvider from '../core/block/BlockProvider.jsx'
-import OrchestrateProvider from "../core/orchestrate/OrchestrateProvider.jsx";
-import FriendshipProvider from "../features/friends/FriendshipProvider.jsx";
+import NotificationProvider from "../features/notification/provider/NotificationProvider";
+import PostProvider from "../features/post/provider/PostProvider";
+import UpdatePassword from '../features/account/updatepassword/UpdatePassword'
+import Profile from "../features/profile/Profile";
+import PageNotification from "../features/notification/PageNotification";
+import  BlockProvider from '../core/block/BlockProvider'
+import OrchestrateProvider from "../core/orchestrate/OrchestrateProvider";
+import FriendshipProvider from "../features/friends/FriendshipProvider";
+import ChatProvider from "../features/chat/provider/ChatProvider";
+import ChatPage from "../features/chat/pages/ChatPage/index";
 import StoryList from "../features/post/components/story/StoryList";
 import DetailPostPage from "../features/post/components/post/DetailPostPage";
 import Feed from "../features/post/components/feed";
-import Reel from "../features/post/components/reel/index.jsx";
+import Reel from "../features/post/components/reel/index";
 import { SearchResultsPage } from "../features/post/components/search";
 function AppProviders({ children }) {
   return (
     <OrchestrateProvider>
       <BlockProvider>
         <NotificationProvider>
-          <FriendshipProvider>
-            <PostProvider>
-              {children}
-            </PostProvider>
-          </FriendshipProvider>
+          <ChatProvider>
+            <FriendshipProvider>
+              <PostProvider>
+                {children}
+              </PostProvider>
+            </FriendshipProvider>
+          </ChatProvider>
         </NotificationProvider>
       </BlockProvider>
     </OrchestrateProvider>
@@ -58,6 +62,7 @@ export default function AppRoute() {
               {/* <Route path="client/:clientName/:postId?" element={<Profile/>}/> */}
               <Route path="profile/:username?" element={<Profile/>}/>
               <Route path="home/:postId?" element={<Feed/>} />
+              <Route path="chat" element={<ChatPage/>} />
               <Route path="search" element={<SearchResultsPage/>} />
               <Route path="reel" element={<Reel/>}/>
             </Route>

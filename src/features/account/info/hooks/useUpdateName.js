@@ -2,8 +2,8 @@ import { useNotify } from "../../../../hooks/useNotify";
 import { services } from "../../account.service";
 import { updateUsernameLoading } from "../actions";
 import { modal } from "../../../../constant/text/vi/modal";
-import {syncUsername} from '../actions.js'
-import useAccountContext from "./useAccountContext.js";
+import {syncUsername} from '../actions'
+import useAccountContext from "./useAccountContext";
 
 const isChange = (before, after) => {
   return before === after ? false : true

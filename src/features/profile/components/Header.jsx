@@ -5,7 +5,6 @@ import BaseInfo from "./BaseInfo"
 import CreateStoryButton from "../../post/components/story/CreateStoryButton"
 import BackgroundImage from './BackgroundImage'
 import {memo} from 'react'
-import EditInfoButton from './EditInfoButton'
 import FollowBtn from './FollowBtn'
 import FriendButton from './FriendButton'
 import BlockUserButton from './BlockUserButton'
@@ -24,7 +23,6 @@ const Header = memo(function Header(){
             <CreateStoryButton/>
             <FriendButton/>
             <FollowBtn/>
-            {isOwner && <EditInfoButton/>}
           </Box>
           {!isOwner && <BlockUserButton color='white'/>}
         </Box>

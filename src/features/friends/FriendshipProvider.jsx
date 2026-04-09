@@ -32,7 +32,7 @@ export default function FriendshipProvider({ children }) {
   useGetMutualNumber()
   useInitMyFriendList(dispatch)
   useGetRequestNumber(dispatch)
-  useGetSentNumber(dispatch)
+  useGetSentNumber(dispatch, isOwner)
 
 const value = useMemo(() => ({
   state,

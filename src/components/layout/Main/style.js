@@ -82,12 +82,13 @@ export const style = {
   },
 
   navButton: (active, expand, emphasize = false) => (theme) => ({
-    width: "100%",
+    width: expand ? "100%" : "3.5rem",
     minHeight: "3.5rem",
     border: 0,
     cursor: "pointer",
     appearance: "none",
     position: "relative",
+    alignSelf: expand ? "stretch" : "center",
     display: "flex",
     alignItems: "center",
     justifyContent: expand ? "flex-start" : "center",
@@ -144,12 +145,13 @@ export const style = {
     color: active || emphasize ? theme.palette.app.primary : theme.palette.app.muted,
   }),
 
-  sidebarFooter: {
+  sidebarFooter: (expand) => ({
     marginTop: "auto",
     display: "flex",
     flexDirection: "column",
     gap: "0.6rem",
-  },
+    alignItems: expand ? "stretch" : "center",
+  }),
 
   utilityLabel: (active = false) => (theme) => ({
     fontSize: "0.86rem",

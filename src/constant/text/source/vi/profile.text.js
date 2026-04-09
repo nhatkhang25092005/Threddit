@@ -50,6 +50,28 @@ export const profile = {
     button: "Chỉnh sửa",
   },
 
+  bio_value:{
+    gender: {
+      male: "Nam",
+      female: "Nữ",
+      other: "Khác",
+    },
+    education: {
+      high_school: "Trung học phổ thông",
+      college: "Cao đẳng",
+      bachelor: "Cử nhân (Đại học)",
+      master: "Thạc sĩ",
+      doctorate: "Tiến sĩ",
+    },
+    relationship: {
+      single: "Độc thân",
+      dating: "Đang hẹn hò",
+      in_relationship: "Đang trong mối quan hệ",
+      engage: "Đã đính hôn",
+      married: "Đã kết hôn",
+    },
+  },
+
   modal: {
     edit_bio: {
       title: "Chỉnh sửa thông tin",

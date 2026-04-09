@@ -36,12 +36,12 @@ export const friendApi = {
     return axios.get(url)
   },
 
-  acceptRequest: (friendshipId) => {
-    return axios.post(`${BASE}${REQUEST}/${friendshipId}${ACCEPT}`)
+  acceptRequest: (username) => {
+    return axios.post(`${BASE}${REQUEST}/${username}${ACCEPT}`)
   },
 
-  rejectRequest: (friendshipId) => {
-    return axios.post(`${BASE}${REQUEST}/${friendshipId}${REJECT}`)
+  rejectRequest: (username) => {
+    return axios.post(`${BASE}${REQUEST}/${username}${REJECT}`)
   },
 
   cancelRequest: (username) => {

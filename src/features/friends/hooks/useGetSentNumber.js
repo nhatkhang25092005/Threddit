@@ -4,11 +4,12 @@ import { apiService } from "../services/api.service"
 import { modal } from "../../../constant/text/vi/modal"
 import { orchestrate } from "../../../utils/orchestrate"
 import { loadingActions, sentListActions } from "../store/actions"
-
-export function useGetSentNumber(dispatch) {
+export function useGetSentNumber(dispatch, isOwner) {
   const notify = useNotify()
 
   useEffect(() => {
+    if (!isOwner) return
+
     const fetch = async () => {
       const response = await orchestrate({
         service: async () => await notify.withLoading(
@@ -17,9 +18,7 @@ export function useGetSentNumber(dispatch) {
         ),
         onSuccess: [
           (res) => {
-            if (res.success) {
-              dispatch(sentListActions.setSentCount(res.data?.sentCount ?? 0))
-            }
+            if (res.success) {dispatch(sentListActions.setSentCount(res.data.sentCount))}
           }
         ],
       })
@@ -31,5 +30,5 @@ export function useGetSentNumber(dispatch) {
 
     fetch()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [isOwner])
 }

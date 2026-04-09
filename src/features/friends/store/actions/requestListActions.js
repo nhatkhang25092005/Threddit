@@ -25,11 +25,11 @@ export const requestListActions = {
       RESET_REQUEST_LIST
     ),
 
-  removeRequest: (friendshipId) =>
+  removeRequest: (username) =>
     createAction(
       ACTION_CLASS.REQUEST_LIST,
       REMOVE_REQUEST,
-      friendshipId
+      username
     ),
   
   setHasMore:(anyMore)=>

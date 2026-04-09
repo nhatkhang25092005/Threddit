@@ -73,19 +73,19 @@ export const loadingActions = {
     )
   ),
 
-  acceptRequest: (loading, friendshipId) => (
+  acceptRequest: (loading, username) => (
     createAction(
       ACTION_CLASS.LOADING,
       ACCEPT_REQUEST,
-      {loading, friendshipId}
+      {loading, username}
     )
   ),
 
-  rejectRequest: (friendshipId, loading) => (
+  rejectRequest: (loading, username) => (
     createAction(
       ACTION_CLASS.LOADING,
       REJECT_REQUEST,
-      {loading, friendshipId}
+      {loading, username}
     )
   ),
 

@@ -1,0 +1,37 @@
+export const CLASS_TYPE = {
+  ROOM_BY_ID: "room by id",
+  CHAT_ROOM: "chat room",
+  DIRECT_CHAT: "direct chat",
+  LOADING: "LOADING",
+  HAS_MORE: "HAS MORE",
+};
+
+export const ROOM_BY_ID = {
+  ADD_ROOMS_BY_ID: "ADD ROOMS BY ID",
+  ADD_ROOM_BY_ID: "ADD ROOM BY ID ITEM",
+  UPDATE_ROOM_BY_ID: "UPDATE ROOM BY ID ITEM",
+  REMOVE_ROOM_BY_ID: "REMOVE ROOM BY ID ITEM",
+};
+
+export const CHAT_ROOM = {
+  SET_ROOM_LIST: "SET CHAT ROOM LIST",
+  ADD_ROOM_LIST: "ADD CHAT ROOM LIST",
+  PREPEND_ROOM_ID: "PREPEND CHAT ROOM ID",
+  REMOVE_ROOM_ID: "REMOVE CHAT ROOM ID",
+};
+
+export const DIRECT_CHAT = {
+  SET_DIRECT_ROOM: "SET DIRECT ROOM",
+  REMOVE_DIRECT_ROOM: "REMOVE DIRECT ROOM",
+};
+
+export const LOADING = {
+  GET_CHAT_ROOMS: "get chat rooms",
+  GET_DIRECT_CHAT_ROOM: "get direct chat room",
+  SET_ROOM_LOADING: "set room loading",
+};
+
+export const HAS_MORE = {
+  SET_CHAT_ROOM_HAS_MORE: "SET CHAT ROOM HAS MORE",
+  INIT_CHAT_ROOM_HAS_MORE: "INIT CHAT ROOM HAS MORE",
+};

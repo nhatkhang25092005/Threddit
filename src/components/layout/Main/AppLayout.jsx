@@ -16,7 +16,10 @@ export default function AppLayout({ customStyle }) {
         <DesktopSidebar controller={controller} customStyle={customStyle} />
       )}
 
-      <Box component="main" sx={(currentTheme) => style.main(currentTheme)}>
+      <Box
+        component="main"
+        sx={(currentTheme) => style.main(currentTheme)}
+      >
         <Box sx={style.contentWrap(controller.isMobile)}>
           <Outlet />
         </Box>

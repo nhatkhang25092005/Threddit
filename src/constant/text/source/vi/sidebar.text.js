@@ -7,6 +7,7 @@ export const sidebar = {
     home: "Trang chủ",
     search: "Tìm kiếm",
     stories: "Thước phim",
+    chat: "Tin nhắn",
     notification: "Thông báo",
     profile: "Hồ sơ",
   },

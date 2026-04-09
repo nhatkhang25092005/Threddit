@@ -7,8 +7,8 @@ import LoadingUI from "../../../components/common/list/LoadingUI"
 import { routes } from "../../../constant/routes"
 import CancelIcon from "@mui/icons-material/Cancel"
 import IconButton from "../../../components/common/button/IconButton"
-import ContainerForList from './ContainerForList.jsx'
-import { useBlockContext } from "../../../core/block/hooks/useBlockContext.js"
+import ContainerForList from './ContainerForList'
+import { useBlockContext } from "../../../core/block/hooks/useBlockContext"
 /* ===================== UI ===================== */
 
 function SentListUI({

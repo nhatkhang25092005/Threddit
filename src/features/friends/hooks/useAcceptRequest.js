@@ -11,14 +11,17 @@ export function useAcceptRequest(dispatch) {
   const { sync } = useOrchestrate()
   const {isOwner} = useAuth()
 
-  const acceptRequest = useCallback(async (requester, friendshipId) => {
+  const acceptRequest = useCallback(async (requester) => {
+    const username = requester?.username
+    if (!username) return
+
     const response = await notify.withLoading(
-      () => apiService.acceptRequest(friendshipId),
-      (bool) => dispatch(loadingActions.acceptRequest(bool, friendshipId))
+      () => apiService.acceptRequest(username),
+      (bool) => dispatch(loadingActions.acceptRequest(bool, username))
     )
 
     if (response.success) {
-      dispatch(requestListActions.removeRequest(friendshipId))
+      dispatch(requestListActions.removeRequest(username))
       dispatch(requestListActions.decreaseRequestCount())
       dispatch(friendListActions.addFriend(requester))
       isOwner && dispatch(friendListActions.addMyFriend(requester))

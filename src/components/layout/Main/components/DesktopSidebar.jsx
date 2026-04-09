@@ -114,7 +114,7 @@ export default function DesktopSidebar({ controller, customStyle }) {
           })}
         </Box>
 
-        <Box sx={style.sidebarFooter}>
+        <Box sx={style.sidebarFooter(isSidebarExpanded)}>
           <PopoverNotification
             closeReason={location.pathname === tabs.notification.path}
             disable={location.pathname === tabs.notification.path}
