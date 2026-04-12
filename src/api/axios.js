@@ -9,11 +9,7 @@ const axiosClient = axios.create({
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    const shouldRedirectOnUnauthorized =
-      error?.response?.status === 401 &&
-      !error?.config?.skipUnauthorizedRedirect;
-
-    if (shouldRedirectOnUnauthorized) {
+    if (error?.response?.status === 401) {
       console.warn("Session expired (401), redirecting to login...");
       window.location.href = "/auth";
     }
