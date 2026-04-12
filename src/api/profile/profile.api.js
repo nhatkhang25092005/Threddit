@@ -6,11 +6,11 @@ export const profileApi = {
   confirm_background_image(payload){
     return axios.post(import.meta.env.VITE_API_BACKGROUND_IMAGE_CONFIRM, payload)
   },
-  get_profile(username = null){
+  get_profile(username = null, config = {}){
     const url = username
     ? `${import.meta.env.VITE_API_GET_PROFILE}/${username}`
     : import.meta.env.VITE_API_GET_PROFILE
-    return axios.get(url)
+    return axios.get(url, config)
   },
   presign_avatar_image(payload){
     return axios.post(import.meta.env.VITE_API_AVATAR_IMAGE_PRESIGN, payload)

@@ -21,7 +21,6 @@ export default function useLogin() {
     setHelperText(null)
     if(!isFormFilled(form)) return
     const res = await notify.withLoading(() => loginService(form))
-    alert(res.message)
     if(!res.success){
       if(res.invalids){
         setHelperText(res.invalids)
