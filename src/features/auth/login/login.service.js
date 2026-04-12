@@ -16,6 +16,7 @@ export const loginService = async (form) => {
     let res = {}
     const loginRes = mapResponse(await authApi.login(payload))
     if(loginRes.is_success) res = await getbaseinfo()
+    alert(loginRes.message)
     return {
       success:res.is_success,
       data:res.data,
