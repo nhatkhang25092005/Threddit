@@ -1,6 +1,5 @@
 import { COLOR } from "../color"
 const baseAuthProps = {
-  minHeight: '100vh',
   maxHeight:'fit-content',
   paddingTop:'3rem',
   paddingBottom:'2rem',

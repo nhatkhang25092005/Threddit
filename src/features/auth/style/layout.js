@@ -9,7 +9,8 @@ export const authLayout = {
       xs:'minmax(0, 0.3fr) 1fr',
       md:'1fr',
     },
-    minHeight:'100dvh',
+    gap:'1rem',
+    minHeight:'100dvh'
   },
 
   symbol:{
