@@ -27,12 +27,9 @@ export function useGetPostDetail(dispatch){
         (bool) => dispatch(loadingAction.getDetailPostLoading(bool))
       )
     )
+    
     if (!r) return null
 
-    /**
-     * if r.success => dispatch.addPostById(r.data.content)
-     * else => notify.popup(modal.title.error, r.message)
-     */
     if (r.success) {
       const content = resolveDetailContent(r.data)
 

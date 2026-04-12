@@ -51,4 +51,17 @@ export default defineConfig([
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
+  {
+    files: [
+      "**/*.{test,spec}.{js,jsx,ts,tsx}",
+      "src/test/**/*.{js,jsx,ts,tsx}",
+    ],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        ...globals.vitest,
+      },
+    },
+  },
 ])

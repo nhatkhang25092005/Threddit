@@ -12,6 +12,7 @@ export default function DetailPostModalContentPanel({
   isSubComment = false,
   onCommentClick,
 }) {
+  console.log(detail)
   return (
     <Box sx={sx.contentPanel}>
       <Box sx={sx.contentScroll}>

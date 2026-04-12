@@ -17,7 +17,6 @@ export default function Symbol() {
         sx={{
           fontSize: {
             xs: "4.5rem",
-            sm: "5.5rem",
             md: "6.75rem",
           },
         }}

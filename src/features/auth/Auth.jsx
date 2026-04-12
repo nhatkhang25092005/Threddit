@@ -8,6 +8,7 @@ import Register from "./register/Register";
 import Forgot from "./forgot/Forgot";
 import Verify from "./verify/Verify";
 import VerifyAccount from "./register/VerifyAccount";
+import { authLayout } from "./style/layout";
 
 export default function Auth(){
   const [active, setActive] = useState({target:'login', payload:null})
@@ -23,11 +24,11 @@ export default function Auth(){
   }
 
   return(
-    <Box sx={{display:'flex', flexDirection:'row'}}>
-      <ThemeToggleBtn sx={{position:'absolute'}}/>
+    <Box sx={authLayout.page}>
+      {/* <ThemeToggleBtn sx={{position:'absolute'}}/> */}
 
       {/* Symbol zone */}
-      <Box sx={{display:'block', width:'65vw'}}>
+      <Box sx={authLayout.symbol}>
         <Symbol/>
       </Box>
 
