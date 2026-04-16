@@ -4,9 +4,14 @@ import {useInput} from '../../../hooks/useInput'
 import { useNotify } from "../../../hooks/useNotify";
 import { registerService } from "./register.service";
 import {isFormFilled} from '../helper/isFormFilled'
+import {
+  type RegisterInvalids,
+} from "./types/models";
+import type { UseRegisterReturn } from "./types/ui";
 
-export default function useRegister(onNavigate) {
-  const [validate, setValidate] = useState(null);
+
+export default function useRegister(onNavigate): UseRegisterReturn {
+  const [validate, setValidate] = useState<RegisterInvalids | null>(null);
   const notify = useNotify()
   const [form, onChange] = useInput({
     username:'',
@@ -22,8 +27,8 @@ export default function useRegister(onNavigate) {
     if(!isFormFilled(form)) return
     setValidate(null)
     const response = await notify.withLoading(()=>registerService(form))
-    if(!response.success){
-      if(response.invalids){
+    if(response.kind !== 'success'){
+      if(response.kind === 'validation_error'){
         setValidate(response.invalids)
         return
       }
@@ -38,5 +43,5 @@ export default function useRegister(onNavigate) {
     form,
     onChange,
     handleSubmit,
-    };
+  };
 }

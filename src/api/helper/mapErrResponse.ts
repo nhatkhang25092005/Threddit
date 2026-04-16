@@ -1,6 +1,18 @@
 import { getErrMessage } from "./getErrMessage";
 
-export const mapErrResponse = (err) => {
+export type ApiErrResponse = {
+  code:string,
+  status:number|null,
+  message:string,
+  success:false,
+  is_success:false,
+  isAbort:boolean,
+  isNetwork:boolean,
+  isServerError:boolean,
+  isClientError:boolean
+}
+
+export const mapErrResponse = (err): ApiErrResponse => {
   const status =
     err?.response?.status || // axios
     err?.status ||           // simulated

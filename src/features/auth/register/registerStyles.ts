@@ -35,4 +35,4 @@ export const registerStyles = {
   birth:{
     width:'50%'
   }
-}
+} as const

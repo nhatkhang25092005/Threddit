@@ -5,9 +5,9 @@ import { AUTH_TEXT } from "../../../constant/text/vi/auth";
 import { loginStyles } from "./loginStyles";
 import {isFormFilled} from '../helper/isFormFilled'
 import { keydown } from "../../../utils/keydown";
+import type { LoginProps } from "./types/login.ui";
 
-export default function Login({onNavigate}) {
-  // const {login, result} = useLogin()
+export default function Login({onNavigate}:LoginProps) {
   const {submit, helperText, onChange, form} = useLogin()
   return (
     <Box sx={loginStyles.container}>
@@ -21,7 +21,7 @@ export default function Login({onNavigate}) {
           variant='standard'
           name="email"
           helperText = {helperText?.['email']}
-          error = {helperText?.['email']}
+          error = {Boolean(helperText?.['email'])}
           value={form.email}
           onKeyDown={keydown.enter(submit,{preventDefault:true})}
           label={AUTH_TEXT.login.email_field}
@@ -32,7 +32,7 @@ export default function Login({onNavigate}) {
           type="password"
           name="password"
           helperText = {helperText?.['password']}
-          error = {helperText?.['password']}
+          error = {Boolean(helperText?.['password'])}
           onKeyDown={keydown.enter(submit,{preventDefault:true})}
           value={form.password}
           label={AUTH_TEXT.login.password_field}

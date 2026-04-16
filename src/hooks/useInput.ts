@@ -18,7 +18,7 @@ import { useState } from "react"
  */
 export function useInput(fields){
   const [input, setInput] = useState(fields)
-  const onChange = (e) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const {value, name} = e.target
     setInput(prev=>({
       ...prev,

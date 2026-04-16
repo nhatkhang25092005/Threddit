@@ -1,4 +1,15 @@
-export const mapRegisterPayload = (form) => ({
+type RegisterPayload = Partial<
+  Record<
+    'email' |
+    'username' |
+    'password' |
+    'repass' |
+    'display_name' |
+    'date_of_birth'|
+    'gender'
+  ,string>
+>
+export const mapRegisterPayload = (form: RegisterPayload) => ({
   email:form.email,
   username:form.username,
   displayName:form.display_name,
@@ -8,7 +19,11 @@ export const mapRegisterPayload = (form) => ({
   confirmedPassword:form.repass
 })
 
-export const mapLoginPayload = (form) => ({
+type LoginPayload = {
+  email:string,
+  password:string
+}
+export const mapLoginPayload = (form:LoginPayload) => ({
   email:form.email,
   password:form.password
 })

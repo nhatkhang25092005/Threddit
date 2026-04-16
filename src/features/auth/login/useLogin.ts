@@ -7,11 +7,13 @@ import { loginService } from "./login.service";
 import { useInput } from "../../../hooks/useInput";
 import {routes} from '../../../constant'
 import { isFormFilled } from "../helper/isFormFilled";
+import type { UseLoginResult } from "./types/login.ui";
+import { LoginInvalids } from "./types/login.model";
 
-export default function useLogin() {
+export default function useLogin(): UseLoginResult {
   //hooks
   const navigate = useNavigate()
-  const [helperText, setHelperText] = useState(null);
+  const [helperText, setHelperText] = useState<LoginInvalids | null>(null);
   const notify = useNotify()
   const [form, onChange] = useInput({email:"", password:""})
   const {setUser} = useAuth()
@@ -21,8 +23,8 @@ export default function useLogin() {
     setHelperText(null)
     if(!isFormFilled(form)) return
     const res = await notify.withLoading(() => loginService(form))
-    if(!res.success){
-      if(res.invalids){
+    if(res.kind !== 'success'){
+      if(res.kind === 'validation_error'){
         setHelperText(res.invalids)
         return
       }
@@ -35,5 +37,5 @@ export default function useLogin() {
   }
 
   //actors
-  return { submit,form, helperText, onChange };
+  return{ submit,form, helperText, onChange }
 }

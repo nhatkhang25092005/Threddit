@@ -29,4 +29,4 @@ export const loginStyles = {
     mt:'auto',
     gap:'0.5rem'
   },
-}
+} as const

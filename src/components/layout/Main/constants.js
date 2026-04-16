@@ -1,4 +1,3 @@
-import ChatBubbleOutlineRoundedIcon from "@mui/icons-material/ChatBubbleOutlineRounded";
 import PersonIcon from "@mui/icons-material/Person";
 import SmartDisplayRoundedIcon from "@mui/icons-material/SmartDisplayRounded";
 import HomeIcon from "../../../assets/icons/home.svg?react";
@@ -33,13 +32,6 @@ export const LAYOUT_TABS = {
     Icon: SmartDisplayRoundedIcon,
     iconProps: { fontSize: "large" },
   },
-  chat: {
-    value: "chat",
-    label: sidebar.tabs.chat,
-    path: routes.chat,
-    Icon: ChatBubbleOutlineRoundedIcon,
-    iconProps: { fontSize: "large" },
-  },
   notification: {
     value: "notification",
     label: sidebar.tabs.notification,
@@ -54,5 +46,5 @@ export const LAYOUT_TABS = {
   },
 }
 
-export const DESKTOP_TAB_KEYS = ["home", "search", "stories", "chat", "profile"]
-export const MOBILE_TAB_KEYS = ["home", "search", "chat", "notification", "profile"]
+export const DESKTOP_TAB_KEYS = ["home", "search", "stories", "profile"]
+export const MOBILE_TAB_KEYS = ["home", "search", "notification", "profile"]

@@ -32,25 +32,6 @@ export const validate = {
     }
   },
 
-  login: (form)=>{
-    const error = AUTH_TEXT.login.error
-    const {email, password} = form
-    const invalids = {}
-    let status = true
-    if(!pattern.email.test(email)){
-      status = false,
-      invalids.email = error.pattern_email
-    }
-    if(!pattern.password.test(password)){
-      status = false,
-      invalids.password = error.pattern_password
-    }
-    return{
-      success:status,
-      ...(Object.keys(invalids).length > 0 && {invalids})
-    }
-  },
-
   verify_account: (email)=>{
     const error = AUTH_TEXT.verify_account.error
     let status = true

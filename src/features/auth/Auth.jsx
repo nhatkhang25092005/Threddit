@@ -1,5 +1,4 @@
 import Login from "./login/Login";
-import ThemeToggleBtn from "../../components/common/button/ThemeToggleBtn";
 import {Box} from '@mui/material'
 import Symbol from "./components/Symbol";
 import { useState } from "react";
@@ -25,20 +24,9 @@ export default function Auth(){
 
   return(
     <Box sx={authLayout.page}>
-      {/* <ThemeToggleBtn sx={{position:'absolute'}}/> */}
-
-      {/* Symbol zone */}
       <Box sx={authLayout.symbol}>
         <Symbol/>
       </Box>
-
-      {/* Effect apply */}
-      {/* <Surface variant="auth" >
-        <AuthSwitch active={active}>
-          <Login name={'login'} onNavigate={setActive}/>
-          <Test name={'forgot'}/>
-        </AuthSwitch>
-      </Surface> */}
 
       <Surface variant='auth'>
         {form[active.target]}

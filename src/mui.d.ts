@@ -1,5 +1,6 @@
 import '@mui/material/Button'
 import '@mui/material/Typography'
+import '@mui/material/Divider'
 
 declare module '@mui/material/Button' {
   interface ButtonPropsVariantOverrides {
@@ -17,5 +18,13 @@ declare module '@mui/material/Typography' {
     normal:true
     title:true
     sub:true
+    secondary:true
+    primary:true
+  }
+}
+
+declare module '@mui/material/Divider' {
+  interface DividerPropsVariantOverrides {
+    thick:true
   }
 }
