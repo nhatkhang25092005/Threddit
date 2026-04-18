@@ -14,6 +14,10 @@ const sharedPalette = {
     main: APP_PALETTE.success,
     contrastText: APP_PALETTE.black,
   },
+  white: {
+    main: APP_PALETTE.white,
+    contrastText: APP_PALETTE.black,
+  },
   background: {
     default: APP_PALETTE.page,
     paper: APP_PALETTE.screen,

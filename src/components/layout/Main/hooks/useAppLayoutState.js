@@ -2,9 +2,7 @@ import { useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSearchDismiss } from "../../../../features/post/components/search/hooks";
-import { SEARCH_FIELD_ID } from "../../../../features/post/components/search/utils";
-import { usePostContext } from "../../../../features/post/hooks";
+import { useLayoutSearchController } from "../../../../features/post/components/search/hooks";
 import {
   DESKTOP_TAB_KEYS,
   HOVER_EXPAND_DELAY,
@@ -20,17 +18,10 @@ export function useAppLayoutState() {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"))
   const navigate = useNavigate()
   const location = useLocation()
-  const { actions, selector } = usePostContext()
   const menuTasks = useMenu()
   const [expand, setExpand] = useState(false)
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [searchValue, setSearchValue] = useState("")
   const hoverTime = useRef(null)
   const previousPathnameRef = useRef(location.pathname)
-  const searchFieldRef = useRef(null)
-  const searchTriggerRef = useRef(null)
-  const isSearchLoading = selector.loading.getSearchFetchingLoading()
-  const hasSearchValue = searchValue.trim().length > 0
 
   const desktopTabs = useMemo(
     () => DESKTOP_TAB_KEYS.map((key) => LAYOUT_TABS[key]),
@@ -61,40 +52,28 @@ export function useAppLayoutState() {
     clearTimeout(hoverTime.current)
   }, [])
 
-  const closeSearch = useCallback(
-    ({ collapse = false } = {}) => {
-      clearHoverTimer()
-      setIsSearchOpen(false)
-      if (collapse && useHoverSidebar) {
-        setExpand(false)
-      }
-    },
-    [clearHoverTimer, useHoverSidebar]
-  )
+  const collapseExpandedRail = useCallback(() => {
+    setExpand(false)
+  }, [])
 
-  const openSearch = useCallback(() => {
-    clearHoverTimer()
-    if (useHoverSidebar) {
-      setExpand(true)
-    }
-    setIsSearchOpen(true)
-  }, [clearHoverTimer, useHoverSidebar])
+  const expandRail = useCallback(() => {
+    setExpand(true)
+  }, [])
 
-  const toggleSearch = useCallback(() => {
-    if (isSearchOpen) {
-      closeSearch({ collapse: true })
-      return
-    }
-
-    openSearch()
-  }, [closeSearch, isSearchOpen, openSearch])
+  const search = useLayoutSearchController({
+    allowHoverSidebar: useHoverSidebar,
+    clearHoverTimer,
+    collapseSidebar: collapseExpandedRail,
+    expandSidebar: expandRail,
+    searchPath: LAYOUT_TABS.search.path,
+  })
 
   const collapseRail = useCallback(() => {
     clearHoverTimer()
-    if (useHoverSidebar && !isSearchOpen) {
-      setExpand(false)
+    if (useHoverSidebar && !search.isOpen) {
+      collapseExpandedRail()
     }
-  }, [clearHoverTimer, isSearchOpen, useHoverSidebar])
+  }, [clearHoverTimer, collapseExpandedRail, search.isOpen, useHoverSidebar])
 
   const navigateToTab = useCallback(
     (tab) => {
@@ -104,11 +83,11 @@ export function useAppLayoutState() {
       }
 
       if (tab.value === LAYOUT_TABS.search.value) {
-        toggleSearch()
+        search.toggle()
         return
       }
 
-      closeSearch({ collapse: true })
+      search.close({ collapse: true })
 
       if (tab.value === LAYOUT_TABS.notification.value || tab.isStatic || !tab.path) {
         collapseRail()
@@ -117,33 +96,8 @@ export function useAppLayoutState() {
 
       navigate(tab.path)
     },
-    [closeSearch, collapseRail, navigate, toggleSearch]
+    [collapseRail, navigate, search]
   )
-
-  const handleSearchChange = useCallback((event) => {
-    setSearchValue(event.target.value)
-  }, [])
-
-  const searchQueryFromUrl = useMemo(() => {
-    if (!location.pathname.startsWith(LAYOUT_TABS.search.path)) {
-      return ""
-    }
-
-    return new URLSearchParams(location.search).get("q")?.trim() ?? ""
-  }, [location.pathname, location.search])
-
-  const handleSearchSubmit = useCallback(async () => {
-    const keyword = searchValue.trim()
-
-    if (!keyword || isSearchLoading) return null
-
-    setSearchValue(keyword)
-    const responsePromise = actions.searchContent(keyword)
-    closeSearch()
-    navigate(`${LAYOUT_TABS.search.path}?q=${encodeURIComponent(keyword)}`)
-
-    return responsePromise
-  }, [actions, closeSearch, isSearchLoading, navigate, searchValue])
 
   const handleSidebarMouseEnter = useCallback(() => {
     if (!useHoverSidebar) return
@@ -160,32 +114,17 @@ export function useAppLayoutState() {
     }
   }, [clearHoverTimer])
 
-  useSearchDismiss({
-    isOpen: isSearchOpen,
-    onClose: closeSearch,
-    fieldRef: searchFieldRef,
-    triggerRef: searchTriggerRef,
-  })
-
   useEffect(() => {
     if (isMobile) {
-      setExpand(false)
+      collapseExpandedRail()
     }
-  }, [isMobile])
-
-  useEffect(() => {
-    if (!searchQueryFromUrl) return
-
-    setSearchValue((currentValue) =>
-      currentValue === searchQueryFromUrl ? currentValue : searchQueryFromUrl
-    )
-  }, [searchQueryFromUrl])
+  }, [collapseExpandedRail, isMobile])
 
   useEffect(() => {
     if (useHoverSidebar) {
-      setExpand(false)
+      collapseExpandedRail()
     }
-  }, [useHoverSidebar])
+  }, [collapseExpandedRail, useHoverSidebar])
 
   useEffect(() => {
     const previousPathname = previousPathnameRef.current
@@ -205,32 +144,18 @@ export function useAppLayoutState() {
     }
   }, [location.pathname])
 
-  useEffect(() => {
-    setIsSearchOpen(false)
-  }, [location.pathname])
-
   return {
     currentTab,
     desktopTabs,
     mobileTabs,
-    hasSearchValue,
-    handleSearchChange,
-    handleSearchSubmit,
     handleSidebarMouseEnter,
     isMobile,
-    isSearchLoading,
-    isSearchOpen,
     isSidebarExpanded,
     location,
     menuTasks,
     navigateToTab,
-    openSearch,
-    closeSearch,
     collapseRail,
-    searchFieldId: SEARCH_FIELD_ID,
-    searchFieldRef,
-    searchTriggerRef,
-    searchValue,
+    search,
     sidebarWidth,
     tabs: LAYOUT_TABS,
     useHoverSidebar,

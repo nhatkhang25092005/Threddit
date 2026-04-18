@@ -28,12 +28,16 @@ export const mapLoginPayload = (form:LoginPayload) => ({
   password:form.password
 })
 
-export const mapVerifyAccountPayload = (payload) => ({
+type VerifyAccountPayload = {
+  email:string
+  otp:string
+}
+export const mapVerifyAccountPayload = (payload: VerifyAccountPayload) => ({
   email:payload.email,
   verificationCode:String(payload.otp)
 })
 
-export const mapResetPassword = (email) => ({
+export const mapResetPassword = (email:string) => ({
   email:email
 })
 
@@ -44,7 +48,7 @@ export const mapVerifyResetPassword = (payload) => ({
   confirmedNewPassword:payload.confirmPassword
 })
 
-export const mapResendVerifyCode = (email) => ({
+export const mapResendVerifyCode = (email:string) => ({
   email:email
 })
 

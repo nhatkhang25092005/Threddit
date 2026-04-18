@@ -11,7 +11,6 @@ const FEED = import.meta.env.VITE_API_CONTENT_FEED
 const REEL = import.meta.env.VITE_API_CONTENT_REEL
 
 const buildSaveUrl = (contentId) => `${BASE}/${contentId}${SAVE}`
-const buildUnsaveUrl = (contentId) => `${BASE}/${contentId}${UNSAVE}`
 
 export const postApi = {
   getPostContent(username, cursor, signal) {
@@ -34,7 +33,7 @@ export const postApi = {
   },
 
   unsavePost(contentId) {
-    return axios.delete(buildUnsaveUrl(contentId))
+    return axios.delete(buildSaveUrl(contentId))
   },
 
   pinContent(contentId){

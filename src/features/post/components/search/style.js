@@ -3,16 +3,30 @@ import { alpha } from "@mui/material/styles";
 export const style = {
   searchSlot: (theme) => ({
     width: "100%",
-    minHeight: "3.5rem",
     display: "flex",
-    alignItems: "center",
-    gap: "0.35rem",
+    flexDirection: "column",
+    gap: "0.55rem",
     padding: "0.32rem 0.36rem 0.32rem 0.52rem",
     borderRadius: "1.15rem",
     color: theme.palette.app.text,
     backgroundColor: theme.palette.app.header,
     border: `1px solid ${theme.palette.app.border}`,
   }),
+
+  searchFieldStack: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.55rem",
+  },
+
+  searchFieldRow: {
+    width: "100%",
+    minHeight: "2.75rem",
+    display: "flex",
+    alignItems: "center",
+    gap: "0.35rem",
+  },
 
   searchLeadingIcon: (theme) => ({
     width: "1.85rem",
@@ -98,9 +112,133 @@ export const style = {
 
   mobileSearchInner: {
     display: "flex",
+    flexDirection: "column",
+    gap: "0.55rem",
+  },
+
+  searchRecommendPanel: (theme, mobile = false) => ({
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.7rem",
+    padding: mobile ? "0.1rem 0.12rem 0.05rem" : "0 0.05rem 0.08rem",
+    borderTop: `1px solid ${alpha(theme.palette.app.border, 0.78)}`,
+  }),
+
+  searchRecommendSection: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.45rem",
+  },
+
+  searchRecommendSectionHeader: {
+    display: "flex",
     alignItems: "center",
+    gap: "0.45rem",
+  },
+
+  searchRecommendSectionTitle: {
+    fontSize: "0.72rem",
+    fontWeight: 800,
+    letterSpacing: "0.04em",
+    textTransform: "uppercase",
+  },
+
+  searchRecommendList: {
+    display: "flex",
+    flexDirection: "column",
     gap: "0.35rem",
   },
+
+  searchRecommendItem: (theme) => ({
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    gap: "0.6rem",
+    padding: "0.52rem 0.58rem",
+    borderRadius: "0.85rem",
+    border: `1px solid ${alpha(theme.palette.app.border, 0.6)}`,
+    backgroundColor: alpha(theme.palette.app.screenAlt, 0.7),
+    color: theme.palette.app.text,
+    textAlign: "left",
+    cursor: "pointer",
+    transition: "transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease",
+    "&:hover": {
+      transform: "translateY(-1px)",
+      borderColor: alpha(theme.palette.app.primary, 0.35),
+      backgroundColor: alpha(theme.palette.app.primarySoft, 0.68),
+    },
+  }),
+
+  searchRecommendAvatar: {
+    width: "2.2rem",
+    height: "2.2rem",
+    flexShrink: 0,
+  },
+
+  searchRecommendLeadingIcon: (theme) => ({
+    width: "2.1rem",
+    minWidth: "2.1rem",
+    height: "2.1rem",
+    borderRadius: "0.7rem",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: theme.palette.app.muted,
+    backgroundColor: alpha(theme.palette.app.screenAlt, 0.92),
+    border: `1px solid ${alpha(theme.palette.app.border, 0.86)}`,
+    "& svg": {
+      width: "1rem",
+      height: "1rem",
+    },
+  }),
+
+  searchRecommendBody: {
+    minWidth: 0,
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.16rem",
+  },
+
+  searchRecommendTitle: {
+    fontSize: "0.84rem",
+    fontWeight: 700,
+    lineHeight: 1.25,
+  },
+
+  searchRecommendMeta: (theme) => ({
+    fontSize: "0.72rem",
+    fontWeight: 500,
+    color: theme.palette.app.muted,
+  }),
+
+  searchRecommendStatus: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    gap: "0.65rem",
+    padding: "0.2rem 0.08rem 0.08rem",
+  },
+
+  searchRecommendStatusBody: {
+    minWidth: 0,
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.14rem",
+  },
+
+  searchRecommendStatusTitle: {
+    fontSize: "0.82rem",
+    fontWeight: 700,
+    lineHeight: 1.2,
+  },
+
+  searchRecommendStatusText: (theme) => ({
+    fontSize: "0.74rem",
+    lineHeight: 1.35,
+    color: theme.palette.app.muted,
+  }),
 
   searchPreviewSlot: ({ mobile = false, active = false, theme }) => {
     const accent = theme.palette.app.primary

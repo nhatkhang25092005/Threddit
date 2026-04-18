@@ -20,3 +20,24 @@ export type RegisterInvalids = Partial<Record<
 export type RegisterValidation =
   {success: true; invalids?: never} |
   {success: false, invalids:RegisterInvalids}
+  
+//===================================
+export type VerifyAccountForm = {
+  email:string
+  otp:string
+}
+
+export type VerifyAccountInvalids = Partial<Record<
+  'email'|
+  'otp'
+  ,string
+  >
+>
+
+export type VerifyAccountValidation =
+  | {success:true, invalids?:never}
+  | {success:false, invalids:VerifyAccountInvalids}
+
+export type ResentValidation =
+  | {success:true, invalids?:never}
+  | {success:false, invalids:{email:string}}

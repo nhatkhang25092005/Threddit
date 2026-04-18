@@ -2,8 +2,7 @@ import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import { Box, Paper } from "@mui/material";
 import PopoverNotification from "../../../../features/notification/PopoverNotification";
 import {
-  SearchMobileField,
-  SearchPreviewField,
+  MobileNavigationSearchContent,
 } from "../../../../features/post/components/search";
 import { ThemeToggleBtn } from "../../../common/button";
 import PositionedMenu from "./PositionedMenu";
@@ -12,22 +11,13 @@ import { style } from "../style";
 
 export default function MobileNavigation({ controller }) {
   const {
-    closeSearch,
     collapseRail,
     currentTab,
-    handleSearchChange,
-    handleSearchSubmit,
-    hasSearchValue,
-    isSearchLoading,
-    isSearchOpen,
     location,
     menuTasks,
     mobileTabs,
     navigateToTab,
-    openSearch,
-    searchFieldId,
-    searchFieldRef,
-    searchValue,
+    search,
     tabs,
   } = controller
 
@@ -63,11 +53,11 @@ export default function MobileNavigation({ controller }) {
             return (
               <NavButton
                 key={`mobile-${tab.value}`}
-                active={tab.value === tabs.search.value ? isSearchOpen : currentTab === tab.value}
+                active={tab.value === tabs.search.value ? search.isOpen : currentTab === tab.value}
                 mobile
                 onClick={() => navigateToTab(tab)}
-                searchFieldId={searchFieldId}
-                searchOpen={isSearchOpen}
+                searchFieldId={search.fieldId}
+                searchOpen={search.isOpen}
                 searchTrigger={tab.value === tabs.search.value}
                 tab={tab}
               />
@@ -76,24 +66,10 @@ export default function MobileNavigation({ controller }) {
         </Box>
       </Paper>
 
-      {isSearchOpen ? (
-        <SearchMobileField
-          id={searchFieldId}
-          ref={searchFieldRef}
-          value={searchValue}
-          onChange={handleSearchChange}
-          onSubmit={handleSearchSubmit}
-          onClose={() => closeSearch()}
-          isLoading={isSearchLoading}
-        />
-      ) : hasSearchValue ? (
-        <SearchPreviewField
-          mobile
-          value={searchValue}
-          onClick={openSearch}
-          active={currentTab === tabs.search.value}
-        />
-      ) : null}
+      <MobileNavigationSearchContent
+        active={currentTab === tabs.search.value}
+        search={search}
+      />
     </>
   )
 }

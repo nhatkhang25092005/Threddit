@@ -56,10 +56,17 @@ export const AUTH_TEXT = {
     submit: "Verify",
     resend_ask: "Didn't receive the code?",
     resend_send: "Resend code",
-    resend_countdown: (second) => `Code resent! Resend after ${second}s`,
+    resend_countdown: (second) => `Code sent! Resend after ${second}s`,
     error: {
       pattern_email: "Email is invalid",
+      pattern_otp:"OTP is invalid"
     },
+  },
+
+  resent:{
+    error:{
+      pattern_email:"Email is invalid"
+    }
   },
 
   forgot: {

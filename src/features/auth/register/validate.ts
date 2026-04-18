@@ -3,7 +3,11 @@ import { pattern } from "../../../constant/pattern"
 import type {
   RegisterValidation,
   RegisterForm,
-  RegisterInvalids
+  RegisterInvalids,
+  VerifyAccountForm,
+  VerifyAccountInvalids,
+  VerifyAccountValidation,
+  ResentValidation
 } from "./types/models"
 export const validateRegister = (form: RegisterForm): RegisterValidation => {
   const error = AUTH_TEXT.register.error
@@ -34,4 +38,38 @@ export const validateRegister = (form: RegisterForm): RegisterValidation => {
     return {success: false, invalids}
   }
   return {success: true}
+}
+
+export const validateVerifyAccount = (form: VerifyAccountForm): VerifyAccountValidation => {
+    const {email, otp} = form
+    const error = AUTH_TEXT.verify_account.error
+    let status = true
+    const invalids : VerifyAccountInvalids = {}
+    if(!pattern.email.test(email)){
+      status = false
+      invalids.email =  error.pattern_email
+    }
+    if(otp.length !== 6){
+      status = false
+      invalids.otp = error.pattern_otp
+    }
+    if(!status){
+      return{
+        success:false,
+        invalids
+      }
+    }
+
+    return{ success:true }
+}
+
+export const validateResent = (email: string): ResentValidation => {
+  const error:string = AUTH_TEXT.resent.error.pattern_email
+  if(!pattern.email.test(email)){
+    return{
+      success:false,
+      invalids:{email:error}
+    }
+  }
+  return {success:true}
 }

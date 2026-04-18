@@ -5,8 +5,7 @@ import { sidebar } from "../../../../constant/text/vi/sidebar.text";
 import { useTextLocale } from "../../../../constant/text/runtime/useTextLocale";
 import PopoverNotification from "../../../../features/notification/PopoverNotification";
 import {
-  SearchPreviewField,
-  SearchSidebarField,
+  DesktopSidebarSearchSlot,
 } from "../../../../features/post/components/search";
 import { ThemeToggleBtn } from "../../../common/button";
 import Logo from "../../../common/Logo";
@@ -17,25 +16,15 @@ import { style } from "../style";
 export default function DesktopSidebar({ controller, customStyle }) {
   const { nextLocale, toggleLocale } = useTextLocale()
   const {
-    closeSearch,
     collapseRail,
     currentTab,
     desktopTabs,
-    handleSearchChange,
-    handleSearchSubmit,
     handleSidebarMouseEnter,
-    hasSearchValue,
-    isSearchLoading,
-    isSearchOpen,
     isSidebarExpanded,
     location,
     menuTasks,
     navigateToTab,
-    openSearch,
-    searchFieldId,
-    searchFieldRef,
-    searchTriggerRef,
-    searchValue,
+    search,
     sidebarWidth,
     tabs,
   } = controller
@@ -66,49 +55,28 @@ export default function DesktopSidebar({ controller, customStyle }) {
                   active={currentTab === tab.value}
                   expanded={isSidebarExpanded}
                   onClick={() => navigateToTab(tab)}
-                  searchFieldId={searchFieldId}
                   tab={tab}
                 />
               )
             }
 
-            if (isSearchOpen) {
-              return (
-                <SearchSidebarField
-                  key="desktop-search-field"
-                  id={searchFieldId}
-                  ref={searchFieldRef}
-                  value={searchValue}
-                  onChange={handleSearchChange}
-                  onSubmit={handleSearchSubmit}
-                  onClose={() => closeSearch()}
-                  isLoading={isSearchLoading}
-                />
-              )
-            }
-
-            if (hasSearchValue) {
-              return (
-                <SearchPreviewField
-                  key="desktop-search-preview"
-                  value={searchValue}
-                  onClick={openSearch}
-                  active={currentTab === tabs.search.value}
-                />
-              )
-            }
-
             return (
-              <NavButton
+              <DesktopSidebarSearchSlot
                 key={`desktop-${tab.value}`}
-                active={isSearchOpen}
-                buttonRef={searchTriggerRef}
-                expanded={isSidebarExpanded}
-                onClick={() => navigateToTab(tab)}
-                searchFieldId={searchFieldId}
-                searchOpen={isSearchOpen}
-                searchTrigger
-                tab={tab}
+                active={currentTab === tabs.search.value}
+                search={search}
+                renderTrigger={({ buttonRef, searchFieldId, searchOpen }) => (
+                  <NavButton
+                    active={searchOpen}
+                    buttonRef={buttonRef}
+                    expanded={isSidebarExpanded}
+                    onClick={() => navigateToTab(tab)}
+                    searchFieldId={searchFieldId}
+                    searchOpen={searchOpen}
+                    searchTrigger
+                    tab={tab}
+                  />
+                )}
               />
             )
           })}

@@ -56,10 +56,17 @@ export const AUTH_TEXT = {
     submit: "Xác minh",
     resend_ask: "Bạn chưa nhận được mã?",
     resend_send: "Gửi lại mã",
-    resend_countdown: (second) => `Đã gửi lại mã! Gửi lại sau ${second}s`,
+    resend_countdown: (second) => `Đã gửi mã! Gửi lại sau ${second}s`,
     error: {
       pattern_email: "Email không hợp lệ",
+      pattern_otp:"Mã OTP không hợp lệ"
     },
+  },
+
+  resent: {
+    error:{
+      pattern_email:'Email không hợp lệ'
+    }
   },
 
   forgot: {

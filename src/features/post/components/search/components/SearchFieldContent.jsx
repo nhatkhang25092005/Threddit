@@ -5,14 +5,18 @@ import { searchText } from "../../../../../constant/text/vi/post/search.text";
 import { style } from "../style";
 
 export default function SearchFieldContent({
+  field,
   mobile = false,
-  value,
-  onChange,
-  onSubmit,
-  onClose,
-  inputRef,
-  isLoading = false,
 }) {
+  const {
+    inputRef,
+    isLoading = false,
+    onChange,
+    onClose,
+    onSubmit,
+    value,
+  } = field ?? {}
+
   const handleKeyDown = (event) => {
     if (event.key !== "Enter") return
 
