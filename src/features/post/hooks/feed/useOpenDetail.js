@@ -1,14 +1,15 @@
 import { useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { usePostModal } from '../../provider/usePostModal'
+import { resolveId } from "../../utils/resolveTypes";
 
 const resolveBooleanSearchParam = (value) => (
   value === "true" || value === "1"
 )
 
 const getSearchParams = (searchParams) => {
-  const contentId = searchParams.get('contentId') || null
-  const commentId = searchParams.get('commentId') || null
+  const contentId = resolveId(searchParams.get('contentId'))
+  const commentId = resolveId(searchParams.get('commentId'))
   const isSubComment = resolveBooleanSearchParam(searchParams.get('isSubComment'))
   
   return [contentId, commentId, isSubComment]

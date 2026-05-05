@@ -6,6 +6,7 @@ import { useSafeRequest } from "../../../../../../hooks/useSafeRequest";
 import { usePostContext } from "../../../../hooks";
 import { postService } from "../../../../services/post.service";
 import { postByIdModel } from "../../../../store/models/postById.model";
+import { resolveId } from "../../../../utils/resolveTypes";
 import { buildProfileRoute } from "../../../story/storyRoute";
 import { buildDetailPostPageRoute } from "../utils/detailPostPageRoute";
 import {
@@ -24,7 +25,8 @@ const resolveDetailContent = (data) => {
 export function useDetailPostPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { mediaIndex, postId } = useParams();
+  const { mediaIndex, postId: postIdParam } = useParams();
+  const postId = resolveId(postIdParam);
   const {
     selector: {
       post: { getPostById },

@@ -31,6 +31,7 @@ export function useCommentComposer({
       }
 
       const result = await onEdit(comment?.id, {
+        currentComment: comment,
         media,
         text,
       });
@@ -41,7 +42,7 @@ export function useCommentComposer({
 
       return result;
     },
-    [comment?.id, onEdit]
+    [comment, onEdit]
   );
 
   const submitReply = useCallback(

@@ -12,13 +12,16 @@ import {
   resolveCommentHasMore,
   resolveCommentItems,
 } from "../../utils/commentCollection.utils"
+import { resolveId } from "../../utils/resolveTypes"
 
 const hasCommentInPage = (comments = [], targetCommentId = null) => {
   if (targetCommentId == null) return false
 
-  const normalizedTargetId = String(targetCommentId)
+  const normalizedTargetId = resolveId(targetCommentId)
+  if (normalizedTargetId == null) return false
+
   return (Array.isArray(comments) ? comments : []).some(
-    (comment) => String(comment?.id) === normalizedTargetId
+    (comment) => resolveId(comment?.id) === normalizedTargetId
   )
 }
 
@@ -38,7 +41,7 @@ export function useGetCommentList(dispatch) {
   const backgroundHasMoreRef = useRef({})
 
   const getCommentList = useCallback(async (postId, options = {}) => {
-    const key = postId
+    const key = resolveId(postId)
     const refresh = options?.refresh === true
     const ignoreHasMore = options?.ignoreHasMore === true
     const silent = options?.silent === true
@@ -46,7 +49,7 @@ export function useGetCommentList(dispatch) {
     const activeHasMoreRef = silent ? backgroundHasMoreRef : hasMoreRef
     const executeRequest = silent ? runBackgroundRequest : runRequest
 
-    if (!key) return null
+    if (key == null) return null
 
     if (refresh) {
       activeCursorRef.current[key] = undefined
@@ -97,12 +100,15 @@ export function useGetCommentList(dispatch) {
     const subCommentsMap = buildSubCommentsMap(comments)
 
     Object.entries(subCommentsMap).forEach(([parentCommentId, commentIds]) => {
+      const resolvedParentCommentId = resolveId(parentCommentId)
+      if (resolvedParentCommentId == null) return
+
       if (refresh) {
-        dispatch(commentActions.setSubCommentIndex(parentCommentId, commentIds))
+        dispatch(commentActions.setSubCommentIndex(resolvedParentCommentId, commentIds))
         return
       }
 
-      dispatch(commentActions.addSubCommentIndex(parentCommentId, commentIds))
+      dispatch(commentActions.addSubCommentIndex(resolvedParentCommentId, commentIds))
     })
 
     return {
@@ -122,13 +128,14 @@ export function useGetCommentList(dispatch) {
   )
 
   const prefetchCommentThread = useCallback(async (postId, options = {}) => {
-    if (!postId) return null
+    const key = resolveId(postId)
+    if (key == null) return null
 
     const targetCommentId = options?.targetCommentId ?? null
     const replySearchParentIds = new Set()
     const syncPrefetchedPaginationToForeground = () => {
-      cursorRef.current[postId] = backgroundCursorRef.current[postId]
-      hasMoreRef.current[postId] = backgroundHasMoreRef.current[postId]
+      cursorRef.current[key] = backgroundCursorRef.current[key]
+      hasMoreRef.current[key] = backgroundHasMoreRef.current[key]
     }
     const collectParentIds = (comments = []) => {
       collectReplySearchParentIds(comments).forEach((commentId) => {
@@ -136,7 +143,7 @@ export function useGetCommentList(dispatch) {
       })
     }
 
-    let response = await getCommentList(postId, {
+    let response = await getCommentList(key, {
       refresh: true,
       ignoreHasMore: true,
       silent: true,
@@ -159,7 +166,7 @@ export function useGetCommentList(dispatch) {
     }
 
     while (response?.data?.hasMore) {
-      response = await getCommentList(postId, { silent: true })
+      response = await getCommentList(key, { silent: true })
 
       if (!response?.success) {
         return response

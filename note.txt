@@ -1,0 +1,6 @@
+[X]: Lỗi chỉnh sửa sub comment
+[ ]: Lỗi phần sắp xếp bài viết chia sẻ đang lấy thời gian
+của bài được chia sẻ thay vì bài đang chia sẻ
+[ ]: Cho phép chặn người dùng ở mọi nơi
+
+refactoring commentTree.utils.ts

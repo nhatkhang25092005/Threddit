@@ -5,56 +5,60 @@ import { useNotify } from "../../../hooks/useNotify"
 import { verifyAccountService } from "./verifyAccount.service"
 import {useCountdown} from '../../../hooks/useCountdown'
 import type { UseVerifyAccountReturn, VerifyAccountProps } from "./types/ui"
+import { createVerifyAccountHandlers } from "./verifyAccount.handlers"
 
 export default function useVerifyAccount(
   email: VerifyAccountProps["email"],
   onNavigate: VerifyAccountProps["onNavigate"]
-):UseVerifyAccountReturn{
+):UseVerifyAccountReturn {
   const notify = useNotify()
   const [otp, onChange] = useInput({otp:''})
   const [loading, setLoading] = useState<{submit:boolean, resend:boolean}>({
     submit:false,
     resend:false
   })
-
   const {countdown, startCountdown} = useCountdown()
-
+  const handlers = createVerifyAccountHandlers({notify, onNavigate})
+  
   useEffect(() => {
     if(email){
       startCountdown(60)
     }
   }, [email, startCountdown])
 
+  const setSubmitLoading = (isLoading: boolean) =>
+    setLoading((prev) => ({...prev, submit: isLoading}))
+
+  const setResendLoading = (isLoading: boolean) =>
+    setLoading((prev) => ({...prev, resend: isLoading}))
+
+
   const submit = async () => {
     const response = await notify.withLoading(
       () => verifyAccountService.submit({otp:otp.otp, email}),
-      (bool) => setLoading(prev=>({...prev,submit:bool})))
+      setSubmitLoading
+    )
 
-    if(!response.success){
-      if(response.invalids){
-        onNavigate('register')
-        console.error('email is expected in useVerifyAccount!')
-        return
-      }
-      notify.popup(modal.title.error, response.message)
-    }
-    else{
-      notify.popup(modal.title.success.verify, response.message, modal.button.back_to_login, () => onNavigate('login'))
-    }
+    if(!response.is_success) return handlers.handleSubmitError(response)
+    
+    else notify.popup(
+      modal.title.success.verify,
+      response.message,
+      modal.button.back_to_login,
+      () => onNavigate('login')
+    )
   }
 
   const resend = async () => {
     const response = await notify.withLoading(
       () => verifyAccountService.resend(email),
-      (bool) => setLoading(prev=>({...prev, resend:bool}))
+      setResendLoading
     )
 
-    if(!response.success){
-      notify.popup(modal.title.error, response.message)
-    }
-    else{
-      startCountdown(60)
-    }
+    if(!response.is_success)
+      handlers.handleInvalidOtp(response)
+
+    else startCountdown(60)
   }
   return {
     otp,
@@ -62,5 +66,6 @@ export default function useVerifyAccount(
     submit,
     countdown,
     loading,
-    resend}
+    resend
+  }
 }

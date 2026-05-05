@@ -1,3 +1,6 @@
+import { ComposerMedia, Media } from "@/features/post/types/media.type";
+import { resolveId } from "@/features/post/utils/resolveTypes";
+
 const COMMENT_AUDIO_TYPES = ["audio", "sound"];
 const COMMENT_VIDEO_TYPES = ["video"];
 
@@ -21,18 +24,35 @@ const resolveCommentMediaType = (media) => {
   return "image";
 };
 
-const resolveCommentMediaId = (media, index) =>
-  media?.id ||
-  media?.mediaId ||
-  media?.mediaKey ||
-  media?.key ||
-  `${media?.url || media?.src || media?.file?.name || "comment-media"}-${index}`;
+const buildStableMediaId = (value, index): number => {
+  const text = String(value || `comment-media-${index}`);
+  let hash = 0;
 
-export const normalizeComposerMediaList = (mediaList = []) =>
+  for (let i = 0; i < text.length; i += 1) {
+    hash = ((hash * 31) + text.charCodeAt(i)) >>> 0;
+  }
+
+  return hash || index + 1;
+};
+
+const resolveCommentMediaId = (media, index): number | null => (
+  resolveId(media?.id ?? media?.mediaId) ??
+  buildStableMediaId(
+    media?.url || media?.src || media?.file?.name || media?.mediaKey || media?.key,
+    index
+  )
+);
+
+/**
+ * Normalize composer media list
+ * @param mediaList - Composer Media List
+ * @returns - Normalized Composer Media List
+ */
+export const normalizeComposerMediaList = (mediaList: Partial<ComposerMedia>[] = []): ComposerMedia[] =>
   (Array.isArray(mediaList) ? mediaList : []).map((media, index) => ({
     id: resolveCommentMediaId(media, index),
     type: resolveCommentMediaType(media),
-    url: media?.url || media?.src || media?.mediaUrl || media?.fileUrl || "",
+    url: media?.url || media?.mediaUrl || media?.fileUrl || "",
     file: media?.file || null,
     name: media?.name || media?.file?.name || "",
     origin: media?.origin || "object-url",

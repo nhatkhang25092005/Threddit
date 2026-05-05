@@ -31,7 +31,7 @@ const buildCreatePayload = (data = {}, uploadSessionId = null) => {
 
 const resolveCreatedCommentRaw = (responseData = {}, payload = {}, user = null) => {
   const now = new Date().toISOString()
-  const fallbackId = `local-created-comment-${Date.now()}`
+  const fallbackId = Date.now()
   const candidate =
     responseData?.createdComment ||
     responseData?.comment ||
@@ -70,6 +70,7 @@ export function useCreateComment(dispatch) {
   const pendingRef = useRef(false)
 
   const createComment = useCallback(async (postId, data = {}) => {
+    console.log(data)
     if (postId == null) return null
     if (pendingRef.current) return null
 

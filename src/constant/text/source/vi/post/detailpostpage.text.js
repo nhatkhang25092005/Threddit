@@ -1,5 +1,5 @@
 export const detailPostPage = {
-  title: "Chi tiết media bài viết",
+  title: "Chi tiết bài viết",
   mediaAlt: "Media bài viết",
   closeLabel: "Đóng trang xem media",
   prevLabel: "Media trước",

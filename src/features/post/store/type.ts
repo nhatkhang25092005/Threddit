@@ -13,7 +13,7 @@ export const CLASS_TYPE = {
   HAS_MORE:'HAS MORE',
   PIN:"PIN",
   SEARCH:"SEARCH"
-}
+} as const
 
 export const LOADING = {
   GET_DETAIL_POST:"get detail post",
@@ -33,7 +33,7 @@ export const LOADING = {
   SET_CREATE_POST_LOADING: "set create post loading",
   SET_CREATE_STORY_LOADING: "set create story loading",
   SET_PRESIGN_LOADING: "set presign loading",
-}
+} as const
 
 export const HAS_MORE = {
   SET_USERS_POST_HAS_MORE:'SET USER POSTS HAS MORE',
@@ -43,7 +43,7 @@ export const HAS_MORE = {
   SET_REEL_HAS_MORE:'SET REEL HAS MORE',
   SET_SEARCH_HAS_MORE:'SET SEARCH HAS MORE',
   SET_SEARCH_USERS_HAS_MORE:'SET SEARCH USERS HAS MORE',
-}
+} as const
 
 export const POST_BY_ID = {
   ADD_POSTS_BY_ID : 'ADD POST BY ID',
@@ -54,7 +54,7 @@ export const POST_BY_ID = {
   SET_POST_SHARED: 'SET POST SHARED',
   SET_POST_PINNED: 'SET POST PINNED',
   REMOVE_POST_BY_ID: 'REMOVE POST BY ID ITEM',
-}
+} as const
 
 export const STORY_BY_ID = {
   ADD_STORIES_BY_ID: 'ADD STORIES BY ID',
@@ -62,7 +62,7 @@ export const STORY_BY_ID = {
   UPDATE_STORY_BY_ID: 'UPDATE STORY BY ID ITEM',
   SET_STORY_PINNED: 'SET STORY PINNED',
   REMOVE_STORY_BY_ID: 'REMOVE STORY BY ID ITEM',
-}
+} as const
 
 export const STORY = {
   SET_STORY_LIST: 'SET STORY LIST',
@@ -73,50 +73,50 @@ export const STORY = {
   CLEAR_FRIEND_STORY_LIST: 'CLEAR FRIEND STORY LIST',
   SET_PIN_STORY:"SET PIN STORY",
   PREPEND_CURRENT_STORY_INDEX:'PREPEND CURRENT STORY INDEX'
-}
+} as const
 
 export const FEEDS = {
   SET_TIMELINE_INDEX: "SET FEEDS TIMELINE INDEX",
   ADD_TIMELINE_INDEX: "ADD FEEDS TIMELINE INDEX",
-}
+} as const
 
 export const REEL = {
   SET_TIMELINE_INDEX: "SET REEL TIMELINE INDEX",
   ADD_TIMELINE_INDEX: "ADD REEL TIMELINE INDEX",
-}
+} as const
 
 export const USERS_POST = {
   ADD_TIMELINE_INDEX: "ADD USERS POST TIMELINE INDEX",
   PREPEND_TIMELINE_INDEX: "PREPEND USERS POST TIMELINE INDEX",
   SET_TIMELINE_INDEX: "SET USERS POST TIMELINE INDEX",
   REMOVE_USERS_POST:'REMOVE_USERS_POST'
-}
+} as const
 
 export const SAVED_POST = {
   ADD_TIMELINE_INDEX: "ADD SAVED POST TIMELINE INDEX",
   PREPEND_TIMELINE_INDEX: "PREPEND SAVED POST TIMELINE INDEX",
   REMOVE_TIMELINE_INDEX: "REMOVE SAVED POST TIMELINE INDEX"
-}
+} as const
 
 export const REACTION = {
   SET_POST_REACTION: 'SET POST REACTION',
   SET_COMMENT_REACTION: 'SET COMMENT REACTION',
-}
+} as const
 
 export const PIN = {
   SET_PIN_LIST:'SET PIN LIST'
-}
+} as const
 
 export const COMMENT = {
-  ADD_COMMENTS_BY_ID: "ADD COMMENTS BY ID",
-  ADD_COMMENT_BY_ID: "ADD COMMENT BY ID ITEM",
-  UPDATE_COMMENT_BY_ID: "UPDATE COMMENT BY ID ITEM",
-  REMOVE_COMMENT_BY_ID: "REMOVE COMMENT BY ID ITEM",
-  SET_POST_COMMENT_INDEX: "SET POST COMMENT INDEX",
-  ADD_POST_COMMENT_INDEX: "ADD POST COMMENT INDEX",
-  SET_SUB_COMMENT_INDEX: "SET SUB COMMENT INDEX",
-  ADD_SUB_COMMENT_INDEX: "ADD SUB COMMENT INDEX",
-}
+  ADD_COMMENTS_BY_ID: "ADD_COMMENTS_BY_ID",
+  ADD_COMMENT_BY_ID: "ADD_COMMENT_BY_ID",
+  UPDATE_COMMENT_BY_ID: "UPDATE_COMMENT_BY_ID",
+  REMOVE_COMMENT_BY_ID: "REMOVE_COMMENT_BY_ID",
+  SET_POST_COMMENT_INDEX: "SET_POST_COMMENT_INDEX",
+  ADD_POST_COMMENT_INDEX: "ADD_POST_COMMENT_INDEX",
+  SET_SUB_COMMENT_INDEX: "SET_SUB_COMMENT_INDEX",
+  ADD_SUB_COMMENT_INDEX: "ADD_SUB_COMMENT_INDEX",
+} as const
 
 export const SEARCH = {
   SET_SEARCH_KEYWORD:'SET SEARCH KEYWORD',
@@ -124,4 +124,46 @@ export const SEARCH = {
   APPEND_SEARCH_LIST:'APPEND SEARCH LIST',
   SET_SEARCH_USERS:'SET SEARCH USERS',
   APPEND_SEARCH_USERS:'APPEND SEARCH USERS',
+} as const
+
+export type ClassType = typeof CLASS_TYPE[keyof typeof CLASS_TYPE]
+
+export type LoadingType = typeof LOADING[keyof typeof LOADING]
+export type PostByIdType = typeof POST_BY_ID[keyof typeof POST_BY_ID]
+export type StoryByIdType = typeof STORY_BY_ID[keyof typeof STORY_BY_ID]
+export type StoryType = typeof STORY[keyof typeof STORY]
+export type FeedsType = typeof FEEDS[keyof typeof FEEDS]
+export type UserPostType = typeof USERS_POST[keyof typeof USERS_POST]
+export type SavedPostType = typeof SAVED_POST[keyof typeof SAVED_POST]
+export type ReactionType = typeof REACTION[keyof typeof REACTION]
+export type PinType = typeof PIN[keyof typeof PIN]
+export type CommentType = typeof COMMENT[keyof typeof COMMENT]
+export type SearchType = typeof SEARCH[keyof typeof SEARCH]
+export type HasMoreType = typeof HAS_MORE[keyof typeof HAS_MORE]
+export type ReelType = typeof REEL[keyof typeof REEL]
+
+export type ActionMap = {
+  [CLASS_TYPE.FEEDS]: FeedsType,
+  [CLASS_TYPE.COMMENT]: CommentType
+  [CLASS_TYPE.POST_BY_ID]: PostByIdType
+  [CLASS_TYPE.STORY_BY_ID]: StoryByIdType
+  [CLASS_TYPE.STORY]: StoryType
+  [CLASS_TYPE.USERS_POST]: UserPostType
+  [CLASS_TYPE.SAVED_POST]: SavedPostType
+  [CLASS_TYPE.REACTION]: ReactionType
+  [CLASS_TYPE.PIN]: PinType
+  [CLASS_TYPE.SEARCH]: SearchType
+  [CLASS_TYPE.HAS_MORE]: HasMoreType
+  [CLASS_TYPE.REEL]: ReelType
+  [CLASS_TYPE.LOADING]: LoadingType
 }
+
+export type Action<
+  C extends ClassType & keyof ActionMap,
+  T
+> ={
+  actionClass:C,
+  type:ActionMap[C],
+  payload?:T
+}
+

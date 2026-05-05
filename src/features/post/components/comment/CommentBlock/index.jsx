@@ -62,6 +62,7 @@ export default function CommentBlock({
     comment,
     currentUser,
     onDelete,
+    onEdit,
     onReact,
     onReply,
     targetCommentId,
@@ -163,7 +164,7 @@ export default function CommentBlock({
                 comment={reply}
                 currentUser={currentUser}
                 onDelete={replies.handleDelete}
-                onEdit={onEdit}
+                onEdit={replies.handleEdit}
                 onReact={replies.handleReact}
                 onReply={replies.handleReply}
                 targetCommentId={targetCommentId}

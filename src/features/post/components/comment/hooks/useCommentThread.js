@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useAuth from "../../../../../core/auth/useAuth";
 import { extractUsernames } from "../../../../../utils/extractUsernames";
 import { usePostContext } from "../../../hooks";
+import { resolveId } from "../../../utils/resolveTypes";
 import {
   addCommentToTree,
   buildLocalComment,
@@ -24,6 +25,12 @@ const resolveRecordValue = (record = {}, key) => (
   record?.[key] ?? record?.[String(key)] ?? null
 );
 
+const COMMENT_TEXT_FIELDS = ["text", "content", "comment", "message"];
+
+const hasOwn = (object, key) => Object.prototype.hasOwnProperty.call(object || {}, key);
+
+const hasAnyOwn = (object, keys = []) => keys.some((key) => hasOwn(object, key));
+
 const buildCachedCommentNode = ({
   commentById = {},
   commentId,
@@ -33,7 +40,8 @@ const buildCachedCommentNode = ({
   viewerUsername = null,
   visitedIds,
 }) => {
-  const resolvedId = String(commentId);
+  const resolvedId = resolveId(commentId);
+  if (resolvedId == null) return null;
 
   if (visitedIds.has(resolvedId)) return null;
   visitedIds.add(resolvedId);
@@ -77,7 +85,7 @@ const buildCachedCommentNode = ({
 };
 
 const buildCachedCommentThread = (postId, state, viewerUsername = null) => {
-  if (!postId) return [];
+  if (postId == null) return [];
 
   const topLevelCommentIds = resolveRecordValue(state?.commentList, postId);
   if (!Array.isArray(topLevelCommentIds)) return [];
@@ -262,7 +270,7 @@ export function useCommentThread(postId, initialCount = 0, options = {}) {
             level,
             parentId,
             replyTo:
-              parentId && !normalizedComment.replyTo
+              parentId != null && !normalizedComment.replyTo
                 ? (parentComment?.author || null)
                 : normalizedComment.replyTo,
           }
@@ -289,40 +297,48 @@ export function useCommentThread(postId, initialCount = 0, options = {}) {
   );
 
   const editComment = useCallback(async (commentId, changes = {}) => {
-    const currentComment = findCommentByIdInTree(commentsRef.current, commentId);
+    const { currentComment: currentCommentHint = null, ...updateChanges } = changes || {};
+    const currentComment =
+      findCommentByIdInTree(commentsRef.current, commentId) ||
+      currentCommentHint;
+
     if (!currentComment) {
       return { success: false };
     }
 
     if (typeof updateCommentAction !== "function") {
-      const nextComments = editCommentInTree(commentsRef.current, commentId, changes);
+      const nextComments = editCommentInTree(commentsRef.current, commentId, updateChanges);
       commentsRef.current = nextComments;
       setComments(nextComments);
       return {
         success: true,
+        data: {
+          editedCommentChanges: updateChanges,
+        },
       };
     }
 
-    const hasTextField = Object.prototype.hasOwnProperty.call(changes || {}, "text");
-    const mentionedUsers = Array.isArray(changes?.mentionedUsers)
-      ? changes.mentionedUsers
-      : (hasTextField ? extractUsernames(String(changes?.text ?? "")) : undefined);
+    const hasTextField = hasOwn(updateChanges, "text");
+    const mentionedUsers = Array.isArray(updateChanges?.mentionedUsers)
+      ? updateChanges.mentionedUsers
+      : (hasTextField ? extractUsernames(String(updateChanges?.text ?? "")) : undefined);
 
     const response = await updateCommentAction(commentId, {
-      ...changes,
+      ...updateChanges,
       ...(Array.isArray(mentionedUsers) ? { mentionedUsers } : {}),
-      currentMedia: currentComment.media,
+      currentMedia: currentComment?.media || [],
     });
 
     if (!response?.success) {
       return response || { success: false };
     }
 
+    const updatedCommentRaw = response?.data?.updatedComment || {};
     const updatedComment = normalizeCommentItem(
       {
         id: commentId,
         parentCommentId: currentComment.parentId,
-        ...(response?.data?.updatedComment || {}),
+        ...updatedCommentRaw,
       },
       {
         level: currentComment.level,
@@ -332,10 +348,24 @@ export function useCommentThread(postId, initialCount = 0, options = {}) {
       }
     );
 
-    const nextComments = editCommentInTree(commentsRef.current, commentId, {
-      text: updatedComment?.text ?? changes?.text,
-      media: Array.isArray(updatedComment?.media) ? updatedComment.media : changes?.media,
-    });
+    const responseHasText = hasAnyOwn(updatedCommentRaw, COMMENT_TEXT_FIELDS);
+    const responseHasMedia =
+      Array.isArray(updatedCommentRaw?.mediaFiles) ||
+      Array.isArray(updatedCommentRaw?.media);
+    const editedCommentChanges = {
+      ...(responseHasText ? { text: updatedComment?.text ?? "" } : {}),
+      ...(!responseHasText && hasTextField ? { text: updateChanges?.text } : {}),
+      ...(responseHasMedia && Array.isArray(updatedComment?.media)
+        ? { media: updatedComment.media }
+        : {}),
+      ...(!responseHasMedia && Array.isArray(updateChanges?.media)
+        ? { media: updateChanges.media }
+        : {}),
+      ...(updatedComment?.time ? { time: updatedComment.time } : {}),
+      ...(updatedComment?.meta ? { meta: updatedComment.meta } : {}),
+    };
+
+    const nextComments = editCommentInTree(commentsRef.current, commentId, editedCommentChanges);
     commentsRef.current = nextComments;
     setComments(nextComments);
 
@@ -343,6 +373,7 @@ export function useCommentThread(postId, initialCount = 0, options = {}) {
       ...response,
       data: {
         ...(response?.data || {}),
+        editedCommentChanges,
         ...(updatedComment ? { updatedComment } : {}),
       },
     };

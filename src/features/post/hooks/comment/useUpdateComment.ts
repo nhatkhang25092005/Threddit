@@ -5,8 +5,13 @@ import { useSafeRequest } from "../../../../hooks/useSafeRequest"
 import { commentService, storageService } from "../../services"
 import { commentActions, loadingAction } from "../../store/actions"
 import { commentModel } from "../../store/models/comment.model"
+import { Comment } from "../../types/comment.type"
+import type { RawCommentInput, UpdateCommentPatch } from "../../types/comment.type"
 
-const normalizeMediaList = (media = []) => {
+type UpdateCommentData = Record<string, any>
+type UpdateCommentPayload = Record<string, any>
+
+const normalizeMediaList = (media: UpdateCommentData[] = []): UpdateCommentData[] => {
   const mediaList = (Array.isArray(media) ? media : []).filter(Boolean)
   const newMediaList = mediaList.filter((item) => item?.file)
 
@@ -17,7 +22,7 @@ const normalizeMediaList = (media = []) => {
   return mediaList.slice(0, 1)
 }
 
-const getNewMediaList = (mediaList = []) => (
+const getNewMediaList = (mediaList: UpdateCommentData[] = []): UpdateCommentData[] => (
   (Array.isArray(mediaList) ? mediaList : []).filter((item) => item?.file)
 )
 
@@ -31,8 +36,8 @@ const normalizeMentionedUsers = (mentionedUsers = []) => (
   )]
 )
 
-const buildUpdatePayload = (data = {}, uploadSessionId = null) => {
-  const payload = {}
+const buildUpdatePayload = (data: UpdateCommentData = {}, uploadSessionId: string | null = null) => {
+  const payload: UpdateCommentPayload = {}
   const mentionedUsers = normalizeMentionedUsers(data?.mentionedUsers)
 
   if (hasOwn(data, "text")) {
@@ -54,8 +59,10 @@ const buildUpdatePayload = (data = {}, uploadSessionId = null) => {
   return payload
 }
 
-const buildUpdatedCommentPatch = (updatedComment = {}) => {
-  const normalizedComment = commentModel(updatedComment)
+const buildUpdatedCommentPatch =(
+  updatedComment: RawCommentInput = {}
+): UpdateCommentPatch => {
+  const normalizedComment: Comment = commentModel(updatedComment)
   const patch = {
     text: normalizedComment.text,
     createdAt: normalizedComment.createdAt,
@@ -65,6 +72,7 @@ const buildUpdatedCommentPatch = (updatedComment = {}) => {
     parentCommentId: normalizedComment.parentCommentId,
     hasChildComment: normalizedComment.hasChildComment,
     reaction: normalizedComment.reaction,
+    reactionNumber: normalizedComment.reactionNumber,
     mediaFiles: normalizedComment.mediaFiles,
     mentionedUsers: normalizedComment.mentionedUsers,
   }
@@ -81,7 +89,7 @@ export function useUpdateComment(dispatch) {
   const runRequest = useSafeRequest()
   const pendingRef = useRef(false)
 
-  const updateComment = useCallback(async (commentId, data = {}) => {
+  const updateComment = useCallback(async (commentId: number, data: UpdateCommentData = {}) => {
     if (commentId == null) return null
     if (pendingRef.current) return null
     pendingRef.current = true

@@ -1,3 +1,5 @@
+import type { NotifyApi } from "@/provider/notify/NotifyProvider"
+import type { AuthNavigate } from "../../types/ui"
 export type RegisterForm = {
   email: string,
   username:string,
@@ -41,3 +43,8 @@ export type VerifyAccountValidation =
 export type ResentValidation =
   | {success:true, invalids?:never}
   | {success:false, invalids:{email:string}}
+
+export type VerifyAccountHandlers = {
+  notify:NotifyApi,
+  onNavigate: AuthNavigate
+}

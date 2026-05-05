@@ -1,51 +1,126 @@
 import { itemModel } from "../models/item.model";
 import { COMMENT } from "../type";
+import type { Comment, UpdateCommentPatch } from "../../types/comment.type";
+import { resolveId } from "../../utils/resolveTypes";
+type CommentId = number
+type CommentRecord = Record<CommentId, Comment>
+type CommentIndexRecord = Record<CommentId, CommentId[]>
+interface CommentState {
+  commentById:CommentRecord
+  commentList: CommentIndexRecord
+  subCommentList:CommentIndexRecord
+  loading:{
+    item: Record<CommentId, ReturnType<typeof itemModel>>
+    [key: string]: unknown
+  }
+  [key: string]: unknown
+}
 
-const unique = (list = []) => [...new Set(Array.isArray(list) ? list : [])];
-const normalizeId = (id) => String(id);
+type PayloadOfCommentActionMap = {
+  [COMMENT.ADD_COMMENTS_BY_ID]:Comment[]
+  [COMMENT.ADD_COMMENT_BY_ID]:Comment
+  [COMMENT.UPDATE_COMMENT_BY_ID]:{
+    commentId: CommentId
+    updates: UpdateCommentPatch
+  }
+  [COMMENT.REMOVE_COMMENT_BY_ID]:CommentId
+  [COMMENT.SET_POST_COMMENT_INDEX]:{
+    postId: CommentId
+    commentIds: CommentId[]
+  }
+  [COMMENT.ADD_POST_COMMENT_INDEX]:{
+    postId: CommentId
+    commentIds: CommentId[]
+  }
+  [COMMENT.SET_SUB_COMMENT_INDEX]:{
+    parentCommentId: CommentId
+    commentIds: CommentId[]
+  }
+  [COMMENT.ADD_SUB_COMMENT_INDEX]:{
+    parentCommentId: CommentId
+    commentIds: CommentId[]
+  }
+}
 
-const mergeCommentLists = (current = [], incoming = []) => (
+type CommentAction = {
+  [K in keyof PayloadOfCommentActionMap]:{
+    type:K,
+    payload?: PayloadOfCommentActionMap[K]
+  }
+}[keyof PayloadOfCommentActionMap]
+
+const unique = <T>(list: T[] = []): T[] => [...new Set(Array.isArray(list) ? list : [])];
+
+const mergeCommentLists = (current: CommentId[] = [], incoming: CommentId[] = []): CommentId[] => (
   unique([...(Array.isArray(current) ? current : []), ...(Array.isArray(incoming) ? incoming : [])])
 );
 
-const filterRemovedIds = (list = [], removedIdKeys = new Set()) => (
-  (Array.isArray(list) ? list : []).filter((itemId) => !removedIdKeys.has(normalizeId(itemId)))
+const filterRemovedIds = (list: CommentId[] = [], removedIdKeys = new Set<CommentId>()): CommentId[] => (
+  (Array.isArray(list) ? list : []).filter((itemId) => !removedIdKeys.has(resolveId(itemId)))
 );
 
-const filterRecordLists = (record = {}, removedIdKeys = new Set()) => (
+const filterRecordLists = (
+  record: CommentIndexRecord = {},
+  removedIdKeys = new Set<CommentId>()
+): CommentIndexRecord => (
   Object.fromEntries(
     Object.entries(record || {}).map(([key, list]) => [key, filterRemovedIds(list, removedIdKeys)])
-  )
+  ) as CommentIndexRecord
 );
 
-const removeSubCommentEntries = (record = {}, removedIdKeys = new Set()) => (
+const removeSubCommentEntries = (
+  record: CommentIndexRecord = {},
+  removedIdKeys = new Set<CommentId>()
+): CommentIndexRecord => (
   Object.fromEntries(
     Object.entries(record || {})
-      .filter(([key]) => !removedIdKeys.has(normalizeId(key)))
+      .filter(([key]) => !removedIdKeys.has(resolveId(key)))
       .map(([key, list]) => [key, filterRemovedIds(list, removedIdKeys)])
-  )
+  ) as CommentIndexRecord
 );
 
-const collectCommentBranchIds = (state, commentId, collectedIds = new Set()) => {
+/**
+ * Recursively collects all comment by IDs in a branch starting from a given comment
+ * This function traverses the comment tree using DFS (depth-first search),
+ * including the root comment and all of it's descendant comments.
+ *
+ * @param state - The global comment state containing sub-comment relationships
+ * @param commentId - The starting comment ID
+ * @param collectedIds - A Set used to accumulate unique comment IDs (prevent duplicates)
+ * @returns - A Set of all collected comment IDs in the branch
+ */
+const collectCommentBranchIds = (
+  state: CommentState,
+  commentId: CommentId,
+  collectedIds = new Set<CommentId>()
+): Set<CommentId> => {
+  // Stop if the input ID is null or undefined
   if (commentId == null) return collectedIds;
 
-  const key = normalizeId(commentId);
-  if (collectedIds.has(key)) return collectedIds;
+  // Avoid processing the same comment multiple times (prevent infinite loops)
+  if (collectedIds.has(commentId)) return collectedIds;
 
-  collectedIds.add(key);
+  // Add current comment IDs to the result set
+  collectedIds.add(commentId);
 
-  const childCommentIds = state.subCommentList?.[key] || [];
+  // Get all child comment IDs of the current comment
+  const childCommentIds = state.subCommentList?.[commentId] || []
+
+  // Recursively collects IDs from all child comment
   childCommentIds.forEach((childCommentId) => {
     collectCommentBranchIds(state, childCommentId, collectedIds);
   });
 
-  return collectedIds;
+  return collectedIds
 };
 
-export const commentHandlers = (state, action) => {
+export const commentHandlers = (
+  state: CommentState,
+  action: CommentAction
+): CommentState => {
   switch (action.type) {
     case COMMENT.ADD_COMMENTS_BY_ID: {
-      const comments = action.payload || [];
+      const comments:Comment[] = action.payload || [];
 
       const byId = Object.fromEntries(
         comments
@@ -76,7 +151,7 @@ export const commentHandlers = (state, action) => {
     }
 
     case COMMENT.ADD_COMMENT_BY_ID: {
-      const comment = action.payload || null;
+      const comment: Comment = action.payload || null;
       if (!comment || comment.id == null) return state;
 
       return {
@@ -89,23 +164,23 @@ export const commentHandlers = (state, action) => {
     }
 
     case COMMENT.UPDATE_COMMENT_BY_ID: {
-      const { id, changes } = action.payload || {};
-      if (id == null) return state;
+      const { commentId, updates } = action.payload || {};
+      if (commentId == null) return state;
 
-      const currentComment = state.commentById?.[id];
+      const currentComment = state.commentById?.[commentId];
       if (!currentComment) return state;
 
       return {
         ...state,
         commentById: {
           ...state.commentById,
-          [id]: {
+          [commentId]: {
             ...currentComment,
-            ...(changes || {}),
-            ...(changes?.commenter ? {
+            ...(updates || {}),
+            ...(updates?.commenter ? {
               commenter: {
                 ...(currentComment.commenter || {}),
-                ...changes.commenter,
+                ...updates.commenter,
               },
             } : {}),
           },
@@ -114,12 +189,12 @@ export const commentHandlers = (state, action) => {
     }
 
     case COMMENT.REMOVE_COMMENT_BY_ID: {
-      const { id } = action.payload || {};
+      const id = action.payload
       if (id == null) return state;
 
       const removedIdKeys = collectCommentBranchIds(state, id);
       if (removedIdKeys.size === 0) {
-        removedIdKeys.add(normalizeId(id));
+        removedIdKeys.add(id);
       }
 
       const nextCommentById = { ...(state.commentById || {}) };

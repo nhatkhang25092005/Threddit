@@ -1,4 +1,5 @@
 import { mediaModel } from "./media.model"
+import { resolveId } from "../../utils/resolveTypes"
 function mapAuthor(author){
   return author !== null
   ? {
@@ -41,7 +42,7 @@ export const postByIdModel = (data = {}) => {
   const sharedPostCandidate = resolveSharedPostCandidate(data)
 
   return {
-    id: data.contentId || data.id,
+    id: resolveId(data.contentId ?? data.id),
     context : null,
     time:{
       createdAt:data.createdAt || data.contentCreatedAt || null,
@@ -79,6 +80,6 @@ export const postByIdModel = (data = {}) => {
     },
 
     sharedPost: sharedPostCandidate ? postByIdModel(sharedPostCandidate) : null,
-    shareId:data.shareId || null
+    shareId:resolveId(data.shareId)
   }
 }

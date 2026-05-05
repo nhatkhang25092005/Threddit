@@ -3,6 +3,7 @@ import useInfiniteScroll from "../../../../../../hooks/useInfiniteScroll";
 import { usePostContext } from "../../../../hooks";
 import {
   countCommentBranch,
+  editCommentInTree,
   findCommentByIdInTree,
   mergeCommentPage,
   removeCommentFromTree,
@@ -22,6 +23,7 @@ export function useCommentReplies({
   comment,
   currentUser,
   onDelete,
+  onEdit,
   onReact,
   onReply,
   targetCommentId = null,
@@ -273,6 +275,48 @@ export function useCommentReplies({
     [loadedReplies, onReact]
   );
 
+  const handleEdit = useCallback(
+    async (commentId, changes = {}) => {
+      const targetReply = Array.isArray(loadedReplies)
+        ? findCommentByIdInTree(loadedReplies, commentId)
+        : null;
+
+      if (typeof onEdit !== "function") {
+        if (targetReply) {
+          setLoadedReplies((current) =>
+            Array.isArray(current)
+              ? editCommentInTree(current, commentId, changes)
+              : current
+          );
+        }
+
+        return { success: true };
+      }
+
+      const response = await onEdit(commentId, {
+        ...changes,
+        currentComment: targetReply || changes?.currentComment || null,
+      });
+
+      if (!response?.success) {
+        return response || { success: false };
+      }
+
+      if (targetReply) {
+        const editedCommentChanges = response?.data?.editedCommentChanges || changes;
+
+        setLoadedReplies((current) =>
+          Array.isArray(current)
+            ? editCommentInTree(current, commentId, editedCommentChanges)
+            : current
+        );
+      }
+
+      return response;
+    },
+    [loadedReplies, onEdit]
+  );
+
   const handleDelete = useCallback(async (targetComment, options = {}) => {
     const commentId = targetComment?.id ?? null;
     if (commentId == null) {
@@ -345,6 +389,7 @@ export function useCommentReplies({
   }, []);
 
   return {
+    handleEdit,
     handleReact,
     handleDelete,
     handleReply,

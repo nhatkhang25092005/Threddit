@@ -1,5 +1,5 @@
 export const detailPostPage = {
-  title: "Post media details",
+  title: "Post details",
   mediaAlt: "Post media",
   closeLabel: "Close media viewer",
   prevLabel: "Previous media",

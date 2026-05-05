@@ -12,6 +12,7 @@ import {
   resolveCommentHasMore,
   resolveCommentItems,
 } from "../../utils/commentCollection.utils"
+import { resolveId } from "../../utils/resolveTypes"
 
 export function useGetChildComment(dispatch) {
   const notify = useNotify()
@@ -25,14 +26,16 @@ export function useGetChildComment(dispatch) {
   const hasCommentInPage = useCallback((comments = [], targetCommentId = null) => {
     if (targetCommentId == null) return false
 
-    const normalizedTargetId = String(targetCommentId)
+    const normalizedTargetId = resolveId(targetCommentId)
+    if (normalizedTargetId == null) return false
+
     return (Array.isArray(comments) ? comments : []).some(
-      (comment) => String(comment?.id) === normalizedTargetId
+      (comment) => resolveId(comment?.id) === normalizedTargetId
     )
   }, [])
 
   const getChildComment = useCallback(async (parentCommentId, options = {}) => {
-    const key = parentCommentId
+    const key = resolveId(parentCommentId)
     const refresh = options?.refresh === true
     const ignoreHasMore = options?.ignoreHasMore === true
     const silent = options?.silent === true
@@ -81,12 +84,15 @@ export function useGetChildComment(dispatch) {
     dispatch(commentActions.addComments(comments))
 
     Object.entries(subCommentsMap).forEach(([currentParentCommentId, commentIds]) => {
+      const resolvedParentCommentId = resolveId(currentParentCommentId)
+      if (resolvedParentCommentId == null) return
+
       if (refresh) {
-        dispatch(commentActions.setSubCommentIndex(currentParentCommentId, commentIds))
+        dispatch(commentActions.setSubCommentIndex(resolvedParentCommentId, commentIds))
         return
       }
 
-      dispatch(commentActions.addSubCommentIndex(currentParentCommentId, commentIds))
+      dispatch(commentActions.addSubCommentIndex(resolvedParentCommentId, commentIds))
     })
 
     return {
@@ -106,14 +112,15 @@ export function useGetChildComment(dispatch) {
   )
 
   const prefetchChildComment = useCallback(async (parentCommentId, options = {}) => {
-    if (parentCommentId == null) return null
+    const parentId = resolveId(parentCommentId)
+    if (parentId == null) return null
 
     const targetCommentId = options?.targetCommentId ?? null
     const deepSearch = options?.deepSearch === true
     const visitedParentIds = options?.visitedParentIds instanceof Set
       ? options.visitedParentIds
       : new Set()
-    const normalizedParentId = String(parentCommentId)
+    const normalizedParentId = parentId
 
     if (visitedParentIds.has(normalizedParentId)) {
       return {
@@ -127,8 +134,8 @@ export function useGetChildComment(dispatch) {
     visitedParentIds.add(normalizedParentId)
 
     const syncPrefetchedPaginationToForeground = () => {
-      cursorRef.current[parentCommentId] = backgroundCursorRef.current[parentCommentId]
-      hasMoreRef.current[parentCommentId] = backgroundHasMoreRef.current[parentCommentId]
+      cursorRef.current[parentId] = backgroundCursorRef.current[parentId]
+      hasMoreRef.current[parentId] = backgroundHasMoreRef.current[parentId]
     }
 
     const nestedParentIds = new Set()
@@ -138,13 +145,13 @@ export function useGetChildComment(dispatch) {
           return
         }
 
-        if (String(comment.id) !== normalizedParentId && comment?.hasChildComment) {
+        if (resolveId(comment.id) !== normalizedParentId && comment?.hasChildComment) {
           nestedParentIds.add(comment.id)
         }
       })
     }
 
-    let response = await getChildComment(parentCommentId, {
+    let response = await getChildComment(parentId, {
       refresh: true,
       ignoreHasMore: true,
       silent: true,
@@ -169,7 +176,7 @@ export function useGetChildComment(dispatch) {
     }
 
     while (response?.data?.hasMore) {
-      response = await getChildComment(parentCommentId, { silent: true })
+      response = await getChildComment(parentId, { silent: true })
 
       if (!response?.success) {
         syncPrefetchedPaginationToForeground()

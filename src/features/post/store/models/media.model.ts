@@ -1,21 +1,33 @@
-const resolveString = (...values) => (
-  values.find((value) => typeof value === "string" && value.trim()) || null
+import type { ExpectMediaInput ,Media } from "../../types/media.type"
+import { resolveId, resolveString, resolveNumber } from "../../utils/resolveTypes"
+
+type ExpectMediaKeys = Partial<Record<'mediaKey' | 'key' | 'storageKey' | 's3Key', unknown>>
+const resolveMediaKey = (media:ExpectMediaKeys): string => (
+  resolveString(
+    media?.mediaKey,
+    media?.key,
+    media?.storageKey,
+    media?.s3Key
+  )
 )
 
-const resolveNumber = (value) => {
-  const parsed = Number(value)
-  return Number.isFinite(parsed) ? parsed : null
-}
-
-const resolveMediaKey = (media = {}) => (
-  resolveString(media?.mediaKey, media?.key, media?.storageKey, media?.s3Key)
+type ExpectMediaUrls = Partial<Record<'url' | 'mediaUrl' | 'fileUrl' | 'src', unknown>>
+const resolveMediaUrl = (media: ExpectMediaUrls) => (
+  resolveString(
+    media?.url,
+    media?.mediaUrl,
+    media?.fileUrl,
+    media?.src
+  )
 )
 
-const resolveMediaUrl = (media = {}) => (
-  resolveString(media?.url, media?.mediaUrl, media?.fileUrl, media?.src)
-)
-
-const resolveMediaType = (media = {}) => (
+type ExpectMediaTypes = Partial<{
+  contentType:unknown,
+  mediaType:unknown,
+  mimeType:unknown, type:unknown,
+  file:{type:unknown}
+}>
+const resolveMediaType = (media: ExpectMediaTypes) => (
   resolveString(
     media?.contentType,
     media?.mediaType,
@@ -25,7 +37,7 @@ const resolveMediaType = (media = {}) => (
   ) || "image"
 )
 
-export const mediaModel = (media = {}) => {
+export const mediaModel = (media: ExpectMediaInput): Media => {
   const mediaKey = resolveMediaKey(media)
   const url = resolveMediaUrl(media)
   const type = resolveMediaType(media)
@@ -38,7 +50,8 @@ export const mediaModel = (media = {}) => {
   )
 
   return {
-    id: media?.id ?? media?.mediaId ?? mediaKey ?? null,
+    id: resolveId(media?.id ?? media?.mediaId),
+    
     sortOrder: resolveNumber(media?.sortOrder),
     type,
     url,

@@ -5,7 +5,8 @@ export const style = {
     alignItems:'center',
     width:'35%',
     gap:'2rem',
-    px:'3rem'
+    px:'3rem',
+    mx:'auto'
   },
   title:{
     fontStyle:'italic',

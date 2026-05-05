@@ -1,4 +1,5 @@
 import { mediaModel } from "./media.model";
+import { resolveId } from "../../utils/resolveTypes";
 
 function mapAuthor(author) {
   if (!author) return null;
@@ -16,7 +17,7 @@ export const storyByIdModel = (story = {}) => {
     : (Array.isArray(story?.media) ? story.media : [])
 
   return {
-    id: story?.contentId ?? story?.id ?? null,
+    id: resolveId(story?.contentId ?? story?.id),
     context: null,
     time: {
       createdAt: story?.createdAt || story?.contentCreatedAt || null,
@@ -50,6 +51,6 @@ export const storyByIdModel = (story = {}) => {
       shareMessage: story?.shareMessage || null,
     },
 
-    shareId: story?.shareId || null,
+    shareId: resolveId(story?.shareId),
   }
 };

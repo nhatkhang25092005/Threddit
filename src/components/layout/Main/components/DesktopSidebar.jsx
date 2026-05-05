@@ -119,12 +119,12 @@ export default function DesktopSidebar({ controller, customStyle }) {
             ) : null}
           </Box>
 
-          <ThemeToggleBtn
+          {/* <ThemeToggleBtn
             sx={isSidebarExpanded ? style.utilityActionButton() : style.utilityIconButton()}
             label={isSidebarExpanded ? sidebar.utility.theme : undefined}
             labelSx={style.utilityLabel()}
             iconWrapSx={style.utilityActionIconWrap}
-          />
+          /> */}
 
           <PositionedMenu
             tasks={menuTasks}

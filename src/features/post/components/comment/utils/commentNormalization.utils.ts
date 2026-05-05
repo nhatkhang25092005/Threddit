@@ -1,10 +1,14 @@
+import { Reaction } from "@/features/post/types/reaction.type";
 import { REACTION_META } from "../../../../../constant/emoji";
 import { convertTime } from "../../../../../utils/formatDate";
+import { CommentItem, NormalizeCommentItem } from "../types/models.types";
+import { resolveId } from "@/features/post/utils/resolveTypes";
 import {
   resolveCommentAuthor,
   resolveReplyAuthor,
 } from "./commentAuthor.utils";
 import { normalizeRemoteCommentMediaList } from "./commentMedia.utils";
+import type { CommentNode } from "./commentTree.utils";
 
 const resolveRawChildren = (comment) => {
   if (Array.isArray(comment?.children)) return comment.children;
@@ -19,7 +23,7 @@ const resolveReplyTo = (comment) =>
   comment?.replyTo || comment?.replyTarget || comment?.parentCommenter || comment?.targetCommenter || null;
 
 const resolveCommentParentId = (comment, fallbackParentId = null) =>
-  comment?.parentId ?? comment?.parentCommentId ?? fallbackParentId ?? null;
+  resolveId(comment?.parentId ?? comment?.parentCommentId ?? fallbackParentId);
 
 const resolveCommentText = (comment) =>
   comment?.text || comment?.content || comment?.comment || comment?.message || "";
@@ -36,8 +40,8 @@ const resolveCommentMedia = (comment) => {
   return [];
 };
 
-const resolveCommentId = (comment) =>
-  comment?.contentId || comment?.commentId || comment?.id || comment?.key || null;
+const resolveCommentId = (comment): number | null =>
+  resolveId(comment?.contentId ?? comment?.commentId ?? comment?.id ?? comment?.key);
 
 const resolveCommentCreatedAt = (comment) =>
   comment?.createdAt || comment?.contentCreatedAt || comment?.time?.createdAt || new Date().toISOString();
@@ -68,7 +72,7 @@ const refreshCommentTreeNode = (
       refreshCommentTreeNode(child, {
         level: level + 1,
         parentAuthor: comment?.author || null,
-        parentId: comment?.id ?? null,
+        parentId: resolveId(comment?.id),
       })
     );
 
@@ -88,18 +92,25 @@ const refreshCommentTreeNode = (
   };
 };
 
-export const normalizeCommentReaction = (reaction) => {
+/**
+ * Normalize the comment reaction to uppercase
+ * @param reaction - reaction of the comment
+ * @returns ReactionMeta or null
+ */
+export const normalizeCommentReaction = (reaction: Reaction | string | null | undefined): Reaction | null=> {
   if (!reaction) return null;
 
-  const key = String(reaction).toUpperCase();
+  const key = String(reaction).toUpperCase() as Reaction
   return REACTION_META[key] ? key : null;
 };
 
-export const normalizeCommentItem = (comment, options = {}) => {
+const isCommentNode = (comment: CommentNode | null): comment is CommentNode => Boolean(comment);
+
+export const normalizeCommentItem = (comment, options: NormalizeCommentItem = {}): CommentNode | null => {
   const { level = 0, parentId = null, parentAuthor = null, viewerUsername = null } = options;
   const id = resolveCommentId(comment);
 
-  if (!id) return null;
+  if (id == null) return null;
 
   const createdAt = resolveCommentCreatedAt(comment);
   const updatedAt = resolveCommentUpdatedAt(comment);
@@ -117,7 +128,7 @@ export const normalizeCommentItem = (comment, options = {}) => {
         viewerUsername,
       })
     )
-    .filter(Boolean);
+    .filter(isCommentNode);
 
   return {
     id,
@@ -158,16 +169,24 @@ export const normalizeCommentItem = (comment, options = {}) => {
   };
 };
 
+/**
+  1. Normalize all the comment
+  2. Build the Tree from the flat list
+  3. Re-run all the tree to fix comment level, reply, stats
+ */
+
 export const normalizeFlatCommentTree = (
   items = [],
   {
-    rootLevel = 0,
+    rootLevel = 0 ,
     rootParentAuthor = null,
     rootParentId = null,
     viewerUsername = null,
-  } = {}
+  }: CommentItem = {}
 ) => {
-  const rootParentKey = rootParentId == null ? null : String(rootParentId);
+  const rootParentKey = resolveId(rootParentId)
+
+  // Normalization the items array
   const normalized = (Array.isArray(items) ? items : [])
     .map((comment) =>
       normalizeCommentItem(comment, {
@@ -177,19 +196,19 @@ export const normalizeFlatCommentTree = (
         viewerUsername,
       })
     )
-    .filter(Boolean)
+    .filter(isCommentNode)
     .map((comment) => ({
       ...comment,
       children: [],
     }));
 
-  const byId = new Map(normalized.map((comment) => [String(comment.id), comment]));
-  const roots = [];
+  const byId = new Map(normalized.map((comment) => [comment.id, comment]));
+  const roots: CommentNode[] = [];
 
   normalized.forEach((comment) => {
-    const currentParentId = comment?.parentId == null ? null : String(comment.parentId);
+    const currentParentId = resolveId(comment?.parentId);
 
-    if (!currentParentId || currentParentId === rootParentKey) {
+    if (currentParentId == null || currentParentId === rootParentKey) {
       roots.push(comment);
       return;
     }
@@ -213,7 +232,10 @@ export const normalizeFlatCommentTree = (
   );
 };
 
-export const normalizeCommentResponse = (data, options = {}) => {
+export const normalizeCommentResponse = (
+  data,
+  options: { viewerUsername?: string | null } = {}
+) => {
   const payload = Array.isArray(data) || !data?.data ? data : data.data;
 
   const rawItems = Array.isArray(payload)
@@ -227,7 +249,7 @@ export const normalizeCommentResponse = (data, options = {}) => {
         viewerUsername: options.viewerUsername || null,
       })
     )
-    .filter(Boolean);
+    .filter(isCommentNode);
 
   const cursor =
     payload?.cursor ??

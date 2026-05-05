@@ -1,4 +1,12 @@
-import { useState, createContext, useMemo, createElement, useRef } from "react";
+import {
+  useState,
+  createContext,
+  useMemo,
+  createElement,
+  useRef,
+  type ComponentType,
+  type ReactNode
+} from "react";
 import { NOTIFY_MAP, LABEL } from "./const";
 import createPopup from "./handlers/createPopup";
 import createSnackbar from './handlers/createSnackbar'
@@ -7,19 +15,53 @@ import createLoading from './handlers/createLoading'
 import createCustomModal from './handlers/createCustomModal'
 import { createSnackbarLoading } from "./handlers/createSnackbarLoading";
 
-const NotifyContext = createContext(null)
-function NotifyProvider({children}){
+type NotifyPlugin = (open: boolean) => void
 
-  const [notif, setNotif] = useState(null)
-  const containerRef = useRef(null)
+export type NotifyApi = {
+  snackbar:(message?: string, duration?:number, type?:string) => void
+  popup:(
+    title?: string,
+    message?: string,
+    buttonLabel?: string,
+    callback?:(()=> void) | null
+  ) => void
+  loading:(open?:boolean) => void
+  withLoading: <T>(task:() => Promise<T>,  plugin?:NotifyPlugin) => Promise<T>
+  customModal : <P extends object>(component: ComponentType<P>, props:P) => void
+  snackbarLoading: (message:string, isLoading:boolean) => void
+}
 
-  const notify = useMemo(()=>({
+type NotifyContextValue = {
+  notify: NotifyApi;
+};
+
+type NotifyProviderProps = {
+  children: ReactNode;
+};
+
+type NotifyState =
+  | null
+  | {
+      type: keyof typeof NOTIFY_MAP;
+      open?: boolean;
+      props?: Record<string, unknown>;
+      containerId?: string | null;
+    };
+
+
+const NotifyContext = createContext<NotifyContextValue | null>(null)
+function NotifyProvider({children}:NotifyProviderProps){
+
+  const [notif, setNotif] = useState<NotifyState>(null)
+  const containerRef = useRef<string | null>(null)
+
+  const notify = useMemo<NotifyApi>(()=>({
     /**
      * Show a snackbar at the left bottom of the screen
      * @param {*} message
      * @param {*} duration
      */
-    snackbar : (message = LABEL.NO_CONTENT, duration = 3000, type='success') =>
+    snackbar: (message:string = LABEL.NO_CONTENT, duration:number = 3000, type='success') =>
       createSnackbar({message, duration, type}, setNotif)
     ,
     /**
@@ -44,7 +86,10 @@ function NotifyProvider({children}){
      * @param {function} plugin
      * @returns
      */
-    withLoading: async (task, plugin = notify.loading)=> await createWithLoading(task, plugin),
+    withLoading: async <T,>(
+      task: () => Promise<T>,
+      plugin = notify.loading
+    ):Promise<T> =>await createWithLoading(task, plugin),
   
     /**
      * Creates a custom modal with notification handling.
@@ -71,7 +116,13 @@ function NotifyProvider({children}){
 
   const close = () => setNotif(prev => prev ? {...prev, open:false} : null)
 
-  const NotifyComponent = notif && NOTIFY_MAP[notif.type]
+  const NotifyComponent = notif
+    ? (NOTIFY_MAP[notif.type] as ComponentType<{
+      open:boolean
+      onClose:() => void
+    } & Record<string, unknown>>)
+    : null
+
   const render = () => {
     if(!notif || !NotifyComponent) return
     const element = (
