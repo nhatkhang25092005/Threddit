@@ -88,19 +88,20 @@ describe("useHorizontalScroll", () => {
       expect(result.current.canScrollLeft).toBe(false);
     });
 
-    it("should enable left scroll after scrolling right", () => {
-      const mockElement = {
-        scrollLeft: 100,
-        scrollWidth: 500,
-        clientWidth: 300,
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-      };
+    it("should enable left scroll when container is scrolled right", () => {
+      const scrollElement = document.createElement("div");
+      Object.defineProperty(scrollElement, "scrollWidth", { value: 500, configurable: true });
+      Object.defineProperty(scrollElement, "clientWidth", { value: 300, configurable: true });
+      Object.defineProperty(scrollElement, "scrollLeft", { value: 100, configurable: true, writable: true });
 
-      const { result } = renderHook(() => useHorizontalScroll(100, 10));
+      const { result } = renderHook(() => {
+        const hook = useHorizontalScroll(100, 10);
 
-      act(() => {
-        result.current.scrollRef.current = mockElement;
+        if (!hook.scrollRef.current) {
+          hook.scrollRef.current = scrollElement;
+        }
+
+        return hook;
       });
 
       expect(result.current.canScrollLeft).toBe(true);

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import "@testing-library/jest-dom/vitest";
 import { render, screen } from "@testing-library/react";
 import EditPinnedStoryEmptyState from "./EditPinnedStoryEmptyState";
 import { EDIT_PINNED_STORY_MODAL_TEXT } from "../utils/constants";

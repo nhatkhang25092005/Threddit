@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import "@testing-library/jest-dom/vitest";
 import { render, screen } from "@testing-library/react";
 import CommentEmptyState from "./CommentEmptyState";
 import { commentText } from "../../../../../constant/text/vi/post/comment.text";

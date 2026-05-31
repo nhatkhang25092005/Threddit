@@ -3,9 +3,22 @@ import { renderHook, act } from "@testing-library/react";
 import { useCreateStoryComposer } from "./useCreateStoryComposer";
 import { STORY_MEDIA_KIND } from "../storyComposer";
 
-const mockCreateStory = vi.fn();
-const mockEditStory = vi.fn();
-const mockSetMentionValue = vi.fn();
+const {
+  mockCreateStory,
+  mockEditStory,
+  mockSetMentionValue,
+  mockUploadImage,
+} = vi.hoisted(() => ({
+  mockCreateStory: vi.fn(),
+  mockEditStory: vi.fn(),
+  mockSetMentionValue: vi.fn(),
+  mockUploadImage: vi.fn(() => ({
+    url: "blob:image",
+    contentType: "image/png",
+    name: "photo.png",
+  })),
+}));
+
 let mentionValue = "";
 
 vi.mock("../../../../hooks", () => ({
@@ -36,13 +49,9 @@ vi.mock("../utils", async (importOriginal) => {
   return {
     ...actual,
     STORY_UPLOAD_HANDLER: {
-      [STORY_MEDIA_KIND.IMAGE]: vi.fn(() => ({
-        url: "blob:image",
-        contentType: "image/png",
-        name: "photo.png",
-      })),
-      [STORY_MEDIA_KIND.VIDEO]: vi.fn(),
-      [STORY_MEDIA_KIND.SOUND]: vi.fn(),
+      image: (...args) => mockUploadImage(...args),
+      video: vi.fn(),
+      sound: vi.fn(),
     },
   };
 });

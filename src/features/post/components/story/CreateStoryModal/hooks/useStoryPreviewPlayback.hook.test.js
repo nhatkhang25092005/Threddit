@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useStoryPreviewPlayback } from "./useStoryPreviewPlayback";
 import { STORY_MEDIA_KIND, STORY_MODE } from "../storyComposer";
@@ -30,10 +30,10 @@ describe("useStoryPreviewPlayback", () => {
       })
     );
 
-    expect(result.current.effectivePaused).toBe(true);
+    expect(result.current.isPaused).toBe(true);
   });
 
-  it("toggles pause state", () => {
+  it("toggles pause state via handleTogglePlayback", () => {
     const { result } = renderHook(() =>
       useStoryPreviewPlayback({
         mediaKind: STORY_MEDIA_KIND.IMAGE,
@@ -44,19 +44,37 @@ describe("useStoryPreviewPlayback", () => {
     );
 
     act(() => {
-      result.current.togglePause();
+      result.current.handleTogglePlayback();
     });
 
     expect(result.current.isPaused).toBe(true);
 
     act(() => {
-      result.current.togglePause();
+      result.current.handleTogglePlayback();
     });
 
     expect(result.current.isPaused).toBe(false);
   });
 
-  it("seeks within playback duration", () => {
+  it("does not toggle when forcedPaused is true", () => {
+    const { result } = renderHook(() =>
+      useStoryPreviewPlayback({
+        forcedPaused: true,
+        mediaKind: STORY_MEDIA_KIND.IMAGE,
+        mediaUrl: "",
+        mode: STORY_MODE.IMAGE,
+        playbackSeconds: 5,
+      })
+    );
+
+    act(() => {
+      result.current.handleTogglePlayback();
+    });
+
+    expect(result.current.isPaused).toBe(true);
+  });
+
+  it("seeks within playback duration via handleProgressChange", () => {
     const { result } = renderHook(() =>
       useStoryPreviewPlayback({
         mediaKind: STORY_MEDIA_KIND.IMAGE,
@@ -67,13 +85,13 @@ describe("useStoryPreviewPlayback", () => {
     );
 
     act(() => {
-      result.current.seekPreview(3);
+      result.current.handleProgressChange(null, 3);
     });
 
     expect(result.current.progressSeconds).toBe(3);
 
     act(() => {
-      result.current.seekPreview(99);
+      result.current.handleProgressChange(null, 99);
     });
 
     expect(result.current.progressSeconds).toBe(5);

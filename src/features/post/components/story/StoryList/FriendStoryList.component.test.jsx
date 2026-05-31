@@ -1,5 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom/vitest";
+import { render, screen, waitFor } from "@testing-library/react";
 import FriendStoryList from "./FriendStoryList";
 import { story } from "../../../../../constant/text/vi/story";
 
@@ -44,9 +45,26 @@ describe("FriendStoryList", () => {
     mockGetFriendStory.mockResolvedValue(undefined);
   });
 
-  it("returns null when there are no stories and not fetching", () => {
+  it("returns null when there are no stories and fetch is skipped", () => {
+    friendStoryMap = { bob: true };
+    friendStoryLists = { bob: [] };
+
     const { container } = render(<FriendStoryList />);
+
     expect(container.firstChild).toBeNull();
+    expect(mockGetFriendStory).not.toHaveBeenCalled();
+  });
+
+  it("returns null after fetch completes with empty friend stories", async () => {
+    const { container } = render(<FriendStoryList />);
+
+    await waitFor(() => {
+      expect(mockGetFriendStory).toHaveBeenCalled();
+    });
+
+    await waitFor(() => {
+      expect(container.firstChild).toBeNull();
+    });
   });
 
   it("renders friend stories when data exists", () => {
@@ -68,16 +86,14 @@ describe("FriendStoryList", () => {
 
   it("renders loading state while fetching friend stories", async () => {
     mockGetFriendStory.mockImplementation(() => new Promise(() => {}));
-    myStories = [{
-      id: 1,
-      author: { username: "alice", displayName: "Alice" },
-      time: { createdAt: "2026-01-01T00:00:00.000Z" },
-    }];
 
     render(<FriendStoryList />);
 
-    expect(screen.getByText(story.storyList.yourStories)).toBeInTheDocument();
-    expect(screen.getByText(story.storyList.fetchingList)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(story.storyList.fetchingList)).toBeInTheDocument();
+    });
+
+    expect(screen.getByRole("progressbar")).toBeInTheDocument();
   });
 
   it("does not fetch friend stories when map already has data", () => {

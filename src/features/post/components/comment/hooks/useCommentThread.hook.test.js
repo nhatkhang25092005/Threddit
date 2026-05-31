@@ -4,31 +4,49 @@ import { useCommentThread } from "./useCommentThread";
 
 const mockUser = { username: "viewer" };
 
-const mockGetCommentList = vi.fn();
-const mockCreateComment = vi.fn();
-const mockUpdateComment = vi.fn();
-const mockDeleteComment = vi.fn();
-const mockReactionComment = vi.fn();
+const {
+  mockGetCommentList,
+  mockCreateComment,
+  mockUpdateComment,
+  mockDeleteComment,
+  mockReactionComment,
+  mockPostContext,
+} = vi.hoisted(() => {
+  const getCommentList = vi.fn();
+  const createComment = vi.fn();
+  const updateComment = vi.fn();
+  const deleteComment = vi.fn();
+  const reactionComment = vi.fn();
+
+  return {
+    mockGetCommentList: getCommentList,
+    mockCreateComment: createComment,
+    mockUpdateComment: updateComment,
+    mockDeleteComment: deleteComment,
+    mockReactionComment: reactionComment,
+    mockPostContext: {
+      state: {
+        commentById: {},
+        commentList: {},
+        subCommentList: {},
+      },
+      actions: {
+        getCommentList,
+        createComment,
+        updateComment,
+        deleteComment,
+        reactionComment,
+      },
+    },
+  };
+});
 
 vi.mock("../../../../../core/auth/useAuth", () => ({
   default: () => ({ user: mockUser }),
 }));
 
 vi.mock("../../../hooks", () => ({
-  usePostContext: () => ({
-    state: {
-      commentById: {},
-      commentList: {},
-      subCommentList: {},
-    },
-    actions: {
-      getCommentList: (...args) => mockGetCommentList(...args),
-      createComment: (...args) => mockCreateComment(...args),
-      updateComment: (...args) => mockUpdateComment(...args),
-      deleteComment: (...args) => mockDeleteComment(...args),
-      reactionComment: (...args) => mockReactionComment(...args),
-    },
-  }),
+  usePostContext: () => mockPostContext,
 }));
 
 const sampleComment = {
@@ -38,13 +56,19 @@ const sampleComment = {
   createdAt: "2026-01-01T00:00:00.000Z",
 };
 
+const emptyListResponse = {
+  success: true,
+  data: { commentList: [], cursor: null, hasMore: false },
+};
+
 describe("useCommentThread", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockGetCommentList.mockResolvedValue(emptyListResponse);
   });
 
   it("loads comments successfully", async () => {
-    mockGetCommentList.mockResolvedValueOnce({
+    mockGetCommentList.mockResolvedValue({
       success: true,
       data: {
         commentList: [sampleComment],
@@ -65,11 +89,6 @@ describe("useCommentThread", () => {
   });
 
   it("shows empty state when comment list is empty", async () => {
-    mockGetCommentList.mockResolvedValueOnce({
-      success: true,
-      data: { commentList: [], cursor: null, hasMore: false },
-    });
-
     const { result } = renderHook(() => useCommentThread(10));
 
     await waitFor(() => {
@@ -81,7 +100,7 @@ describe("useCommentThread", () => {
   });
 
   it("handles load error from API", async () => {
-    mockGetCommentList.mockResolvedValueOnce({
+    mockGetCommentList.mockResolvedValue({
       success: false,
       message: "Load failed",
     });
@@ -97,11 +116,6 @@ describe("useCommentThread", () => {
   });
 
   it("creates comment with valid text", async () => {
-    mockGetCommentList.mockResolvedValueOnce({
-      success: true,
-      data: { commentList: [], cursor: null, hasMore: false },
-    });
-
     mockCreateComment.mockResolvedValueOnce({
       success: true,
       data: {
@@ -131,11 +145,6 @@ describe("useCommentThread", () => {
   });
 
   it("returns API error when create comment fails", async () => {
-    mockGetCommentList.mockResolvedValueOnce({
-      success: true,
-      data: { commentList: [], cursor: null, hasMore: false },
-    });
-
     mockCreateComment.mockResolvedValueOnce({
       success: false,
       message: "Content cannot be empty",
@@ -157,7 +166,7 @@ describe("useCommentThread", () => {
   });
 
   it("reacts to comment and rolls back on API failure", async () => {
-    mockGetCommentList.mockResolvedValueOnce({
+    mockGetCommentList.mockResolvedValue({
       success: true,
       data: { commentList: [sampleComment], cursor: null, hasMore: false },
     });
@@ -178,7 +187,7 @@ describe("useCommentThread", () => {
   });
 
   it("deletes comment successfully", async () => {
-    mockGetCommentList.mockResolvedValueOnce({
+    mockGetCommentList.mockResolvedValue({
       success: true,
       data: { commentList: [sampleComment], cursor: null, hasMore: false },
     });
