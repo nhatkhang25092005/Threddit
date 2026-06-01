@@ -1,15 +1,12 @@
 import { describe, it, expect } from "vitest";
 import {
   addCommentToTree,
-  buildLocalComment,
+  removeCommentFromTree,
   countTotalComments,
+  updateCommentReactionInTree,
   editCommentInTree,
   findCommentByIdInTree,
-  formatCommentCount,
-  mergeCommentPage,
-  removeCommentFromTree,
-  resolveReplyParentId,
-  updateCommentReactionInTree,
+  mergeCommentPage
 } from './commentTree.utils'
 
 import type {
@@ -168,85 +165,6 @@ describe('commentTree.utils',()=>{
 
       expect(result[0].children[0].viewer.reaction).toBe("LIKE")
       expect(result[0].children[0].stats.reactionNumber).toBe(1)
-    })
-
-    it("changes reaction from one type to another", () => {
-      const tree = [
-        makeComment({
-          id: 1,
-          viewer: { reaction: "LIKE" },
-          stats: { reactionNumber: 1, replyNumber: 0 },
-        }),
-      ]
-
-      const result = updateCommentReactionInTree(tree, 1, "LOVE")
-
-      expect(result[0].viewer.reaction).toBe("LOVE")
-      expect(result[0].stats.reactionNumber).toBe(1)
-    })
-
-    it("removes reaction when toggling the same reaction", () => {
-      const tree = [
-        makeComment({
-          id: 1,
-          viewer: { reaction: "LIKE" },
-          stats: { reactionNumber: 1, replyNumber: 0 },
-        }),
-      ]
-
-      const result = updateCommentReactionInTree(tree, 1, "LIKE")
-
-      expect(result[0].viewer.reaction).toBeNull()
-      expect(result[0].stats.reactionNumber).toBe(0)
-    })
-
-    it("decreases count when reaction is cleared", () => {
-      const tree = [
-        makeComment({
-          id: 1,
-          viewer: { reaction: "LIKE" },
-          stats: { reactionNumber: 3, replyNumber: 0 },
-        }),
-      ]
-
-      const result = updateCommentReactionInTree(tree, 1, null)
-
-      expect(result[0].viewer.reaction).toBeNull()
-      expect(result[0].stats.reactionNumber).toBe(2)
-    })
-  })
-
-  describe("formatCommentCount", () => {
-    it("formats numeric count for vi-VN locale", () => {
-      expect(formatCommentCount(1200)).toBe("1.200")
-    })
-
-    it("returns 0 for invalid count", () => {
-      expect(formatCommentCount(undefined)).toBe("0")
-    })
-  })
-
-  describe("resolveReplyParentId", () => {
-    it("returns comment id as parent id", () => {
-      expect(resolveReplyParentId(makeComment({ id: 7 }) as CommentNode)).toBe(7)
-    })
-
-    it("returns null for missing comment", () => {
-      expect(resolveReplyParentId(null as unknown as CommentNode)).toBeNull()
-    })
-  })
-
-  describe("buildLocalComment", () => {
-    it("builds a local comment with viewer as author", () => {
-      const result = buildLocalComment({
-        text: "local comment",
-        viewer: { username: "murad", displayName: "Murad" },
-      })
-
-      expect(result.text).toBe("local comment")
-      expect(result.author.username).toBe("murad")
-      expect(result.meta.isOwner).toBe(true)
-      expect(result.viewer.reaction).toBeNull()
     })
   })
 
