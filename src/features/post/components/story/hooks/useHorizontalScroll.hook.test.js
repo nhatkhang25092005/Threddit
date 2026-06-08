@@ -126,9 +126,6 @@ describe("useHorizontalScroll", () => {
     });
   });
 
-  // ============================================
-  // ✅ TEST: SCROLL NAVIGATION (Điều hướng cuộn)
-  // ============================================
   describe("Scroll Navigation", () => {
     it("should scroll right when direction is right", () => {
       const scrollByMock = vi.fn();
