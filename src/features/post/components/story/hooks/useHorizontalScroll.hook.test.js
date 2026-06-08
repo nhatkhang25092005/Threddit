@@ -3,9 +3,7 @@ import { renderHook, act } from "@testing-library/react";
 import { useHorizontalScroll } from "./useHorizontalScroll";
 
 describe("useHorizontalScroll", () => {
-  // ============================================
-  // ✅ TEST: INITIALIZATION (Khởi tạo)
-  // ============================================
+
   describe("Initialization", () => {
     it("should initialize with scroll disabled", () => {
       const { result } = renderHook(() => useHorizontalScroll(100));
