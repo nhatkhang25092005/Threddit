@@ -9,7 +9,8 @@ export const handleRequest = async (apiCall, config = {}) => {
   } = config
   try {
     isDelay ? await delay(delayTime, shouldFail) : undefined
-    const res = mapResponse(await apiCall())
+    const rawRes = await apiCall()
+    const res = mapResponse(rawRes)
     return {
       success: res?.is_success,
       message: res?.message,

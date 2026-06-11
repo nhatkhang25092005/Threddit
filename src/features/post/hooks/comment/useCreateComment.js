@@ -57,7 +57,7 @@ export function useCreateComment(dispatch) {
     dispatch(loadingAction.setCommentLoading(postId, true))
 
     try {
-      const response = await runRequest(() => commentService.createNewComment(postId, data));
+      const response = await runRequest(() => commentService.createComment(postId, data));
       if (!response) return null;
 
       if (!response.success) {

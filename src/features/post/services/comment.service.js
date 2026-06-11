@@ -28,16 +28,13 @@ export const commentService = {
   getChildComment: async (parentCommentId, cursor, signal) =>
     handleRequest(() => commentApi.getChildComment(parentCommentId, cursor, signal)),
 
-  createComment: async (postId, payload) =>
-    handleRequest(() => commentApi.createComment(postId, payload)),
-
   updateComment: async (commentId, payload) =>
     handleRequest(() => commentApi.updateComment(commentId, payload)),
 
   deleteComment: async (commentId) =>
     handleRequest(() => commentApi.deleteComment(commentId)),
 
-  createNewComment: async (postId, data) => {
+  createComment: async (postId, data) => {
     const mediaList = normalizeMediaList(data?.media)
   
     const externalUploadSessionId = data?.uploadSessionId || null
@@ -64,7 +61,7 @@ export const commentService = {
 
     }
 
-    const response = await commentService.createComment(postId, payload)
+    const response = await handleRequest(() => commentApi.createComment(postId, payload))
     
     return{
       ...response,

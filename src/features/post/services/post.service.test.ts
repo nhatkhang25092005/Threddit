@@ -1,9 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 import { postService } from "./post.service";
+import { postApi } from "@/api/content/post/post.api";
+import { createMockApiResponse } from "@/test/createMockApiResponse";
 const mockDataResponse = {
   createdPost: {
     text: "tesst =)",
-    type: "story",
+    type: "post",
     mentionedUsers: [],
     author: {
       username: "zeskkk",
@@ -18,39 +20,39 @@ const mockDataResponse = {
   },
 };
 
-const mockCreatePostResponse = {
-  success: true,
-  message: "Đăng tải nội dung thành công",
-  data: mockDataResponse,
-};
+const mockApiResponse = createMockApiResponse(
+  201,
+  mockDataResponse,
+  "Đăng tải nội dung thành công",
+  201,
+);
 
 vi.mock("../../../api/content/post/post.api", () => ({
   postApi: {
-    createPost: vi.fn(() =>
-      Promise.resolve({
-        statusCode: 201,
-        message: "Đăng tải nội dung thành công",
-        data: mockDataResponse,
-      }),
-    ),
+    createPost: vi.fn(),
   },
 }));
-const createPostSpy = vi.spyOn(postService, "createPost");
 
 describe("postService", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
-  it("should create a post successfully", async () => {
+  it("should create a post successfully and inject type 'post'", async () => {
+    vi.mocked(postApi.createPost).mockResolvedValue(mockApiResponse);
     const payload = {
-      text: "tesst =)",
-      type: "post",
+      text: "abc",
       mentionedUsers: [],
     };
-    createPostSpy.mockResolvedValue(mockCreatePostResponse);
-
     const result = await postService.createPost(payload);
-    expect(createPostSpy).toHaveBeenCalledWith(payload);
-    expect(result).toEqual(mockCreatePostResponse);
+    expect(postApi.createPost).toHaveBeenCalledWith({
+      text: "abc",
+      mentionedUsers: [],
+      type: "post",
+    });
+    expect(result).toEqual({
+      success: true,
+      message: "Đăng tải nội dung thành công",
+      data: mockDataResponse,
+    });
   });
 });
