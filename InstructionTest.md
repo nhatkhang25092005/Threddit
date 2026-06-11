@@ -1,54 +1,81 @@
-# Hướng dẫn viết Vitest cho Threddit
+# Hướng dẫn viết Vitest cho luồng dữ liệu Threddit
 
-Tài liệu này dùng để chuyển phần mô tả hệ thống thành hướng dẫn viết test. Mục tiêu là mỗi người đọc được module mình phụ trách, biết nên test file nào, test những trường hợp nào và chạy test ra sao.
+Tài liệu này dùng để viết test cho cách dữ liệu được validate, map, gọi API, normalize, dispatch vào reducer/store, và đồng bộ giữa các module. Không dùng tài liệu này để viết test giao diện.
 
-## 1. Nguyên tắc chung
+Mục tiêu là người viết test đọc được module mình phụ trách, biết dữ liệu nằm ở đâu, được xử lý qua những lớp nào, và biết cách mock dữ liệu theo shape thật của module thay vì chỉ mock mỗi field đang assert.
+
+## 1. Phạm vi test
 
 - Chỉ viết hoặc sửa file test trong module được phân công.
-- Không sửa trực tiếp mã nguồn để test pass. Nếu phát hiện lỗi ở source code, ghi lại lỗi và báo cáo.
-- Đặt file test cùng thư mục hoặc gần file đang được test.
-- Tên file test theo mẫu:
+- Không sửa source code để ép test pass. Nếu phát hiện lỗi source, ghi lại input, output hiện tại và output mong đợi.
+- Không viết test giao diện/component: không test render text, click nút, style, layout, icon, MUI, `screen`, DOM query.
+- Nếu logic đang nằm trong component, ưu tiên test hook, service, reducer, model, mapper hoặc utils mà component đang dùng.
+- Đặt file test gần file cần test.
+- Tên file test nên theo lớp xử lý dữ liệu:
 
 ```text
-<chức năng>.<phân lớp của file>.test.js
+<chuc-nang>.<layer>.test.js
+<chuc-nang>.<layer>.test.jsx
+<chuc-nang>.<layer>.test.ts
+<chuc-nang>.<layer>.test.tsx
 ```
 
-Nếu file gốc dùng TypeScript thì có thể đặt:
-
-```text
-<chức năng>.<phân lớp của file>.test.ts
-```
-
-Ví dụ:
+Ví dụ nên dùng:
 
 ```text
 login.service.test.ts
-register.hook.test.ts
-comment.utils.test.ts
-notification.component.test.jsx
+register.validate.test.ts
+postById.model.test.js
+post.reducer.test.ts
+commentTree.utils.test.ts
+search.hook.test.jsx
+notification.reducer.test.js
+block.service.test.js
 ```
 
-Mỗi chức năng nên có tối thiểu các nhóm case sau:
+Ví dụ không nên tạo mới:
 
-- Case thành công: dữ liệu hợp lệ, API hoặc hàm xử lý trả về đúng kết quả.
-- Case dữ liệu không hợp lệ: thiếu input, sai định dạng, mật khẩu không khớp, nội dung rỗng,...
-- Case lỗi từ API/hệ thống: API reject, trả lỗi 401/404/500, không có quyền, dữ liệu không tồn tại.
-- Case biên nếu có: danh sách rỗng, media không có, nhiều cấp bình luận, token hết hạn,...
+```text
+notification.component.test.jsx
+postCard.component.test.jsx
+login.page.test.tsx
+```
 
-## 2. Cách chọn loại test
+Mỗi chức năng nên có ít nhất:
 
-### Test service
+- Case thành công với dữ liệu hợp lệ.
+- Case input không hợp lệ hoặc thiếu dữ liệu bắt buộc.
+- Case API/hệ thống trả lỗi.
+- Case biên của luồng dữ liệu: danh sách rỗng, cursor/hasMore hết dữ liệu, dữ liệu trùng lặp, null/undefined, reaction đã tồn tại, comment nhiều cấp, loading/retry/abort nếu module có xử lý.
 
-Dùng cho các file gọi API hoặc xử lý nghiệp vụ trước khi gọi API, ví dụ `login.service.ts`, `register.service.ts`, `services.js`.
+## 2. Chọn lớp để test
+
+### Test validate/mapper/model/utils
+
+Dùng cho các file validate form, map payload, normalize response, format, build tree, resolve id/type, tính toán state cục bộ.
 
 Nên test:
 
-- Hàm có gọi đúng API với payload đúng không.
-- Khi input sai thì không gọi API.
-- Khi API thành công thì trả result đúng.
-- Khi API lỗi thì trả message hoặc trạng thái lỗi đúng.
+- Raw input được chuyển thành output đúng shape.
+- Field optional có fallback đúng.
+- Null/undefined/sai type không làm crash.
+- List/tree nested được merge, add, remove, update đúng.
+- Hàm không mutate input cũ nếu logic yêu cầu immutable.
 
-Thường dùng:
+### Test service
+
+Dùng cho các file `*.service.*` hoặc `services.js`.
+
+Nên test:
+
+- Validate trước khi gọi API.
+- Mapper tạo payload đúng.
+- Gọi đúng API với tham số/cursor/signal/payload đúng.
+- Response thành công được map thành result đúng.
+- Response lỗi, reject, 401/404/500, network error được map thành result lỗi đúng.
+- Nếu service gọi nhiều API, test thứ tự và cách tổng hợp kết quả.
+
+Thường mock:
 
 ```js
 vi.mock(...)
@@ -57,43 +84,394 @@ mockResolvedValueOnce(...)
 mockRejectedValueOnce(...)
 ```
 
-### Test hook
+### Test hook xử lý dữ liệu
 
-Dùng cho các file `useSomething`.
+Dùng cho hook `useSomething` khi hook nối service với dispatch/context/notify/router.
 
-Nên test:
-
-- State ban đầu.
-- State sau khi gọi action trong hook.
-- Có gọi service/context/notify/navigate đúng không.
-- Trường hợp loading, success, error.
-
-Thường dùng `renderHook`, `act` từ Testing Library.
-
-### Test component
-
-Dùng cho các file giao diện `.jsx`, `.tsx`.
+Không test DOM. Chỉ test giá trị trả về, service đã gọi, dispatch đã bắn action nào, loading/retry/abort/pendingRef xử lý ra sao.
 
 Nên test:
 
-- Render đúng nội dung chính.
-- Người dùng nhập/click thì gọi đúng handler.
-- Hiển thị loading/empty/error state.
-- Hiển thị dữ liệu sau khi mock hook/service.
+- State/action ban đầu nếu hook có trả về state.
+- Submit/fetch/action thành công dispatch đúng action và trả data đúng.
+- Service lỗi thì không dispatch success, có gọi notify lỗi nếu hook có logic đó.
+- Loading bật/tắt đúng thứ tự.
+- Abort request cũ, retry backoff, debounce, duplicate guard, hasMore guard nếu hook có.
 
-Không cần test quá sâu style MUI. Chỉ cần kiểm tra hành vi người dùng thấy được.
+Có thể dùng `renderHook`, `act`, `vi.useFakeTimers`, wrapper context nếu cần. Vẫn không render component giao diện.
 
-### Test utils/reducer/actions
+### Test reducer/action/casehandler/store
 
-Dùng cho hàm thuần, reducer hoặc action.
+Dùng cho `reducer`, `actions`, `casehandler`, `handlers`, `initState`, `selectors`.
 
 Nên test:
 
-- Input nào tạo output/state nào.
-- Không mutate state cũ nếu reducer cần immutable.
-- Trường hợp input rỗng/null/undefined nếu hàm có xử lý.
+- Action creator tạo đúng `type`, `classType`/`actionClass`, `payload`.
+- Reducer biến đổi state đúng với action.
+- State cũ không bị mutate.
+- Loading global/item/per-user/per-request cập nhật đúng.
+- Normalized store cập nhật đúng: `byId` lưu object, list chỉ lưu id, hasMore/cursor đúng.
+- Remove cascade đúng với comment con, room/post/story/comment id liên quan.
 
-## 3. Cài đặt và chạy test
+### Test API helper
+
+Dùng cho `src/api/helper/*` và API wrapper khi cần.
+
+Nên test:
+
+- `mapResponse` lấy đúng `message`, `status`, `data`, `success`.
+- `mapErrResponse` phân loại abort, network, client, server error đúng.
+- `handleRequest` trả `{ success, message, data }` khi API thành công và trả shape lỗi khi reject.
+- API wrapper build đúng URL, method, params, payload nếu có mock axios.
+
+## 3. Bản đồ dữ liệu trong dự án
+
+Bảng này dựa trên cấu trúc hiện tại của project. Khi viết test, hãy đọc đúng file trong module trước, vì một số module có pattern riêng.
+
+| Module | Nơi dữ liệu/API vào | Nơi xử lý nghiệp vụ | Nơi giữ/cập nhật state | Nơi nên ưu tiên test |
+| --- | --- | --- | --- | --- |
+| API helper | `src/api/axios.js`, `src/api/helper` | `handleRequest`, `mapResponse`, `mapErrResponse`, `getErrMessage` | Không có store | helper test, API wrapper test |
+| Auth | `src/api/auth/auth.api.ts`, `src/api/auth/auth.mapper.ts` | `src/features/auth/*/*.service.ts`, `validate.ts`, `types/*` | `src/core/auth/AuthProvider.jsx`, hook `useLogin`, `useRegister`, `useVerify`, `useVerifyAccount` | validate, mapper, service, hook |
+| Account | `src/api/account/account.api.js`, `account.map.js` | `src/features/account/account.service.js`, `validate.js` | `src/features/account/info/reducer.js`, `actions.js`, hooks info/delete/update password | service, reducer, hook |
+| Profile | `src/api/profile/profile.api.js`, `profile.map.js` | `src/features/profile/services.js` | `src/features/profile/reducer.js`, `actions.js`, provider/hooks | mapper upload, service, reducer, hook |
+| Post/content | `src/api/content/post`, `story`, `comments`, `reaction`, `storage` | `src/features/post/services`, `src/features/post/utils` | `src/features/post/store`: `initState`, `reducer`, `actions`, `casehanlders`, `models`, `selectors` | model, casehandler, reducer, service, hook |
+| Feed | `postService.getFeed` | `src/features/post/hooks/post/useGetFeed.js` | `contentList.home.feeds`, `postById`, `feedHasMore`, loading | hook, combine action, feed handler |
+| Search | `postService.search`, `profileApi.search_profile` | `src/features/post/hooks/post/useSearch.js`, `components/search/hooks` | `contentList.searchList`, `searchUsers`, `searchKeyword`, `searchHasMore`, `searchUsersHasMore` | search service, hook, debounce utils |
+| Comment | `commentApi`, `commentService` | `src/features/post/hooks/comment`, `components/comment/utils`, `CommentBlock/hooks` | `commentById`, `commentList`, `subCommentList`, item loading | comment model, tree utils, comment handlers, hooks |
+| Story | `storyApi`, `storyService` | `hooks/story`, `components/story/*/utils` | `storyById`, `storyList`, `currentStory`, `friendStories`, pinned story state | story model, hook, handler, utils |
+| Reel | `postService.getReel` | `components/reel/hooks`, `components/reel/utils` | `contentList.reel`, `reelHasMore`, loading | reel hook/utils, hasMore/duplicate logic |
+| Friends | `src/api/friend/friend.api.js` | `src/features/friends/services/api.service.js`, `domain.service.js` | `src/features/friends/store`: lists, counts, hasMore, loading global/perFriend/perRequest | service, reducer/casehandler, hooks |
+| Follow | `src/api/follow/follow.api.js` | `src/features/follow/services.js` | `src/features/follow/reducer.js`, `actions.js`, `handlers`, provider/hooks | reducer/handler, hook, service |
+| Block | `src/api/block/block.api.js` | `src/core/block/services`, `utils/extractUsernameFromUrl.js` | `src/core/block/store`: blockList, hasMore, loading global/perBlock | service, reducer, hook, utils |
+| Notification | `src/api/notification/notification.api.js` | `src/features/notification/services.js`, `notification.utils.js` | `src/features/notification/reducer.js`, `actions.js`, provider/hooks | reducer, hook, service, utils |
+| Chat | `src/api/chat/chat.api.js` | `src/features/chat/services.js`, hooks | `src/features/chat/store`: `roomById`, `roomList`, `directRoomByUser`, hasMore/loading | model/action/handler, hook, service |
+| Text/runtime | `src/constant/text/runtime`, `src/constant/text/source`, `src/constant/text/vi`, `en` | locale registry/hook | Không có store riêng | runtime/fallback logic |
+| Common hooks/utils | `src/hooks`, `src/utils`, `src/model` | validate, format, retry, mention, event bus, action model | Tùy file | pure utils/hook data behavior |
+
+## 4. Lưu ý luồng dữ liệu theo module
+
+### Auth
+
+Luồng chính: form -> `validate.ts` -> mapper trong `api/auth/auth.mapper.ts` -> `authApi` -> `mapResponse`/`mapErrResponse` -> service result -> hook cập nhật auth/notify/navigate.
+
+Can test:
+
+- `loginService`, `registerService`, `forgot.service`, `verify.service`, `verifyAccount.service`.
+- Validate email/password/otp/repass.
+- Mapper payload: `display_name` thành `displayName`, `date_of_birth` thành `dateOfBirth`, otp thành string.
+- Hook chỉ cần assert service được gọi, helperText/result/notify/auth action đúng; không test form UI.
+
+### Account và Profile
+
+Account quản lý thông tin tài khoản, mật khẩu, xóa tài khoản, logout. Profile quản lý profile public, avatar/background, bio, follow/friend counters.
+
+Can test:
+
+- `account.service.js`: validate update password, map update/delete payload, request/verify/logout success/failure.
+- `info/reducer.js`: `SET_ACCOUNT_DATA`, loading get/update username.
+- `profile.map.js`: presign/confirm/avatar/background/update profile chỉ gửi field có giá trị.
+- `profile/reducer.js`: set profile đầy đủ field, cache-busting avatar/background, counters follow/friend không giảm dưới 0.
+- Hook upload: presign thành công, upload S3 lỗi, confirm lỗi.
+
+### Post, Feed, Search, Reel
+
+Store post normalize dữ liệu theo `postById`, `storyById`, `commentById`; các list trong `contentList` chủ yếu lưu id. Đây là điểm cần test kỹ.
+
+Can test:
+
+- `postByIdModel`, `storyByIdModel`, `commentModel`, `mediaModel`: raw API -> normalized object.
+- `casehanlders`: add/set timeline id, dedupe id, update reaction/save/share/pin, remove post/story/comment, set loading/hasMore.
+- `useGetFeed`, `useGetReel`, `useGetPostList`, `useGetSavedPost`: cursor/hasMore, duplicate batch, loading, abort.
+- `useSearch` và search recommend: keyword trim, reset khi keyword rỗng, scope `all/content/users`, cursor profile/content riêng, duplicate user/post, debounce.
+- `reel.utils`: media type, primary media, handle username/count.
+
+### Comment
+
+Comment có hai kiểu dữ liệu cần phân biệt:
+
+- Normalized store: `commentById`, `commentList[postId]`, `subCommentList[parentCommentId]`.
+- Tree cho logic: `CommentNode` trong `commentTree.utils.ts`.
+
+Can test:
+
+- Tạo comment root và reply: payload text/media/mention/uploadSessionId, dispatch add comment id vào đúng list.
+- Xóa comment cha phải xóa cả nhánh con trong `commentById`, `commentList`, `subCommentList`, loading item.
+- `addCommentToTree`, `removeCommentFromTree`, `editCommentInTree`, `updateCommentReactionInTree`, `mergeCommentPage`, `findCommentByIdInTree`.
+- Reaction comment tăng/giảm đúng khi thêm, đổi, hủy reaction.
+
+### Friends, Follow, Block
+
+Ba module này có nhiều đồng bộ chéo với profile/orchestrate.
+
+Can test:
+
+- Friends: request/accept/reject/cancel/delete friend cập nhật list, count, loading `perRequest`/`perFriend`, `hasMore`.
+- Friends domain sync: `createFriendListSync` dispatch add/remove đúng.
+- Follow: `followerList`, `followingList`, `canFollow`, `hasMore`, reset, loading. Lưu ý follow action dùng `classType`, không phải `actionClass`.
+- Block: block/unblock/get status/get list, retry với `shouldRetry`, loading `global` và `perBlock.cancelBlock`, sync add/remove blocked user.
+- `extractUsernameFromUrl`: absolute URL, relative URL, query/hash, URL rỗng/sai type.
+
+### Notification
+
+Notification có state riêng cho all/unread/count/loading.
+
+Can test:
+
+- Reducer: append all/unread, read one, delete one, read all, increment/decrement unread count, realtime notification.
+- Hook: fetch all/unread/unreadCount với cursor, abort, retry, loading; API lỗi không append data.
+- Utils: `resolveNotificationItem`, `resolveNotificationList`, message theo `target.type`, fallback khi thiếu template/actor.
+- Không viết test render notification item.
+
+### Chat
+
+Chat normalize phòng chat vào `roomById`, list id trong `roomList`, và map phòng chat trực tiếp theo user trong `directRoomByUser`.
+
+Can test:
+
+- `getChatRooms`: set/append mode, cursor, hasMore, loading bật/tắt.
+- `getDirectChatRoom`: lưu room vào `roomById` và `directRoomByUser`.
+- Handler/action: dedupe room id, prepend/remove, update room.
+
+## 5. Nguyên tắc viết dữ liệu giả lập
+
+Khi mock data, hãy xây dựng object gần với shape thật của module. Không chỉ viết mỗi field đang test nếu object thật có nhiều prop quan trọng.
+
+Quy tắc:
+
+- Tạo factory cho mỗi loại dữ liệu: `makeUser`, `makePostRaw`, `makePostModel`, `makeComment`, `makeNotification`, `makeFriend`, `makeRoom`.
+- Factory phải có default hợp lệ và đầy đủ prop thường dùng. Mỗi test chỉ override field cần thay đổi.
+- Phân biệt raw API data và normalized model data.
+- Nếu test service/API helper, mock response theo shape Axios: `{ status, statusText, config, data: { message, data } }`.
+- Nếu test reducer/model, mock data theo shape mà reducer/model thật sự nhận.
+- Thêm đủ field liên quan đến id, timestamp, author, viewer, stats, media, mentioned users, cursor, hasMore, loading.
+- Nếu model có dùng `Date.now()` để thêm `?t=...` hoặc tạo id local, dùng `vi.spyOn(Date, "now")` hoặc fake timers để test ổn định.
+- Dùng data rỗng/null/sai type trong case riêng, không trộn với data hợp lệ mặc định.
+
+Ví dụ factory nên dùng:
+
+```ts
+const makeUser = (overrides = {}) => ({
+  username: "murad",
+  displayName: "Murad",
+  avatarUrl: "https://cdn.example.com/avatar.png",
+  ...overrides,
+});
+
+const makeMedia = (overrides = {}) => ({
+  id: 10,
+  type: "image",
+  contentType: "image/png",
+  contentLength: 1024,
+  name: "image.png",
+  url: "https://cdn.example.com/image.png",
+  sortOrder: 0,
+  ...overrides,
+});
+
+const makePostRaw = (overrides = {}) => ({
+  id: 1,
+  contentId: 1,
+  type: "post",
+  text: "Hello Threddit",
+  createdAt: "2026-01-01T00:00:00.000Z",
+  updatedAt: "2026-01-01T00:00:00.000Z",
+  isPinned: false,
+  isOwner: true,
+  author: makeUser(),
+  sharer: null,
+  mentionedUsers: ["thy"],
+  mediaFiles: [makeMedia()],
+  commentNumber: 2,
+  saveNumber: 1,
+  shareNumber: 0,
+  reactionNumber: 3,
+  isSaved: false,
+  reaction: null,
+  isShare: false,
+  isShared: false,
+  shareMessage: null,
+  sharedPost: null,
+  shareId: null,
+  ...overrides,
+});
+```
+
+Ví dụ không nên dùng nếu đang test post/model/reducer:
+
+```ts
+const post = { id: 1 };
+```
+
+Ví dụ notification nên có đủ target:
+
+```ts
+const makeNotification = (overrides = {}) => ({
+  id: 1,
+  isRead: false,
+  createdAt: "2026-01-01T00:00:00.000Z",
+  target: {
+    type: "comment",
+    actorUsername: "murad",
+    actorDisplayName: "Murad",
+    contentId: 99,
+    commentId: 100,
+  },
+  ...overrides,
+});
+```
+
+## 6. Mẫu test service
+
+```ts
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { loginService } from "./login.service";
+import { authApi } from "../../../api/auth/auth.api";
+import { getbaseinfo } from "./getbaseinfo.service";
+
+vi.mock("../../../api/auth/auth.api", () => ({
+  authApi: {
+    login: vi.fn(),
+  },
+}));
+
+vi.mock("./getbaseinfo.service", () => ({
+  getbaseinfo: vi.fn(),
+}));
+
+const makeAxiosResponse = (data, status = 200) => ({
+  status,
+  statusText: status === 200 ? "OK" : "Error",
+  config: { method: "post" },
+  data: {
+    message: "success",
+    data,
+  },
+});
+
+describe("loginService", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns validation error and does not call api when form is invalid", async () => {
+    const result = await loginService({
+      email: "wrong-email",
+      password: "",
+    });
+
+    expect(authApi.login).not.toHaveBeenCalled();
+    expect(result.kind).toBe("validation_error");
+  });
+
+  it("calls api with mapped payload when form is valid", async () => {
+    vi.mocked(authApi.login).mockResolvedValueOnce(
+      makeAxiosResponse({ accessToken: "token" })
+    );
+    vi.mocked(getbaseinfo).mockResolvedValueOnce({
+      is_success: true,
+      success: true,
+      message: "success",
+      data: {
+        username: "murad",
+        displayName: "Murad",
+        avatarUrl: "https://cdn.example.com/avatar.png",
+      },
+    });
+
+    const result = await loginService({
+      email: "user@example.com",
+      password: "Password123!",
+    });
+
+    expect(authApi.login).toHaveBeenCalledWith({
+      email: "user@example.com",
+      password: "Password123!",
+    });
+    expect(result.kind).toBe("success");
+  });
+});
+```
+
+Hãy điều chỉnh sample theo service thật của module. Nếu service có gọi thêm API khác, mock đầy đủ API đó.
+
+## 7. Mẫu test reducer/model
+
+```ts
+import { describe, expect, it } from "vitest";
+import { reducer } from "../reducer/reducer";
+import { initState } from "../reducer/initState";
+import { postByIdActions } from "../actions";
+import { postByIdModel } from "../models/postById.model";
+
+describe("post reducer", () => {
+  it("adds normalized post by id without mutating previous state", () => {
+    const previous = initState;
+    const post = postByIdModel(makePostRaw({ id: 11, contentId: 11 }));
+
+    const next = reducer(previous, postByIdActions.addPost(post));
+
+    expect(next.postById[11]).toEqual(post);
+    expect(previous.postById[11]).toBeUndefined();
+    expect(next).not.toBe(previous);
+  });
+});
+```
+
+## 8. Mẫu test hook data flow
+
+```ts
+import { act, renderHook } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { useGetFeed } from "./useGetFeed";
+import { postService } from "../../services";
+
+vi.mock("../../services", () => ({
+  postService: {
+    getFeed: vi.fn(),
+  },
+}));
+
+vi.mock("../../../../hooks/useNotify", () => ({
+  useNotify: () => ({
+    withLoading: (task, setLoading) => {
+      setLoading?.(true);
+      return task().finally(() => setLoading?.(false));
+    },
+    popup: vi.fn(),
+  }),
+}));
+
+describe("useGetFeed", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("dispatches normalized feed data when request succeeds", async () => {
+    const dispatch = vi.fn();
+    vi.mocked(postService.getFeed).mockResolvedValueOnce({
+      success: true,
+      message: "success",
+      data: {
+        feedItems: [makePostRaw({ id: 1, contentId: 1 })],
+        hasMore: true,
+      },
+    });
+
+    const { result } = renderHook(() => useGetFeed(dispatch, undefined, []));
+
+    await act(async () => {
+      await result.current();
+    });
+
+    expect(dispatch).toHaveBeenCalled();
+    expect(postService.getFeed).toHaveBeenCalledOnce();
+  });
+});
+```
+
+Hook test chỉ cần kiểm tra luồng dữ liệu, action, service, loading, retry/abort. Không render component.
+
+## 9. Chạy test
 
 Cài dependencies:
 
@@ -107,58 +485,40 @@ Chạy toàn bộ test:
 npm run test
 ```
 
-Chạy một file test cụ thể:
-
-```powershell
-npx vitest run src/features/auth/register/register.test.ts
-```
-
 Chạy watch mode:
 
 ```powershell
 npm run test:watch
 ```
 
-Project đã cấu hình Vitest trong `vite.config.js` với:
+Chạy coverage:
+
+```powershell
+npm run test:coverage
+```
+
+Chạy một file:
+
+```powershell
+npx vitest run src/features/post/components/comment/utils/commentTree.utils.test.ts
+```
+
+Project đã cấu hình Vitest trong `vite.config.js`:
 
 - `environment: "jsdom"`
 - `setupFiles: "./src/test/setup.ts"`
 - `globals: true`
+- alias `@` trỏ đến `src`
 
-## 4. Module path cần chú ý
-
-# Cấu trúc chức năng dự án
-
-| 🧩 Nhóm chức năng    | 📂 Path chính                          |
-| -------------------- | -------------------------------------- |
-| 🔐 Auth              | `src/features/auth`                    |
-| 👤 Account           | `src/features/account`                 |
-| 📝 Bài viết          | `src/features/post`                    |
-| 📖 Tin / Story       | `src/features/post/components/story`   |
-| 💬 Bình luận         | `src/features/post/components/comment` |
-| 👥 Bạn bè            | `src/features/friends`                 |
-| ➕ Theo dõi           | `src/features/follow`                  |
-| 🚫 Chặn              | `src/core/block`                       |
-| 🔔 Thông báo         | `src/features/notification`            |
-| 📰 Feed              | `src/features/post/components/feed`    |
-| 🎬 Thước phim / Reel | `src/features/post/components/reel`    |
-| 🌐 Đổi ngôn ngữ      | `src/constant/text/runtime`            |
-| 🔍 Tìm kiếm          | `src/features/post/components/search`  |
-
-
-## 5. Phân công theo README
+## 10. Phân công module
 
 ### Phạm Minh Dũng
 
-Module phụ trách:
-
 - Auth: `src/features/auth`
 - Notification: `src/features/notification`
-- Searching: `src/features/post/components/search`
+- Searching: `src/features/post/components/search`, liên quan thêm `src/features/post/hooks/post/useSearch.js`
 
 ### Uyên Thy
-
-Module phụ trách:
 
 - Friend: `src/features/friends`
 - Follow: `src/features/follow`
@@ -166,452 +526,21 @@ Module phụ trách:
 
 ### Huỳnh Thảo
 
-Module phụ trách:
+- Comment: `src/features/post/components/comment`, liên quan thêm `src/features/post/hooks/comment` và `src/features/post/store/casehanlders/comment.handlers.ts`
+- Story: `src/features/post/components/story`, liên quan thêm `src/features/post/hooks/story`, `story.service.js`, `storyById.model.js`
 
-- Comment: `src/features/post/components/comment`
-- Story: `src/features/post/components/story`
+Nếu được giao thêm Account, Profile, Post, Feed, Reel, Chat hoặc Text runtime thì dùng bản đồ dữ liệu ở mục 3.
 
-Các nhóm như Account, Bài viết, Feed, Reel, Đổi ngôn ngữ nếu được giao thêm thì dùng path ở mục 4.
-
-## 6. Gợi ý test case theo nhóm chức năng
-
-### 6.1. Auth
-
-Path: `src/features/auth`
-
-Nên ưu tiên test service và hook trước, component sau.
-
-Đăng nhập:
-
-- Thành công khi email và mật khẩu hợp lệ.
-- Không gọi API khi email sai định dạng hoặc mật khẩu rỗng.
-- Trả lỗi khi API báo sai email/mật khẩu.
-- Sau khi thành công có lưu trạng thái đăng nhập hoặc trả data user/token đúng theo logic hiện có.
-
-Đăng kí:
-
-- Thành công với đầy đủ thông tin hợp lệ.
-- Lỗi khi thiếu email, username, display name, ngày sinh hoặc giới tính.
-- Lỗi khi email sai định dạng.
-- Lỗi khi mật khẩu không đúng rule hoặc xác nhận mật khẩu không khớp.
-- Lỗi khi API báo email/username đã tồn tại.
-
-Gửi yêu cầu đặt lại mật khẩu:
-
-- Thành công khi email hợp lệ.
-- Không gọi API khi email sai định dạng.
-- Trả lỗi khi API báo email không tồn tại.
-
-Xác thực đặt lại mật khẩu:
-
-- Thành công khi token/mã xác thực và mật khẩu mới hợp lệ.
-- Lỗi khi token/mã xác thực rỗng hoặc sai.
-- Lỗi khi mật khẩu mới và xác nhận mật khẩu không khớp.
-- Trả lỗi khi API báo token hết hạn.
-
-Đăng xuất:
-
-- Thành công thì gọi API/logout handler đúng.
-- Sau khi logout thì xóa trạng thái đăng nhập theo logic hiện có.
-- Nếu logout lỗi thì trả hoặc hiển thị lỗi phù hợp.
-
-### 6.2. Account
-
-Path: `src/features/account`
-
-Xem thông tin tài khoản:
-
-- Thành công thì trả/hiển thị thông tin tài khoản.
-- Lỗi khi API trả unauthorized hoặc không tải được dữ liệu.
-- Loading và empty state nếu component có hỗ trợ.
-
-Đổi tên hiển thị:
-
-- Thành công khi tên hợp lệ.
-- Lỗi khi tên rỗng hoặc quá ngắn/quá dài nếu có validate.
-- Lỗi khi API reject.
-
-Đổi mật khẩu:
-
-- Thành công khi mật khẩu hiện tại, mật khẩu mới và xác nhận hợp lệ.
-- Lỗi khi mật khẩu mới không đúng rule.
-- Lỗi khi xác nhận mật khẩu không khớp.
-- Lỗi khi API báo mật khẩu hiện tại sai.
-
-Yêu cầu xóa tài khoản:
-
-- Thành công khi email hợp lệ.
-- Lỗi khi email rỗng/sai định dạng.
-- Lỗi khi API reject.
-
-Xác thực xóa tài khoản:
-
-- Thành công khi mã xác thực hợp lệ.
-- Lỗi khi mã rỗng/sai/hết hạn.
-- Sau khi xóa thành công thì xử lý đăng xuất hoặc điều hướng theo logic hiện có.
-
-Chỉnh sửa thông tin cơ bản:
-
-- Thành công khi cập nhật giới tính, ngày sinh, học vấn, mối quan hệ hợp lệ.
-- Lỗi khi dữ liệu không hợp lệ.
-- Lỗi khi API reject.
-
-### 6.3. Bài viết
-
-Path: `src/features/post`
-
-Tạo bài viết:
-
-- Thành công khi có nội dung hợp lệ.
-- Thành công khi có nội dung kèm hình ảnh/video.
-- Lỗi khi nội dung rỗng và không có media, nếu hệ thống không cho phép.
-- Lỗi khi upload hoặc API tạo bài viết thất bại.
-
-Chỉnh sửa bài viết:
-
-- Thành công khi cập nhật nội dung/media hợp lệ.
-- Lỗi khi bài viết không tồn tại hoặc không có quyền sửa.
-- Lỗi khi API reject.
-
-Thả cảm xúc bài viết:
-
-- Thành công khi chọn loại cảm xúc.
-- Đổi cảm xúc cũ sang cảm xúc mới đúng.
-- Lỗi khi API reject.
-
-Chia sẻ bài viết:
-
-- Thành công khi chia sẻ không có nội dung bổ sung.
-- Thành công khi chia sẻ có nội dung bổ sung.
-- Lỗi khi bài viết gốc không tồn tại hoặc API reject.
-
-Lưu/hủy lưu bài viết:
-
-- Lưu thành công thì trạng thái saved đổi đúng.
-- Hủy lưu thành công thì trạng thái saved đổi đúng.
-- Lỗi khi API reject.
-
-Xóa bài viết:
-
-- Thành công khi người dùng là chủ bài viết.
-- Lỗi khi không có quyền hoặc API reject.
-
-Ghim bài viết:
-
-- Thành công khi ghim một bài viết.
-- Khi ghim bài mới thì bài cũ không còn được ghim nếu logic có hỗ trợ.
-- Lỗi khi API reject.
-
-Bình luận bài viết:
-
-- Thành công khi nội dung bình luận hợp lệ.
-- Lỗi khi nội dung rỗng và không có media.
-- Lỗi khi API reject.
-
-### 6.4. Tin/Story
-
-Path: `src/features/post/components/story`
-
-Tạo tin:
-
-- Thành công khi có nội dung hoặc một media hợp lệ.
-- Lỗi khi vượt quá số lượng media cho phép.
-- Lỗi khi upload/API thất bại.
-
-Chỉnh sửa tin:
-
-- Thành công khi cập nhật nội dung/media.
-- Lỗi khi tin không tồn tại hoặc không có quyền sửa.
-
-Xóa tin:
-
-- Thành công khi người dùng là chủ tin.
-- Lỗi khi API reject.
-
-Tin nổi bật:
-
-- Thêm tin vào danh sách nổi bật thành công.
-- Xóa tin khỏi danh sách nổi bật thành công.
-- Lỗi khi tin không tồn tại hoặc API reject.
-
-Xem danh sách tin:
-
-- Hiển thị danh sách tin khi có dữ liệu.
-- Hiển thị empty state khi danh sách rỗng.
-- Hiển thị lỗi khi tải danh sách thất bại.
-
-Xem tin của bạn bè:
-
-- Hiển thị tin của bạn bè.
-- Không hiển thị tin khi API trả danh sách rỗng.
-- Hiển thị lỗi khi API reject.
-
-### 6.5. Bình luận
-
-Path: `src/features/post/components/comment`
-
-Tạo bình luận:
-
-- Thành công khi có nội dung hợp lệ.
-- Thành công khi có media hợp lệ.
-- Lỗi khi nội dung rỗng và không có media.
-- Lỗi khi API reject.
-
-Trả lời bình luận:
-
-- Thành công khi trả lời một bình luận.
-- Hỗ trợ dữ liệu trả lời lồng nhau nhiều cấp nếu utils có xử lý tree.
-- Lỗi khi bình luận cha không tồn tại hoặc API reject.
-
-Xem danh sách bình luận:
-
-- Hiển thị danh sách bình luận.
-- Hiển thị empty state khi chưa có bình luận.
-- Sắp xếp hoặc build cây bình luận đúng nếu có utils tương ứng.
-- Hiển thị lỗi khi tải danh sách thất bại.
-
-Bày tỏ cảm xúc bình luận:
-
-- Thành công khi chọn cảm xúc.
-- Đổi/hủy cảm xúc đúng theo logic hiện có.
-- Lỗi khi API reject.
-
-Chỉnh sửa bình luận:
-
-- Thành công khi cập nhật nội dung/media.
-- Lỗi khi không có quyền sửa hoặc API reject.
-
-Xóa bình luận:
-
-- Thành công khi xóa bình luận.
-- Lỗi khi không có quyền hoặc API reject.
-
-### 6.6. Bạn bè
-
-Path: `src/features/friends`
-
-Xem danh sách bạn bè:
-
-- Hiển thị danh sách bạn bè khi API thành công.
-- Hiển thị empty state khi không có bạn bè.
-- Hiển thị lỗi khi tải danh sách thất bại.
-
-Gửi lời mời kết bạn:
-
-- Thành công khi gửi lời mời tới user hợp lệ.
-- Lỗi khi gửi cho chính mình, đã là bạn bè hoặc API reject.
-
-Chấp nhận lời mời kết bạn:
-
-- Thành công khi chấp nhận request hợp lệ.
-- Sau khi chấp nhận thì request được xóa khỏi danh sách chờ nếu reducer/hook có xử lý.
-- Lỗi khi request không tồn tại hoặc API reject.
-
-Từ chối lời mời kết bạn:
-
-- Thành công khi từ chối request hợp lệ.
-- Sau khi từ chối thì request được xóa khỏi danh sách chờ nếu reducer/hook có xử lý.
-- Lỗi khi API reject.
-
-Xóa bạn bè:
-
-- Thành công khi xóa một bạn bè.
-- Danh sách bạn bè cập nhật đúng sau khi xóa.
-- Lỗi khi API reject.
-
-Nhắc bạn bè:
-
-- Tìm/gợi ý bạn bè đúng theo keyword nếu có utils/hook.
-- Chèn mention đúng định dạng.
-- Lỗi hoặc danh sách rỗng khi không tìm thấy bạn bè.
-
-### 6.7. Theo dõi
-
-Path: `src/features/follow`
-
-Theo dõi người khác:
-
-- Thành công khi follow user hợp lệ.
-- Trạng thái follower/following cập nhật đúng nếu reducer/hook có xử lý.
-- Lỗi khi follow chính mình, user không tồn tại hoặc API reject.
-
-Hủy theo dõi:
-
-- Thành công khi unfollow user đang theo dõi.
-- Trạng thái cập nhật đúng sau khi unfollow.
-- Lỗi khi API reject.
-
-Xem danh sách theo dõi:
-
-- Hiển thị danh sách followers.
-- Hiển thị danh sách followings.
-- Hiển thị empty state khi danh sách rỗng.
-- Hiển thị lỗi khi tải danh sách thất bại.
-
-### 6.8. Chặn
-
-Path: `src/core/block`
-
-Chặn người dùng:
-
-- Thành công khi block user hợp lệ.
-- User bị chặn được thêm vào danh sách block nếu store có xử lý.
-- Lỗi khi block chính mình, user không tồn tại hoặc API reject.
-
-Gỡ chặn:
-
-- Thành công khi unblock user đã bị chặn.
-- User được xóa khỏi danh sách block nếu store có xử lý.
-- Lỗi khi API reject.
-
-Xem danh sách chặn:
-
-- Hiển thị danh sách user đã chặn.
-- Hiển thị empty state khi danh sách rỗng.
-- Hiển thị lỗi khi tải danh sách thất bại.
-
-Điều hướng khi bị chặn:
-
-- `useCanNavigateToUser` hoặc utils liên quan trả đúng khi được phép/không được phép.
-- `extractUsernameFromUrl` xử lý đúng URL hợp lệ, URL thiếu username và URL rỗng.
-
-### 6.9. Thông báo
-
-Path: `src/features/notification`
-
-Xem toàn bộ thông báo:
-
-- Hiển thị danh sách thông báo khi tải thành công.
-- Hiển thị empty state khi không có thông báo.
-- Hiển thị lỗi khi API reject.
-
-Xem thông báo mới/chưa đọc:
-
-- Trả đúng danh sách unread.
-- Đếm unread đúng nếu test `useUnreadCount`.
-- Lỗi khi API reject.
-
-Đọc nhanh tất cả:
-
-- Thành công thì tất cả thông báo chuyển sang đã đọc.
-- Lỗi khi API reject.
-
-Xóa thông báo:
-
-- Thành công thì thông báo bị xóa khỏi danh sách.
-- Lỗi khi API reject.
-
-Điều hướng đến nguồn thông báo:
-
-- Điều hướng đúng tới bài viết, tin, bình luận hoặc profile theo loại thông báo.
-- Không điều hướng và báo lỗi nếu thông báo thiếu dữ liệu nguồn.
-
-Gửi thông báo:
-
-- Khi người đang theo dõi đăng bài, tạo notification đúng payload nếu có service/hàm xử lý.
-- Khi có lời mời kết bạn, comment, mention hoặc bạn bè tạo nội dung mới, notification được build đúng loại.
-- Lỗi khi API reject.
-
-### 6.10. Thao tác hệ thống
-
-Feed path: `src/features/post/components/feed`
-
-Xem feed:
-
-- Hiển thị danh sách bài viết/tin khi tải thành công.
-- Hiển thị loading trong lúc tải.
-- Hiển thị empty state khi không có nội dung.
-- Hiển thị lỗi khi API reject.
-
-Reel path: `src/features/post/components/reel`
-
-Xem thước phim:
-
-- Hiển thị danh sách reel khi tải thành công.
-- Chuyển reel trước/sau đúng nếu có hook navigation.
-- Tạm dừng/phát video đúng nếu test playback hook.
-- Hiển thị empty/error state.
-
-Đổi ngôn ngữ path: `src/constant/text/runtime`
-
-Đổi ngôn ngữ:
-
-- Trả text tiếng Việt khi locale là `vi`.
-- Trả text tiếng Anh khi locale là `en`.
-- Fallback đúng khi thiếu key hoặc locale không hợp lệ.
-
-### 6.11. Tìm kiếm
-
-Path: `src/features/post/components/search`
-
-Tìm kiếm người dùng và bài viết:
-
-- Thành công khi nhập keyword hợp lệ.
-- Gọi API/service với keyword đúng.
-- Hiển thị user results và post results nếu có dữ liệu.
-- Hiển thị empty state khi không có kết quả.
-- Không gọi API khi keyword rỗng nếu logic hiện có yêu cầu.
-- Hiển thị lỗi khi API reject.
-- Test debounce/dismiss/recommend nếu hook có xử lý riêng.
-
-## 7. Mẫu test service tham khảo
-
-```ts
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { someService } from "./some.service";
-import { someApi } from "@/api/some.api";
-
-vi.mock("@/api/some.api", () => ({
-  someApi: {
-    create: vi.fn(),
-  },
-}));
-
-const mockedCreate = vi.mocked(someApi.create);
-
-describe("someService", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it("should return validation error when input is invalid", async () => {
-    const result = await someService({ content: "" });
-
-    expect(mockedCreate).not.toHaveBeenCalled();
-    expect(result.success).toBe(false);
-  });
-
-  it("should return success when api is success", async () => {
-    mockedCreate.mockResolvedValueOnce({
-      data: { message: "ok", data: { id: 1 } },
-    });
-
-    const result = await someService({ content: "hello" });
-
-    expect(mockedCreate).toHaveBeenCalledOnce();
-    expect(result.success).toBe(true);
-  });
-
-  it("should return error when api is failed", async () => {
-    mockedCreate.mockRejectedValueOnce({
-      response: { data: { message: "Something went wrong" } },
-    });
-
-    const result = await someService({ content: "hello" });
-
-    expect(mockedCreate).toHaveBeenCalledOnce();
-    expect(result.success).toBe(false);
-  });
-});
-```
-
-## 8. Mẫu checklist trước khi nộp
+## 11. Checklist trước khi nộp
 
 - File test nằm đúng module được giao.
-- Tên file đúng format.
-- Có ít nhất success case và failure case.
-- Có mock API/service thay vì gọi thật backend.
+- Test tập trung vào data flow, không test UI/render/click/style.
+- Có success case và failure case.
+- Có case input invalid/null/empty nếu module có xử lý.
+- Có mock API/service thay vì gọi backend thật.
+- Fake data đủ prop theo shape thật của module; field cần thay đổi được override qua factory.
+- Phân biệt raw API response và normalized model/state.
+- Có assert action/state/result quan trọng, không chỉ assert "function called".
+- Nếu có timer/debounce/retry, dùng fake timers và cleanup.
 - Chạy được file test riêng bằng `npx vitest run <path-file-test>`.
-- Không sửa source code để ép test pass.
-- Nếu test fail do bug source code, ghi lại lỗi, input gây lỗi và kết quả mong đợi.
-
+- Nếu test fail do bug source code, ghi lại bug, input gây lỗi và kết quả mong đợi.

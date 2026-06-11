@@ -4,30 +4,9 @@ import useAuth from "../../../../core/auth/useAuth"
 import { modal } from "../../../../constant/text/vi/modal"
 import { useNotify } from "../../../../hooks/useNotify"
 import { useSafeRequest } from "../../../../hooks/useSafeRequest"
-import { commentService, storageService } from "../../services"
+import { commentService } from "../../services"
 import { commentActions, loadingAction, postByIdActions } from "../../store/actions"
 import { commentModel } from "../../store/models/comment.model"
-
-const normalizeMediaList = (media = []) => (
-  (Array.isArray(media) ? media : [])
-    .filter((item) => item?.file)
-    .slice(0, 1)
-)
-
-const buildCreatePayload = (data = {}, uploadSessionId = null) => {
-  const payload = {}
-  const text = String(data?.text ?? "").trim()
-  const mentionedUsers = Array.isArray(data?.mentionedUsers)
-    ? data.mentionedUsers.filter(Boolean)
-    : []
-
-  if (text) payload.text = text
-  if (mentionedUsers.length > 0) payload.mentionedUsers = mentionedUsers
-  if (uploadSessionId) payload.uploadSessionId = uploadSessionId
-  if (data?.parentCommentId != null) payload.parentCommentId = data.parentCommentId
-
-  return payload
-}
 
 const resolveCreatedCommentRaw = (responseData = {}, payload = {}, user = null) => {
   const now = new Date().toISOString()
@@ -78,36 +57,21 @@ export function useCreateComment(dispatch) {
     dispatch(loadingAction.setCommentLoading(postId, true))
 
     try {
-      const mediaList = normalizeMediaList(data?.media)
-      const externalUploadSessionId = data?.uploadSessionId || null
-      let uploadSessionId = externalUploadSessionId
-
-      if (!uploadSessionId && mediaList.length > 0) {
-        const uploadResult = await storageService.uploadMediaAndGetSessionId(mediaList)
-
-        if (!uploadResult?.success) {
-          notify.popup(modal.title.error, uploadResult?.message || errorText.upload.file)
-          return uploadResult
-        }
-
-        uploadSessionId = uploadResult.uploadSessionId
-      }
-
-      const payload = buildCreatePayload(data, uploadSessionId)
-      if (Object.keys(payload).length === 0) {
-        notify.popup(modal.title.error, errorText.validation.invalidComment)
-        return null
-      }
-
-      const response = await runRequest(() => commentService.createComment(postId, payload))
-      if (!response) return null
+      const response = await runRequest(() => commentService.createNewComment(postId, data));
+      if (!response) return null;
 
       if (!response.success) {
-        notify.popup(modal.title.error, response.message)
-        return response
+        if (response.errorSource === "UPLOAD_STAGE") {
+          notify.popup(modal.title.error, response.message || errorText.upload.file);
+        } else if (response.errorSource === "VALIDATION_STAGE") {
+          notify.popup(modal.title.error, errorText.validation.invalidComment);
+        } else {
+          notify.popup(modal.title.error, response.message);
+        }
+        return response;
       }
 
-      const createdComment = commentModel(resolveCreatedCommentRaw(response.data, payload, user))
+      const createdComment = commentModel(resolveCreatedCommentRaw(response.data, response._payloadUsed, user))
       if (createdComment?.id != null) {
         dispatch(commentActions.addComment(createdComment))
         if (createdComment.parentCommentId != null) {
