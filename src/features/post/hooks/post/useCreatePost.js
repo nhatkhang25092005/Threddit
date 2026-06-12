@@ -1,25 +1,12 @@
 import { useCallback, useRef } from "react"
-import { errorText } from "../../../../constant/text/vi/error.text"
 import useAuth from "../../../../core/auth/useAuth"
 import { useNotify } from "../../../../hooks/useNotify"
 import { useSafeRequest } from "../../../../hooks/useSafeRequest"
 import { modal } from "../../../../constant/text/vi/modal"
-import { postService, storageService } from "../../services"
+import { postService,} from "../../services"
 import { loadingAction, postByIdActions, userPostActions } from "../../store/actions"
 import { postByIdModel } from "../../store/models/postById.model"
 import {resolveCreatedPostRaw} from '../../utils/resolveCreatedPostRaw'
-
-const buildCreatePayload = (data = {}, uploadSessionId = null) => ({
-  mentionedUsers: Array.isArray(data?.mentionedUsers) ? data.mentionedUsers : [],
-  type: "post",
-  text: data?.text ?? "",
-  ...(uploadSessionId ? { uploadSessionId } : {}),
-})
-
-const normalizeMediaList = (media = []) => (
-  (Array.isArray(media) ? media : [])
-    .filter((item) => item?.file)
-)
 
 export function useCreatePost(dispatch) {
   const { user } = useAuth()
@@ -33,22 +20,8 @@ export function useCreatePost(dispatch) {
     dispatch(loadingAction.setCreatePostLoading(true))
     try{
       const username = data?.username || user?.username || null
-      const mediaList = normalizeMediaList(data?.media)
-
-      let uploadSessionId = null
-
-      if (mediaList.length > 0) {
-        const uploadResult = await storageService.uploadMediaAndGetSessionId(mediaList)
-
-        if (!uploadResult?.success){
-          notify.popup(modal.title.error, uploadResult?.message || errorText.upload.media)
-          return null
-        }
-        uploadSessionId = uploadResult.uploadSessionId
-      }
-
-      const payload = buildCreatePayload(data, uploadSessionId)
-      const response = await runRequest(()=>postService.createPost(payload))
+      // create new post (include handle media uploading)
+      const response = await runRequest(()=>postService.createPost(data))
       if (!response) return null
 
       if (!response.success) {
@@ -56,7 +29,7 @@ export function useCreatePost(dispatch) {
         return null
       }
 
-      const createdRaw = resolveCreatedPostRaw(response.data, payload, user)
+      const createdRaw = resolveCreatedPostRaw(response.data, response._payload, user)
       if (createdRaw) {
         const createdPost = postByIdModel(createdRaw)
         dispatch(postByIdActions.addPost(createdPost))
@@ -64,7 +37,7 @@ export function useCreatePost(dispatch) {
           dispatch(userPostActions.prependTimelineIndex(username, createdPost.id))
         }
       }
-      console.log(response)
+
       notify.snackbar(response.message, 3000)
 
       onCloseModal?.()

@@ -13,7 +13,7 @@ interface CustomResponseData<T> {
 export const createMockApiResponse = <T>(
   status: number,
   innerData: T,
-  message: string,
+  message: string = "call api successfully",
   statusCode: number = 200,
 ): AxiosResponse<CustomResponseData<T>> => {
   const mockedHeader = new AxiosHeaders({
