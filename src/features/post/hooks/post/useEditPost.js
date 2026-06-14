@@ -2,14 +2,8 @@ import { useCallback, useRef } from "react"
 import { modal } from "../../../../constant/text/vi/modal"
 import { useNotify } from "../../../../hooks/useNotify"
 import { useSafeRequest } from "../../../../hooks/useSafeRequest"
-import { postService, storageService } from "../../services"
+import { postService } from "../../services"
 import { loadingAction, postByIdActions } from "../../store/actions"
-import {
-  buildEditedContentPatch,
-  buildEditedContentPayload,
-  getNewEditableMediaList,
-  normalizeEditableMediaList,
-} from "../../utils/resolveEditedContent"
 
 export function useEditPost(dispatch){
   const notify = useNotify()
@@ -25,51 +19,15 @@ export function useEditPost(dispatch){
     dispatch(loadingAction.setEditPostLoading(true))
 
     try {
-      const mediaList = normalizeEditableMediaList(data?.media)
-      const newMediaList = getNewEditableMediaList(mediaList)
-      let uploadSessionId = null
-      let presignedMediaUrls = []
-
-      if (newMediaList.length > 0) {
-        const uploadResult = await storageService.uploadUpdatedMediaAndGetSessionId(contentId, newMediaList)
-        if (!uploadResult?.success) {
-          notify.popup(modal.title.error, uploadResult?.message || "Could not upload media")
-          return uploadResult
-        }
-
-        uploadSessionId = uploadResult.uploadSessionId
-        presignedMediaUrls = uploadResult.presignedMediaUrls || []
-      }
-
-      const { hasMissingMediaKey, payload } = buildEditedContentPayload({
-        type: "post",
-        data,
-        mediaList,
-        presignedMediaUrls,
-        uploadSessionId,
-      })
-
-      if (hasMissingMediaKey) {
-        notify.popup(modal.title.error, "Could not resolve mediaKey for updated media")
-        return null
-      }
-
-      const response = await runRequest(() => postService.editPost(contentId, payload))
-      if (!response) return null
+      const response = await runRequest(() => postService.editPost(contentId, data))
 
       if (!response.success) {
         notify.popup(modal.title.error, response.message)
-        return response
+        if(response.errorSource === "BUILD_PAYLOAD") return null
+        else return response
       }
 
-      const patch = buildEditedContentPatch({
-        type: "post",
-        responseData: response.data,
-        data,
-        mediaList,
-      })
-
-      dispatch(postByIdActions.updatePost(contentId, patch))
+      dispatch(postByIdActions.updatePost(contentId, response.patch))
       onCloseModal?.()
 
       if (response.message) {

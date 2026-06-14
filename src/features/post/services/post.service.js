@@ -2,6 +2,7 @@ import { handleRequest } from "../../../api/helper";
 import { postApi } from "../../../api/content/post/post.api";
 import { profileApi } from "../../../api/profile/profile.api";
 import { storageService } from "./storage.service";
+import { buildEditedContentPayload, buildEditedContentPatch } from "../utils/resolveEditedContent";
 
 const hasCursor = (cursor) =>
   cursor !== null && cursor !== undefined && cursor !== "";
@@ -46,6 +47,35 @@ const normalizeSearchBucket = (data, keys = []) => {
   };
 };
 
+const normalizeEditableMediaList = (media = []) => {
+  return (Array.isArray(media) ? media : []).filter(Boolean).map((item, index) => ({
+    ...item,
+    file: item?.file || null,
+    mediaKey:
+      item?.mediaKey ||
+      item?.key ||
+      item?.storageKey ||
+      item?.s3Key ||
+      ((item) => {
+        if (!item?.url || typeof item?.url !== "string") return null;
+      }),
+    sortOrder: Number.isFinite(item?.sortOrder) ? item.sortOrder : index + 1,
+    type: () => {
+      if (typeof item?.type === "string" && !item.type.includes("/")) {
+        return item.type;
+      }
+
+      const rawType = item?.contentType || item?.file?.type || item?.type || "";
+      if (typeof rawType === "string" && rawType.includes("/")) {
+        return rawType.split("/")[0] || "image";
+      }
+
+      return "image";
+    },
+    url: item?.url || item?.previewUrl || item?.src || null,
+  }));
+};
+
 export const postService = {
   getPostContent: async (username, cursor, signal) =>
     handleRequest(() => postApi.getPostContent(username, cursor, signal)),
@@ -55,22 +85,25 @@ export const postService = {
 
   createPost: async (data) => {
     // check the media list
-    const mediaList = ((Array.isArray(data?.media) ? data.media : []).filter(item => item?.file))
+    const mediaList = (Array.isArray(data?.media) ? data.media : []).filter(
+      (item) => item?.file,
+    );
 
     // if has media => call api to get sessionId
-    let uploadSessionId = null
-    if(mediaList.length > 0){
-      const uploadResult = await storageService.uploadMediaAndGetSessionId(mediaList)
-      if(!uploadResult?.success){
+    let uploadSessionId = null;
+    if (mediaList.length > 0) {
+      const uploadResult =
+        await storageService.uploadMediaAndGetSessionId(mediaList);
+      if (!uploadResult?.success) {
         return {
-          success:false,
-          errorSource:"POST_UPLOAD_MEDIA",
-          message:uploadResult.message,
-        }
+          success: false,
+          errorSource: "POST_UPLOAD_MEDIA",
+          message: uploadResult.message,
+        };
       }
-      uploadSessionId = uploadResult.uploadSessionId
+      uploadSessionId = uploadResult.uploadSessionId;
     }
-    
+
     /*
       create the payload with {
         mentionUsers
@@ -80,27 +113,29 @@ export const postService = {
       }
     */
     const payload = {
-      mentionedUsers: Array.isArray(data?.mentionedUsers) ? data.mentionedUsers : [],
+      mentionedUsers: Array.isArray(data?.mentionedUsers)
+        ? data.mentionedUsers
+        : [],
       type: "post",
       text: data?.text ?? "",
       ...(uploadSessionId ? { uploadSessionId } : {}),
-    }
-    
+    };
+
     //handleRequest(createPost())
     const createResult = await handleRequest(() => postApi.createPost(payload));
 
-    if(!createResult?.success){
-      return{
-        success:false,
-        message:createResult?.message || "Fail in create new post",
-        errorSource:"CREATE_NEW_POST"
-      }
+    if (!createResult?.success) {
+      return {
+        success: false,
+        message: createResult?.message || "Fail in create new post",
+        errorSource: "CREATE_NEW_POST",
+      };
     }
     // return result and payload (the payload is using for dispatch in store)
     return {
       ...createResult,
-      _payload:payload
-    }
+      _payload: payload,
+    };
   },
 
   savePost: async (id) => handleRequest(() => postApi.savePost(id)),
@@ -116,8 +151,70 @@ export const postService = {
 
   unPinContent: async (id) => handleRequest(() => postApi.unPinContent(id)),
 
-  editPost: async (id, payload) =>
-    handleRequest(() => postApi.editContent(id, payload)),
+  editPost: async (contentId, data) => {
+    const mediaList = normalizeEditableMediaList(data?.media);
+    const filteredMediaList = (
+      Array.isArray(mediaList) ? mediaList : []
+    ).filter((item) => item?.file);
+    let uploadSessionId = null;
+    let presignedMediaUrls = [];
+    if (filteredMediaList.length > 0) {
+      const uploadResult =
+        await storageService.uploadUpdatedMediaAndGetSessionId(
+          contentId,
+          filteredMediaList,
+        );
+
+      if (!uploadResult?.success) {
+        return {
+          success: false,
+          message: uploadResult?.message || "Upload the update failed",
+          errorSource: "UPLOAD",
+        };
+      }
+
+      ((uploadSessionId = uploadResult.uploadSessionId),
+        (presignedMediaUrls = uploadResult.presignedMediaUrls));
+    }
+
+    const { hasMissingMediaKey, payload } = buildEditedContentPayload({
+      type: "post",
+      data,
+      mediaList,
+      presignedMediaUrls,
+      uploadSessionId,
+    });
+
+    if (hasMissingMediaKey)
+      return {
+        success: false,
+        message: "Could not resolve mediaKey for updated media",
+        errorSource: "BUILD_PAYLOAD",
+      };
+
+    const result = await handleRequest(() =>
+      postApi.editContent(contentId, payload),
+    );
+
+    if (!result.success) return {
+      success:false,
+      message:result?.message || "Can not update posts content",
+      errorSource: "UPDATE_CONTENT_CALL"
+    };
+
+    const contentPatch = buildEditedContentPatch({
+      type: "post",
+      responseData: result.data,
+      data,
+      mediaList:filteredMediaList
+    })
+
+    return {
+      success:true,
+      message: result?.message || "Updated Successfully",
+      patch: contentPatch
+    }
+  },
 
   deletePost: async (id) => handleRequest(() => postApi.deleteContent(id)),
 
