@@ -35,7 +35,13 @@ export const createMockApiResponse = <T>(
   };
 
   return {
-    data: { statusCode, message, data: innerData },
+    data: {
+      statusCode,
+      message,
+      ...(innerData !== null && innerData !== undefined
+        ? { data: innerData }
+        : {}),
+    },
     status,
     statusText: status === 200 ? "OK" : "Error",
     headers: mockedHeader,

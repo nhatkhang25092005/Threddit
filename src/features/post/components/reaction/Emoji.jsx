@@ -49,6 +49,7 @@ export default function Emoji({mention}) {
       />
 
       <Popover
+        data-testid="popover-emoji"
         open={Boolean(anchorEl)}
         onClose={() => setAnchorEl(null)}
         anchorEl={anchorEl}
@@ -77,6 +78,7 @@ export default function Emoji({mention}) {
                   {emojis.map(emoji => (
                   <IconButton
                     key={emoji.char}
+                    data-testid={emoji.char}
                     aria-label={emoji.label}
                     title={emoji.label}
                     size="small"

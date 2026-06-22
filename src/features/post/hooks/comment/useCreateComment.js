@@ -8,7 +8,7 @@ import { commentService } from "../../services"
 import { commentActions, loadingAction, postByIdActions } from "../../store/actions"
 import { commentModel } from "../../store/models/comment.model"
 
-const resolveCreatedCommentRaw = (responseData = {}, payload = {}, user = null) => {
+const resolveCreatedCommentRaw = (responseData = {}, user = null) => {
   const now = new Date().toISOString()
   const fallbackId = Date.now()
   const candidate =
@@ -23,7 +23,7 @@ const resolveCreatedCommentRaw = (responseData = {}, payload = {}, user = null) 
 
   return {
     id: base?.id ?? base?.commentId ?? base?.contentId ?? fallbackId,
-    text: base?.text ?? payload?.text ?? "",
+    text: base?.text,
     createdAt: base?.createdAt || now,
     updatedAt: base?.updatedAt || base?.createdAt || now,
     commenter: base?.commenter || {
@@ -32,13 +32,13 @@ const resolveCreatedCommentRaw = (responseData = {}, payload = {}, user = null) 
       avatarUrl: user?.avatarUrl || null,
     },
     isCommenter: base?.isCommenter ?? true,
-    parentCommentId: base?.parentCommentId ?? payload?.parentCommentId ?? null,
+    parentCommentId: base?.parentCommentId ?? null,
     hasChildComment: Boolean(base?.hasChildComment),
     reaction: base?.reaction || null,
     mediaFiles: Array.isArray(base?.mediaFiles) ? base.mediaFiles : [],
     mentionedUsers: Array.isArray(base?.mentionedUsers)
       ? base.mentionedUsers
-      : (Array.isArray(payload?.mentionedUsers) ? payload.mentionedUsers : []),
+      : []
   }
 }
 
@@ -58,6 +58,7 @@ export function useCreateComment(dispatch) {
 
     try {
       const response = await runRequest(() => commentService.createComment(postId, data));
+      console.log(response)
       if (!response) return null;
 
       if (!response.success) {
@@ -71,7 +72,7 @@ export function useCreateComment(dispatch) {
         return response;
       }
 
-      const createdComment = commentModel(resolveCreatedCommentRaw(response.data, response._payloadUsed, user))
+      const createdComment = commentModel(resolveCreatedCommentRaw(response.data, user))
       if (createdComment?.id != null) {
         dispatch(commentActions.addComment(createdComment))
         if (createdComment.parentCommentId != null) {

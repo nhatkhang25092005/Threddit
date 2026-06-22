@@ -41,7 +41,7 @@ export default function CreatePostModalActionBar({
 
       <Box sx={sx.actionList}>
         {showImageUpload ? (
-          <MediaInput multiple accept="image/*" onChange={onUploadImage} sx={mediaInputSx}>
+          <MediaInput data-testid = "image-upload-input-to-post" multiple accept="image/*" onChange={onUploadImage} sx={mediaInputSx}>
             <IconButton component="span" sx={sx.actionIconButton} aria-label={composerText.post.actionAria.addImage}>
               <AddPhotoAlternateIcon sx={sx.photoIcon} />
             </IconButton>
@@ -49,7 +49,7 @@ export default function CreatePostModalActionBar({
         ) : null}
 
         {showVideoUpload ? (
-          <MediaInput multiple accept="video/*" onChange={onUploadVideo} sx={mediaInputSx}>
+          <MediaInput data-testid = "video-upload-input-to-post"  multiple accept="video/*" onChange={onUploadVideo} sx={mediaInputSx}>
             <IconButton component="span" sx={sx.actionIconButton} aria-label={composerText.post.actionAria.addVideo}>
               <VideocamIcon sx={videoIconSx} />
             </IconButton>
@@ -57,7 +57,7 @@ export default function CreatePostModalActionBar({
         ) : null}
 
         {showSoundUpload ? (
-          <MediaInput multiple accept="audio/*" onChange={onUploadSound} sx={mediaInputSx}>
+          <MediaInput data-testid = "sound-upload-input-to-post" multiple accept="audio/*" onChange={onUploadSound} sx={mediaInputSx}>
             <IconButton component="span" sx={sx.actionIconButton} aria-label={composerText.post.actionAria.addSound}>
               <MusicNoteIcon sx={audioIconSx} />
             </IconButton>
@@ -72,7 +72,7 @@ export default function CreatePostModalActionBar({
           <PersonAddAlt1Icon sx={sx.tagIcon} />
         </IconButton>
 
-        <Box sx={{ ...sx.actionIconButton, justifyContent: "center" }}>
+        <Box data-testid='emoji-popup-button' sx={{ ...sx.actionIconButton, justifyContent: "center", cursor:'pointer',  }}>
           <Emoji mention={mention} />
         </Box>
       </Box>

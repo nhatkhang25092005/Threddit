@@ -25,6 +25,7 @@ export default function Login({onNavigate}:LoginProps) {
           value={form.email}
           onKeyDown={keydown.enter(submit,{preventDefault:true})}
           label={AUTH_TEXT.login.email_field}
+          slotProps={{ htmlInput: { 'data-testid': 'email-input' } }}
         />
         <TextField
           onChange={onChange}
@@ -36,13 +37,14 @@ export default function Login({onNavigate}:LoginProps) {
           onKeyDown={keydown.enter(submit,{preventDefault:true})}
           value={form.password}
           label={AUTH_TEXT.login.password_field}
+          slotProps={{ htmlInput: { 'data-testid': 'password-input' } }}
         />
       </Box>
       
       {/* Submit, forgot password */}
       <Box sx={loginStyles.button}>
         <Link variant="primary" onClick={()=>onNavigate('forgot')}>{AUTH_TEXT.login.forgot_password}</Link>
-        <Button disabled={!isFormFilled(form)} onClick={submit} variant="primary" sx={{width:'100%'}}>{AUTH_TEXT.login.submit}</Button>
+        <Button data-testid="login-submit-btn" disabled={!isFormFilled(form)} onClick={submit} variant="primary" sx={{width:'100%'}}>{AUTH_TEXT.login.submit}</Button>
       </Box>
       
       <Divider

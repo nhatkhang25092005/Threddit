@@ -23,6 +23,7 @@ export default function PopupNotification({ open = false, onClose, title, conten
     >
       <Fade in={open}>
         <Box
+          data-testid="popup"
           sx={{
             py: "1rem",
             bgcolor: "#071120",

@@ -81,6 +81,7 @@ export default function CreatePostModalEditor({
   return (
     <Box sx={editorWrapSx}>
       <Box
+        data-testid="post-editor-textarea"
         component="textarea"
         placeholder={placeholder || composerText.post.editor.placeholder(displayName)}
         sx={{
@@ -89,11 +90,12 @@ export default function CreatePostModalEditor({
         }}
         {...mention.bind}
         disabled={loading}
+        
       />
       {mention.overlay}
       {images.map((image, index) =>
         image?.url ? (
-          <Box key={`${image.url}-${index}`} sx={mediaItemWrapSx}>
+          <Box data-testid = {`preview-image-${index}`} key={`${image.url}-${index}`} sx={mediaItemWrapSx}>
             <IconButton
               aria-label={composerText.post.editor.removeImage}
               sx={removeMediaButtonSx}
@@ -107,7 +109,7 @@ export default function CreatePostModalEditor({
       )}
       {videos.map((video, index) =>
         video?.url ? (
-          <Box key={`${video.url}-${index}`} sx={mediaItemWrapSx}>
+          <Box data-testid = {`preview-video-${index}`} key={`${video.url}-${index}`} sx={mediaItemWrapSx}>
             <IconButton
               aria-label={composerText.post.editor.removeVideo}
               sx={removeMediaButtonSx}
@@ -127,7 +129,7 @@ export default function CreatePostModalEditor({
       )}
       {sounds.map((sound, index) =>
         sound?.url ? (
-          <Box key={`${sound.url}-${index}`} sx={audioItemWrapSx}>
+          <Box data-testid = {`preview-sound-${index}`} key={`${sound.url}-${index}`} sx={audioItemWrapSx}>
             <IconButton
               aria-label={composerText.post.editor.removeSound}
               sx={removeMediaButtonSx}

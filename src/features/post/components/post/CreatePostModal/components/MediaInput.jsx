@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { useRef } from "react";
 
-export default function MediaInput({multiple, accept, onChange, children, sx }) {
+export default function MediaInput({"data-testid":testid = null, multiple, accept, onChange, children, sx }) {
   const inputRef = useRef(null);
   const isMultiple = multiple
   const handleOpenFilePicker = () => {
@@ -11,6 +11,7 @@ export default function MediaInput({multiple, accept, onChange, children, sx }) 
   return (
     <Box sx={sx}>
       <input
+        data-testid={testid}
         multiple = {isMultiple}
         type="file"
         style={{ display: "none" }}

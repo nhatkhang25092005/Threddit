@@ -206,12 +206,12 @@ export default function CreatePostModal({
   );
 
   return (
-    <Surface variant="modal" sx={sx.surface}>
+    <Surface data-testid="create-post-modal" variant="modal" sx={sx.surface}>
       <CreatePostModalHeader sx={sx} onClose={handleAttemptClose} title={title} />
 
       <Divider sx={sx.divider} />
 
-      <Box sx={sx.body}>
+      <Box data-testid="create-post-body" sx={sx.body}>
         <CreatePostModalAuthor
           sx={sx}
           avatarUrl={user?.avatarUrl}
@@ -242,13 +242,14 @@ export default function CreatePostModal({
         />
 
         <Button
+          data-testid = "create-post-button"
           disabled={disableSubmit}
           variant="primary"
           fullWidth
           sx={sx.submitButton}
           onClick={handleSubmit}
         >
-          {loading ? <CircularProgress size={20} color="inherit" /> : submitLabel}
+          {loading ? <CircularProgress data-testid="create-post-loading" size={20} color="inherit" /> : submitLabel}
         </Button>
       </Box>
 

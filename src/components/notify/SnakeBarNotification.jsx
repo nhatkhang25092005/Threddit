@@ -23,6 +23,7 @@ export default function SnakeBarNotification({
 
   return (
     <Snackbar
+      data-testid = "snackbar"
       open={open}
       autoHideDuration={duration}
       onClose={handleClose}

@@ -8,36 +8,11 @@ import {
   buildEditedContentPayload,
 } from "../utils/resolveEditedContent";
 
-const mockDataResponse = (
-  text: string = "test",
-  mediaFiles: { file: string }[] = [],
-) => ({
-  createdPost: {
-    text,
-    type: "post",
-    mentionedUsers: [],
-    author: {
-      username: "zeskkk",
-      displayName: "zesk",
-      avatarUrl: "https://threddit-s3.s3.us-east-1.amazonaws.com/avatar/1",
-    },
-    id: 2,
-    isPinned: false,
-    createdAt: "2026-06-09T03:18:04.552Z",
-    updatedAt: "2026-06-09T03:18:04.552Z",
-    mediaFiles,
-  },
-});
-
-const mockUploadResponse = {
-  success: true,
-  uploadSessionId: "b9bb9e73-80f5-48ac-a7d8-6d82e07b674e",
-};
-
 vi.mock("../../../api/content/post/post.api", () => ({
   postApi: {
     createPost: vi.fn(),
     editContent: vi.fn(),
+    deleteContent: vi.fn(),
   },
 }));
 
@@ -54,6 +29,30 @@ vi.mock("../utils/resolveEditedContent", () => ({
 }));
 
 describe("postService.createPost", () => {
+  const mockDataResponse = (
+    text: string = "test",
+    mediaFiles: { file: string }[] = [],
+  ) => ({
+    createdPost: {
+      text,
+      type: "post",
+      mentionedUsers: [],
+      author: {
+        username: "zeskkk",
+        displayName: "zesk",
+        avatarUrl: "https://threddit-s3.s3.us-east-1.amazonaws.com/avatar/1",
+      },
+      id: 2,
+      isPinned: false,
+      createdAt: "2026-06-09T03:18:04.552Z",
+      updatedAt: "2026-06-09T03:18:04.552Z",
+      mediaFiles,
+    },
+  });
+  const mockUploadResponse = {
+    success: true,
+    uploadSessionId: "b9bb9e73-80f5-48ac-a7d8-6d82e07b674e",
+  };
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -292,7 +291,6 @@ describe("postService.updatePost", () => {
     };
 
     const result = await postService.editPost(contentId, input);
-    console.log(result);
     // OK
     expect(
       storageService.uploadUpdatedMediaAndGetSessionId,
@@ -359,7 +357,6 @@ describe("postService.updatePost", () => {
     };
 
     const result = await postService.editPost(contentId, input);
-    console.log(result);
     expect(
       storageService.uploadUpdatedMediaAndGetSessionId,
     ).toHaveBeenCalledWith(contentId, expect.any(Array));
@@ -521,7 +518,7 @@ describe("postService.updatePost", () => {
     vi.mocked(buildEditedContentPayload).mockReturnValue({
       hasExplicitMediaField: false,
       hasMissingMediaKey: true, // kích hoạt lỗi build payload
-      payload: null as any,
+      payload: null,
     });
 
     const input = {
@@ -542,14 +539,12 @@ describe("postService.updatePost", () => {
   });
 
   it("should return failure response when API editContent fails", async () => {
-    // Mock helper build payload hoạt động bình thường
     vi.mocked(buildEditedContentPayload).mockReturnValue({
       hasExplicitMediaField: false,
       hasMissingMediaKey: false,
       payload: { text: "api fails", type: "post", mentionedUsers: [] },
     });
 
-    // Giả lập API trả về phản hồi thất bại (success: false)
     vi.mocked(postApi.editContent).mockResolvedValue(
       createMockApiResponse(400, null, "Can not update posts content", 400),
     );
@@ -561,13 +556,91 @@ describe("postService.updatePost", () => {
 
     const result = await postService.editPost(contentId, input);
 
-    // Đảm bảo không chạy tiếp xuống hàm buildEditedContentPatch khi API đã tạch
     expect(buildEditedContentPatch).not.toHaveBeenCalled();
 
     expect(result).toEqual({
       success: false,
       message: "Can not update posts content",
       errorSource: "UPDATE_CONTENT_CALL",
+    });
+  });
+
+  it("should return failure response if uploadUpdatedMediaAndGetSessionId returns success false", async () => {
+    vi.mocked(
+      storageService.uploadUpdatedMediaAndGetSessionId,
+    ).mockResolvedValue({
+      success: false,
+      message: "Upload the update failed due to connection error",
+    });
+
+    const input = {
+      text: "broken upload text",
+      media: [{ file: "failed-image.png" }],
+    };
+
+    const result = await postService.editPost(contentId, input);
+
+    // Luồng xử lý phải dừng lại ngay lập tức, không được gọi tới API chỉnh sửa endpoint
+    expect(postApi.editContent).not.toHaveBeenCalled();
+
+    // Kiểm tra cấu trúc lỗi trả ra khớp chuẩn xác với mã nguồn handle trong post.service.js
+    expect(result).toEqual({
+      success: false,
+      message: "Upload the update failed due to connection error",
+      errorSource: "UPLOAD",
+    });
+  });
+
+  it("should handle error or reject if uploadUpdatedMediaAndGetSessionId throws an exception", async () => {
+    vi.mocked(
+      storageService.uploadUpdatedMediaAndGetSessionId,
+    ).mockResolvedValue({
+      success: false,
+      message: "S3 Bucket Timeout Error",
+    });
+
+    const input = {
+      text: "upload exception text",
+      media: [{ file: "failed-network-image.png" }],
+    };
+
+    const result = await postService.editPost(contentId, input);
+
+    expect(result).toEqual({
+      success: false,
+      message: "S3 Bucket Timeout Error",
+      errorSource: "UPLOAD",
+    });
+    expect(postApi.editContent).not.toHaveBeenCalled();
+  });
+});
+
+describe("postService.deletePost", () => {
+  const postId = 10;
+  beforeEach(() => vi.clearAllMocks());
+  it("Should delete the specific post successfully", async () => {
+    vi.mocked(postApi.deleteContent).mockResolvedValue(
+      createMockApiResponse(200, null, "Delete successfully", 200),
+    );
+
+    const result = await postService.deletePost(postId);
+    expect(postApi.deleteContent).toHaveBeenCalledWith(postId);
+    expect(result).toEqual({
+      success: true,
+      message: "Delete successfully",
+    });
+  });
+
+  it("Should return fail if delete post unsuccessfully", async () => {
+    vi.mocked(postApi.deleteContent).mockResolvedValue(
+      createMockApiResponse(400, null, "Delete Failed", 400),
+    );
+
+    const result = await postService.deletePost(postId);
+    expect(postApi.deleteContent).toHaveBeenCalledWith(postId);
+    expect(result).toEqual({
+      success: false,
+      message: "Delete Failed",
     });
   });
 });

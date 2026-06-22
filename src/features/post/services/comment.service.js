@@ -41,6 +41,7 @@ export const commentService = {
     let uploadSessionId = externalUploadSessionId
 
     if(!uploadSessionId && mediaList.length > 0){
+      // Create media comment and update post use the same api update upload
       const uploadResult = await storageService.uploadUpdatedMediaAndGetSessionId(postId, mediaList)
       if(!uploadResult?.success){
         return {
@@ -58,14 +59,10 @@ export const commentService = {
         success:false,
         errorSource: "VALIDATION_STAGE"
       }
-
     }
 
     const response = await handleRequest(() => commentApi.createComment(postId, payload))
-    
-    return{
-      ...response,
-      _contextPayload:payload
-    }
+
+    return response
   }
 };

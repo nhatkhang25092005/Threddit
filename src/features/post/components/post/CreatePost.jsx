@@ -57,7 +57,7 @@ export default function CreatePost({ redirectAfterCreate = null }){
           sx={sx.textField}
           onClick={handleOpenCreatePostModal}
           placeholder={composerText.post.quickComposer.placeholder}
-          slotProps={{htmlInput:{readOnly:true}}}
+          slotProps={{htmlInput:{readOnly:true, "data-testid": "create-post-input-button"}}}
         />
         <Box sx={sx.container_2}>
           <SoundInput multiple onClick={(event) => handleUpload('sound', event)}>

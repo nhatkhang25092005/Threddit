@@ -10,7 +10,7 @@ export default function CreatePostModalHeader({
   return (
     <Box sx={sx.header}>
       <Typography sx={sx.headerTitle}>{title}</Typography>
-      <IconButton aria-label={composerText.post.closeAriaLabel} onClick={onClose} sx={sx.closeButton}>
+      <IconButton data-testid="close-modal-button" aria-label={composerText.post.closeAriaLabel} onClick={onClose} sx={sx.closeButton}>
         <CloseIcon sx={sx.closeIcon} />
       </IconButton>
     </Box>

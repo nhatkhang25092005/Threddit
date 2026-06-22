@@ -59,7 +59,7 @@ export default function CloseAlert({
 }) {
   return (
     <Portal>
-      <Box sx={sx.overlay} onClick={onCancel}>
+      <Box data-testid='close-modal-alert' sx={sx.overlay} onClick={onCancel}>
         <Surface
           variant="modal"
           sx={sx.panel}
@@ -72,7 +72,7 @@ export default function CloseAlert({
             <Button variant="secondary" sx={sx.cancelButton} onClick={onCancel}>
               {cancelLabel}
             </Button>
-            <Button variant="primary" sx={sx.confirmButton} onClick={onConfirm}>
+            <Button data-testid='close-confirm-button' variant="primary" sx={sx.confirmButton} onClick={onConfirm}>
               {confirmLabel}
             </Button>
           </Box>

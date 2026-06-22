@@ -16,11 +16,17 @@ export function useReaction(dispatch){
     const previous = normalizeReaction(previousReact);
     const next = normalizeReaction(nextReact);
 
+    const calculatedNextReaction = reactionService.calculateNextReaction(previous, next)
+    
+    if(calculatedNextReaction === "EMPTY_NEXT_REACTION_UNEXPECT"){
+      notify.popup("Internal Error", "Non-next reaction unexpect")
+      return
+    }
     let res;
-    if (!previous && next) {
+    if (calculatedNextReaction === "NEW_REACTION") {
       dispatch(reactionActions.setReaction(id, next))
       res = await reactionService.react(id, { type: next })
-    } else if (previous === next) {
+    } else if (calculatedNextReaction === "UN_REACTION") {
       dispatch(reactionActions.setReaction(id, null))
       res = await reactionService.unreact(id);
     } else {

@@ -7,16 +7,16 @@ const COMMENT = import.meta.env.VITE_API_COMMENT_BASE
 const buildReactionUrl = (contentId) => `${BASE}/${contentId}${REACTION}`;
 
 export const reactionApi = {
-  react(contentId, payload, signal) {
-    return axios.post(buildReactionUrl(contentId), payload, { signal });
+  react(contentId, payload) {
+    return axios.post(buildReactionUrl(contentId), payload);
   },
 
-  updateReaction(contentId, payload, signal) {
-    return axios.patch(buildReactionUrl(contentId), payload, { signal });
+  updateReaction(contentId, payload) {
+    return axios.patch(buildReactionUrl(contentId), payload);
   },
 
-  unreact(contentId, signal) {
-    return axios.delete(buildReactionUrl(contentId), { signal });
+  unreact(contentId) {
+    return axios.delete(buildReactionUrl(contentId));
   },
 
   reactComment(commentId, payload, signal){
