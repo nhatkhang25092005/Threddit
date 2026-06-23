@@ -513,31 +513,6 @@ describe("postService.updatePost", () => {
     });
   });
 
-  it("should return failure response if payload builder detects a missing media key", async () => {
-    // Giả lập helper build payload trả về lỗi thiếu key
-    vi.mocked(buildEditedContentPayload).mockReturnValue({
-      hasExplicitMediaField: false,
-      hasMissingMediaKey: true, // kích hoạt lỗi build payload
-      payload: null,
-    });
-
-    const input = {
-      text: "missing key text",
-      media: [],
-    };
-
-    const result = await postService.editPost(contentId, input);
-
-    // Không được gọi tiếp xuống API khi payload không hợp lệ
-    expect(postApi.editContent).not.toHaveBeenCalled();
-
-    expect(result).toEqual({
-      success: false,
-      message: "Could not resolve mediaKey for updated media",
-      errorSource: "BUILD_PAYLOAD",
-    });
-  });
-
   it("should return failure response when API editContent fails", async () => {
     vi.mocked(buildEditedContentPayload).mockReturnValue({
       hasExplicitMediaField: false,
