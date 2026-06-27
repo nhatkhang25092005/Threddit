@@ -1,5 +1,5 @@
 /// <reference types="cypress" />
-import { EMOJI } from "../../src/constant/emoji";
+import { EMOJI } from "../../../src/constant/emoji";
 
 describe("post creation", () => {
   beforeEach(() => {

@@ -6,7 +6,7 @@ import MutualList from "./components/MutualList";
 import useAuth from "../../core/auth/useAuth";
 import { friend } from '../../constant/text/vi/friend.text'
 import SentList from "./components/SentList";
-export default function Friend(){
+export default function Friend({'data-testid':testid = null}){
   const { isOwner } = useAuth()
 
   const shouldDisplay = [
@@ -17,7 +17,7 @@ export default function Friend(){
   ].filter(Boolean)
 
   return(
-    <Surface sx={style.surface}>
+    <Surface data-testid={testid} sx={style.surface}>
       <TabsController
         sx={style.tabs_controller}
         urlParams='friend_tab'

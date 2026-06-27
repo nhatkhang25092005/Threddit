@@ -64,6 +64,7 @@ export const buildEditedContentPayload = ({
 
   const mediaFiles = (Array.isArray(mediaList) ? mediaList : [])
     .map((item) => {
+      console.log(item.mediaKey)
       let mediaKey = item?.mediaKey
 
       if (item?.file) {

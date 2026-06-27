@@ -97,11 +97,11 @@ export default function PostList({ variant = "userPost" }) {
 
   return (
     <Box>
-      {posts.map((post) =>
+      {posts.map((post, index) =>
         resolveIsSharePost(post) && variant ==='userPost' ? (
           <SharePost key={post.id} post={post} />
         ) : (
-          <Post key={post.id} post={post} />
+          <Post key={post.id} index={index} post={post} />
         )
       )}
 

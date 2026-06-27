@@ -1,97 +1,125 @@
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
-import { CircularProgress } from '@mui/material'
-import ButtonMenu from "../../../../../../components/common/button/ButtonMenu"
-import { post } from "../../../../../../constant/text/vi/post/post"
-import useAuth from "../../../../../../core/auth/useAuth"
-import { usePostContext } from "../../../../hooks"
-import { usePostModal } from "../../../../provider/usePostModal"
-import { resolvePinOption } from "../../../../utils/resolvePinOption"
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { CircularProgress } from "@mui/material";
+import ButtonMenu from "../../../../../../components/common/button/ButtonMenu";
+import { post } from "../../../../../../constant/text/vi/post/post";
+import useAuth from "../../../../../../core/auth/useAuth";
+import { usePostContext } from "../../../../hooks";
+import { usePostModal } from "../../../../provider/usePostModal";
+import { resolvePinOption } from "../../../../utils/resolvePinOption";
 
-export default function PostMenu({ postId, postContext }) {
+export default function PostMenu({
+  "data-testid": testid,
+  postId,
+  postContext,
+}) {
   const {
-    actions: {
-      deletePost,
-      pinPost,
-      savePost,
-      unpinPost,
-      unsavePost
-    },
+    actions: { deletePost, pinPost, savePost, unpinPost, unsavePost },
     selector: {
-      loading: {
-        getEditPostLoading
-      },
+      loading: { getEditPostLoading },
       post: {
         getDeleteLoadingByPostIdOf,
         getPostById,
         getPostPinLoadingOf,
         getPostPinStatusOf,
         getSaveLoadingByPostIdOf,
-        getSaveStatusByPostIdOf
-      }
-    }
-  } = usePostContext()
-  const { isOwner, isOwnerByUsername } = useAuth()
-  const { openModal } = usePostModal()
+        getSaveStatusByPostIdOf,
+      },
+    },
+  } = usePostContext();
+  const { isOwner, isOwnerByUsername } = useAuth();
+  const { openModal } = usePostModal();
 
-  const postItem = getPostById(postId)
-  const isSaved = getSaveStatusByPostIdOf(postId)
-  const isSaveLoading = getSaveLoadingByPostIdOf(postId)
-  const isPinned = getPostPinStatusOf(postId)
-  const isPinnedLoading = getPostPinLoadingOf(postId)
-  const isDeleteLoading = getDeleteLoadingByPostIdOf(postId)
-  const isEditLoading = getEditPostLoading()
-  const canDelete = Boolean(postItem?.isOwner || isOwnerByUsername(postItem?.author?.username))
-  const canEdit = canDelete
-  const canPin = resolvePinOption(isOwner, postContext)
-    || Boolean(postContext === "detailPostPage" && canDelete)
+  const postItem = getPostById(postId);
+  const isSaved = getSaveStatusByPostIdOf(postId);
+  const isSaveLoading = getSaveLoadingByPostIdOf(postId);
+  const isPinned = getPostPinStatusOf(postId);
+  const isPinnedLoading = getPostPinLoadingOf(postId);
+  const isDeleteLoading = getDeleteLoadingByPostIdOf(postId);
+  const isEditLoading = getEditPostLoading();
+  const canDelete = Boolean(
+    postItem?.isOwner || isOwnerByUsername(postItem?.author?.username),
+  );
+  const canEdit = canDelete;
+  const canPin =
+    resolvePinOption(isOwner, postContext) ||
+    Boolean(postContext === "detailPostPage" && canDelete);
 
   const saveAction = isSaved
     ? {
-        label: isSaveLoading ? <CircularProgress size={20} color="inherit" /> : post.unsavePost,
+        label: isSaveLoading ? (
+          <CircularProgress size={20} color="inherit" />
+        ) : (
+          post.unsavePost
+        ),
         callback: () => unsavePost(postId),
-        disabled: isSaveLoading || isDeleteLoading || isEditLoading
+        disabled: isSaveLoading || isDeleteLoading || isEditLoading,
       }
     : {
-        label: isSaveLoading
-          ? <CircularProgress size={20} color="inherit" sx={{ height: "fit-content" }} />
-          : post.savePost,
+        label: isSaveLoading ? (
+          <CircularProgress
+            size={20}
+            color="inherit"
+            sx={{ height: "fit-content" }}
+          />
+        ) : (
+          post.savePost
+        ),
         callback: () => savePost(postId),
-        disabled: isSaveLoading || isDeleteLoading || isEditLoading
-      }
+        disabled: isSaveLoading || isDeleteLoading || isEditLoading,
+      };
 
   const pinAction = isPinned
     ? {
-        label: isPinnedLoading ? <CircularProgress size={20} color="inherit" /> : post.menu.unpin,
+        label: isPinnedLoading ? (
+          <CircularProgress size={20} color="inherit" />
+        ) : (
+          post.menu.unpin
+        ),
         callback: () => unpinPost(postId),
-        disabled: isPinnedLoading || isDeleteLoading || isEditLoading
+        disabled: isPinnedLoading || isDeleteLoading || isEditLoading,
       }
     : {
-        label: isPinnedLoading ? <CircularProgress size={20} color="inherit" /> : post.menu.pin,
+        label: isPinnedLoading ? (
+          <CircularProgress size={20} color="inherit" />
+        ) : (
+          post.menu.pin
+        ),
         callback: () => pinPost(postId),
-        disabled: isPinnedLoading || isDeleteLoading || isEditLoading
-      }
+        disabled: isPinnedLoading || isDeleteLoading || isEditLoading,
+      };
 
   const editAction = {
-    label: isEditLoading ? <CircularProgress size={20} color="inherit" /> : post.menu.edit,
+    label: isEditLoading ? (
+      <CircularProgress size={20} color="inherit" />
+    ) : (
+      post.menu.edit
+    ),
     callback: () => openModal("edit_post_modal", { postId }),
-    disabled: isDeleteLoading || isPinnedLoading || isSaveLoading || isEditLoading
-  }
+    disabled:
+      isDeleteLoading || isPinnedLoading || isSaveLoading || isEditLoading,
+  };
 
   const deleteAction = {
-    label: isDeleteLoading ? <CircularProgress size={20} color="inherit" /> : post.menu.delete,
+    label: isDeleteLoading ? (
+      <CircularProgress size={20} color="inherit" />
+    ) : (
+      post.menu.delete
+    ),
     callback: () => deletePost(postId),
-    disabled: isDeleteLoading || isPinnedLoading || isSaveLoading || isEditLoading
-  }
+    disabled:
+      isDeleteLoading || isPinnedLoading || isSaveLoading || isEditLoading,
+  };
 
   const actions = [
     saveAction,
     ...(canPin ? [pinAction] : []),
     ...(canEdit ? [editAction] : []),
-    ...(canDelete ? [deleteAction] : [])
-  ]
+    ...(canDelete ? [deleteAction] : []),
+  ];
 
   return (
     <ButtonMenu
+      testid={testid}
       label={
         <MoreHorizIcon
           sx={{
@@ -115,8 +143,10 @@ export default function PostMenu({ postId, postContext }) {
           boxShadow: "none",
         },
       }}
-      buttonDisabled={isSaveLoading || isPinnedLoading || isDeleteLoading || isEditLoading}
+      buttonDisabled={
+        isSaveLoading || isPinnedLoading || isDeleteLoading || isEditLoading
+      }
       actions={actions}
     />
-  )
+  );
 }

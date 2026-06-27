@@ -97,6 +97,7 @@ export default function CreatePostModalEditor({
         image?.url ? (
           <Box data-testid = {`preview-image-${index}`} key={`${image.url}-${index}`} sx={mediaItemWrapSx}>
             <IconButton
+              data-testid = 'image-remove'
               aria-label={composerText.post.editor.removeImage}
               sx={removeMediaButtonSx}
               onClick={() => onRemoveImage(index)}
@@ -111,6 +112,7 @@ export default function CreatePostModalEditor({
         video?.url ? (
           <Box data-testid = {`preview-video-${index}`} key={`${video.url}-${index}`} sx={mediaItemWrapSx}>
             <IconButton
+              data-testid = 'video-remove'
               aria-label={composerText.post.editor.removeVideo}
               sx={removeMediaButtonSx}
               onClick={() => onRemoveVideo(index)}
@@ -131,6 +133,7 @@ export default function CreatePostModalEditor({
         sound?.url ? (
           <Box data-testid = {`preview-sound-${index}`} key={`${sound.url}-${index}`} sx={audioItemWrapSx}>
             <IconButton
+              data-testid ='sound-remove'
               aria-label={composerText.post.editor.removeSound}
               sx={removeMediaButtonSx}
               onClick={() => onRemoveSound(index)}

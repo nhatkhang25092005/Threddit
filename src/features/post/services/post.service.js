@@ -48,32 +48,36 @@ const normalizeSearchBucket = (data, keys = []) => {
 };
 
 const normalizeEditableMediaList = (media = []) => {
-  return (Array.isArray(media) ? media : []).filter(Boolean).map((item, index) => ({
-    ...item,
-    file: item?.file || null,
-    mediaKey:
-      item?.mediaKey ||
-      item?.key ||
-      item?.storageKey ||
-      item?.s3Key ||
-      ((item) => {
-        if (!item?.url || typeof item?.url !== "string") return null;
-      }),
-    sortOrder: Number.isFinite(item?.sortOrder) ? item.sortOrder : index + 1,
-    type: () => {
-      if (typeof item?.type === "string" && !item.type.includes("/")) {
-        return item.type;
-      }
+  return (Array.isArray(media) ? media : []).filter(Boolean).map((item, index) => {
+    // 1. Resolve the URL first so we can use it for mediaKey and validation
+    const resolvedUrl = item?.url || item?.previewUrl || item?.src || null;
 
+    // 2. Conditional check for mediaKey: if url exists and contains '/media/', extract it. Otherwise, null.
+    const mediaKey = (resolvedUrl && typeof resolvedUrl === "string" && resolvedUrl.includes("/media/"))
+      ? `media/${resolvedUrl.split("/media/")[1]}`
+      : null;
+
+    // 3. Resolve the item type dynamically
+    let finalType = "image";
+    if (typeof item?.type === "string" && !item.type.includes("/")) {
+      finalType = item.type;
+    } else {
       const rawType = item?.contentType || item?.file?.type || item?.type || "";
       if (typeof rawType === "string" && rawType.includes("/")) {
-        return rawType.split("/")[0] || "image";
+        finalType = rawType.split("/")[0] || "image";
       }
+    }
 
-      return "image";
-    },
-    url: item?.url || item?.previewUrl || item?.src || null,
-  }));
+    // 4. Return the beautifully formatted object
+    return {
+      ...item,
+      file: item?.file || null,
+      mediaKey: mediaKey,
+      sortOrder: Number.isFinite(item?.sortOrder) ? item.sortOrder : index + 1,
+      type: finalType,
+      url: resolvedUrl,
+    };
+  });
 };
 
 export const postService = {
@@ -152,6 +156,7 @@ export const postService = {
   unPinContent: async (id) => handleRequest(() => postApi.unPinContent(id)),
 
   editPost: async (contentId, data) => {
+    console.log(data.media)
     const mediaList = normalizeEditableMediaList(data?.media);
     const filteredMediaList = (
       Array.isArray(mediaList) ? mediaList : []

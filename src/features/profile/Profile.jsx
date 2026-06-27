@@ -26,7 +26,7 @@ const Content = memo(function Content(){
       >
         <MainProfile label={profile.tab_label.profile} name='profile'/>
         <Follow label={profile.tab_label.follow} name='follow'/>
-        <Friend label={profile.tab_label.friend} name='friends'/>
+        <Friend data-testid = "friend-list" label={profile.tab_label.friend} name='friends'/>
         {isOwner && <BlockList label={profile.tab_label.block} name='block'/>}
       </TabsController>
     </Box>

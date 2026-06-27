@@ -35,6 +35,7 @@ export default function SnackBarLoading({
 
   return (
     <Snackbar
+      data-testid ="snackbar-loading"
       open={visible}
       onClose={handleClose}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}

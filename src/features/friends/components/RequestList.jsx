@@ -31,6 +31,7 @@ function RequestListUI({
             <CircularProgress size={20} color="white" />
           ) : (
             <IconButton
+              data-testid = 'accept-request'
               icon={PersonAddIcon}
               title={friend.text_on_request_list.button.accept_request}
               onClick={() => acceptRequest(requester)}
@@ -42,6 +43,7 @@ function RequestListUI({
             <CircularProgress size={20} color="white" />
           ) : (
             <IconButton
+              data-testid = 'reject-request'
               icon={RemoveCircleOutlineIcon}
               title={friend.text_on_request_list.button.reject_request}
               onClick={() => rejectRequest(requester?.username)}

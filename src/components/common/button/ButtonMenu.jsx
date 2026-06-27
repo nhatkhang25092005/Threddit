@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-export default function ButtonMenu({label, actions, buttonSx, buttonVariant, buttonDisabled = false}) {
+export default function ButtonMenu({testid = null , label, actions, buttonSx, buttonVariant, buttonDisabled = false}) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -17,6 +17,7 @@ export default function ButtonMenu({label, actions, buttonSx, buttonVariant, but
   return (
     <div>
       <Button
+        data-testid={testid}
         variant={buttonVariant || 'primary'}
         sx={buttonSx}
         disabled={buttonDisabled}
@@ -58,7 +59,7 @@ export default function ButtonMenu({label, actions, buttonSx, buttonVariant, but
         }}
       >
         {actions.map((action, index) => (
-          <MenuItem key={index} disabled={Boolean(action?.disabled)} onClick={ () => {
+          <MenuItem data-testid={`${testid}.menu-item-${index}`} key={index} disabled={Boolean(action?.disabled)} onClick={ () => {
             if (action?.disabled) return
             handleClose()
             action?.callback()

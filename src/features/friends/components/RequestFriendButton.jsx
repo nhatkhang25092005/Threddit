@@ -41,6 +41,7 @@ export default function RequestFriendButton({
   return (
     <Tooltip title={friend.text_on_profile.tool_tip.request_friend}>
       <Button
+        data-testid="request-friend-button"
         variant="primary"
         sx={{ ...btnContainerSx, ...sx }}
         disabled={disabled || loading}

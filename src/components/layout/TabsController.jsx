@@ -26,6 +26,7 @@ function TabsUI({
         <Tabs value={safeValue} onChange={handleChange}>
           {childrenArray.map((child, index) => (
             <Tab
+              
               key={index}
               label={child.props?.label}
               id={`simple-tab-${index}`}

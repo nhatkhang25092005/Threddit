@@ -1,6 +1,7 @@
 import { Tooltip, CircularProgress } from "@mui/material"
 
 export default function IconButton({
+  'data-testid':testid,
   title,
   icon,
   sx,
@@ -29,6 +30,7 @@ export default function IconButton({
   return (
     <Tooltip title={title}>
       <Icon
+        data-testid ={testid}
         sx={{
           cursor: 'pointer',
           transition: 'transform 0.2s ease-in-out',

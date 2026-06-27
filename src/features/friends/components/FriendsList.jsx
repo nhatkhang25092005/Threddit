@@ -22,6 +22,7 @@ function FriendListUI({ friendList, deleteFriend, actorName, loading, isOwner, n
 
     return (
       <ButtonIcon
+        data-testid='delete-friend'
         icon={PersonRemoveIcon}
         onClick={func}
         title={friend.text_on_friend_list.remove_friend}

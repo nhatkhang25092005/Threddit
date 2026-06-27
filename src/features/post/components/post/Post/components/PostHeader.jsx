@@ -6,7 +6,7 @@ import { post } from "../../../../../../constant/text/vi/post/post"
 import useAuth from "../../../../../../core/auth/useAuth";
 import { buildProfileRoute } from "../../../story/storyRoute";
 import { resolveProfileUsername } from "../../../reel/utils";
-export default function PostHeader({context, sx,isPinned, author, createdAt, postId, hideMenu = false }) {
+export default function PostHeader({index, context, sx,isPinned, author, createdAt, postId, hideMenu = false }) {
   const {isOwner} = useAuth()
   const navigate = useNavigate()
   const profileUsername = resolveProfileUsername(author?.username)
@@ -52,7 +52,7 @@ export default function PostHeader({context, sx,isPinned, author, createdAt, pos
         </Box>
       </Box>
       {isPinned && isOwner ? <PushPinIcon sx={{color:'yellow'}}/> : null}
-      {!hideMenu ? <PostMenu postContext = {context} postId={postId} /> : null}
+      {!hideMenu ? <PostMenu data-testid = {`post-button-menu-${index}`} index={index} postContext = {context} postId={postId} /> : null}
     </Box>
   );
 }

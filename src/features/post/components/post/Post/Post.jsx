@@ -46,8 +46,8 @@ export default function Post({ post }) {
   const postContext = safePost?.context ?? null
   return (
     <Surface  sx={sx.card}>
-      <PostHeader sx={sx} context={postContext}  isPinned={isPinned} author={author} createdAt={createdAt} postId={safePost.id} />
-      <PostText sx={sx} text={safePost.text} />
+      <PostHeader index={post.id} sx={sx} context={postContext}  isPinned={isPinned} author={author} createdAt={createdAt} postId={safePost.id} />
+      <PostText postId={post.id} sx={sx} text={safePost.text} />
       <PostMedia items={media} postId={safePost.id} />
       <PostStats
         sx={sx}
