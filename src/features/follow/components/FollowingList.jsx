@@ -20,11 +20,11 @@ const FollowingListUI = memo(function FollowingListUI({
 
   return (
     <Grid container spacing={2} width="100%">
-      {list.map((ele) => {
+      {list.map((ele, index) => {
         const user = ele.followee
         if (!user) return null
         return (
-          <Grid  item xs={6} key={user.username} sx={{ display: "flex", width: "49%" }}>
+          <Grid data-testid={`following-item-${index}`} item xs={6} key={user.username} sx={{ display: "flex", width: "49%" }}>
             <UserCard
               key={user.username}
               onClick={() => navigateChecker(routes.profile,user.username)}

@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 const timeoutApi: number = 300000;
-describe("friend request", () => {
+describe("friend", () => {
   it("Should request friend successfully", () => {
     // Using Zeskkk account
     cy.session("session-zeskkk", () => {

@@ -4,9 +4,9 @@ import TabsController from "../../components/layout/TabsController";
 import Surface from "../../components/common/Surface";
 import { follow } from "../../constant/text/vi/follow.text";
 
-export default function Follow(){
+export default function Follow({'data-testid':testid}){
   return(
-    <Surface sx={style.surface}>
+    <Surface data-testid={testid} sx={style.surface}>
       <TabsController sx={style.tabs_controller}>
         <FollowerList label={follow.label.follower}/>
         <FollowingList label={follow.label.following}/>

@@ -11,6 +11,7 @@ function UI({isFollowing, hidden, loading, onClick}){
   return(
     <Tooltip title = {isFollowing ? follow.tool_tip.follow : follow.tool_tip.unfollow} placement="top">
       <Button
+        data-testid = 'toggle-follow-button'
         variant={isFollowing ? 'secondary' : 'primary'}
         sx={{...sx.btn_container,display:hidden ? 'none' : 'inline-flex'}}
         disabled={loading.follow}
