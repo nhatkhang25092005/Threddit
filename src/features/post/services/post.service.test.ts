@@ -487,7 +487,6 @@ describe("postService.updatePost", () => {
   });
 
   it("should return failure response if media upload fails during the editing phase", async () => {
-    // Giả lập upload media bị lỗi
     vi.mocked(
       storageService.uploadUpdatedMediaAndGetSessionId,
     ).mockResolvedValue({
@@ -502,10 +501,8 @@ describe("postService.updatePost", () => {
 
     const result = await postService.editPost(contentId, input);
 
-    // Luồng xử lý phải dừng lại ngay lập tức, không gọi tới API editContent
     expect(postApi.editContent).not.toHaveBeenCalled();
 
-    // Kiểm tra cấu trúc lỗi trả ra chuẩn xác
     expect(result).toEqual({
       success: false,
       message: "Upload the update failed due to connection error",
@@ -537,32 +534,6 @@ describe("postService.updatePost", () => {
       success: false,
       message: "Can not update posts content",
       errorSource: "UPDATE_CONTENT_CALL",
-    });
-  });
-
-  it("should return failure response if uploadUpdatedMediaAndGetSessionId returns success false", async () => {
-    vi.mocked(
-      storageService.uploadUpdatedMediaAndGetSessionId,
-    ).mockResolvedValue({
-      success: false,
-      message: "Upload the update failed due to connection error",
-    });
-
-    const input = {
-      text: "broken upload text",
-      media: [{ file: "failed-image.png" }],
-    };
-
-    const result = await postService.editPost(contentId, input);
-
-    // Luồng xử lý phải dừng lại ngay lập tức, không được gọi tới API chỉnh sửa endpoint
-    expect(postApi.editContent).not.toHaveBeenCalled();
-
-    // Kiểm tra cấu trúc lỗi trả ra khớp chuẩn xác với mã nguồn handle trong post.service.js
-    expect(result).toEqual({
-      success: false,
-      message: "Upload the update failed due to connection error",
-      errorSource: "UPLOAD",
     });
   });
 
