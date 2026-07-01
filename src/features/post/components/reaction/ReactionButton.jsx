@@ -88,27 +88,27 @@ export default function ReactionButton({postId}){
   } = useReaction(reaction, postId, selectedReaction)
 
   return(
-    <Box sx={sx.likeActionWrap} onMouseEnter={openReaction} onMouseLeave={closeReaction}>
+    <Box data-testid={`reaction-button-${postId}`} sx={sx.likeActionWrap} onMouseEnter={openReaction} onMouseLeave={closeReaction}>
       <ButtonBase sx={{ ...sx.actionBtn, width: "100%" }} onClick={()=>handleReact(selectedReaction || "LIKE")}>
         {selectedReactionMeta ? (
           <>
-            <Box component="span" sx={sx.selectedReactionEmoji}>
+            <Box data-testid={`selected-reaction-emoji-${postId}`} component="span" sx={sx.selectedReactionEmoji}>
               {selectedReactionMeta.emoji}
             </Box>
-            <Box component="span" sx={{ color: selectedReactionMeta.color }}>
+            <Box data-testid={`selected-reaction-label-${postId}`} component="span" sx={{ color: selectedReactionMeta.color }}>
               {selectedReactionMeta.label}
             </Box>
           </>
         ) : (
-          <Box sx={{display:'flex', alignItems:'center'}}>
-            <ThumbUpAltIcon sx={sx.actionIcon} />
+          <Box data-testid={`no-emote-icon-${postId}`} sx={{display:'flex', alignItems:'center'}}>
+            <ThumbUpAltIcon  sx={sx.actionIcon} />
             <Typography fontSize='0.9rem' color='white'>{post.actionLike}</Typography>
           </Box>
         )}
       </ButtonBase>
 
       {isReactionOpen && (
-        <Box sx={sx.reactionPopover}>
+        <Box  data-testid="reaction-bar" sx={sx.reactionPopover}>
           <ReactionBar onReact={handleReact} onMouseEnter={keepReactionOpen} onMouseLeave={closeReaction} />
         </Box>
       )}

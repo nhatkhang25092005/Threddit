@@ -57,17 +57,17 @@ describe("postService.createPost", () => {
     vi.clearAllMocks();
   });
 
-  it("should create a post successfully and inject type 'post' with text content only", async () => {
+  it("should create a post successfully with text content only", async () => {
     vi.mocked(postApi.createPost).mockResolvedValue(
       createMockApiResponse(
         201,
-        mockDataResponse("abc"),
+        mockDataResponse("ddd"),
         "Đăng tải nội dung thành công",
         201,
       ),
     );
     const payload = {
-      text: "abc",
+      text: "ddd",
       mentionedUsers: [],
       type: "post",
     };
@@ -76,12 +76,12 @@ describe("postService.createPost", () => {
     expect(result).toEqual({
       success: true,
       message: "Đăng tải nội dung thành công",
-      data: mockDataResponse("abc"),
+      data: mockDataResponse("ddd"),
       _payload: payload,
     });
   });
 
-  it("Should create a post successfully and inject type 'post' with media content only", async () => {
+  it("Should create a post successfully with media content only", async () => {
     //Mock the reponse of upload (because in this case, this service will be called)
     vi.mocked(storageService.uploadMediaAndGetSessionId).mockResolvedValue(
       mockUploadResponse,
@@ -132,7 +132,7 @@ describe("postService.createPost", () => {
     });
   });
 
-  it("Should create a post successfully and inject the type 'post' with media and text together", async () => {
+  it("Should create a post successfully with media and text together", async () => {
     // mock storageService response
     vi.mocked(storageService.uploadMediaAndGetSessionId).mockResolvedValue({
       success: true,

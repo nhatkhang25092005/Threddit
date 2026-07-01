@@ -8,6 +8,7 @@ export default function ReactionBar({ onReact, onMouseEnter, onMouseLeave }) {
     <Box sx={sx.tray} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       {Object.entries(REACTION_META).map(([reaction, value]) => (
         <IconButton
+          data-testid={`reaction-button-${reaction}`}
           key={reaction}
           size="small"
           title={value.label}

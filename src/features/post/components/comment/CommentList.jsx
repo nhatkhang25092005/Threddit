@@ -261,9 +261,10 @@ export default function CommentList({
 
       {prefetchStatus !== "loading-root" && prefetchStatus !== "loading-replies" && !thread.isLoading && thread.comments.length > 0 ? (
         <Box data-comment-thread-scroll="true" ref={threadRootRef} sx={sx.threadScroll}>
-          <Box sx={sx.threadList}>
-            {thread.comments.map((comment) => (
+          <Box data-testid='comment-list' sx={sx.threadList}>
+            {thread.comments.map((comment, index) => (
               <CommentBlock
+                data-testid = {`comment-${index}`}
                 key={comment.id}
                 comment={comment}
                 currentUser={thread.viewer}

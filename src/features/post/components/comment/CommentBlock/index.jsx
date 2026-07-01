@@ -43,6 +43,7 @@ const scrollReplyComposerIntoView = (node) => {
 };
 
 export default function CommentBlock({
+  'data-testid':testid = null,
   comment,
   currentUser,
   onDelete,
@@ -107,6 +108,7 @@ export default function CommentBlock({
 
   return (
     <Box
+      data-testid = {testid}
       data-comment-id={comment?.id ?? undefined}
       ref={commentRootRef}
       sx={[

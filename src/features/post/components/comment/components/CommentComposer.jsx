@@ -107,6 +107,7 @@ export default function CommentComposer({
       {replyLabel ? <Box sx={sx.composerReplyTag(compact)}>{replyLabel}</Box> : null}
 
       <TextField
+        slotProps={{htmlInput:{ 'data-testid' : 'comment-creator'}}}
         autoFocus={autoFocus}
         fullWidth
         maxRows={compact ? 6 : 8}
@@ -158,6 +159,7 @@ export default function CommentComposer({
         ) : null}
 
         <Button
+          data-testid="post-comment-button"
           disabled={isDisabled}
           onClick={handleSubmit}
           sx={sx.composerSubmitButton(compact)}

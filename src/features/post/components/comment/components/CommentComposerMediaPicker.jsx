@@ -22,7 +22,7 @@ export default function CommentComposerMediaPicker({
 }) {
   return (
     <Box sx={sx.composerMediaTools(compact)}>
-      <ImageInput onClick={onPickImage}>
+      <ImageInput data-testid={'comment-image-input'} onClick={onPickImage}>
         <ToolButton compact={compact}>
           <InsertPhotoOutlinedIcon sx={{ color: "#45BD62", fontSize: compact ? "0.98rem" : "1.1rem" }} />
           <Typography component="span" sx={sx.composerToolLabel(compact)}>
@@ -31,7 +31,7 @@ export default function CommentComposerMediaPicker({
         </ToolButton>
       </ImageInput>
 
-      <VideoInput onClick={onPickVideo}>
+      <VideoInput data-testid={'comment-video-input'} onClick={onPickVideo}>
         <ToolButton compact={compact}>
           <VideocamOutlinedIcon sx={{ color: "#3B82F6", fontSize: compact ? "0.98rem" : "1.1rem" }} />
           <Typography component="span" sx={sx.composerToolLabel(compact)}>
@@ -40,7 +40,7 @@ export default function CommentComposerMediaPicker({
         </ToolButton>
       </VideoInput>
 
-      <SoundInput onClick={onPickAudio}>
+      <SoundInput data-testid={'comment-sound-input'} onClick={onPickAudio}>
         <ToolButton compact={compact}>
           <GraphicEqRoundedIcon sx={{ color: "#22C55E", fontSize: compact ? "0.98rem" : "1.1rem" }} />
           <Typography component="span" sx={sx.composerToolLabel(compact)}>

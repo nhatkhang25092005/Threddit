@@ -79,7 +79,7 @@ export default function PostActions({ sx, postId, onCommentClick }) {
         >
           <ReactionButton postId={postId} />
 
-          <ButtonBase onClick={handleCommentClick} sx={actionButtonSx}>
+          <ButtonBase data-testid = {`comment-button-${postId}`} onClick={handleCommentClick} sx={actionButtonSx}>
             <ChatBubbleOutlineIcon sx={actionIconSx} />
             <Typography component="span" sx={{ fontSize: "inherit", color: "inherit" }}>
               {post.actionComment}
