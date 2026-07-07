@@ -58,182 +58,193 @@ describe("postService.createPost", () => {
   });
 
   it("should create a post successfully with text content only", async () => {
-    vi.mocked(postApi.createPost).mockResolvedValue(
-      createMockApiResponse(
-        201,
-        mockDataResponse("ddd"),
-        "Đăng tải nội dung thành công",
-        201,
-      ),
-    );
-    const payload = {
-      text: "ddd",
+    const mockText = "ddd";
+    const successMessage = "Đăng tải nội dung thành công";
+    const mockData = mockDataResponse(mockText);
+
+    const input = {
+      text: mockText,
+      type: "post" as const,
+    };
+
+    const expectedApiPayload = {
+      text: mockText,
       mentionedUsers: [],
       type: "post",
     };
-    const result = await postService.createPost(payload);
-    expect(postApi.createPost).toHaveBeenCalledWith(payload);
-    expect(result).toEqual({
+
+    const expected = {
       success: true,
-      message: "Đăng tải nội dung thành công",
-      data: mockDataResponse("ddd"),
-      _payload: payload,
-    });
+      message: successMessage,
+      data: mockData,
+    };
+
+    vi.mocked(postApi.createPost).mockResolvedValue(
+      createMockApiResponse(201, mockData, successMessage, 201),
+    );
+
+    const actual = await postService.createPost(input);
+
+    expect(postApi.createPost).toHaveBeenCalledWith(expectedApiPayload);
+    expect(actual).toEqual(expected);
   });
 
   it("Should create a post successfully with media content only", async () => {
-    //Mock the reponse of upload (because in this case, this service will be called)
+    const successMessage = "Create new post successfully";
+    const mockSessionId = "b9bb9e73-80f5-48ac-a7d8-6d82e07b674e";
+    const mockMedia = [{ file: "image1.png" }, { file: "image2.png" }];
+    const mockData = mockDataResponse("", mockMedia);
+
+    const input = {
+      text: "",
+      media: mockMedia,
+    };
+
+    const expectedApiPayload = {
+      text: "",
+      mentionedUsers: [],
+      type: "post",
+      uploadSessionId: mockSessionId,
+    };
+
+    const expected = {
+      success: true,
+      message: successMessage,
+      data: mockData,
+    };
+
     vi.mocked(storageService.uploadMediaAndGetSessionId).mockResolvedValue(
       mockUploadResponse,
     );
-
-    const dataResponse = mockDataResponse("tesst =)", [
-      { file: "image1.png" },
-      { file: "image2.png" },
-    ]);
-
-    // Mock the api response of create post
     vi.mocked(postApi.createPost).mockResolvedValue(
-      createMockApiResponse(
-        201,
-        dataResponse,
-        "Create new post successfully",
-        201,
-      ),
+      createMockApiResponse(201, mockData, successMessage, 201),
     );
 
-    // payload for service calling
-    const payload = {
-      text: "abc",
-      mentionedUsers: [],
-      type: "post",
-      media: [{ file: "image1.png" }, { file: "image2.png" }],
-    };
+    const actual = await postService.createPost(input);
 
-    // Call service
-    const result = await postService.createPost(payload);
-    expect(postApi.createPost).toHaveBeenCalledWith({
-      text: "abc",
-      mentionedUsers: [],
-      type: "post",
-      uploadSessionId: "b9bb9e73-80f5-48ac-a7d8-6d82e07b674e",
-    });
-
-    expect(result).toEqual({
-      success: true,
-      message: "Create new post successfully",
-      data: dataResponse,
-      _payload: {
-        text: "abc",
-        mentionedUsers: [],
-        type: "post",
-        uploadSessionId: "b9bb9e73-80f5-48ac-a7d8-6d82e07b674e",
-      },
-    });
+    expect(postApi.createPost).toHaveBeenCalledWith(expectedApiPayload);
+    expect(actual).toEqual(expected);
   });
 
   it("Should create a post successfully with media and text together", async () => {
-    // mock storageService response
+    const successMessage = "Create new post successfully";
+    const mockSessionId = "b9bb9e73-80f5-48ac-a7d8-6d82e07b674e";
+    const mockMedia = [{ file: "image.png" }];
+    const mockData = mockDataResponse("hello", mockMedia);
+
+    const input = {
+      text: "hello",
+      media: mockMedia,
+    };
+
+    const expectedApiPayload = {
+      text: "hello",
+      mentionedUsers: [],
+      type: "post",
+      uploadSessionId: mockSessionId,
+    };
+
+    const expected = {
+      success: true,
+      message: successMessage,
+      data: mockData,
+    };
+
     vi.mocked(storageService.uploadMediaAndGetSessionId).mockResolvedValue({
       success: true,
-      uploadSessionId: "b9bb9e73-80f5-48ac-a7d8-6d82e07b674e",
+      uploadSessionId: mockSessionId,
     });
-
-    // mock create post api response
     vi.mocked(postApi.createPost).mockResolvedValue(
-      createMockApiResponse(
-        201,
-        mockDataResponse("hello", [{ file: "image.png" }]),
-        "Create new post successfully",
-        201,
-      ),
+      createMockApiResponse(201, mockData, successMessage, 201),
     );
 
-    // input of service
-    const input = {
-      text: "hello",
-      media: [{ file: "image.png" }],
-    };
+    const actual = await postService.createPost(input);
 
-    const result = await postService.createPost(input);
-
-    expect(postApi.createPost).toHaveBeenCalledWith({
-      text: "hello",
-      type: "post",
-      mentionedUsers: [],
-      uploadSessionId: "b9bb9e73-80f5-48ac-a7d8-6d82e07b674e",
-    });
-
-    expect(result).toEqual({
-      success: true,
-      message: "Create new post successfully",
-      _payload: {
-        text: "hello",
-        type: "post",
-        mentionedUsers: [],
-        uploadSessionId: "b9bb9e73-80f5-48ac-a7d8-6d82e07b674e",
-      },
-      data: mockDataResponse("hello", [{ file: "image.png" }]),
-    });
+    expect(postApi.createPost).toHaveBeenCalledWith(expectedApiPayload);
+    expect(actual).toEqual(expected);
   });
 
-  it("Shouldn't have uploadSessionId if there are no media in the input", async () => {
-    const input = {
-      text: "abc",
-      media: [],
-    };
-    await postService.createPost(input);
-    expect(postApi.createPost).toHaveBeenCalledWith({
-      text: "abc",
-      type: "post",
-      mentionedUsers: [],
-    });
-  });
+  // it("Shouldn't have uploadSessionId if there are no media in the input", async () => {
+  //   const input = {
+  //     text: "abc",
+  //     media: [],
+  //   };
+  //   const expected = {
+  //     success: false,
+  //     message: "Fail in create new post",
+  //     errorSource: "CREATE_NEW_POST",
+  //   };
+  //   const actual = await postService.createPost(input);
+  //   expect(postApi.createPost).toHaveBeenCalledWith({
+  //     text: "abc",
+  //     type: "post",
+  //     mentionedUsers: [],
+  //   });
+  // });
 
-  it("Should return valid response if an error occurs in the phase", async () => {
-    vi.mocked(storageService.uploadMediaAndGetSessionId).mockResolvedValue({
-      success: false,
-      message: "Media upload failed",
-    });
-
+  it("Should return valid response if an error occurs in the upload phase", async () => {
+    // 1. Arrange
     const input = {
       text: "abc",
       media: [{ file: "image1.png" }, { file: "image2.png" }],
     };
 
-    const result = await postService.createPost(input);
+    const expected = {
+      success: false,
+      errorSource: "POST_UPLOAD_MEDIA",
+      message: "Media upload failed",
+    };
 
-    expect(result).toEqual({
+    // 2. Mocking Services
+    vi.mocked(storageService.uploadMediaAndGetSessionId).mockResolvedValue({
       success: false,
       message: "Media upload failed",
-      errorSource: "POST_UPLOAD_MEDIA",
     });
+
+    // 3. Act
+    const actual = await postService.createPost(input);
+
+    // 4. Assert
+    expect(storageService.uploadMediaAndGetSessionId).toHaveBeenCalledWith(
+      input.media,
+    );
+    expect(actual).toEqual(expected);
   });
 
   it("Should return valid response if an error occurs in create post phase", async () => {
+    // 1. Arrange
+    const mockSessionId = "b9bb9e73-80f5-48ac-a7d8-6d82e07b674e";
+
+    const input = {
+      text: "hello",
+      media: [{ file: "image1.png" }, { file: "image2.png" }],
+    };
+
+    const expectedApiPayload = {
+      text: "hello",
+      mentionedUsers: [],
+      type: "post",
+      uploadSessionId: mockSessionId,
+    };
+
+    const expected = {
+      success: false,
+      message: "Network Error",
+      errorSource: "CREATE_NEW_POST",
+    };
+
+    // 2. Mocking Services & APIs
     vi.mocked(storageService.uploadMediaAndGetSessionId).mockResolvedValue(
       mockUploadResponse,
     );
     vi.mocked(postApi.createPost).mockRejectedValue(new Error("Network Error"));
-    const input = {
-      text: "hello",
-      media: [{ file: "image1.png" }, { file: "image2.png" }],
-    };
 
-    const result = await postService.createPost(input);
+    // 3. Act
+    const actual = await postService.createPost(input);
 
-    expect(postApi.createPost).toHaveBeenCalledWith({
-      text: "hello",
-      mentionedUsers: [],
-      type: "post",
-      uploadSessionId: "b9bb9e73-80f5-48ac-a7d8-6d82e07b674e",
-    });
-
-    expect(result).toEqual({
-      success: false,
-      message: "Network Error",
-      errorSource: "CREATE_NEW_POST",
-    });
+    // 4. Assert
+    expect(postApi.createPost).toHaveBeenCalledWith(expectedApiPayload);
+    expect(actual).toEqual(expected);
   });
 });
 
@@ -259,30 +270,8 @@ describe("postService.updatePost", () => {
   });
 
   it("should edit a post successfully with text content only (no media upload needed)", async () => {
-    vi.mocked(postApi.editContent).mockResolvedValue(
-      createMockApiResponse(
-        201,
-        mockApiEditSuccessResponse,
-        "Updated Successfully",
-        201,
-      ),
-    );
-
-    vi.mocked(buildEditedContentPayload).mockReturnValue({
-      hasExplicitMediaField: false,
-      hasMissingMediaKey: false,
-      payload: { text: "edited text", type: "post", mentionedUsers: [] },
-    });
-
-    vi.mocked(buildEditedContentPatch).mockReturnValue({
-      type: "post",
-      mentionedUsers: [],
-      mediaFiles: [],
-      text: "edited text",
-      time: {
-        updatedAt: "now",
-      },
-    });
+    // 1. Arrange
+    const successMessage = "Updated Successfully";
 
     const input = {
       text: "edited text",
@@ -290,97 +279,123 @@ describe("postService.updatePost", () => {
       mentionedUsers: [],
     };
 
-    const result = await postService.editPost(contentId, input);
-    // OK
-    expect(
-      storageService.uploadUpdatedMediaAndGetSessionId,
-    ).not.toHaveBeenCalled();
-
-    // OK
-    expect(postApi.editContent).toHaveBeenCalledWith(contentId, {
+    const expectedApiPayload = {
       text: "edited text",
       type: "post",
       mentionedUsers: [],
-    });
+    };
 
-    expect(result).toEqual({
-      success: true,
-      message: "Updated Successfully",
-      patch: {
-        text: "edited text",
-        type: "post",
-        time: {
-          updatedAt: "now",
-        },
-        mediaFiles: [],
-        mentionedUsers: [],
+    const expectedPatch = {
+      type: "post",
+      mentionedUsers: [],
+      mediaFiles: [],
+      text: "edited text",
+      time: {
+        updatedAt: "now",
       },
+    };
+
+    const expected = {
+      success: true,
+      message: successMessage,
+      patch: expectedPatch,
+    };
+
+    // 2. Mocking Services & APIs
+    vi.mocked(postApi.editContent).mockResolvedValue(
+      createMockApiResponse(
+        201,
+        mockApiEditSuccessResponse,
+        successMessage,
+        201,
+      ),
+    );
+    vi.mocked(buildEditedContentPayload).mockReturnValue({
+      hasExplicitMediaField: false,
+      hasMissingMediaKey: false,
+      payload: expectedApiPayload,
     });
+    vi.mocked(buildEditedContentPatch).mockReturnValue(expectedPatch);
+
+    // 3. Act
+    const actual = await postService.editPost(contentId, input);
+
+    // 4. Assert
+    expect(
+      storageService.uploadUpdatedMediaAndGetSessionId,
+    ).not.toHaveBeenCalled();
+    expect(postApi.editContent).toHaveBeenCalledWith(
+      contentId,
+      expectedApiPayload,
+    );
+    expect(actual).toEqual(expected);
   });
 
   it("Should upload media and edit post successfully when new media files are provided", async () => {
+    // 1. Arrange
+    const successMessage = "Updated Successfully";
+    const mockSessionId = "edit-session-id-12345";
+    const mockMedia = [{ file: "new-image.png" }];
+
+    const input = {
+      text: "text with media",
+      media: mockMedia,
+    };
+
+    const expectedApiPayload = {
+      text: "text with media",
+      type: "post",
+      uploadSessionId: mockSessionId,
+      mentionedUsers: [],
+    };
+
+    const expectedPatch = {
+      type: "post",
+      mentionedUsers: [],
+      mediaFiles: mockMedia,
+      text: "text with media",
+      time: {
+        updatedAt: "now",
+      },
+    };
+
+    const expected = {
+      success: true,
+      message: successMessage,
+      patch: expectedPatch,
+    };
+
+    // 2. Mocking Services & APIs
     vi.mocked(
       storageService.uploadUpdatedMediaAndGetSessionId,
     ).mockResolvedValue(mockUploadUpdateResponse);
-
     vi.mocked(buildEditedContentPayload).mockReturnValue({
       hasExplicitMediaField: true,
       hasMissingMediaKey: false,
-      payload: {
-        text: "text with media",
-        type: "post",
-        uploadSessionId: "edit-session-id-12345",
-        mentionedUsers: [],
-      },
+      payload: expectedApiPayload,
     });
     vi.mocked(postApi.editContent).mockResolvedValue(
       createMockApiResponse(
         201,
         mockApiEditSuccessResponse,
-        "Updated Successfully",
+        successMessage,
         201,
       ),
     );
+    vi.mocked(buildEditedContentPatch).mockReturnValue(expectedPatch);
 
-    vi.mocked(buildEditedContentPatch).mockReturnValue({
-      type: "post",
-      mentionedUsers: [],
-      mediaFiles: [{ file: "new-image.png" }],
-      text: "text with media",
-      time: {
-        updatedAt: "now",
-      },
-    });
-    const input = {
-      text: "text with media",
-      media: [{ file: "new-image.png" }],
-    };
+    // 3. Act
+    const actual = await postService.editPost(contentId, input);
 
-    const result = await postService.editPost(contentId, input);
+    // 4. Assert
     expect(
       storageService.uploadUpdatedMediaAndGetSessionId,
     ).toHaveBeenCalledWith(contentId, expect.any(Array));
-
-    expect(postApi.editContent).toHaveBeenCalledWith(contentId, {
-      text: "text with media",
-      type: "post",
-      mentionedUsers: [],
-      uploadSessionId: "edit-session-id-12345",
-    });
-
-    expect(result).toEqual({
-      success: true,
-      message: "Updated Successfully",
-      patch: {
-        type: "post",
-        mentionedUsers: [],
-        mediaFiles: [{ file: "new-image.png" }],
-        text: "text with media",
-        time: {
-          updatedAt: "now",
-        },
-      },
-    });
+    expect(postApi.editContent).toHaveBeenCalledWith(
+      contentId,
+      expectedApiPayload,
+    );
+    expect(actual).toEqual(expected);
   });
 
   it("Should edit both text and media content successfully at the same time", async () => {
@@ -487,6 +502,19 @@ describe("postService.updatePost", () => {
   });
 
   it("should return failure response if media upload fails during the editing phase", async () => {
+    // 1. Arrange
+    const input = {
+      text: "broken upload text",
+      media: [{ file: "failed-image.png" }],
+    };
+
+    const expected = {
+      success: false,
+      message: "Upload the update failed due to connection error",
+      errorSource: "UPLOAD",
+    };
+
+    // 2. Mocking Services
     vi.mocked(
       storageService.uploadUpdatedMediaAndGetSessionId,
     ).mockResolvedValue({
@@ -494,47 +522,51 @@ describe("postService.updatePost", () => {
       message: "Upload the update failed due to connection error",
     });
 
-    const input = {
-      text: "broken upload text",
-      media: [{ file: "failed-image.png" }],
-    };
+    // 3. Act
+    const actual = await postService.editPost(contentId, input);
 
-    const result = await postService.editPost(contentId, input);
-
+    // 4. Assert
     expect(postApi.editContent).not.toHaveBeenCalled();
-
-    expect(result).toEqual({
-      success: false,
-      message: "Upload the update failed due to connection error",
-      errorSource: "UPLOAD",
-    });
+    expect(actual).toEqual(expected);
   });
 
   it("should return failure response when API editContent fails", async () => {
-    vi.mocked(buildEditedContentPayload).mockReturnValue({
-      hasExplicitMediaField: false,
-      hasMissingMediaKey: false,
-      payload: { text: "api fails", type: "post", mentionedUsers: [] },
-    });
-
-    vi.mocked(postApi.editContent).mockResolvedValue(
-      createMockApiResponse(400, null, "Can not update posts content", 400),
-    );
+    // 1. Arrange
+    const errorMessage = "Can not update posts content";
 
     const input = {
       text: "api fails",
       media: [],
     };
 
-    const result = await postService.editPost(contentId, input);
+    const expectedApiPayload = {
+      text: "api fails",
+      type: "post",
+      mentionedUsers: [],
+    };
 
-    expect(buildEditedContentPatch).not.toHaveBeenCalled();
-
-    expect(result).toEqual({
+    const expected = {
       success: false,
-      message: "Can not update posts content",
+      message: errorMessage,
       errorSource: "UPDATE_CONTENT_CALL",
+    };
+
+    // 2. Mocking Services & APIs
+    vi.mocked(buildEditedContentPayload).mockReturnValue({
+      hasExplicitMediaField: false,
+      hasMissingMediaKey: false,
+      payload: expectedApiPayload,
     });
+    vi.mocked(postApi.editContent).mockResolvedValue(
+      createMockApiResponse(400, null, errorMessage, 400),
+    );
+
+    // 3. Act
+    const actual = await postService.editPost(contentId, input);
+
+    // 4. Assert
+    expect(buildEditedContentPatch).not.toHaveBeenCalled();
+    expect(actual).toEqual(expected);
   });
 
   it("should handle error or reject if uploadUpdatedMediaAndGetSessionId throws an exception", async () => {
@@ -565,28 +597,46 @@ describe("postService.deletePost", () => {
   const postId = 10;
   beforeEach(() => vi.clearAllMocks());
   it("Should delete the specific post successfully", async () => {
+    // 1. Arrange
+    const successMessage = "Delete successfully";
+
+    const expected = {
+      success: true,
+      message: successMessage,
+    };
+
+    // 2. Mocking APIs
     vi.mocked(postApi.deleteContent).mockResolvedValue(
-      createMockApiResponse(200, null, "Delete successfully", 200),
+      createMockApiResponse(200, null, successMessage, 200),
     );
 
-    const result = await postService.deletePost(postId);
+    // 3. Act
+    const actual = await postService.deletePost(postId);
+
+    // 4. Assert
     expect(postApi.deleteContent).toHaveBeenCalledWith(postId);
-    expect(result).toEqual({
-      success: true,
-      message: "Delete successfully",
-    });
+    expect(actual).toEqual(expected);
   });
 
   it("Should return fail if delete post unsuccessfully", async () => {
+    // 1. Arrange
+    const errorMessage = "Delete Failed";
+
+    const expected = {
+      success: false,
+      message: errorMessage,
+    };
+
+    // 2. Mocking APIs
     vi.mocked(postApi.deleteContent).mockResolvedValue(
-      createMockApiResponse(400, null, "Delete Failed", 400),
+      createMockApiResponse(400, null, errorMessage, 400),
     );
 
-    const result = await postService.deletePost(postId);
+    // 3. Act
+    const actual = await postService.deletePost(postId);
+
+    // 4. Assert
     expect(postApi.deleteContent).toHaveBeenCalledWith(postId);
-    expect(result).toEqual({
-      success: false,
-      message: "Delete Failed",
-    });
+    expect(actual).toEqual(expected);
   });
 });

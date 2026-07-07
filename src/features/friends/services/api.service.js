@@ -14,8 +14,11 @@ export const apiService = {
   getSentRequestList: async (cursor, signal) =>
     handleRequest(() => friendApi.getSentRequests(cursor, signal)),
 
-  acceptRequest: async (username) =>
-    handleRequest(() => friendApi.acceptRequest(username)),
+  acceptRequest: async (username) =>{
+    console.log("acceptRequest", username)
+    return handleRequest(() => friendApi.acceptRequest(username))
+  },
+
 
   rejectRequest: async (username) =>
     handleRequest(() => friendApi.rejectRequest(username)),
@@ -26,8 +29,10 @@ export const apiService = {
   deleteFriend: async (username) =>
     handleRequest(() => friendApi.deleteFriend(username)),
 
-  requestFriend: async (username) =>
-    handleRequest(() => friendApi.request(username)),
+  requestFriend: async (username) =>{
+    console.log(username)
+    return handleRequest(() => friendApi.request(username))
+  },
 
   getMutualList: async (username, cursor, signal) =>
     handleRequest(() =>

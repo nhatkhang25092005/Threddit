@@ -126,57 +126,68 @@ describe("commentSuccess", () => {
   });
 
   it("Should create a comment with media and text together", () => {
-    cy.visit("http://localhost:5000/app/profile");
+    // 1. Arrange
+    const postUrl = "http://localhost:5000/app/profile";
+    const fixturePath = "cypress/fixtures/sample_image.jpg";
+
+    const selectors = {
+      commentBtn: "[data-testid^=comment-button-]",
+      commentList: '[data-testid="comment-list"]',
+      commentItem: '[data-testid^="comment-"]',
+      commentInput: '[data-testid="comment-creator"]',
+      imageInput: '[data-testid="comment-image-input"]',
+      submitBtn: '[data-testid="post-comment-button"]',
+    };
+
     cy.intercept("POST", "**/api/content/**/comment").as("createComment");
+
+    // 2. Act
+    cy.visit(postUrl);
     cy.wait(2000);
-    cy.get("[data-testid^=comment-button-]")
+
+    cy.get(selectors.commentBtn)
       .first()
       .then(($btn) => {
-        // Click to open the post modal
         cy.wrap($btn).click();
         cy.wait(2000);
 
         // Count the init comment list length
-        cy.get('[data-testid="comment-list"]').then(($list) => {
-          const comments = $list.find('[data-testid^="comment-"]');
+        cy.get(selectors.commentList).then(($list) => {
+          const comments = $list.find(selectors.commentItem);
           const initNumber = comments.length > 0 ? comments.length : 0;
-          cy.wrap(initNumber).as("commentNumber"); // Dùng tên alias riêng biệt để tránh nhầm lẫn
+          cy.wrap(initNumber).as("commentNumber");
         });
 
-        // enter text
-        cy.get('[data-testid="comment-creator"]')
+        // Enter text & upload media
+        cy.get(selectors.commentInput)
           .click()
           .type(comment)
           .should("have.value", comment);
         cy.wait(2000);
 
-        // upload media
-        cy.get('[data-testid="comment-image-input"]')
+        cy.get(selectors.imageInput)
           .first()
-          .selectFile("cypress/fixtures/sample_image.jpg", { force: true });
+          .selectFile(fixturePath, { force: true });
         cy.wait(2000);
 
-        // Find the post comment button then click
-        cy.get('[data-testid="post-comment-button"]').then(($submit_btn) => {
+        // Submit comment
+        cy.get(selectors.submitBtn).then(($submit_btn) => {
           cy.wrap($submit_btn).should("be.enabled");
           cy.wrap($submit_btn).click({ force: true });
           cy.wrap($submit_btn).should("be.disabled");
-          cy.wait("@createComment", { timeout: 30000 })
-            .its("response.statusCode")
-            .should("eq", 200);
         });
 
-        // create post completed
-        cy.get('[data-testid="comment-creator"]').should("not.have.value");
+        // 3. Assert
+        cy.wait("@createComment", { timeout: 30000 })
+          .its("response.statusCode")
+          .should("eq", 200);
+        cy.get(selectors.commentInput).should("not.have.value");
 
-        // --- KIỂM TRA SỐ LƯỢNG TĂNG LÊN ---
-        cy.get('[data-testid="comment-list"]').within(() => {
+        // Check if the comment count increases
+        cy.get(selectors.commentList).within(() => {
           cy.get("@commentNumber").then((initNumber) => {
             const expectedLength = Number(initNumber) + 1;
-            cy.get('[data-testid^="comment-"]').should(
-              "have.length",
-              expectedLength,
-            );
+            cy.get(selectors.commentItem).should("have.length", expectedLength);
           });
         });
       });

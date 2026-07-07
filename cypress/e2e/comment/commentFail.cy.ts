@@ -16,42 +16,77 @@ describe("commentFail", () => {
     });
   });
 
-  it("It should create a comment successfully", () => {
-    // visit the profile page
-    cy.visit("http://localhost:5000/app/profile");
+  it("It should create a comment fail", () => {
+    // 1. Arrange
+    const postUrl = "http://localhost:5000/app/profile";
+
+    const selectors = {
+      commentBtn: "[data-testid^=comment-button-]",
+      commentInput: '[data-testid="comment-creator"]',
+      submitBtn: '[data-testid="post-comment-button"]',
+      popup: '[data-testid="popup"]',
+    };
+
     cy.intercept("POST", "**/api/content/**/comment").as("createComment");
+
+    // 2. Act
+    cy.visit(postUrl);
     cy.wait(3000);
 
-    // Find the comment button
-    cy.get("[data-testid^=comment-button-]")
+    cy.get(selectors.commentBtn)
       .first()
       .then(($btn) => {
-        // Click to open the post modal
         cy.wrap($btn).click();
         cy.wait(2000);
 
-        // Enter the comment content
-        cy.get('[data-testid = "comment-creator"]')
+        // Enter comment
+        cy.get(selectors.commentInput)
           .click()
           .type(comment)
           .should("have.value", comment);
         cy.wait(4000);
 
-        // Find the post comment button then click
-        cy.get('[data-testid = "post-comment-button"]').then(($submit_btn) => {
+        // Submit comment
+        cy.get(selectors.submitBtn).then(($submit_btn) => {
           cy.wrap($submit_btn).should("be.visible").should("be.enabled");
           cy.wrap($submit_btn).click();
           cy.wrap($submit_btn).should("be.disabled");
-          cy.wait("@createComment", { timeout: 30000 })
-            .its("response.statusCode")
-            .should("eq", 400);
         });
 
-        // create post completed
-        cy.get('[data-testid = "comment-creator"]').should("not.have.value");
+        // 3. Assert
+        cy.wait("@createComment", { timeout: 30000 })
+          .its("response.statusCode")
+          .should("eq", 400);
+        cy.get(selectors.commentInput).should("not.have.value");
       });
 
-    // See the snackbar
-    cy.get('[data-testid="popup"]').should("exist");
+    cy.get(selectors.popup).should("exist");
+    cy.wait(2000);
+  });
+
+  it("should can not create a comment with empty content", () => {
+    // 1. Arrange
+    const postUrl = "http://localhost:5000/app/profile";
+
+    const selectors = {
+      commentBtn: "[data-testid^=comment-button-]",
+      submitBtn: '[data-testid="post-comment-button"]',
+      commentInput: '[data-testid="comment-creator"]',
+    };
+
+    // 2. Act
+    cy.visit(postUrl);
+    cy.wait(3000);
+
+    cy.get(selectors.commentBtn)
+      .first()
+      .then(($btn) => {
+        cy.wrap($btn).click();
+        cy.wait(2000);
+
+        // 3. Assert
+        cy.get(selectors.submitBtn).should("be.visible").should("be.disabled");
+        cy.get(selectors.commentInput).should("not.have.value");
+      });
   });
 });

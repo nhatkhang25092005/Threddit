@@ -29,7 +29,7 @@ export function useCreatePost(dispatch) {
         return null
       }
 
-      const createdRaw = resolveCreatedPostRaw(response.data, response._payload, user)
+      const createdRaw = resolveCreatedPostRaw(response.data, data, user)
       if (createdRaw) {
         const createdPost = postByIdModel(createdRaw)
         dispatch(postByIdActions.addPost(createdPost))

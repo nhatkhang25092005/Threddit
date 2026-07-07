@@ -88,12 +88,10 @@ export const postService = {
     handleRequest(() => postApi.getSavedContent(cursor, signal)),
 
   createPost: async (data) => {
-    // check the media list
     const mediaList = (Array.isArray(data?.media) ? data.media : []).filter(
       (item) => item?.file,
     );
 
-    // if has media => call api to get sessionId
     let uploadSessionId = null;
     if (mediaList.length > 0) {
       const uploadResult =
@@ -108,14 +106,6 @@ export const postService = {
       uploadSessionId = uploadResult.uploadSessionId;
     }
 
-    /*
-      create the payload with {
-        mentionUsers
-        type = "post",
-        text,
-        uploadSessionId
-      }
-    */
     const payload = {
       mentionedUsers: Array.isArray(data?.mentionedUsers)
         ? data.mentionedUsers
@@ -135,11 +125,7 @@ export const postService = {
         errorSource: "CREATE_NEW_POST",
       };
     }
-    // return result and payload (the payload is using for dispatch in store)
-    return {
-      ...createResult,
-      _payload: payload,
-    };
+    return createResult
   },
 
   savePost: async (id) => handleRequest(() => postApi.savePost(id)),
@@ -156,69 +142,37 @@ export const postService = {
   unPinContent: async (id) => handleRequest(() => postApi.unPinContent(id)),
 
   editPost: async (contentId, data) => {
-    console.log(data.media)
     const mediaList = normalizeEditableMediaList(data?.media);
-    const filteredMediaList = (
-      Array.isArray(mediaList) ? mediaList : []
-    ).filter((item) => item?.file);
-    let uploadSessionId = null;
-    let presignedMediaUrls = [];
-    if (filteredMediaList.length > 0) {
-      const uploadResult =
-        await storageService.uploadUpdatedMediaAndGetSessionId(
-          contentId,
-          filteredMediaList,
-        );
-
-      if (!uploadResult?.success) {
-        return {
-          success: false,
-          message: uploadResult?.message || "Upload the update failed",
-          errorSource: "UPLOAD",
-        };
-      }
-
-      ((uploadSessionId = uploadResult.uploadSessionId),
-        (presignedMediaUrls = uploadResult.presignedMediaUrls));
+    const filteredMedia = (Array.isArray(mediaList) ? mediaList : []).filter(i => i?.file);
+    
+    let uploadSessionId = null, presignedMediaUrls = [];
+    if (filteredMedia.length > 0) {
+      const uploadRes = await storageService.uploadUpdatedMediaAndGetSessionId(contentId, filteredMedia);
+      if (!uploadRes?.success) return {
+        success: false,
+        message: uploadRes?.message || "Upload the update failed",
+        errorSource: "UPLOAD"
+      };
+      ({ uploadSessionId, presignedMediaUrls } = uploadRes);
     }
 
     const { hasMissingMediaKey, payload } = buildEditedContentPayload({
-      type: "post",
-      data,
-      mediaList,
-      presignedMediaUrls,
-      uploadSessionId,
+      type: "post", data, mediaList, presignedMediaUrls, uploadSessionId
     });
-
-    if (hasMissingMediaKey)
-      return {
-        success: false,
-        message: "Could not resolve mediaKey for updated media",
-        errorSource: "BUILD_PAYLOAD",
-      };
-
-    const result = await handleRequest(() =>
-      postApi.editContent(contentId, payload),
-    );
-
-    if (!result.success) return {
-      success:false,
-      message:result?.message || "Can not update posts content",
-      errorSource: "UPDATE_CONTENT_CALL"
+    if (hasMissingMediaKey) return {
+      success: false, message: "Could not resolve mediaKey for updated media", errorSource: "BUILD_PAYLOAD"
     };
 
-    const contentPatch = buildEditedContentPatch({
-      type: "post",
-      responseData: result.data,
-      data,
-      mediaList:filteredMediaList
-    })
+    const result = await handleRequest(() => postApi.editContent(contentId, payload));
+    if (!result.success) return {
+      success: false, message: result?.message || "Can not update posts content", errorSource: "UPDATE_CONTENT_CALL"
+    };
 
     return {
-      success:true,
+      success: true,
       message: result?.message || "Updated Successfully",
-      patch: contentPatch
-    }
+      patch: buildEditedContentPatch({ type: "post", responseData: result.data, data, mediaList: filteredMedia })
+    };
   },
 
   deletePost: async (id) => handleRequest(() => postApi.deleteContent(id)),

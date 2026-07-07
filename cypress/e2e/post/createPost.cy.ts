@@ -18,113 +18,143 @@ describe("post creation", () => {
 
   // create post with text only
   it("should create post with text only successfully", () => {
+    // 1. Arrange
+    const postUrl = "http://localhost:5000/app/profile";
+    const postTextContent = `text content of post creation at ${Date.now()}`;
+
+    const selectors = {
+      inputBtn: '[data-testid="create-post-input-button"]',
+      modal: '[data-testid="create-post-modal"]',
+      submitBtn: '[data-testid="create-post-button"]',
+      textarea: '[data-testid="post-editor-textarea"]',
+      loading: '[data-testid="create-post-loading"]',
+      snackbar: '[data-testid="snackbar"]',
+    };
+
     cy.intercept("POST", "**/api/content").as("createPostRequest");
-    // navigate to the page
-    cy.visit("http://localhost:5000/app/profile");
 
-    // declare test value
-    const now = Date.now();
-    const postTextContent = `text content of post creation at ${now}`;
+    // 2. Act
+    cy.visit(postUrl);
+    cy.get(selectors.inputBtn).click();
 
-    // open the modal
-    cy.get('[data-testid="create-post-input-button"]').click();
-    cy.get('[data-testid="create-post-modal"]').should("be.visible");
-    cy.get('[data-testid="create-post-button"]').should("be.disabled");
+    cy.get(selectors.modal).should("be.visible");
+    cy.get(selectors.submitBtn).should("be.disabled");
 
-    // type the test value into modal
-    cy.get('[data-testid="post-editor-textarea"]')
+    cy.get(selectors.textarea)
       .type(postTextContent)
       .should("have.value", postTextContent);
+    cy.get(selectors.submitBtn).should("be.enabled").click();
 
-    // Click the create new post button
-    cy.get('[data-testid="create-post-button"]').should("be.enabled").click();
-    cy.get('[data-testid="create-post-button"]').should("be.disabled");
-    cy.get('[data-testid="create-post-loading"]').should("be.visible");
+    // 3. Assert
+    cy.get(selectors.submitBtn).should("be.disabled");
+    cy.get(selectors.loading).should("be.visible");
+
     cy.wait("@createPostRequest", { timeout: 30000 })
       .its("response.statusCode")
       .should("eq", 201);
-    cy.get('[data-testid="create-post-modal"]').should("not.exist");
 
-    // toast notification and result display
-    cy.get('[data-testid="snackbar"]').should("be.visible");
-    cy.get('[data-testid="snackbar"]', { timeout: 5000 }).should("not.exist");
+    cy.get(selectors.modal).should("not.exist");
+    cy.get(selectors.snackbar).should("be.visible");
+    cy.get(selectors.snackbar, { timeout: 5000 }).should("not.exist");
     cy.contains(postTextContent).should("be.visible");
   });
 
   // create post with media only
   it("should create post with media only successfully", () => {
+    // 1. Arrange
+    const postUrl = "http://localhost:5000/app/profile";
+    const fixturePath = "cypress/fixtures/sample_image.jpg";
+
+    const selectors = {
+      inputBtn: '[data-testid="create-post-input-button"]',
+      modal: '[data-testid="create-post-modal"]',
+      submitBtn: '[data-testid="create-post-button"]',
+      textarea: '[data-testid="post-editor-textarea"]',
+      uploadInput: '[data-testid="image-upload-input-to-post"]',
+      previewImage: '[data-testid="preview-image-0"]',
+      loading: '[data-testid="create-post-loading"]',
+      snackbar: '[data-testid="snackbar"]',
+    };
+
     cy.intercept("POST", "**/api/content").as("createPostRequest");
-    cy.visit("http://localhost:5000/app/profile");
 
-    // open the modal
-    cy.get('[data-testid="create-post-input-button"]').click();
-    cy.get('[data-testid="create-post-modal"]').should("be.visible");
-    cy.get('[data-testid="create-post-button"]').should("be.disabled");
-    cy.get('[data-testid="post-editor-textarea"]').should("have.value", "");
-    cy.get('[data-testid="create-post-button"]').should("be.disabled");
-    // click the upload media button
-    cy.get('[data-testid = "image-upload-input-to-post"]').selectFile(
-      "cypress/fixtures/sample_image.jpg",
-      { force: true },
-    );
+    // 2. Act
+    cy.visit(postUrl);
+    cy.get(selectors.inputBtn).click();
 
-    // upload result expected
-    cy.get('[data-testid="preview-image-0"]').should("be.visible");
-    cy.get('[data-testid="create-post-button"]').should("be.enabled").click();
+    cy.get(selectors.modal).should("be.visible");
+    cy.get(selectors.submitBtn).should("be.disabled");
+    cy.get(selectors.textarea).should("have.value", "");
 
-    // 6. Assert the successful submission lifecycle
-    cy.get('[data-testid="create-post-loading"]').should("be.visible");
+    cy.get(selectors.uploadInput).selectFile(fixturePath, { force: true });
+
+    // 3. Assert
+    cy.get(selectors.previewImage).should("be.visible");
+    cy.get(selectors.submitBtn).should("be.enabled").click();
+
+    cy.get(selectors.loading).should("be.visible");
     cy.wait("@createPostRequest", { timeout: 30000 })
       .its("response.statusCode")
       .should("eq", 201);
-    cy.get('[data-testid="create-post-modal"]').should("not.exist");
-    cy.get('[data-testid="snackbar"]').should("be.visible");
-    cy.get('[data-testid="snackbar"]', { timeout: 5000 }).should("not.exist");
+
+    cy.get(selectors.modal).should("not.exist");
+    cy.get(selectors.snackbar).should("be.visible");
+    cy.get(selectors.snackbar, { timeout: 5000 }).should("not.exist");
   });
 
   it("should create post with content mixing successfully", () => {
+    // 1. Arrange
+    const postUrl = "http://localhost:5000/app/profile";
+    const postTextContent = `mixing content of post creation at ${Date.now()}`;
+
+    const fixtures = {
+      image: "cypress/fixtures/sample_image.jpg",
+      sound: "cypress/fixtures/sample_sound.mp3",
+      video: "cypress/fixtures/sample_video.mp4",
+    };
+
+    const selectors = {
+      inputBtn: '[data-testid="create-post-input-button"]',
+      modal: '[data-testid="create-post-modal"]',
+      submitBtn: '[data-testid="create-post-button"]',
+      textarea: '[data-testid="post-editor-textarea"]',
+      imageInput: '[data-testid="image-upload-input-to-post"]',
+      soundInput: '[data-testid="sound-upload-input-to-post"]',
+      videoInput: '[data-testid="video-upload-input-to-post"]',
+      modalBody: '[data-testid="create-post-body"]',
+      loading: '[data-testid="create-post-loading"]',
+      snackbar: '[data-testid="snackbar"]',
+    };
+
     cy.intercept("POST", "**/api/content").as("createPostRequest");
-    cy.visit("http://localhost:5000/app/profile");
-    // open the modal
-    cy.get('[data-testid="create-post-input-button"]').click();
-    cy.get('[data-testid="create-post-modal"]').should("be.visible");
-    cy.get('[data-testid="create-post-button"]').should("be.disabled");
-    cy.get('[data-testid="post-editor-textarea"]').should("have.value", "");
-    cy.get('[data-testid="create-post-button"]').should("be.disabled");
 
-    // Contents
-    const now = Date.now();
-    const postTextContent = `mixing content of post creation at ${now}`;
+    // 2. Act
+    cy.visit(postUrl);
+    cy.get(selectors.inputBtn).click();
 
-    cy.get('[data-testid="post-editor-textarea"]')
+    cy.get(selectors.modal).should("be.visible");
+    cy.get(selectors.submitBtn).should("be.disabled");
+    cy.get(selectors.textarea).should("have.value", "");
+
+    cy.get(selectors.textarea)
       .type(postTextContent)
       .should("have.value", postTextContent);
-    cy.get('[data-testid = "image-upload-input-to-post"]').selectFile(
-      "cypress/fixtures/sample_image.jpg",
-      { force: true },
-    );
-    cy.get('[data-testid = "sound-upload-input-to-post"]').selectFile(
-      "cypress/fixtures/sample_sound.mp3",
-      { force: true },
-    );
-    cy.get('[data-testid = "video-upload-input-to-post"]').selectFile(
-      "cypress/fixtures/sample_video.mp4",
-      { force: true },
-    );
+    cy.get(selectors.imageInput).selectFile(fixtures.image, { force: true });
+    cy.get(selectors.soundInput).selectFile(fixtures.sound, { force: true });
+    cy.get(selectors.videoInput).selectFile(fixtures.video, { force: true });
 
-    cy.get('[data-testid="create-post-body"]').scrollTo("bottom", {
-      duration: 500,
-    });
-    cy.get('[data-testid="create-post-button"]').should("be.enabled").click();
+    cy.get(selectors.modalBody).scrollTo("bottom", { duration: 500 });
+    cy.get(selectors.submitBtn).should("be.enabled").click();
 
-    // 6. Assert the successful submission lifecycle
-    cy.get('[data-testid="create-post-loading"]').should("be.visible");
+    // 3. Assert
+    cy.get(selectors.loading).should("be.visible");
     cy.wait("@createPostRequest", { timeout: 30000 })
       .its("response.statusCode")
       .should("eq", 201);
-    cy.get('[data-testid="create-post-modal"]').should("not.exist");
-    cy.get('[data-testid="snackbar"]').should("be.visible");
-    cy.get('[data-testid="snackbar"]', { timeout: 5000 }).should("not.exist");
+
+    cy.get(selectors.modal).should("not.exist");
+    cy.get(selectors.snackbar).should("be.visible");
+    cy.get(selectors.snackbar, { timeout: 5000 }).should("not.exist");
   });
 
   // blank input protection
@@ -156,58 +186,86 @@ describe("post creation", () => {
 
   // Error occurs notify using a popup
   it("Should appear popup to notify the error", () => {
-    cy.intercept("POST", "**/api/content").as("createPostRequest");
-    cy.visit("http://localhost:5000/app/profile");
+    // 1. Arrange
+    const postUrl = "http://localhost:5000/app/profile";
+    const toxicContent = "fuck";
 
-    // open the modal
-    cy.get('[data-testid="create-post-input-button"]').click();
-    cy.get('[data-testid="create-post-modal"]').should("be.visible");
-    cy.get('[data-testid="create-post-button"]').should("be.disabled");
-    const toxicContent = `fuck`;
-    cy.get('[data-testid="post-editor-textarea"]')
+    const selectors = {
+      inputBtn: '[data-testid="create-post-input-button"]',
+      modal: '[data-testid="create-post-modal"]',
+      submitBtn: '[data-testid="create-post-button"]',
+      textarea: '[data-testid="post-editor-textarea"]',
+      loading: '[data-testid="create-post-loading"]',
+      popup: '[data-testid="popup"]',
+    };
+
+    cy.intercept("POST", "**/api/content").as("createPostRequest");
+
+    // 2. Act
+    cy.visit(postUrl);
+    cy.get(selectors.inputBtn).click();
+
+    cy.get(selectors.modal).should("be.visible");
+    cy.get(selectors.submitBtn).should("be.disabled");
+
+    cy.get(selectors.textarea)
       .type(toxicContent)
       .should("have.value", toxicContent);
-    cy.get('[data-testid="create-post-button"]').should("be.enabled").click();
-    cy.get('[data-testid="create-post-loading"]').should("be.visible");
+    cy.get(selectors.submitBtn).should("be.enabled").click();
+
+    // 3. Assert
+    cy.get(selectors.loading).should("be.visible");
     cy.wait("@createPostRequest", { timeout: 30000 })
       .its("response.statusCode")
       .should("eq", 400);
-    cy.get('[data-testid="popup"]').should("be.visible");
+    cy.get(selectors.popup).should("be.visible");
   });
 
   // Emoji input
   it("Should type emoji correctly", () => {
-    // get API and visit target page
+    // 1. Arrange
+    const postUrl = "http://localhost:5000/app/profile";
+
+    const selectors = {
+      inputBtn: '[data-testid="create-post-input-button"]',
+      modal: '[data-testid="create-post-modal"]',
+      emojiBtn: '[data-testid="emoji-popup-button"]',
+      popoverEmoji: '[data-testid="popover-emoji"]',
+      submitBtn: '[data-testid="create-post-button"]',
+      loading: '[data-testid="create-post-loading"]',
+    };
+
     cy.intercept("POST", "**/api/content").as("createPostRequest");
-    cy.visit("http://localhost:5000/app/profile");
 
-    // Open modal
-    cy.get('[data-testid="create-post-input-button"]').click();
-    cy.get('[data-testid="create-post-modal"]').should("be.visible");
-    cy.get('[data-testid="emoji-popup-button"]').click();
-
-    // Random Emoji
+    // Helper function to pick a random emoji
     const getRandomEmoji = () => {
       const categories = Object.keys(EMOJI) as Array<keyof typeof EMOJI>;
-      const randomCategories =
+      const randomCategory =
         categories[Math.floor(Math.random() * categories.length)];
-      const emojiList = EMOJI[randomCategories];
+      const emojiList = EMOJI[randomCategory];
       const randomEntry =
         emojiList[Math.floor(Math.random() * emojiList.length)];
       return randomEntry.char;
     };
 
-    // Enter the emojis one by one
+    // 2. Act
+    cy.visit(postUrl);
+    cy.get(selectors.inputBtn).click();
+    cy.get(selectors.modal).should("be.visible");
+    cy.get(selectors.emojiBtn).click();
+
+    // Enter 5 random emojis one by one
     for (let i = 0; i < 5; i++) {
       const randomEmoji = getRandomEmoji();
-      cy.get(`[data-testid=${randomEmoji}]`).click();
+      cy.get(`[data-testid="${randomEmoji}"]`).click();
       cy.wait(500);
     }
-    cy.get('[data-testid="popover-emoji"').click();
 
-    // Create post
-    cy.get('[data-testid="create-post-button"]').should("be.enabled").click();
-    cy.get('[data-testid="create-post-loading"]').should("be.visible");
+    cy.get(selectors.popoverEmoji).click();
+    cy.get(selectors.submitBtn).should("be.enabled").click();
+
+    // 3. Assert
+    cy.get(selectors.loading).should("be.visible");
     cy.wait("@createPostRequest", { timeout: 30000 })
       .its("response.statusCode")
       .should("eq", 201);
