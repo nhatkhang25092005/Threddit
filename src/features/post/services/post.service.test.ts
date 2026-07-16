@@ -208,6 +208,7 @@ describe("postService.createPost", () => {
     expect(storageService.uploadMediaAndGetSessionId).toHaveBeenCalledWith(
       input.media,
     );
+    expect(postApi.createPost).not.toHaveBeenCalled();
     expect(actual).toEqual(expected);
   });
 
@@ -448,6 +449,19 @@ describe("postService.updatePost", () => {
         updatedAt: "2026-06-14T15:18:00.000Z",
       },
     });
+    const expected = {
+      success: true,
+      message: "Updated Successfully",
+      patch: {
+        type: "post",
+        text: "Fully updated post text",
+        mediaFiles: [{ url: "https://s3.amazonaws.com/final-prod-img.png" }],
+        mentionedUsers: [],
+        time: {
+          updatedAt: "2026-06-14T15:18:00.000Z",
+        },
+      },
+    };
 
     // Dữ liệu đầu vào thay đổi toàn diện từ Client
     const input = {
@@ -457,9 +471,7 @@ describe("postService.updatePost", () => {
     };
 
     // Thực thi hàm cần test
-    const result = await postService.editPost(contentId, input);
-
-    // --- TIẾN HÀNH KIỂM TRA (EXPECT) ---
+    const actual = await postService.editPost(contentId, input);
 
     // Kiểm tra hàm upload được gọi với đúng ID bài viết và mảng media
     expect(
@@ -486,19 +498,7 @@ describe("postService.updatePost", () => {
     });
 
     // Kiểm tra đầu ra của Service khớp trọn vẹn cấu trúc dữ liệu mới kèm bản vá (patch)
-    expect(result).toEqual({
-      success: true,
-      message: "Updated Successfully",
-      patch: {
-        type: "post",
-        text: "Fully updated post text",
-        mediaFiles: [{ url: "https://s3.amazonaws.com/final-prod-img.png" }],
-        mentionedUsers: [],
-        time: {
-          updatedAt: "2026-06-14T15:18:00.000Z",
-        },
-      },
-    });
+    expect(actual).toEqual(expected);
   });
 
   it("should return failure response if media upload fails during the editing phase", async () => {
@@ -599,7 +599,7 @@ describe("postService.deletePost", () => {
   it("Should delete the specific post successfully", async () => {
     // 1. Arrange
     const successMessage = "Delete successfully";
-
+    const input = postId;
     const expected = {
       success: true,
       message: successMessage,
@@ -611,17 +611,17 @@ describe("postService.deletePost", () => {
     );
 
     // 3. Act
-    const actual = await postService.deletePost(postId);
+    const actual = await postService.deletePost(input);
 
     // 4. Assert
-    expect(postApi.deleteContent).toHaveBeenCalledWith(postId);
+    expect(postApi.deleteContent).toHaveBeenCalledWith(input);
     expect(actual).toEqual(expected);
   });
 
   it("Should return fail if delete post unsuccessfully", async () => {
     // 1. Arrange
     const errorMessage = "Delete Failed";
-
+    const input = postId;
     const expected = {
       success: false,
       message: errorMessage,
@@ -633,10 +633,10 @@ describe("postService.deletePost", () => {
     );
 
     // 3. Act
-    const actual = await postService.deletePost(postId);
+    const actual = await postService.deletePost(input);
 
     // 4. Assert
-    expect(postApi.deleteContent).toHaveBeenCalledWith(postId);
+    expect(postApi.deleteContent).toHaveBeenCalledWith(input);
     expect(actual).toEqual(expected);
   });
 });

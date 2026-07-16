@@ -234,7 +234,7 @@ export default function CommentList({
   }, []);
 
   return (
-    <Box sx={sx.root(variant)}>
+    <Box data-testid="comment-post-modal" sx={sx.root(variant)}>
       <CommentListHeader totalCount={thread.totalCount} />
 
       <Box sx={sx.composerWrap}>
@@ -264,7 +264,7 @@ export default function CommentList({
           <Box data-testid='comment-list' sx={sx.threadList}>
             {thread.comments.map((comment, index) => (
               <CommentBlock
-                data-testid = {`comment-${index}`}
+                data-testid = {`comment-item-${index}`}
                 key={comment.id}
                 comment={comment}
                 currentUser={thread.viewer}

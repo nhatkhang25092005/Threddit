@@ -1,4 +1,5 @@
-import { Box } from "@mui/material";
+import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
+import { Box, Typography } from "@mui/material";
 import { post } from "../../../../constant/text/vi/post/post";
 import useInfiniteScroll from "../../../../hooks/useInfiniteScroll";
 import { usePostContext } from "../../hooks";
@@ -35,6 +36,8 @@ export default function Feed() {
   });
   const showEmpty =
     hasRequested && hasMore === false && !isLoading && posts.length === 0;
+  const showEndOfFeed =
+    hasRequested && hasMore === false && !isLoading && posts.length > 0;
   const isLoadMore = isLoading && posts.length > 0;
   const canRestoreScroll = !isLoading && hasRequested;
   const enableInfiniteScroll = Boolean(hasMore) && posts.length > 0;
@@ -78,6 +81,15 @@ export default function Feed() {
 
       {isLoadMore ? (
         <LoadingGetPost count={1} sx={{ list: { alignItems: "center" } }} />
+      ) : null}
+
+      {showEndOfFeed ? (
+        <Box sx={sx.endOfFeed}>
+          <CheckCircleOutlineRoundedIcon sx={sx.endOfFeedIcon} />
+          <Typography sx={sx.endOfFeedText}>
+            {post.list.feedEnd}
+          </Typography>
+        </Box>
       ) : null}
     </Box>
   );

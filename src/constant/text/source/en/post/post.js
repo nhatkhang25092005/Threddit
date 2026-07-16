@@ -21,6 +21,7 @@ export const post = {
     userEmpty: "This user has no posts yet",
     savedEmpty: "You have not saved any posts yet",
     feedEmpty: "The feed currently has no posts",
+    feedEnd: "You have reached the end of the feed",
     loadMore: "Load more",
   },
   loading: {

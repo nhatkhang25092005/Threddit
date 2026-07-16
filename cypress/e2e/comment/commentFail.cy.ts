@@ -2,15 +2,17 @@
 
 describe("commentFail", () => {
   const comment: string = `cc (at ${new Date().toLocaleString()})`;
+  const email = "email@gmail.com";
+  const password = "password";
   beforeEach(() => {
     cy.session("user-session", () => {
       cy.visit("http://localhost:5000/auth");
       cy.get('[data-testid="email-input"]')
-        .type("nhatkhang25092005@gmail.com")
-        .should("have.value", "nhatkhang25092005@gmail.com");
+        .type(email)
+        .should("have.value", email);
       cy.get('[data-testid="password-input"]')
-        .type("@Minedash13579")
-        .should("have.value", "@Minedash13579");
+        .type(password)
+        .should("have.value", password);
       cy.get('[data-testid="login-submit-btn"]').click();
       cy.url().should("include", "/app/home");
     });

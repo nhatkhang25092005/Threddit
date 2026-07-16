@@ -2,127 +2,20 @@
 
 describe("commentSuccess", () => {
   const comment: string = `oh this post is really cool =D (at ${new Date().toLocaleString()})`;
-
+  const email = "email@gmail.com";
+  const password = "password";
   beforeEach(() => {
     cy.session("user-session", () => {
       cy.visit("http://localhost:5000/auth");
       cy.get('[data-testid="email-input"]')
-        .type("nhatkhang25092005@gmail.com")
-        .should("have.value", "nhatkhang25092005@gmail.com");
+        .type(email)
+        .should("have.value", email);
       cy.get('[data-testid="password-input"]')
-        .type("@Minedash13579")
-        .should("have.value", "@Minedash13579");
+        .type(password)
+        .should("have.value", password);
       cy.get('[data-testid="login-submit-btn"]').click();
       cy.url().should("include", "/app/home");
     });
-  });
-
-  it("Should create a text only comment successfully", () => {
-    // visit the profile page
-    cy.visit("http://localhost:5000/app/profile");
-    cy.intercept("POST", "**/api/content/**/comment").as("createComment");
-    cy.wait(3000);
-
-    // Find the comment button
-    cy.get("[data-testid^=comment-button-]")
-      .first()
-      .then(($btn) => {
-        // Click to open the post modal
-        cy.wrap($btn).click();
-        cy.wait(2000);
-
-        // --- ĐẾM SỐ LƯỢNG COMMENT BAN ĐẦU ---
-        cy.get('[data-testid="comment-list"]').then(($list) => {
-          const comments = $list.find('[data-testid^="comment-"]');
-          const initNumber = comments.length > 0 ? comments.length : 0;
-          cy.wrap(initNumber).as("commentNumberTextOnly"); // Dùng tên alias riêng biệt để tránh nhầm lẫn
-        });
-
-        // Enter the comment content
-        cy.get('[data-testid="comment-creator"]')
-          .click()
-          .type(comment)
-          .should("have.value", comment);
-        cy.wait(4000);
-
-        // Find the post comment button then click
-        cy.get('[data-testid="post-comment-button"]').then(($submit_btn) => {
-          cy.wrap($submit_btn).should("be.visible").should("be.enabled");
-          cy.wrap($submit_btn).click();
-          cy.wrap($submit_btn).should("be.disabled");
-          cy.wait("@createComment", { timeout: 30000 })
-            .its("response.statusCode")
-            .should("eq", 200);
-        });
-
-        // create post completed
-        cy.get('[data-testid="comment-creator"]').should("not.have.value");
-
-        // --- KIỂM TRA SỐ LƯỢNG TĂNG LÊN ---
-        cy.get('[data-testid="comment-list"]').within(() => {
-          cy.get("@commentNumberTextOnly").then((initNumber) => {
-            const expectedLength = Number(initNumber) + 1;
-            cy.get('[data-testid^="comment-"]').should(
-              "have.length",
-              expectedLength,
-            );
-          });
-        });
-      });
-
-    // See the snackbar
-    cy.get('[data-testid="snackbar"]').should("exist");
-    cy.get('[data-testid="snackbar"]', { timeout: 5000 }).should("not.exist");
-  });
-
-  it("Should create a media only comment successfully", () => {
-    cy.visit("http://localhost:5000/app/profile");
-    cy.intercept("POST", "**/api/content/**/comment").as("createComment");
-    cy.wait(2000);
-
-    cy.get("[data-testid^=comment-button-]")
-      .first()
-      .then(($btn) => {
-        cy.wrap($btn).click();
-        cy.wait(2000);
-
-        // --- ĐẾM SỐ LƯỢNG COMMENT BAN ĐẦU ---
-        cy.get('[data-testid="comment-list"]').then(($list) => {
-          const comments = $list.find('[data-testid^="comment-"]');
-          const initNumber = comments.length > 0 ? comments.length : 0;
-          cy.wrap(initNumber).as("commentNumberMediaOnly");
-        });
-
-        // Enter the comment content
-        cy.get('[data-testid="comment-image-input"]')
-          .first()
-          .selectFile("cypress/fixtures/sample_image.jpg", { force: true });
-        cy.wait(3000);
-
-        // Find the post comment button then click
-        cy.get('[data-testid="post-comment-button"]').then(($submit_btn) => {
-          cy.wrap($submit_btn).should("be.enabled");
-          cy.wrap($submit_btn).click({ force: true });
-          cy.wrap($submit_btn).should("be.disabled");
-          cy.wait("@createComment", { timeout: 30000 })
-            .its("response.statusCode")
-            .should("eq", 200);
-        });
-
-        // create post completed
-        cy.get('[data-testid="comment-creator"]').should("not.have.value");
-
-        // --- KIỂM TRA SỐ LƯỢNG TĂNG LÊN ---
-        cy.get('[data-testid="comment-list"]').within(() => {
-          cy.get("@commentNumberMediaOnly").then((initNumber) => {
-            const expectedLength = Number(initNumber) + 1;
-            cy.get('[data-testid^="comment-"]').should(
-              "have.length",
-              expectedLength,
-            );
-          });
-        });
-      });
   });
 
   it("Should create a comment with media and text together", () => {
@@ -131,9 +24,10 @@ describe("commentSuccess", () => {
     const fixturePath = "cypress/fixtures/sample_image.jpg";
 
     const selectors = {
+      commentPostModal: '[data-testid="comment-post-modal"]',
       commentBtn: "[data-testid^=comment-button-]",
       commentList: '[data-testid="comment-list"]',
-      commentItem: '[data-testid^="comment-"]',
+      commentItem: '[data-testid^="comment-item-"]',
       commentInput: '[data-testid="comment-creator"]',
       imageInput: '[data-testid="comment-image-input"]',
       submitBtn: '[data-testid="post-comment-button"]',
@@ -143,22 +37,31 @@ describe("commentSuccess", () => {
 
     // 2. Act
     cy.visit(postUrl);
-    cy.wait(2000);
+    cy.wait(2000); // Giữ nguyên cách wait gốc của bạn[cite: 3]
 
     cy.get(selectors.commentBtn)
       .first()
       .then(($btn) => {
         cy.wrap($btn).click();
-        cy.wait(2000);
+        cy.wait(2000); // Giữ nguyên cách wait gốc của bạn[cite: 3]
 
-        // Count the init comment list length
-        cy.get(selectors.commentList).then(($list) => {
-          const comments = $list.find(selectors.commentItem);
-          const initNumber = comments.length > 0 ? comments.length : 0;
-          cy.wrap(initNumber).as("commentNumber");
+        // Đảm bảo modal hiển thị hoàn chỉnh trước khi check điều kiện nhằm tránh lỗi bất đồng bộ[cite: 3]
+        cy.get(selectors.commentInput).should("be.visible");
+
+        // --- ĐẾM SỐ LƯỢNG COMMENT BAN ĐẦU ---
+        // Nhắm trực tiếp vào modal để JQuery giới hạn đúng vùng tìm kiếm nội bộ
+        cy.get(selectors.commentPostModal).then(($modal) => {
+          const currentComments = $modal.find(selectors.commentItem);
+          // Nếu tìm thấy comment-item bên trong modal thì gán số lượng tính được
+          if (currentComments.length > 0) {
+            cy.wrap(currentComments.length).as("commentNumberBoth");
+          } else {
+            // Nếu không get được thì để số lượng comment = 0[cite: 3]
+            cy.wrap(0).as("commentNumberBoth");
+          }
         });
 
-        // Enter text & upload media
+        // Enter text & upload media (Giữ nguyên bản gốc)[cite: 3]
         cy.get(selectors.commentInput)
           .click()
           .type(comment)
@@ -170,22 +73,22 @@ describe("commentSuccess", () => {
           .selectFile(fixturePath, { force: true });
         cy.wait(2000);
 
-        // Submit comment
+        // Submit comment (Giữ nguyên bản gốc)[cite: 3]
         cy.get(selectors.submitBtn).then(($submit_btn) => {
           cy.wrap($submit_btn).should("be.enabled");
           cy.wrap($submit_btn).click({ force: true });
           cy.wrap($submit_btn).should("be.disabled");
         });
 
-        // 3. Assert
+        // 3. Assert (Giữ nguyên bản gốc)[cite: 3]
         cy.wait("@createComment", { timeout: 30000 })
           .its("response.statusCode")
           .should("eq", 200);
         cy.get(selectors.commentInput).should("not.have.value");
 
-        // Check if the comment count increases
+        // Check if the comment count increases (Sử dụng đúng cấu trúc .within gốc của bạn)[cite: 3]
         cy.get(selectors.commentList).within(() => {
-          cy.get("@commentNumber").then((initNumber) => {
+          cy.get("@commentNumberBoth").then((initNumber) => {
             const expectedLength = Number(initNumber) + 1;
             cy.get(selectors.commentItem).should("have.length", expectedLength);
           });

@@ -79,6 +79,8 @@ export function useGetFeed(dispatch, hasMore, currentFeedIds = []) {
             (isLoading) => dispatch(loadingAction.getFeedListLoading(isLoading))
           )
       )
+
+            console.log(response)
       if (!response) return null
 
       if (!response.success) {
@@ -106,6 +108,7 @@ export function useGetFeed(dispatch, hasMore, currentFeedIds = []) {
       if (incomingFeedIds.length > 0) {
         combineActions.getFeedSuccess(dispatch, nextFeedItems)
       }
+
 
       return {
         ...response,

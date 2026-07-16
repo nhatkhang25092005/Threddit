@@ -15,6 +15,40 @@ export const style = {
       maxWidth: "42rem",
     },
 
+    endOfFeed: (theme) => ({
+      width: "100%",
+      maxWidth: "42rem",
+      boxSizing: "border-box",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: "0.5rem",
+      px: { xs: "0.9rem", sm: "1rem" },
+      py: "0.8rem",
+      borderRadius: "0.6rem",
+      border: `1px solid ${alpha(theme.palette.app.border, 0.86)}`,
+      color: theme.palette.app.muted,
+      backgroundColor:
+        theme.palette.mode === "dark"
+          ? alpha(theme.palette.app.header, 0.72)
+          : alpha(theme.palette.app.header, 0.9),
+    }),
+
+    endOfFeedIcon: (theme) => ({
+      width: "1.1rem",
+      height: "1.1rem",
+      flexShrink: 0,
+      color: theme.palette.app.primary,
+    }),
+
+    endOfFeedText: {
+      minWidth: 0,
+      fontSize: "0.88rem",
+      fontWeight: 700,
+      lineHeight: 1.45,
+      textAlign: "center",
+    },
+
     storyRailWrap: {
       width: "100%",
       maxWidth: "42rem",

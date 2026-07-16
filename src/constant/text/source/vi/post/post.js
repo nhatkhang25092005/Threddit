@@ -21,6 +21,7 @@ export const post = {
     userEmpty: "Người dùng này chưa có bài viết nào",
     savedEmpty: "Bạn chưa lưu bài viết nào",
     feedEmpty: "Hiện bảng tin chưa có bài viết nào",
+    feedEnd: "Đã hết bài viết",
     loadMore: "Tải thêm",
   },
   loading: {
